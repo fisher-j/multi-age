@@ -1,0 +1,202 @@
+---
+title: Data description
+---
+
+# Fuel data
+
+The fuel data was gathered in the spring of 2022 and 2023. The Firemon protocol
+was used as the basis for data collection which in turn employs the use of
+Brown's transects, with the addition of vegetation sample plots in which
+vegetative fuel loading is estimated within a 1 meter radius cylinder.
+
+The notion of fuel bed depth is notably absent from the [Firemon protocol], so we
+added it by estimating an "average" fuel bed depth within the vegetation
+sampling cylinder that included litter, and all downed woody debris.
+
+Dominant (well represented) woody speices were also recorded in the vegetation
+cylinders.
+
+## Data entry
+
+Data was entered using Excel and exported as a UTF-8 csv. The file format
+(@fig-excel) was defined to resemble the physical datasheets as closely as
+possible, while maintaining data integretity and facilitating ease of input.
+There is one file for each macro plot (or replicate = site + treatment
+combination). 
+
+Each file includes sections for different tables, and these are separated by a
+line that contains only a single hashtag (e.g., "#duff_litter_fbd") in lowercase
+letters with underscores for spaces. In Excel, the #hashtag should go in the
+first cell of a row, with nothing esle in the row. There should be no blank rows
+before or after hashtags. The table sections used don't correlate 1:1 with
+physical datasheet tables. For instance, columns for "metermeark1" and
+"metermark2" were added to reflect the fact initially, we sampled vegetation at
+5 and 10 m, but later we moved this sampling to 5 and 9 m. The "1" and "2"
+following repeated variable names refers to one of these locations along the
+transect. A complete description of data varialbes can be found
+[below](#data-description)
+
+- `#site_info`
+  - site
+  - treatment
+  - date
+  - onehr
+  - tenhr
+  - hundhr
+  - thoushr
+  - trans_count
+  - notes *site level notes*
+
+- `#transects`
+  - transect *number 1 through 8, corresponds with transect column in other
+    sections*
+  - corner
+  - azi
+  - fwd_crew
+  - veg_crew *moved from vegetation table to here*
+  - slope
+  - metermark1 *location along transect of first veg station*
+  - metermark2 *location along transect of second veg station*
+  - notes *transect specific notes*
+
+- `#duff_litter_fbd`
+  - transect *number 1 through 8*
+  - onehr
+  - tenhr
+  - hundhr
+  - duff_litter1
+  - pct_litter1
+  - fbd1
+  - duff_litter2
+  - pct_litter2
+  - fbd2
+
+- `#vegetation`
+  - transect *number 1 though 8*
+  - live_woody1
+  - dead_woody1
+  - avg_w_ht1
+  - live_herb1
+  - dead_herb1
+  - avg_h_ht1
+  - live_woody2
+  - dead_woody2
+  - avg_w_ht2
+  - live_herb2
+  - dead_herb2
+  - avg_h_ht2
+
+- `#woody_species`
+  - transect
+  - species1
+  - species2
+
+- `#coarse_woody_debris`
+  - transect
+  - dia
+  - decay
+
+![Screenshot of an examle of the datasheet entry format. Each section, defined
+by a begining hashtag is parsed by an r function as a seperate
+table.](./figures/excel_data_example.jpg){#fig-excel}
+
+An R function is used to parse this file into individual tables. As part of this
+process, all the table sections whose rows have a 1:1 relationship with
+transects are combined into one wide table. 
+
+```{r}
+#| file: "./scripts/process_datasheets.r"
+```
+
+The resulting data looks like this
+
+```{r}
+wrangle_datasheet("../data/fuel_waldon_gs.csv")
+```
+
+While the wide format for the transect data is not ideal, it is convenient because
+we not working with many linked tables. This requires extra work at analysis time
+to expand data stored in column names. By this, I am refering to the columns
+which are followed by a number (1 or 2) which describe the location along
+the transect where the data was taken. To analze these data, they will first need to
+be pivoted into a longer format, where the station (1 or 2) becomes an explicit
+column.
+
+# Data variable descriptions
+
+The following is a descripton of the data variables for each of the tables in
+the data list. So, the `$plots` heading refers to the table found in
+`data$plots`. This data structure is subject to change, but for now, has 3
+tables. [`$plots`](#plots) has plot level data including the lengths of
+transects (which are the same across all transects, but included for clarity).
+[`$transects`](#transects) contains all the fuel data associated with a given
+transect, including both vegetation stations, in wide format (one row for each
+transect). Finally, [`$coarse_woody`](#coarse_woody) contains coarse woody
+debris in a long format (multiple rows for each transect).
+
+## `$plots`
+
+|Variable    |Description | 
+|:-----------|:-----------| 
+|site        |            | 
+|treatment   |            | 
+|date        |            | 
+|onehr       |            | 
+|tenhr       |            | 
+|hundhr      |            | 
+|thoushr     |            | 
+|trans_count |            | 
+|notes       |            | 
+
+## `$transects`
+
+|Variable     |Description |
+|:------------|:-----------|
+|site         |            |
+|treatment    |            |
+|corner       |            |
+|azi          |            |
+|fwd_crew     |            |
+|veg_crew     |            |
+|slope        |            |
+|metermark1   |locantion along transect of first veg. station|
+|metermark2   |            |
+|notes        |            |
+|onehr        |            |
+|tenhr        |            |
+|hundhr       |            |
+|duff_litter1 |            |
+|pct_litter1  |            |
+|fbd1         |            |
+|duff_litter2 |            |
+|pct_litter2  |            |
+|fbd2         |            |
+|live_woody1  |            |
+|dead_woody1  |            |
+|avg_w_ht1    |            |
+|live_herb1   |            |
+|dead_herb1   |            |
+|avg_h_ht1    |            |
+|live_woody2  |            |
+|dead_woody2  |            |
+|avg_w_ht2    |            |
+|live_herb2   |            |
+|dead_herb2   |            |
+|avg_h_ht2    |            |
+|species1     |            |
+|species2     |            |
+
+## `$coarse_woody`
+
+|Variable  |Description |
+|:---------|:-----------|
+|site      |            |
+|treatment |            |
+|corner    |            |
+|azi       |            |
+|dia       |            |
+|decay     |            |
+
+
+
+[Firemon protocol]: https://www.frames.gov/firemon/sampling-methods
