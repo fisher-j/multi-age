@@ -45,7 +45,7 @@ transect. A complete description of data varialbes can be found
   - hundhr
   - thoushr
   - trans_count
-  - notes *site level notes*
+  - notes *site level notes, should not contain commas*
 
 - `#transects`
   - transect *number 1 through 8, corresponds with transect column in other
@@ -88,8 +88,8 @@ transect. A complete description of data varialbes can be found
 
 - `#woody_species`
   - transect
-  - species1
-  - species2
+  - species1 *space-delimited list of 'significant' species*
+  - species2 *space-delimited list of 'significant' species*
 
 - `#coarse_woody_debris`
   - transect
@@ -122,7 +122,7 @@ the transect where the data was taken. To analze these data, they will first nee
 be pivoted into a longer format, where the station (1 or 2) becomes an explicit
 column.
 
-# Data variable descriptions
+## Data variable descriptions
 
 The following is a descripton of the data variables for each of the tables in
 the data list. So, the `$plots` heading refers to the table found in
@@ -134,7 +134,7 @@ transect, including both vegetation stations, in wide format (one row for each
 transect). Finally, [`$coarse_woody`](#coarse_woody) contains coarse woody
 debris in a long format (multiple rows for each transect).
 
-## `$plots`
+### `$plots`
 
 |Variable    |Description | 
 |:-----------|:-----------| 
@@ -148,7 +148,7 @@ debris in a long format (multiple rows for each transect).
 |trans_count |            | 
 |notes       |            | 
 
-## `$transects`
+### `$transects`
 
 |Variable     |Description |
 |:------------|:-----------|
@@ -186,7 +186,7 @@ debris in a long format (multiple rows for each transect).
 |species1     |            |
 |species2     |            |
 
-## `$coarse_woody`
+### `$coarse_woody`
 
 |Variable  |Description |
 |:---------|:-----------|

@@ -3,6 +3,7 @@
   - one file for each plot
 - Created R function to ingest a datasheet in the specified format
 - [Documented](./data_description.qmd) the input format and processing function
+- Fuel data entered for 7 replicates
 
 # 2023-05-23
 
