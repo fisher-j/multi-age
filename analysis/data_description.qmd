@@ -134,6 +134,16 @@ transect, including both vegetation stations, in wide format (one row for each
 transect). Finally, [`$coarse_woody`](#coarse_woody) contains coarse woody
 debris in a long format (multiple rows for each transect).
 
+### The vegetation sampling cylinder
+
+Reference is made the vegetation sampling cylinder below. It is an imaginary,
+vertical cylinder with a radius of 1 meter and a variable height equal to the
+maxiumm height of sprout or shrub vegetation within the cylinders radius. There
+are two vegetation sampling cylinders on each transect and their centers are
+defined by the transects two metermarks. Duff, litter, and fuel bed depth in
+addition to the vegetation measurements, are all recorded within these
+cylinders.
+
 ### `$plots`
 
 |Variable    |Description | 
@@ -141,49 +151,49 @@ debris in a long format (multiple rows for each transect).
 |site        |            | 
 |treatment   |            | 
 |date        |            | 
-|onehr       |            | 
-|tenhr       |            | 
-|hundhr      |            | 
-|thoushr     |            | 
-|trans_count |            | 
+|onehr       |Distance from end of transect for which 1-hr fuels were counted| 
+|tenhr       |Distance from end of transect for which 10-hr fuels were counted| 
+|hundhr      |Distance from end of transect for which 100-hr fuels were counted| 
+|thoushr     |Distance from end of transect for which 1000-hr fuels were counted| 
+|trans_count |number of transects on macro plot| 
 |notes       |            | 
 
 ### `$transects`
 
 |Variable     |Description |
 |:------------|:-----------|
-|site         |            |
-|treatment    |            |
-|corner       |            |
-|azi          |            |
-|fwd_crew     |            |
-|veg_crew     |            |
-|slope        |            |
-|metermark1   |locantion along transect of first veg. station|
-|metermark2   |            |
-|notes        |            |
-|onehr        |            |
-|tenhr        |            |
-|hundhr       |            |
-|duff_litter1 |            |
-|pct_litter1  |            |
-|fbd1         |            |
-|duff_litter2 |            |
+|site         |One of four different sites: whiskey, waldon, waldos, and camp6|
+|treatment    |One of HD=High density, dispersed retention, LD=Low density dispersed retention, MD=Medium densty dispersed retention, HA=High density aggreagated retention, GS=Group selection opening (1 ha, centered on plot)|
+|corner       |One of n,s,e,w for "diamond" plost and one of ne, nw, se, sw for "square" plots|
+|azi          |actual azimuth from corner to end of fuel transect, deg|
+|fwd_crew     |Initials of person performing fuel counts and measuring litter, duff, and FBD|
+|veg_crew     |Initials of person estimating vegetation cover|
+|slope        |slope in percent, measured with clinometer|
+|metermark1   |locantion along transect of first veg. station m|
+|metermark2   |locantion along transect of first veg. station m|
+|notes        |Transect specific notes|
+|onehr        |Count of down woody fuels <0.6 cm for the lenght of the 1-hr transect, redwood leaflets less than about 2 mm were not counted as one hour fuels|
+|tenhr        |Count of down woody fuels >= 0.6 and < 2.5 cm|
+|hundhr       |Count of down woody fuels >= 2.5 and < 8 cm|
+|duff_litter1 |Combined duff and litter depth from a representative location within a 1-meter radius circle centered at metermark, cm|
+|pct_litter1  |Percent of duff_litter depth compose of litter: percent|
+|fbd1         |Estimated average height of litter and downed woody debris within the vegetation sampling cylinder, 1 m radius, centered at metermark|
+|duff_litter2 ||
 |pct_litter2  |            |
 |fbd2         |            |
-|live_woody1  |            |
-|dead_woody1  |            |
-|avg_w_ht1    |            |
-|live_herb1   |            |
-|dead_herb1   |            |
-|avg_h_ht1    |            |
+|live_woody1  |Total projected ground cover of all live woody plant parts within 1-meter-radius sampling cylinder of height equal to the height of the shrub or sprout vegetaion within the cylinders radius, 0-100 percent|
+|dead_woody1  |Total projected ground cover of all dead woody plant parts connected to live or standing dead plants, within the vegetation sampling cylinder 0-100 percent|
+|avg_w_ht1    |Average maximum height of all live and dead woody plants in vegetation sampling cylinder(see Estimating Height in Firemon protocol)|
+|live_herb1   |Total projected ground cover of live herbs in the vegetation sampling cylinder|
+|dead_herb1   |Total projected ground cover of dead herbs in the vegetation sampling cylinder|
+|avg_h_ht1    |Average height of live and dead herbs in the vegetation sampling cylinder|
 |live_woody2  |            |
 |dead_woody2  |            |
 |avg_w_ht2    |            |
 |live_herb2   |            |
 |dead_herb2   |            |
 |avg_h_ht2    |            |
-|species1     |            |
+|species1     |Dominant woody species within sampling cylinder, each species is assumed to occupy an equal portion of volume, under-represented species are ignored|
 |species2     |            |
 
 ### `$coarse_woody`
@@ -195,8 +205,7 @@ debris in a long format (multiple rows for each transect).
 |corner    |            |
 |azi       |            |
 |dia       |            |
-|decay     |            |
-
+|decay     |Decay class 1-5, 1=Fine branches still present, 2=Some branches and bark missing, 3=most branches and much bark missing potentially minor decay, 4=Significant decay, 5=Almost completely rotten|
 
 
 [Firemon protocol]: https://www.frames.gov/firemon/sampling-methods
