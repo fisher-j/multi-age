@@ -9,8 +9,10 @@ wrangle_datasheet <- function(file) {
   lines[1] <- gsub("\\xef\\xbb\\xbf", "", lines[1], useBytes = TRUE)
 
   # These are the sections I want to extract
-  to_get <- c("site_data", "transects", "duff_litter_fbd", "vegetation",
-            "woody_species", "coarse_woody_debris")
+  to_get <- c(
+    "site_data", "transects", "duff_litter_fbd", "vegetation",
+    "woody_species", "coarse_woody_debris"
+  )
   # sections are defined by line with only a hashtage (#section)
   section_pattern <- "^#(\\w+).*$"
 
@@ -27,8 +29,8 @@ wrangle_datasheet <- function(file) {
     purrr::map(\(x) lines[seq.int(x[1], x[2])]) |>
     # collapse sections to strings so they can be read as if they were files
     purrr::map(\(x) paste(x, collapse = "\n")) |>
-    purrr::map(\(x)
-      # leave empty column names so they can be removed
+    # leave empty column names so they can be removed
+    purrr::map(\(x) 
       readr::read_csv(x, show_col_types = FALSE, name_repair = "minimal")
     ) |>
     # Remove empty columns
@@ -42,24 +44,24 @@ wrangle_datasheet <- function(file) {
     "transects", "duff_litter_fbd", "vegetation", "woody_species"
   )
 
-  transects <- sections |> 
-    (`[`)(transect_data) |> 
+  transects <- sections |>
+    (`[`)(transect_data) |>
     purrr::reduce(dplyr::left_join, by = "transect") |>
     dplyr::mutate(
-      sections$site_data[c("site", "treatment")], 
-      .before = corner 
+      sections$site_data[c("site", "treatment")],
+      .before = corner
     ) |>
     dplyr::select(-transect)
 
   coarse_woody_debris <- sections$coarse_woody_debris |>
     dplyr::mutate(
-       sections$site_data[c("site", "treatment")], 
+      sections$site_data[c("site", "treatment")],
       .after = transect
     ) |>
     dplyr::left_join(sections$transects[c("transect", "corner", "azi")]) |>
     dplyr::select(c(site, treatment, corner, azi, dia, decay))
 
-  # Final output with three tables. These will be combined with corresponding 
+  # Final output with three tables. These will be combined with corresponding
   # tables from other datasheets.
   list(
     plots = sections$site_data,
@@ -68,3 +70,17 @@ wrangle_datasheet <- function(file) {
   )
 }
 
+data_dir <- "../data"
+
+# Combine fuels data for each plot
+#
+# This function expects all fuel datasheets to begin with "fuel" and end with
+# "csv". It loads all matching files in a given folder and returns the same
+# tables as `wrangle_datasheet`, but for all plots combined.
+
+combine_fuels_datasheets <- function(data_dir) {
+  files <- list.files(data_dir, pattern = "^fuel.*csv$", full.names = TRUE)
+  sheets_list <- purrr::map(files, wrangle_datasheet)
+  table_names <- purrr::set_names(names(sheets_list[[1]]))
+  purrr::map(table_names, \(x) purrr::list_rbind(purrr::map(sheets_list, x)))
+}
