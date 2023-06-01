@@ -84,3 +84,12 @@ combine_fuels_datasheets <- function(data_dir) {
   table_names <- purrr::set_names(names(sheets_list[[1]]))
   purrr::map(table_names, \(x) purrr::list_rbind(purrr::map(sheets_list, x)))
 }
+
+
+# this is how to pivot station data to longer format
+# d |>
+#   tidyr::pivot_longer(
+#     cols = !c(site, treatment, corner, azi),
+#     names_to = ".value",
+#     names_pattern = "(\\w+)[12]$"
+#   )
