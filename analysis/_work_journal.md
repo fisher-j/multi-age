@@ -1,3 +1,15 @@
+# 2023-06-01
+
+- Finish data entry
+
+# 2023-05-31
+
+- Figure showing fuel (and vegetation) sampling layout
+- Function to combine data from all datasheets
+- Refine data description text
+- continued data entry
+
+
 # 2023-5-26
 - Developed data input format
   - one file for each plot

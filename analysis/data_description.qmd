@@ -2,25 +2,44 @@
 title: Data description
 ---
 
-# Fuel data
+## Fuel data
 
 The fuel data was gathered in the spring of 2022 and 2023. The Firemon protocol
 was used as the basis for data collection which in turn employs the use of
-Brown's transects, with the addition of vegetation sample plots in which
-vegetative fuel loading is estimated within a 1 meter radius cylinder. While
-the firemon protocol specifies a 2 meter tall imaginary cylinder for
-quantifying surface fuels, because our resprouting trees were continuous with
-the ground, we used an imaginary cylinder with a variable height, up to the
-tallest shrub or sprout fuels that were continuous to the ground.
+Brown's transects, with the addition of duff, litter, and vegetation density
+sampling stations at two locations along each transect
+(@sec-sampling-cylinder). While the firemon protocol specifies a 2 meter tall
+imaginary cylinder for quantifying surface fuels, because our resprouting trees
+were continuous with the ground, we used an imaginary cylinder with a variable
+height, up to the tallest shrub or sprout fuels that were continuous to the
+ground.
 
-The notion of fuel bed depth is notably absent from the [Firemon protocol], so we
-added it by estimating an "average" fuel bed depth within the vegetation
+Two 10-meter transects were installed parallel to plot edges at each macro plot
+corner. Their near ends shared a point inset 10 meters from the corner, towards
+plot center (@fig-sampling-diagram). Downed, woody fuels in four size classes
+were counted starting from the far end of the transect and each fuel size class
+was counted for a specified lenght of the total transect (generally longer for
+larger fuels).
+
+At two stations along each transect, duff, litter, live and dead vegetation
+density (as height and percent cover), and fuel bed depth were assessed. Details
+of each of these values are described below (@sec-sampling-cylinder)
+
+The notion of fuel bed depth is notably absent from the [Firemon protocol], so
+we added it by estimating an "average" fuel bed depth within the vegetation
 sampling cylinder that included litter, and all downed woody debris.
 
 Dominant (well represented) woody speices were also recorded in the vegetation
 cylinders.
 
-## Data entry
+![A diagram of the fuel sampling design depicting 0.4 hectare macro plot, fuels
+transects, transect stations, and vegetation sub-plots. Large green circles are
+vegetation monitoring plots (which are mostly used for tracking species
+composition) and the small orange circles are transect stations where duff,
+litter, and live and dead vegetation density were
+measured.](./figures/fuel_sampling_layout.png){#fig-sampling-diagram}
+
+### Data entry
 
 Data was entered using Excel and exported as a UTF-8 csv. The file format
 (@fig-excel) was defined to resemble the physical datasheets as closely as
@@ -34,37 +53,40 @@ letters with underscores for spaces. In Excel, the #hashtag should go in the
 first cell of a row, with nothing esle in the row. There should be no blank rows
 before or after hashtags. The table sections used don't correlate 1:1 with
 physical datasheet tables. For instance, columns for "metermeark1" and
-"metermark2" were added to reflect the fact initially, we sampled vegetation at
-5 and 10 m, but later we moved this sampling to 5 and 9 m. The "1" and "2"
-following repeated variable names refers to one of these locations along the
-transect. A complete description of data varialbes can be found
-[below](#data-description)
+"metermark2" were added to reflect the fact that initially we sampled duff,
+litter and vegetation density (transect stations) at 5 and 10 m, but later we
+moved the stations to 5 and 9 m. The "1" and "2" following repeated variable
+names refers to one of these locations along the transect. The function used to
+wrangle these data matches rows based on transect number and columns based on
+column names. Thus, it is possible to rearrage the rows or columns within each
+section as long as column names are kept consistent and data for each transect
+have the same transect number. Following are the section and column labels used
+for each section of the plot data entry form with any notes regarding their
+format. A complete description of the data varialbes can be found in
+@sec-sampling-cylinder. 
 
-- `#site_info`
-  - site
-  - treatment
+- `#site_info` site treatment
   - date
   - onehr
   - tenhr
   - hundhr
   - thoushr
-  - trans_count
-  - notes *site level notes, should not contain commas*
+  - trans_count notes *(site level notes, should not contain commas)*
 
 - `#transects`
-  - transect *number 1 through 8, corresponds with transect column in other
-    sections*
+  - transect *(number 1 through 8, corresponds with transect column in other
+    sections)*
   - corner
   - azi
   - fwd_crew
-  - veg_crew *moved from vegetation table to here*
+  - veg_crew *(moved from vegetation table to here)*
   - slope
-  - metermark1 *location along transect of first veg station*
-  - metermark2 *location along transect of second veg station*
-  - notes *transect specific notes*
+  - metermark1 *(location along transect of first station)*
+  - metermark2 *(location along transect of second station)*
+  - notes *(transect specific notes)*
 
 - `#duff_litter_fbd`
-  - transect *number 1 through 8*
+  - transect *(number 1 through 8)*
   - onehr
   - tenhr
   - hundhr
@@ -76,7 +98,7 @@ transect. A complete description of data varialbes can be found
   - fbd2
 
 - `#vegetation`
-  - transect *number 1 though 8*
+  - transect *(number 1 though 8)*
   - live_woody1
   - dead_woody1
   - avg_w_ht1
@@ -92,8 +114,8 @@ transect. A complete description of data varialbes can be found
 
 - `#woody_species`
   - transect
-  - species1 *space-delimited list of 'significant' species*
-  - species2 *space-delimited list of 'significant' species*
+  - species1 *(space-delimited list of 'significant' species)*
+  - species2 *(space-delimited list of 'significant' species)*
 
 - `#coarse_woody_debris`
   - transect
@@ -106,27 +128,27 @@ table.](./figures/excel_data_example.jpg){#fig-excel}
 
 An R function is used to parse this file into individual tables. As part of this
 process, all the table sections whose rows have a 1:1 relationship with
-transects are combined into one wide table. 
+transects are combined into one wide table, based on the transect column.
 
 ```{r}
+#| code-fold: true
 #| file: "./scripts/process_datasheets.r"
 ```
 
-The resulting data looks like this
+The resulting data looks like this:
 
 ```{r}
 wrangle_datasheet("../data/fuel_waldon_gs.csv")
 ```
 
-While the wide format for the transect data is not ideal, it is convenient because
-we not working with many linked tables. This requires extra work at analysis time
-to expand data stored in column names. By this, I am refering to the columns
-which are followed by a number (1 or 2) which describe the location along
-the transect where the data was taken. To analze these data, they will first need to
-be pivoted into a longer format, where the station (1 or 2) becomes an explicit
-column.
+While the wide format for the transect data is not ideal, it is convenient
+because it reduces the number of tables we are dealing with. This will require
+extra work at analysis time to expand the data variables which are followed by a
+"1" or "2", which represent different stations (@sec-sampling-cylinder) on the
+same transect. To analze these data, they will first need to be pivoted into a
+longer format, where the station (1 or 2) becomes an explicit column.
 
-## Data variable descriptions
+### Data variable descriptions
 
 The following is a descripton of the data variables for each of the tables in
 the data list. So, the `$plots` heading refers to the table found in
@@ -134,19 +156,18 @@ the data list. So, the `$plots` heading refers to the table found in
 tables. [`$plots`](#plots) has plot level data including the lengths of
 transects (which are the same across all transects, but included for clarity).
 [`$transects`](#transects) contains all the fuel data associated with a given
-transect, including both vegetation stations, in wide format (one row for each
+transect, including both sampling stations, in wide format (one row for each
 transect). Finally, [`$coarse_woody`](#coarse_woody) contains coarse woody
 debris in a long format (multiple rows for each transect).
 
-### The vegetation sampling cylinder
+### Station sampling cylinder {#sec-sampling-cylinder}
 
-Reference is made the vegetation sampling cylinder below. It is an imaginary,
+Reference is made the station sampling cylinder below. It is an imaginary,
 vertical cylinder with a radius of 1 meter and a variable height equal to the
 maxiumm height of sprout or shrub vegetation within the cylinders radius. There
-are two vegetation sampling cylinders on each transect and their centers are
-defined by the transects two metermarks. Duff, litter, and fuel bed depth in
-addition to the vegetation measurements, are all recorded within these
-cylinders.
+are two sampling cylinders on each transect and their centers are defined by the
+transects' two metermarks. Duff, litter, and fuel bed depth in addition to the
+vegetation measurements, are all recorded within these cylinders.
 
 ### `$plots`
 
@@ -181,16 +202,16 @@ cylinders.
 |hundhr       |Count of down woody fuels >= 2.5 and < 8 cm|
 |duff_litter1 |Combined duff and litter depth from a representative location within a 1-meter radius circle centered at metermark, cm|
 |pct_litter1  |Percent of duff_litter depth compose of litter: percent|
-|fbd1         |Estimated average height of litter and downed woody debris within the vegetation sampling cylinder, 1 m radius, centered at metermark|
+|fbd1         |Estimated average height of litter and downed woody debris within the sampling cylinder, 1 m radius, centered at metermark|
 |duff_litter2 ||
 |pct_litter2  |            |
 |fbd2         |            |
 |live_woody1  |Total projected ground cover of all live woody plant parts within 1-meter-radius sampling cylinder of height equal to the height of the shrub or sprout vegetaion within the cylinders radius, 0-100 percent|
-|dead_woody1  |Total projected ground cover of all dead woody plant parts connected to live or standing dead plants, within the vegetation sampling cylinder 0-100 percent|
-|avg_w_ht1    |Average maximum height of all live and dead woody plants in vegetation sampling cylinder(see Estimating Height in Firemon protocol)|
-|live_herb1   |Total projected ground cover of live herbs in the vegetation sampling cylinder|
-|dead_herb1   |Total projected ground cover of dead herbs in the vegetation sampling cylinder|
-|avg_h_ht1    |Average height of live and dead herbs in the vegetation sampling cylinder|
+|dead_woody1  |Total projected ground cover of all dead woody plant parts connected to live or standing dead plants, within the sampling cylinder 0-100 percent|
+|avg_w_ht1    |Average maximum height of all live and dead woody plants in sampling cylinder (see Estimating Height in Firemon protocol)|
+|live_herb1   |Total projected ground cover of live herbs in the sampling cylinder|
+|dead_herb1   |Total projected ground cover of dead herbs in the sampling cylinder|
+|avg_h_ht1    |Average maximum height of live and dead herbs in the sampling cylinder|
 |live_woody2  |            |
 |dead_woody2  |            |
 |avg_w_ht2    |            |
