@@ -1,3 +1,9 @@
+# 2023-06-05
+
+- Start calculate fuel loading
+- some background research on the theory behind planar intercept
+- compile fuel particle parameters from multiple sources
+
 # 2023-06-01
 
 - Finish data entry

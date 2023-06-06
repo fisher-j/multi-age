@@ -1,0 +1,129 @@
+---
+title: Calculate fuel loading
+---
+
+We used the line intercept method for tallying fine and coarse woody debris
+[@vanwagnerPracticalAspectsLine1982; @brownHandbookInventoryingDowned1974]. In
+essence, with this technique we are recording the diameters of all dead, downed
+woody pieces that cross an imaginary sampling plane of a specified length and
+height. These diameters are convered to crossectional areas which can then be
+extended to a volume by multiplying by a width. Finally, volume can be converted
+to mass using specific gravity. This method requires the assumptions that a
+particle is (1) cylidrical, (2) horizontal, and (3) perpendicular to the
+sampling plane. While (1) may be a reasonable assumption for many woody
+particles, 2 and 3 are less likely. For 2, we use a factor which allows us to
+trade out this assumption, for the assumption that pieces are randomly oriented
+in the horizontal plane. For 3, we use a correction factor ($\sec \theta$) based
+estimates of average paticle inclination ($\theta$).
+
+In practice, the diameter of each piece is not measured, but tallied by size
+class (up to a certain size, after which it is prudent to measure individual
+pieces). We used the common time-lag size classes < 0.635 cm; 0.635 - 2.54 cm;
+and 2.54 - 7.62 cm. All pieces larger than 7.62 cm were measured to the nearest
+cm. This requires estimating an average diameter (quadratic mean diameter is
+used) for pieces in each category which can be done using emperical data
+gathered from specific forest types [@brownHandbookInventoryingDowned1974], or
+estimated from the sampling distribution of the tallies themselves
+[@vanwagnerPracticalAspectsLine1982]. 
+
+The resulting equation for estimating fuel load (Mg) is: 
+
+$$Load = \frac{\sum d^2  G  k  a  c}{l}$$
+
+where d is diameter (cm), G is specific gravity, k is a constant which accounts
+for random horizontal particle orientation, the density of water and unit
+conversion factors, a is the particle inclination correction factor, c is the
+transect slope correction factor and l is the transect length.
+
+The "composite" values for G (for both sound and rotten wood), a, and the
+quadratic mean diameter of a size class (used for d) where provided by
+@brownHandbookInventoryingDowned1974 for use when site specific data are
+unknown. The values given a pertain to "non-slash". Somewhat larger values are
+used for slash fuel beds.
+
+```{r}
+#| code-fold: true
+
+params <- dplyr::tribble(
+  ~source,        ~parameter, ~onehr, ~tenhr, ~hundhr, ~thoushr_s, ~thoushr_r,
+  "brown",        "d2",       0.10,   1.86,   17.81,   NA,         NA,
+  "brown",        "G",        0.48,   0.48,   0.40,    0.40,       0.30,
+  "brown",        "a",        1.13,   1.13,   1.13,    1.00,       1.00,
+  "vanwagtendonk","d2",       0.12,   1.28,   14.52,   NA,         NA,
+  "vanwagtendonk","G",        0.58,   0.57,   0.53,    0.47,       0.36,
+  "vanwagtendonk","a",        1.03,   1.02,   1.02,    1.02,       1.02,
+)
+
+glebocki <- dplyr::tribble(
+  ~id, ~parameter, ~onehr, ~tenhr, ~hundhr, ~thoushr_s, ~thoushr_r,
+  "85-0405", "a", 1.03, 1.03, 1.02, 1.01, 1.00, 
+  "85-0405", "d2", 0.13, 1.32, 16.13,  NA, NA,
+  "85-0405", "G", 0.45, 0.46, 0.42, 0.38, 0.37, 
+  "85-0607", "a", 1.02, 1.02, 1.02, 1.01, 1.01, 
+  "85-0607", "d2", 0.10, 1.21, 20.90,  NA, NA,
+  "85-0607", "G", 0.53, 0.48, 0.40, 0.33, 0.25, 
+  "85-0809", "a", 1.02, 1.02, 1.02, 1.01, 1.00, 
+  "85-0809", "d2", 0.12, 1.27, 19.24,  NA, NA,
+  "85-0809", "G", 0.44, 0.49, 0.38, 0.46, 0.28, 
+  "85-1011", "a", 1.04, 1.02, 1.03, 1.01, 1.00, 
+  "85-1011", "d2", 0.10, 1.48, 21.72,  NA, NA,
+  "85-1011", "G", 0.51, 0.53, 0.43, 0.47, 0.32, 
+  "85-C", "a", 1.02, 1.02, 1.01, 1.02, 1.02, 
+  "85-C", "d2", 0.12, 1.28, 17.74,  NA, NA,
+  "85-C", "G", 0.47, 0.41, 0.31, 0.30, 0.30, 
+  "9192-0405", "a", 1.02, 1.02, 1.01, 1.01, 1.00, 
+  "9192-0405", "d2", 0.12, 1.45, 20.68,  NA, NA,
+  "9192-0405", "G", 0.42, 0.51, 0.41, 0.36, 0.29, 
+  "9192-0607", "a", 1.03, 1.05, 1.02, 1.01, 1.01, 
+  "9192-0607", "d2", 0.12, 1.52, 19.42,  NA, NA,
+  "9192-0607", "G", 0.46, 0.43, 0.43, 0.37, 0.27, 
+  "9192-0809", "a", 1.03, 1.04, 1.01, 1.01, 1.00, 
+  "9192-0809", "d2", 0.11, 1.44, 17.69,  NA, NA,
+  "9192-0809", "G", 0.47, 0.51, 0.44, 0.46, 0.41, 
+  "9192-1011", "a", 1.02, 1.03, 1.01, 1.00, 1.00, 
+  "9192-1011", "d2", 0.13, 1.64, 15.32,  NA, NA,
+  "9192-1011", "G", 0.49, 0.52, 0.47, 0.43, 0.32, 
+  "9192-C", "a", 1.04, 1.02, 1.03, 1.01, 1.01, 
+  "9192-C", "d2", 0.12, 1.41, 14.50,  NA, NA,
+  "9192-C", "G", 0.46, 0.44, 0.43, 0.39, 0.28, 
+  "97-0809", "a", 1.06, 1.04, 1.01, 1.01, 1.00, 
+  "97-0809", "d2", 0.12, 1.81, 20.35,  NA, NA,
+  "97-0809", "G", 0.46, 0.52, 0.46, 0.47, 0.45, 
+  "97-1011", "a", 1.11, 1.29, 1.01, 1.01, 1.04, 
+  "97-1011", "d2", 0.11, 1.46, 18.49,  NA, NA,
+  "97-1011", "G", 0.48, 0.56, 0.46, 0.42, 0.41, 
+  "97-C", "a", 1.02, 1.01, 1.03, 1.08, 1.00, 
+  "97-C", "d2", 0.12, 1.40, 18.63,  NA, NA,
+  "97-C", "G", 0.39, 0.36, 0.44, 0.37, 0.37, 
+)
+
+summarize_glebocki <- function(data) {
+  data |>
+    dplyr::group_by(parameter) |>
+    dplyr::summarize(across(where(is.numeric), ~round(mean(.x), 2))) |>
+    dplyr::mutate(source = "glebocki", .before = 1)
+}
+
+params2 <- dplyr::bind_rows(params, summarize_glebocki(glebocki)) |> 
+  dplyr::arrange(parameter)
+```
+
+A study of Sierra Nevada conifers found these values to vary by species, and
+estimates of fuel loading ranged from 40% less to 8% more than when using those
+suggested by @brownHandbookInventoryingDowned1974. A study of young, treated
+redwood and Douglas-fir stands [@glebockiFuelLoadingMoisture2015] found similar
+values for G to those of @brownHandbookInventoryingDowned1974, and values for a
+much closer to those of @vanwagtendonkPhysicalPropertiesWoody1996
+(@tbl-params).
+
+```{r}
+#| echo: false
+#| label: tbl-params
+#| tbl-cap: >
+#|   Physical properties of woody fuel particles used for calculating fuel
+#|   loading from several different sources in the literature.
+
+params2 |> knitr::kable()
+```
+
+

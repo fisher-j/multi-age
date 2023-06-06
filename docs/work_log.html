@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.290">
+<meta name="generator" content="quarto-1.3.361">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./data_description.html" rel="prev">
+<link href="./calculate_fuel_loading.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -56,7 +56,8 @@ ul.task-list li input[type="checkbox"] {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
@@ -72,10 +73,10 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./work_log.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Work log</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./work_log.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Work log</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -111,8 +112,14 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./calculate_fuel_loading.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Calculate fuel loading</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./work_log.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
   </div>
 </li>
     </ul>
@@ -125,11 +132,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">2023-06-01</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">2023-05-31</a></li>
-  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">2023-5-26</a></li>
-  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">2023-05-23</a></li>
-  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">2023-05-22</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">2023-06-05</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">2023-06-01</a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">2023-05-31</a></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">2023-5-26</a></li>
+  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">2023-05-23</a></li>
+  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">2023-05-22</a></li>
   </ul>
 </nav>
     </div>
@@ -138,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Work log</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Work log</span></h1>
 </div>
 
 
@@ -155,12 +163,20 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em>The following is a log of the work completed for this project</em></p>
 <section id="section" class="level1">
+<h1>2023-06-05</h1>
+<ul>
+<li>Start calculate fuel loading</li>
+<li>some background research on the theory behind planar intercept</li>
+<li>compile fuel particle parameters from multiple sources</li>
+</ul>
+</section>
+<section id="section-1" class="level1">
 <h1>2023-06-01</h1>
 <ul>
 <li>Finish data entry</li>
 </ul>
 </section>
-<section id="section-1" class="level1">
+<section id="section-2" class="level1">
 <h1>2023-05-31</h1>
 <ul>
 <li>Figure showing fuel (and vegetation) sampling layout</li>
@@ -169,7 +185,7 @@ ul.task-list li input[type="checkbox"] {
 <li>continued data entry</li>
 </ul>
 </section>
-<section id="section-2" class="level1">
+<section id="section-3" class="level1">
 <h1>2023-5-26</h1>
 <ul>
 <li>Developed data input format
@@ -181,13 +197,13 @@ ul.task-list li input[type="checkbox"] {
 <li>Fuel data entered for 7 replicates</li>
 </ul>
 </section>
-<section id="section-3" class="level1">
+<section id="section-4" class="level1">
 <h1>2023-05-23</h1>
 <ul>
 <li>work on development environment for coding</li>
 </ul>
 </section>
-<section id="section-4" class="level1">
+<section id="section-5" class="level1">
 <h1>2023-05-22</h1>
 <ul>
 <li>Initialized project as a quarto book
@@ -437,8 +453,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./data_description.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data description</span></span>
+      <a href="./calculate_fuel_loading.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Calculate fuel loading</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
