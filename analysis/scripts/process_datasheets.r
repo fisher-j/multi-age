@@ -60,6 +60,9 @@ wrangle_datasheet <- function(file) {
     ) |>
     dplyr::left_join(sections$transects[c("transect", "corner", "azi")]) |>
     dplyr::select(c(site, treatment, corner, azi, dia, decay))
+  # I'll add a check to make sure that all transects and plots are unique
+  warn_duplicates(transects, site, treatment, corner, azi)
+  warn_duplicates(plots, site, treatment)
 
   # Final output with three tables. These will be combined with corresponding
   # tables from other datasheets.
