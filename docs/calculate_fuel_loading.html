@@ -206,77 +206,128 @@ div.csl-indent {
 
 </header>
 
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tibble' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyr' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'readr' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'purrr' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'dplyr' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'stringr' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'forcats' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'lubridate' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
 <p>We used the line intercept method for tallying fine and coarse woody debris <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982 brownHandbookInventoryingDowned1974">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>; <a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">Brown 1974</a>)</span>. In essence, with this technique we are recording the diameters of all dead, downed woody pieces that cross an imaginary sampling plane of a specified length and height. These diameters are convered to crossectional areas which can then be extended to a volume by multiplying by a width. Finally, volume can be converted to mass using specific gravity. This method requires the assumptions that a particle is (1) cylidrical, (2) horizontal, and (3) perpendicular to the sampling plane. While (1) may be a reasonable assumption for many woody particles, 2 and 3 are less likely. For 2, we use a factor which allows us to trade out this assumption, for the assumption that pieces are randomly oriented in the horizontal plane. For 3, we use a correction factor (<span class="math inline">\(\sec \theta\)</span>) based estimates of average paticle inclination (<span class="math inline">\(\theta\)</span>).</p>
 <p>In practice, the diameter of each piece is not measured, but tallied by size class (up to a certain size, after which it is prudent to measure individual pieces). We used the common time-lag size classes &lt; 0.635 cm; 0.635 - 2.54 cm; and 2.54 - 7.62 cm. All pieces larger than 7.62 cm were measured to the nearest cm. This requires estimating an average diameter (quadratic mean diameter is used) for pieces in each category which can be done using emperical data gathered from specific forest types <span class="citation" data-cites="brownHandbookInventoryingDowned1974">(<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">Brown 1974</a>)</span>, or estimated from the sampling distribution of the tallies themselves <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>)</span>.</p>
 <p>The resulting equation for estimating fuel load (Mg) is:</p>
-<p><span class="math display">\[Load = \frac{\sum d^2  G  k  a  c}{l}\]</span></p>
-<p>where d is diameter (cm), G is specific gravity, k is a constant which accounts for random horizontal particle orientation, the density of water and unit conversion factors, a is the particle inclination correction factor, c is the transect slope correction factor and l is the transect length.</p>
+<p><span id="eq-load"><span class="math display">\[Load = \frac{\sum d^2  G  k  a  c}{l} \tag{3.1}\]</span></span></p>
+<p>where d is diameter (cm), G is specific gravity, k=1.234 is a constant which accounts for random horizontal particle orientation, the density of water and unit conversion factors <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>)</span>, a is the particle inclination correction factor, c is the transect slope correction factor and l is the transect length. The calculation of a is described above and c is calculated as <span class="math inline">\(c = \sqrt{1 + (slope ratio)^2}\)</span>.</p>
+<p>Thus in R, our basic fuel load function will look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>simple_load <span class="ot">&lt;-</span> <span class="cf">function</span>(sum_d2, G, <span class="at">k =</span> <span class="fl">1.234</span>, a, percent_slope, l) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">+</span> (percent_slope <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  (sum_d2 <span class="sc">*</span> G <span class="sc">*</span> k <span class="sc">*</span> a <span class="sc">*</span> c) <span class="sc">/</span> l</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>The “composite” values for G (for both sound and rotten wood), a, and the quadratic mean diameter of a size class (used for d) where provided by <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span> for use when site specific data are unknown. The values given a pertain to “non-slash”. Somewhat larger values are used for slash fuel beds.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tribble</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source,        <span class="sc">~</span>parameter, <span class="sc">~</span>onehr, <span class="sc">~</span>tenhr, <span class="sc">~</span>hundhr, <span class="sc">~</span>thoushr_s, <span class="sc">~</span>thoushr_r,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"brown"</span>,        <span class="st">"d2"</span>,       <span class="fl">0.10</span>,   <span class="fl">1.86</span>,   <span class="fl">17.81</span>,   <span class="cn">NA</span>,         <span class="cn">NA</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"brown"</span>,        <span class="st">"G"</span>,        <span class="fl">0.48</span>,   <span class="fl">0.48</span>,   <span class="fl">0.40</span>,    <span class="fl">0.40</span>,       <span class="fl">0.30</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"brown"</span>,        <span class="st">"a"</span>,        <span class="fl">1.13</span>,   <span class="fl">1.13</span>,   <span class="fl">1.13</span>,    <span class="fl">1.00</span>,       <span class="fl">1.00</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vanwagtendonk"</span>,<span class="st">"d2"</span>,       <span class="fl">0.12</span>,   <span class="fl">1.28</span>,   <span class="fl">14.52</span>,   <span class="cn">NA</span>,         <span class="cn">NA</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vanwagtendonk"</span>,<span class="st">"G"</span>,        <span class="fl">0.58</span>,   <span class="fl">0.57</span>,   <span class="fl">0.53</span>,    <span class="fl">0.47</span>,       <span class="fl">0.36</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vanwagtendonk"</span>,<span class="st">"a"</span>,        <span class="fl">1.03</span>,   <span class="fl">1.02</span>,   <span class="fl">1.02</span>,    <span class="fl">1.02</span>,       <span class="fl">1.02</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>glebocki <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tribble</span>(</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>id, <span class="sc">~</span>parameter, <span class="sc">~</span>onehr, <span class="sc">~</span>tenhr, <span class="sc">~</span>hundhr, <span class="sc">~</span>thoushr_s, <span class="sc">~</span>thoushr_r,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0405"</span>, <span class="st">"a"</span>, <span class="fl">1.03</span>, <span class="fl">1.03</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0405"</span>, <span class="st">"d2"</span>, <span class="fl">0.13</span>, <span class="fl">1.32</span>, <span class="fl">16.13</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0405"</span>, <span class="st">"G"</span>, <span class="fl">0.45</span>, <span class="fl">0.46</span>, <span class="fl">0.42</span>, <span class="fl">0.38</span>, <span class="fl">0.37</span>, </span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0607"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0607"</span>, <span class="st">"d2"</span>, <span class="fl">0.10</span>, <span class="fl">1.21</span>, <span class="fl">20.90</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0607"</span>, <span class="st">"G"</span>, <span class="fl">0.53</span>, <span class="fl">0.48</span>, <span class="fl">0.40</span>, <span class="fl">0.33</span>, <span class="fl">0.25</span>, </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0809"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0809"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.27</span>, <span class="fl">19.24</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0809"</span>, <span class="st">"G"</span>, <span class="fl">0.44</span>, <span class="fl">0.49</span>, <span class="fl">0.38</span>, <span class="fl">0.46</span>, <span class="fl">0.28</span>, </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-1011"</span>, <span class="st">"a"</span>, <span class="fl">1.04</span>, <span class="fl">1.02</span>, <span class="fl">1.03</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-1011"</span>, <span class="st">"d2"</span>, <span class="fl">0.10</span>, <span class="fl">1.48</span>, <span class="fl">21.72</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-1011"</span>, <span class="st">"G"</span>, <span class="fl">0.51</span>, <span class="fl">0.53</span>, <span class="fl">0.43</span>, <span class="fl">0.47</span>, <span class="fl">0.32</span>, </span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-C"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, </span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-C"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.28</span>, <span class="fl">17.74</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-C"</span>, <span class="st">"G"</span>, <span class="fl">0.47</span>, <span class="fl">0.41</span>, <span class="fl">0.31</span>, <span class="fl">0.30</span>, <span class="fl">0.30</span>, </span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0405"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0405"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.45</span>, <span class="fl">20.68</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0405"</span>, <span class="st">"G"</span>, <span class="fl">0.42</span>, <span class="fl">0.51</span>, <span class="fl">0.41</span>, <span class="fl">0.36</span>, <span class="fl">0.29</span>, </span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0607"</span>, <span class="st">"a"</span>, <span class="fl">1.03</span>, <span class="fl">1.05</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, </span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0607"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.52</span>, <span class="fl">19.42</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0607"</span>, <span class="st">"G"</span>, <span class="fl">0.46</span>, <span class="fl">0.43</span>, <span class="fl">0.43</span>, <span class="fl">0.37</span>, <span class="fl">0.27</span>, </span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0809"</span>, <span class="st">"a"</span>, <span class="fl">1.03</span>, <span class="fl">1.04</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0809"</span>, <span class="st">"d2"</span>, <span class="fl">0.11</span>, <span class="fl">1.44</span>, <span class="fl">17.69</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0809"</span>, <span class="st">"G"</span>, <span class="fl">0.47</span>, <span class="fl">0.51</span>, <span class="fl">0.44</span>, <span class="fl">0.46</span>, <span class="fl">0.41</span>, </span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-1011"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.03</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, <span class="fl">1.00</span>, </span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-1011"</span>, <span class="st">"d2"</span>, <span class="fl">0.13</span>, <span class="fl">1.64</span>, <span class="fl">15.32</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-1011"</span>, <span class="st">"G"</span>, <span class="fl">0.49</span>, <span class="fl">0.52</span>, <span class="fl">0.47</span>, <span class="fl">0.43</span>, <span class="fl">0.32</span>, </span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-C"</span>, <span class="st">"a"</span>, <span class="fl">1.04</span>, <span class="fl">1.02</span>, <span class="fl">1.03</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, </span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-C"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.41</span>, <span class="fl">14.50</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-C"</span>, <span class="st">"G"</span>, <span class="fl">0.46</span>, <span class="fl">0.44</span>, <span class="fl">0.43</span>, <span class="fl">0.39</span>, <span class="fl">0.28</span>, </span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-0809"</span>, <span class="st">"a"</span>, <span class="fl">1.06</span>, <span class="fl">1.04</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-0809"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.81</span>, <span class="fl">20.35</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-0809"</span>, <span class="st">"G"</span>, <span class="fl">0.46</span>, <span class="fl">0.52</span>, <span class="fl">0.46</span>, <span class="fl">0.47</span>, <span class="fl">0.45</span>, </span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-1011"</span>, <span class="st">"a"</span>, <span class="fl">1.11</span>, <span class="fl">1.29</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.04</span>, </span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-1011"</span>, <span class="st">"d2"</span>, <span class="fl">0.11</span>, <span class="fl">1.46</span>, <span class="fl">18.49</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-1011"</span>, <span class="st">"G"</span>, <span class="fl">0.48</span>, <span class="fl">0.56</span>, <span class="fl">0.46</span>, <span class="fl">0.42</span>, <span class="fl">0.41</span>, </span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-C"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.03</span>, <span class="fl">1.08</span>, <span class="fl">1.00</span>, </span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-C"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.40</span>, <span class="fl">18.63</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-C"</span>, <span class="st">"G"</span>, <span class="fl">0.39</span>, <span class="fl">0.36</span>, <span class="fl">0.44</span>, <span class="fl">0.37</span>, <span class="fl">0.37</span>, </span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>summarize_glebocki <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(parameter) <span class="sc">|&gt;</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">round</span>(<span class="fu">mean</span>(.x), <span class="dv">2</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>params2 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(params, <span class="fu">summarize_glebocki</span>(glebocki)) <span class="sc">|&gt;</span> </span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(parameter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source,        <span class="sc">~</span>parameter, <span class="sc">~</span>onehr, <span class="sc">~</span>tenhr, <span class="sc">~</span>hundhr, <span class="sc">~</span>thoushr_s, <span class="sc">~</span>thoushr_r,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"brown"</span>,        <span class="st">"d2"</span>,       <span class="fl">0.10</span>,   <span class="fl">1.86</span>,   <span class="fl">17.81</span>,   <span class="cn">NA</span>,         <span class="cn">NA</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"brown"</span>,        <span class="st">"G"</span>,        <span class="fl">0.48</span>,   <span class="fl">0.48</span>,   <span class="fl">0.40</span>,    <span class="fl">0.40</span>,       <span class="fl">0.30</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"brown"</span>,        <span class="st">"a"</span>,        <span class="fl">1.13</span>,   <span class="fl">1.13</span>,   <span class="fl">1.13</span>,    <span class="fl">1.00</span>,       <span class="fl">1.00</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vanwagtendonk"</span>,<span class="st">"d2"</span>,       <span class="fl">0.12</span>,   <span class="fl">1.28</span>,   <span class="fl">14.52</span>,   <span class="cn">NA</span>,         <span class="cn">NA</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vanwagtendonk"</span>,<span class="st">"G"</span>,        <span class="fl">0.58</span>,   <span class="fl">0.57</span>,   <span class="fl">0.53</span>,    <span class="fl">0.47</span>,       <span class="fl">0.36</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vanwagtendonk"</span>,<span class="st">"a"</span>,        <span class="fl">1.03</span>,   <span class="fl">1.02</span>,   <span class="fl">1.02</span>,    <span class="fl">1.02</span>,       <span class="fl">1.02</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>glebocki <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>id, <span class="sc">~</span>parameter, <span class="sc">~</span>onehr, <span class="sc">~</span>tenhr, <span class="sc">~</span>hundhr, <span class="sc">~</span>thoushr_s, <span class="sc">~</span>thoushr_r,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0405"</span>, <span class="st">"a"</span>, <span class="fl">1.03</span>, <span class="fl">1.03</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0405"</span>, <span class="st">"d2"</span>, <span class="fl">0.13</span>, <span class="fl">1.32</span>, <span class="fl">16.13</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0405"</span>, <span class="st">"G"</span>, <span class="fl">0.45</span>, <span class="fl">0.46</span>, <span class="fl">0.42</span>, <span class="fl">0.38</span>, <span class="fl">0.37</span>, </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0607"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, </span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0607"</span>, <span class="st">"d2"</span>, <span class="fl">0.10</span>, <span class="fl">1.21</span>, <span class="fl">20.90</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0607"</span>, <span class="st">"G"</span>, <span class="fl">0.53</span>, <span class="fl">0.48</span>, <span class="fl">0.40</span>, <span class="fl">0.33</span>, <span class="fl">0.25</span>, </span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0809"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0809"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.27</span>, <span class="fl">19.24</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0809"</span>, <span class="st">"G"</span>, <span class="fl">0.44</span>, <span class="fl">0.49</span>, <span class="fl">0.38</span>, <span class="fl">0.46</span>, <span class="fl">0.28</span>, </span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-1011"</span>, <span class="st">"a"</span>, <span class="fl">1.04</span>, <span class="fl">1.02</span>, <span class="fl">1.03</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-1011"</span>, <span class="st">"d2"</span>, <span class="fl">0.10</span>, <span class="fl">1.48</span>, <span class="fl">21.72</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-1011"</span>, <span class="st">"G"</span>, <span class="fl">0.51</span>, <span class="fl">0.53</span>, <span class="fl">0.43</span>, <span class="fl">0.47</span>, <span class="fl">0.32</span>, </span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-C"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, </span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-C"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.28</span>, <span class="fl">17.74</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-C"</span>, <span class="st">"G"</span>, <span class="fl">0.47</span>, <span class="fl">0.41</span>, <span class="fl">0.31</span>, <span class="fl">0.30</span>, <span class="fl">0.30</span>, </span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0405"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0405"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.45</span>, <span class="fl">20.68</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0405"</span>, <span class="st">"G"</span>, <span class="fl">0.42</span>, <span class="fl">0.51</span>, <span class="fl">0.41</span>, <span class="fl">0.36</span>, <span class="fl">0.29</span>, </span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0607"</span>, <span class="st">"a"</span>, <span class="fl">1.03</span>, <span class="fl">1.05</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, </span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0607"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.52</span>, <span class="fl">19.42</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0607"</span>, <span class="st">"G"</span>, <span class="fl">0.46</span>, <span class="fl">0.43</span>, <span class="fl">0.43</span>, <span class="fl">0.37</span>, <span class="fl">0.27</span>, </span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0809"</span>, <span class="st">"a"</span>, <span class="fl">1.03</span>, <span class="fl">1.04</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0809"</span>, <span class="st">"d2"</span>, <span class="fl">0.11</span>, <span class="fl">1.44</span>, <span class="fl">17.69</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0809"</span>, <span class="st">"G"</span>, <span class="fl">0.47</span>, <span class="fl">0.51</span>, <span class="fl">0.44</span>, <span class="fl">0.46</span>, <span class="fl">0.41</span>, </span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-1011"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.03</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, <span class="fl">1.00</span>, </span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-1011"</span>, <span class="st">"d2"</span>, <span class="fl">0.13</span>, <span class="fl">1.64</span>, <span class="fl">15.32</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-1011"</span>, <span class="st">"G"</span>, <span class="fl">0.49</span>, <span class="fl">0.52</span>, <span class="fl">0.47</span>, <span class="fl">0.43</span>, <span class="fl">0.32</span>, </span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-C"</span>, <span class="st">"a"</span>, <span class="fl">1.04</span>, <span class="fl">1.02</span>, <span class="fl">1.03</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, </span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-C"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.41</span>, <span class="fl">14.50</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-C"</span>, <span class="st">"G"</span>, <span class="fl">0.46</span>, <span class="fl">0.44</span>, <span class="fl">0.43</span>, <span class="fl">0.39</span>, <span class="fl">0.28</span>, </span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-0809"</span>, <span class="st">"a"</span>, <span class="fl">1.06</span>, <span class="fl">1.04</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-0809"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.81</span>, <span class="fl">20.35</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-0809"</span>, <span class="st">"G"</span>, <span class="fl">0.46</span>, <span class="fl">0.52</span>, <span class="fl">0.46</span>, <span class="fl">0.47</span>, <span class="fl">0.45</span>, </span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-1011"</span>, <span class="st">"a"</span>, <span class="fl">1.11</span>, <span class="fl">1.29</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.04</span>, </span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-1011"</span>, <span class="st">"d2"</span>, <span class="fl">0.11</span>, <span class="fl">1.46</span>, <span class="fl">18.49</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-1011"</span>, <span class="st">"G"</span>, <span class="fl">0.48</span>, <span class="fl">0.56</span>, <span class="fl">0.46</span>, <span class="fl">0.42</span>, <span class="fl">0.41</span>, </span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-C"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.03</span>, <span class="fl">1.08</span>, <span class="fl">1.00</span>, </span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-C"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.40</span>, <span class="fl">18.63</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>,</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-C"</span>, <span class="st">"G"</span>, <span class="fl">0.39</span>, <span class="fl">0.36</span>, <span class="fl">0.44</span>, <span class="fl">0.37</span>, <span class="fl">0.37</span>, </span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Currently this function summarizes data across all Glebocki plots, I could #</span></span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a><span class="co"># adapt this later if I only want to include some plots.</span></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>summarize_glebocki <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(parameter) <span class="sc">|&gt;</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">round</span>(<span class="fu">mean</span>(.x), <span class="dv">2</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>params2 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(params, <span class="fu">summarize_glebocki</span>(glebocki)) <span class="sc">|&gt;</span> </span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(parameter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>A study of Sierra Nevada conifers found these values to vary by species, and estimates of fuel loading ranged from 40% less to 8% more than when using those suggested by <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. A study of young, treated redwood and Douglas-fir stands <span class="citation" data-cites="glebockiFuelLoadingMoisture2015">(<a href="#ref-glebockiFuelLoadingMoisture2015" role="doc-biblioref">Glebocki 2015</a>)</span> found similar values for G to those of <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>, and values for a much closer to those of <span class="citation" data-cites="vanwagtendonkPhysicalPropertiesWoody1996">Van Wagtendonk, Benedict, and Sydoriak (<a href="#ref-vanwagtendonkPhysicalPropertiesWoody1996" role="doc-biblioref">1996</a>)</span> (<a href="#tbl-params">Table&nbsp;<span>3.1</span></a>).</p>
@@ -381,6 +432,138 @@ div.csl-indent {
 </tbody>
 </table>
 </div>
+</div>
+</div>
+<p>The above information will allow us to calculate fuel loading for fine and coarse woody debris. First we’ll load our data and get the FWD (and the fuel particle parameters) in a long format for easier calculations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/process_datasheets.r"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">combine_fuels_datasheets</span>(<span class="st">"../data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Duplicates detected in `transects`
+camp6 ld e 315: 2
+camp6 ld n 315: 2
+camp6 ld s 315: 2
+camp6 ld w 315: 2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use this to reduce the amount of typing when referring to transects</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>transectid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"corner"</span>, <span class="st">"azi"</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>get_particle_params <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">params =</span> params2, source) {</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  params[params<span class="sc">$</span>source <span class="sc">==</span> source, <span class="sc">!</span><span class="fu">names</span>(params) <span class="sc">%in%</span> <span class="st">"source"</span>] <span class="sc">|&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(parameter), <span class="at">names_to =</span> <span class="st">"class"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> parameter, <span class="at">values_from =</span> value)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(d<span class="sc">$</span>plots, site, treatment, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># move onehr, tenhr, etc to new column and create new columns for transect</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># length and particle counts</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"count|len"</span>),</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">get_particle_params</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(site, treatment)`
+Joining with `by = join_by(class)`</code></pre>
+</div>
+</div>
+<p>Fine woody debris fuel loading can then be calculated.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fwd <span class="ot">&lt;-</span> d1 <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> <span class="fu">simple_load</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">sum_d2 =</span> count <span class="sc">*</span> d2,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">l =</span> length,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">percent_slope =</span> slope,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">G =</span> G,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">a =</span> a</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Coarse woody debris is already in a long format so we don’t need to pivot longer, but we will summarize the data for each transect by getting the sum of squared diameters. Also, we only have parameters for “sound” and “rotten” particles, so anything over decay class 3 will be considered “rotten”. Finally, we need to join in transect slopes, and transect lengths.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: fix camp6 ld azimuths</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/test_funs.r"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">warn_duplicates</span>(d<span class="sc">$</span>transects, site, treatment, corner, azi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Duplicates detected in `d$transects`
+camp6 ld e 315: 2
+camp6 ld n 315: 2
+camp6 ld s 315: 2
+camp6 ld w 315: 2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>coarse_woody <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">if_else</span>(decay <span class="sc">&gt;</span> <span class="dv">3</span>, <span class="st">"thoushr_r"</span>, <span class="st">"thoushr_s"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, treatment, corner, azi, class) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">sum_d2 =</span> <span class="fu">sum</span>(dia<span class="sc">^</span><span class="dv">2</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d<span class="sc">$</span>transects[<span class="fu">c</span>(transectid, <span class="st">"slope"</span>)]) <span class="sc">|&gt;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d<span class="sc">$</span>plots[<span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"thoushr_length"</span>)]) <span class="sc">|&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">get_particle_params</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> <span class="fu">simple_load</span>(</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">sum_d2 =</span> sum_d2,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">G =</span> G,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">a =</span> a,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">l =</span> thoushr_length,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">percent_slope =</span> slope</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(site, treatment, corner, azi)`</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in left_join(summarize(group_by(mutate(d$coarse_woody, class = if_else(decay &gt; : Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 22 of `x` matches multiple rows in `y`.
+ℹ Row 8 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(site, treatment)`
+Joining with `by = join_by(class)`</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 152 × 12
+   site  treatment corner   azi class    sum_d2 slope thoushr_length     G     a
+   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 camp6 gs        e        225 thoushr…  173      72             10  0.4   1.02
+ 2 camp6 gs        e        315 thoushr…   72.2     1             10  0.33  1.01
+ 3 camp6 gs        e        315 thoushr… 1178.      1             10  0.4   1.02
+ 4 camp6 gs        n        135 thoushr…  216.      2             10  0.33  1.01
+ 5 camp6 gs        n        135 thoushr…  550.      2             10  0.4   1.02
+ 6 camp6 gs        n        225 thoushr…  676       4             10  0.4   1.02
+ 7 camp6 gs        s        315 thoushr…  254.      4             10  0.33  1.01
+ 8 camp6 gs        s        315 thoushr…  293.      4             10  0.4   1.02
+ 9 camp6 gs        w        135 thoushr…  424.     17             10  0.33  1.01
+10 camp6 gs        w        135 thoushr…  882.     17             10  0.4   1.02
+# ℹ 142 more rows
+# ℹ 2 more variables: d2 &lt;dbl&gt;, load &lt;dbl&gt;</code></pre>
 </div>
 </div>
 

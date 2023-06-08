@@ -2,6 +2,10 @@
 title: Calculate fuel loading
 ---
 
+```{r}
+library(tidyverse)
+```
+
 We used the line intercept method for tallying fine and coarse woody debris
 [@vanwagnerPracticalAspectsLine1982; @brownHandbookInventoryingDowned1974]. In
 essence, with this technique we are recording the diameters of all dead, downed
@@ -28,12 +32,22 @@ estimated from the sampling distribution of the tallies themselves
 
 The resulting equation for estimating fuel load (Mg) is: 
 
-$$Load = \frac{\sum d^2  G  k  a  c}{l}$$
+$$Load = \frac{\sum d^2  G  k  a  c}{l}$$ {#eq-load}
 
-where d is diameter (cm), G is specific gravity, k is a constant which accounts
+where d is diameter (cm), G is specific gravity, k=1.234 is a constant which accounts
 for random horizontal particle orientation, the density of water and unit
-conversion factors, a is the particle inclination correction factor, c is the
-transect slope correction factor and l is the transect length.
+conversion factors [@vanwagnerPracticalAspectsLine1982], a is the particle inclination correction factor, c is the
+transect slope correction factor and l is the transect length. The calculation
+of a is described above and c is calculated as $c = \sqrt{1 + (slope ratio)^2}$.
+
+Thus in R, our basic fuel load function will look like this:
+
+```{r}
+simple_load <- function(sum_d2, G, k = 1.234, a, percent_slope, l) {
+  c = sqrt(1 + (percent_slope / 100)^2)
+  (sum_d2 * G * k * a * c) / l
+}
+```
 
 The "composite" values for G (for both sound and rotten wood), a, and the
 quadratic mean diameter of a size class (used for d) where provided by
@@ -97,6 +111,8 @@ glebocki <- dplyr::tribble(
   "97-C", "G", 0.39, 0.36, 0.44, 0.37, 0.37, 
 )
 
+# Currently this function summarizes data across all Glebocki plots, I could #
+# adapt this later if I only want to include some plots.
 summarize_glebocki <- function(data) {
   data |>
     dplyr::group_by(parameter) |>
@@ -106,6 +122,7 @@ summarize_glebocki <- function(data) {
 
 params2 <- dplyr::bind_rows(params, summarize_glebocki(glebocki)) |> 
   dplyr::arrange(parameter)
+
 ```
 
 A study of Sierra Nevada conifers found these values to vary by species, and
@@ -123,7 +140,81 @@ much closer to those of @vanwagtendonkPhysicalPropertiesWoody1996
 #|   Physical properties of woody fuel particles used for calculating fuel
 #|   loading from several different sources in the literature.
 
+
 params2 |> knitr::kable()
 ```
 
+The above information will allow us to calculate fuel loading for fine and
+coarse woody debris. First we'll load our data and get the FWD (and the fuel
+particle parameters) in a long format for easier calculations.
 
+```{r}
+source("./scripts/process_datasheets.r")
+d <- combine_fuels_datasheets("../data")
+# use this to reduce the amount of typing when referring to transects
+transectid <- c("site", "treatment", "corner", "azi")
+
+get_particle_params <- function(params = params2, source) {
+  params[params$source == source, !names(params) %in% "source"] |>
+    tidyr::pivot_longer(-c(parameter), names_to = "class") |>
+    tidyr::pivot_wider(names_from = parameter, values_from = value)
+}
+
+d1 <- d$transects |>
+  select(all_of(transectid), slope, matches("one|ten|hun")) |>
+  left_join(select(d$plots, site, treatment, matches("one|ten|hun"))) |>
+  # move onehr, tenhr, etc to new column and create new columns for transect
+  # length and particle counts
+  pivot_longer(
+    matches("count|len"),
+    names_to = c("class", ".value"),
+    names_sep = "_"
+  ) |>
+  left_join(get_particle_params(source = "glebocki"))
+```
+
+Fine woody debris fuel loading can then be calculated.
+
+```{r}
+fwd <- d1 |>
+  mutate(
+    load = simple_load(
+      sum_d2 = count * d2,
+      l = length,
+      percent_slope = slope,
+      G = G,
+      a = a
+    )
+  )
+```
+
+Coarse woody debris is already in a long format so we don't need to pivot
+longer, but we will summarize the data for each transect by getting the sum of
+squared diameters. Also, we only have parameters for "sound" and "rotten"
+particles, so anything over decay class 3 will be considered "rotten". Finally,
+we need to join in transect slopes, and transect lengths.
+
+```{r}
+# TODO: fix camp6 ld azimuths
+source("./scripts/test_funs.r")
+warn_duplicates(d$transects, site, treatment, corner, azi)
+```
+
+```{r}
+d$coarse_woody |>
+  mutate(class = if_else(decay > 3, "thoushr_r", "thoushr_s")) |>
+  group_by(site, treatment, corner, azi, class) |>
+  summarize(sum_d2 = sum(dia^2), .groups = "drop") |>
+  left_join(d$transects[c(transectid, "slope")]) |>
+  left_join(d$plots[c("site", "treatment", "thoushr_length")]) |>
+  left_join(get_particle_params(source = "glebocki")) |>
+  mutate(
+    load = simple_load(
+      sum_d2 = sum_d2,
+      G = G,
+      a = a,
+      l = thoushr_length,
+      percent_slope = slope
+    )
+  )
+```
