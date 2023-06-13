@@ -191,7 +191,8 @@ div.csl-indent {
   <li><a href="#fine-woody-debris" id="toc-fine-woody-debris" class="nav-link active" data-scroll-target="#fine-woody-debris"><span class="header-section-number">3.1</span> Fine woody debris</a></li>
   <li><a href="#coarse-woody-debris" id="toc-coarse-woody-debris" class="nav-link" data-scroll-target="#coarse-woody-debris"><span class="header-section-number">3.2</span> Coarse woody debris</a></li>
   <li><a href="#duff-and-litter" id="toc-duff-and-litter" class="nav-link" data-scroll-target="#duff-and-litter"><span class="header-section-number">3.3</span> Duff and litter</a></li>
-  <li><a href="#sec-total-load" id="toc-sec-total-load" class="nav-link" data-scroll-target="#sec-total-load"><span class="header-section-number">3.4</span> Total load</a></li>
+  <li><a href="#vegetation" id="toc-vegetation" class="nav-link" data-scroll-target="#vegetation"><span class="header-section-number">3.4</span> Vegetation</a></li>
+  <li><a href="#sec-total-load" id="toc-sec-total-load" class="nav-link" data-scroll-target="#sec-total-load"><span class="header-section-number">3.5</span> Total load</a></li>
   </ul>
 </nav>
     </div>
@@ -414,36 +415,52 @@ div.csl-indent {
 </div>
 </div>
 </div>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`</code></pre>
+</div>
+</div>
 <section id="fine-woody-debris" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="fine-woody-debris"><span class="header-section-number">3.1</span> Fine woody debris</h2>
 <p>The above information will allow us to calculate fuel loading for fine and coarse woody debris. First we’ll load our data and get the FWD (and the fuel particle parameters) in a long format for easier calculations.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">combine_fuels_datasheets</span>(<span class="st">"../data"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># use this to reduce the amount of typing when referring to transects</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>transectid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"corner"</span>, <span class="st">"azi"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>fwd <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(d<span class="sc">$</span>plots, site, treatment, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># move onehr, tenhr, etc to new column and create new columns for transect</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># length and particle counts</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"count|len"</span>),</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use this to reduce the amount of typing when referring to transects</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>transectid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"corner"</span>, <span class="st">"azi"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>fwd <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(d<span class="sc">$</span>plots, site, treatment, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># move onehr, tenhr, etc to new column and create new columns for transect</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># length and particle counts</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"count|len"</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
 <section id="coarse-woody-debris" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="coarse-woody-debris"><span class="header-section-number">3.2</span> Coarse woody debris</h2>
 <p>Coarse woody debris is already in a long format so we don’t need to pivot longer, but we will summarize the data for each transect by getting the sum of squared diameters. Also, we only have parameters for “sound” and “rotten” particles, so anything over decay class 3 will be considered “rotten”. Finally, we need to join in transect slopes, and transect lengths.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/test_funs.r"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">warn_duplicates</span>(d<span class="sc">$</span>transects, site, treatment, corner, azi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cwd <span class="ot">&lt;-</span> d<span class="sc">$</span>coarse_woody <span class="sc">|&gt;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">if_else</span>(decay <span class="sc">&gt;</span> <span class="dv">3</span>, <span class="st">"thoushr_r"</span>, <span class="st">"thoushr_s"</span>)) <span class="sc">|&gt;</span></span>
@@ -527,6 +544,11 @@ div.csl-indent {
 <td style="text-align: left;">No ref. cited, 2.75 and 5.5 lbs/ft<sup>3</sup> litter and duff resp.</td>
 <td style="text-align: right;">6.60</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="citation" data-cites="valachovicSuddenOakDeathcaused2011">Valachovic et al. (<a href="#ref-valachovicSuddenOakDeathcaused2011" role="doc-biblioref">2011</a>)</span></td>
+<td style="text-align: left;">Tanoak-Douglas-fir, litter only, Humboldt County</td>
+<td style="text-align: right;">0.93</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -563,9 +585,71 @@ Krieger, R. M., Wall, B. E., et al. (2020), Chronosequence of Fuel Loading and
 Fuel Depth Following Forest Rehabilitation Frill Treatment of Tanoak to Release
 Douglas-Fir: A Case Study from Northern California. -->
 </section>
-<section id="sec-total-load" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="sec-total-load"><span class="header-section-number">3.4</span> Total load</h2>
+<section id="vegetation" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="vegetation"><span class="header-section-number">3.4</span> Vegetation</h2>
+<p>We based our data collection on the Firemon protocol, which determines vegetative fuel loading by multiplying estimated percent cover by height by a constant bulk densities of 8 and 18 t/ha/m for herbaceous and shrub components, respectively.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(d<span class="sc">$</span>transects)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "site"         "treatment"    "corner"       "azi"          "fwd_crew"    
+ [6] "veg_crew"     "slope"        "metermark1"   "metermark2"   "notes"       
+[11] "onehr_count"  "tenhr_count"  "hundhr_count" "duff_litter1" "pct_litter1" 
+[16] "fbd1"         "duff_litter2" "pct_litter2"  "fbd2"         "live_woody1" 
+[21] "dead_woody1"  "avg_w_ht1"    "live_herb1"   "dead_herb1"   "avg_h_ht1"   
+[26] "live_woody2"  "dead_woody2"  "avg_w_ht2"    "live_herb2"   "dead_herb2"  
+[31] "avg_h_ht2"    "species1"     "species2"    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>veg_match <span class="ot">&lt;-</span> <span class="st">"woody|herb|avg_w_ht|avg_h_ht|species"</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>transects <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">!</span><span class="fu">any_of</span>(transectid))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 136 × 29
+   fwd_crew veg_crew slope metermark1 metermark2 notes   onehr_count tenhr_count
+   &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;       &lt;dbl&gt;
+ 1 jd       ac           4          5          9 &lt;NA&gt;             18           8
+ 2 jd       ac          11          5          9 &lt;NA&gt;              9           9
+ 3 jd       ac           2          5          9 &lt;NA&gt;             12           1
+ 4 jd       ac          17          5          9 &lt;NA&gt;             69          11
+ 5 jd       ac           2          5          9 &lt;NA&gt;             19          14
+ 6 jd       ac           4          5          9 &lt;NA&gt;              5           6
+ 7 jd       ac          72          5          9 &lt;NA&gt;             45           8
+ 8 jd       ac           1          5          9 &lt;NA&gt;             24          10
+ 9 ac       jw          18          5          9 &lt;NA&gt;             33           0
+10 ac       jw           4          5          9 pampas…          10           0
+# ℹ 126 more rows
+# ℹ 21 more variables: hundhr_count &lt;dbl&gt;, duff_litter1 &lt;dbl&gt;,
+#   pct_litter1 &lt;dbl&gt;, fbd1 &lt;dbl&gt;, duff_litter2 &lt;dbl&gt;, pct_litter2 &lt;dbl&gt;,
+#   fbd2 &lt;dbl&gt;, live_woody1 &lt;dbl&gt;, dead_woody1 &lt;dbl&gt;, avg_w_ht1 &lt;dbl&gt;,
+#   live_herb1 &lt;dbl&gt;, dead_herb1 &lt;dbl&gt;, avg_h_ht1 &lt;dbl&gt;, live_woody2 &lt;dbl&gt;,
+#   dead_woody2 &lt;dbl&gt;, avg_w_ht2 &lt;dbl&gt;, live_herb2 &lt;dbl&gt;, dead_herb2 &lt;dbl&gt;,
+#   avg_h_ht2 &lt;dbl&gt;, species1 &lt;chr&gt;, species2 &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>veg <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(veg_match)) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">c</span>(<span class="fu">any_of</span>(transectid), slope),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"station"</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(</span><span class="sc">\\</span><span class="st">w+)([12])"</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_w_ht =</span> <span class="fu">if_else</span>(live_woody <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_woody <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_w_ht),</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_h_ht =</span> <span class="fu">if_else</span>(live_herb <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_herb <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_h_ht),</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody =</span> ((live_woody <span class="sc">+</span> dead_woody) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> avg_w_ht <span class="sc">*</span> <span class="dv">18</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_prop_dead =</span> <span class="fu">if_else</span>(woody <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_woody <span class="sc">/</span> (live_woody <span class="sc">+</span> dead_woody)),</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb =</span> ((live_herb <span class="sc">+</span> dead_herb) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> avg_h_ht <span class="sc">*</span> <span class="dv">8</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_prop_dead =</span> <span class="fu">if_else</span>(herb <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_herb <span class="sc">/</span> (live_herb <span class="sc">+</span> dead_herb))</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">matches</span>(<span class="st">"live_|dead_"</span>), <span class="at">woody_ht =</span> avg_w_ht, <span class="at">herb_ht =</span> avg_h_ht) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="sec-total-load" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="sec-total-load"><span class="header-section-number">3.5</span> Total load</h2>
 <p>Now we can join results for fine woody debris, coarse woody debris, litter, and duff into a single dataframe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.nan</span>(<span class="cn">NaN</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
@@ -586,6 +670,9 @@ Krieger, Raven M., Brian E. Wall, Cody W. Kidd, and John-Pascal Berrill. 2020. <
 </div>
 <div id="ref-nivesFireBehaviorForest1989" class="csl-entry" role="listitem">
 Nives, Sherryl L. 1989. <span>“Fire Behavior on the Forest Floor in Coastal Redwood Forests, <span>Redwood National Park</span>.”</span> PhD thesis, Humboldt State University.
+</div>
+<div id="ref-valachovicSuddenOakDeathcaused2011" class="csl-entry" role="listitem">
+Valachovic, Yana S., Christopher A. Lee, Hugh Scanlon, J. Morgan Varner, Radoslaw Glebocki, Bradley D. Graham, and David M. Rizzo. 2011. <span>“Sudden Oak Death-Caused Changes to Surface Fuel Loading and Potential Fire Behavior in <span class="nocase">Douglas-fir-tanoak</span> Forests.”</span> <em>Forest Ecology and Management</em> 261 (11): 1973–86. <a href="https://doi.org/10.1016/j.foreco.2011.02.024">https://doi.org/10.1016/j.foreco.2011.02.024</a>.
 </div>
 <div id="ref-vanwagnerPracticalAspectsLine1982" class="csl-entry" role="listitem">
 Van Wagner, C. E. 1982. <span>“Practical Aspects of the Line Intersect Method.”</span> PI-X-12. <span>Chalk River, Ontario, Canada</span>: <span>Petawawa National Forestry Institute, Canadian Forestry Service</span>.
