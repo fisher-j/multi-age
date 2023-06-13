@@ -1,3 +1,10 @@
+# 2023-06-08
+
+- Calculate fine and coarse fuel load
+- create test for duplicated transect or plot ids
+- fix wrong azimuths in datasheet
+- start with duff and litter load
+
 # 2023-06-05
 
 - Start calculate fuel loading
