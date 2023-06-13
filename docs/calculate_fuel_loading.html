@@ -191,6 +191,7 @@ div.csl-indent {
   <li><a href="#fine-woody-debris" id="toc-fine-woody-debris" class="nav-link active" data-scroll-target="#fine-woody-debris"><span class="header-section-number">3.1</span> Fine woody debris</a></li>
   <li><a href="#coarse-woody-debris" id="toc-coarse-woody-debris" class="nav-link" data-scroll-target="#coarse-woody-debris"><span class="header-section-number">3.2</span> Coarse woody debris</a></li>
   <li><a href="#duff-and-litter" id="toc-duff-and-litter" class="nav-link" data-scroll-target="#duff-and-litter"><span class="header-section-number">3.3</span> Duff and litter</a></li>
+  <li><a href="#sec-total-load" id="toc-sec-total-load" class="nav-link" data-scroll-target="#sec-total-load"><span class="header-section-number">3.4</span> Total load</a></li>
   </ul>
 </nav>
     </div>
@@ -535,18 +536,21 @@ div.csl-indent {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  dufflitter,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">avg_pct_litter =</span> <span class="fu">mean</span>(pct_litter, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">avg_total_depth =</span> <span class="fu">mean</span>(duff_litter),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">avg_pct_litter =</span> <span class="fu">mean</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    litter_depth <span class="sc">/</span> (duff_depth <span class="sc">+</span> litter_depth), </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">avg_total_depth =</span> <span class="fu">mean</span>(duff_depth <span class="sc">+</span> litter_depth),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
   avg_pct_litter avg_total_depth
            &lt;dbl&gt;           &lt;dbl&gt;
-1           47.2            6.20</code></pre>
+1          0.474            6.20</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">dufflitter_load =</span> duff_litter <span class="sc">*</span> <span class="fl">7.73</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">dufflitter_load =</span> (duff_depth <span class="sc">+</span> litter_depth) <span class="sc">*</span> <span class="fl">7.73</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- todo: Ask Pascal/Jeff about these numbers
@@ -558,6 +562,10 @@ tons/acre [16] using Equation (4):"
 Krieger, R. M., Wall, B. E., et al. (2020), Chronosequence of Fuel Loading and
 Fuel Depth Following Forest Rehabilitation Frill Treatment of Tanoak to Release
 Douglas-Fir: A Case Study from Northern California. -->
+</section>
+<section id="sec-total-load" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="sec-total-load"><span class="header-section-number">3.4</span> Total load</h2>
+<p>Now we can join results for fine woody debris, coarse woody debris, litter, and duff into a single dataframe</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">

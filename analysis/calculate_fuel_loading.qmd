@@ -322,7 +322,7 @@ summarize(
 
 dufflitter <- dufflitter |>
   mutate(
-    dufflitter_load = duff_litter * 7.73
+    dufflitter_load = (duff_depth + litter_depth) * 7.73
   )
 ```
 
@@ -340,3 +340,7 @@ Douglas-Fir: A Case Study from Northern California. -->
 
 Now we can join results for fine woody debris, coarse woody debris, litter, and
 duff into a single dataframe
+
+```{r}
+
+```
