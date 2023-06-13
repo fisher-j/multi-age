@@ -3,7 +3,8 @@ title: Calculate fuel loading
 ---
 
 ```{r}
-library(tidyverse)
+#| warning: false
+library(tidyverse, warn.conflicts = F)
 source("./scripts/process_datasheets.r")
 ```
 
@@ -245,6 +246,7 @@ of 16 measurements per plot.
 
 ```{r}
 #| echo: false
+
 dufflitter <- d$transects |>
   select(all_of(transectid), matches("litter")) |>
   pivot_longer(
@@ -254,7 +256,8 @@ dufflitter <- d$transects |>
   ) |>
   mutate(
     duff_depth = (1 - pct_litter / 100) * duff_litter,
-    litter_depth =  (pct_litter / 100) * duff_litter 
+    litter_depth =  (pct_litter / 100) * duff_litter,
+    .keep = "unused"
   )
 
 ```
@@ -272,34 +275,58 @@ differentiating between duff and litter.
 #|   Average depth to load multiplier from different sources in the
 #|   literature. 
 
-tribble(
+lit_dufflitter_load <- tribble(
   ~Source, ~`Description`, ~`Load Mg ha^-1^ cm^-1^`,
   "@finneyFuelLoadingBulk1993", 
-  "Annadel SP & Humboldt Redwoods SP (rw dbh <= 60 in)", 7.15,
+  "Annadel SP & Humboldt Redwoods SP (rw dbh <= 60 in)", 
+  7.15,
 
   "@kittredgeComparisonForestFloors1940",
-  "plantation redwoods", 6.8,
+  "plantation redwoods",
+  6.8,
 
   "Stuart, J.D. 1985, Unpubl. in @finneyFuelLoadingBulk1993",
-  "Redwoods SP, (mean of duff & litter)", 9.25,
+  "Redwoods SP, (mean of duff & litter)",
+  9.25,
 
   "@vanwagtendonkFuelBedCharacteristics1998",
-  "Avg. for Sierra Nevada conifers", 16.24
+  "Avg. for Sierra Nevada conifers",
+  16.24,
+
+  "@nivesFireBehaviorForest1989",
+  "Redwood NP, Lost Man Cr., Redwood Cr.",
+  2.42,
+
+  "@kriegerChronosequenceFuelLoading2020",
+  "No ref. cited, 2.75 and 5.5 lbs/ft^3^ litter and duff resp.",
+  6.6
   
-) |> knitr::kable()
+)
+
+knitr::kable(lit_dufflitter_load)
 ```
 
-On average, we have 50/50 duff/litter, using the average of the above redwood
-forest types (7.73 Mg ha^-1^ cm^-1^)
+On average, we have about 50% litter and a depth of about 6.2 cm. If we use the
+mean of the first 3 rows in @tbl-load, an average depth to load multiplier for
+redwood forests (with 50% litter) is 7.73 Mg ha^-1^ cm^-1^.
 
 ```{r}
 summarize(
   dufflitter,
-  pct_litter = mean(pct_litter, na.rm = TRUE),
-  total_depth = mean(duff_litter)
+  avg_pct_litter = mean(
+    litter_depth / (duff_depth + litter_depth), 
+    na.rm = TRUE
+  ),
+  avg_total_depth = mean(duff_depth + litter_depth),
 )
+
+dufflitter <- dufflitter |>
+  mutate(
+    dufflitter_load = duff_litter * 7.73
+  )
 ```
-todo: Ask Pascal/Jeff about these numbers
+
+<!-- todo: Ask Pascal/Jeff about these numbers
 
 "To calculate litter and duff loadings, the average depth was multiplied by the
 bulk density of litter (2.75 lbs/ft3) or duff (5.5 lbs/ft3), and converted to
@@ -307,5 +334,9 @@ tons/acre [16] using Equation (4):"
 
 Krieger, R. M., Wall, B. E., et al. (2020), Chronosequence of Fuel Loading and
 Fuel Depth Following Forest Rehabilitation Frill Treatment of Tanoak to Release
-Douglas-Fir: A Case Study from Northern California.
+Douglas-Fir: A Case Study from Northern California. -->
 
+## Total load {#sec-total-load}
+
+Now we can join results for fine woody debris, coarse woody debris, litter, and
+duff into a single dataframe
