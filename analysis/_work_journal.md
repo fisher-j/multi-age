@@ -1,3 +1,7 @@
+# 2023-06-15
+
+- Improve presentation of fuel loading values from literature
+
 # 2023-14-08
 
 - Calculated vegetation fuel loading
