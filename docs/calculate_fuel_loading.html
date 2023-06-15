@@ -668,11 +668,51 @@ override using the `.groups` argument.</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Joining with `by = join_by(site, treatment, corner, azi)`</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>total_load <span class="sc">|&gt;</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">load =</span> <span class="fu">mean</span>(load, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">low =</span> <span class="fu">min</span>(load), <span class="at">high =</span> <span class="fu">max</span>(load)) <span class="sc">|&gt;</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>John Stuart measured old-growth forest fuels in in Bull Creek Drainage of Humboldt Redwood State Park, approximately 30 km inland from the coast. Overstory BA was about 66 m<sup>2</sup>ha<sup>-1</sup>. Plots were classifed based on their overstory/understory species as one of:</p>
+<ul>
+<li>redwood-Douglas-fir/tanoak-evergreen huckleberry</li>
+<li>redwood-Douglas-fir/evergreen huckleberry-tanoak</li>
+<li>Douglas-fir-redwood/evergreen huckleberry</li>
+</ul>
+<p><span class="citation" data-cites="finneyFuelLoadingBulk1993">Finney and Martin (<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">1993</a>)</span> measured fuels at two loacations. In Annadel SP with 30-40% slopes and 45 - 60 m<sup>2</sup>ha<sup>-1</sup> of trees approximate 120 years old. At RW SP, BA was between 20 and 60 m<sup>2</sup>ha<sup>-1</sup> that sprouted after harvest and were around 90 years old.</p>
+<p><span class="citation" data-cites="kittredgeComparisonForestFloors1940">Kittredge (<a href="#ref-kittredgeComparisonForestFloors1940" role="doc-biblioref">1940</a>)</span> studied duff and litter in redwood plantations with an average total depth of 4 cm.</p>
+<p><span class="citation" data-cites="valachovicSuddenOakDeathcaused2011">Valachovic et al. (<a href="#ref-valachovicSuddenOakDeathcaused2011" role="doc-biblioref">2011</a>)</span> measured surface fuels in Douglas-fir-tanoak forests from Sonoma to northern Humboldt counteis. The values shown are from across this range.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>stuart <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source, <span class="sc">~</span>class, <span class="sc">~</span>low, <span class="sc">~</span>high,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"dufflitter"</span>, <span class="fl">13.78</span>, <span class="fl">32.81</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"onetenhundhr"</span>, <span class="fl">3.59</span>, <span class="fl">5.96</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"thoushr_s"</span>, <span class="fl">2.25</span>, <span class="fl">52.35</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"thoushr_r"</span>, <span class="fl">0.23</span>, <span class="fl">20.82</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"veg_woody"</span>, <span class="fl">0.04</span>, <span class="fl">2.48</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>stuart <span class="ot">&lt;-</span> <span class="fu">mutate</span>(stuart, <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) x <span class="sc">*</span> <span class="fl">2.54</span>))</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>others <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source, <span class="sc">~</span>class, <span class="sc">~</span>low, <span class="sc">~</span>high,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"dufflitter"</span>, <span class="dv">29</span>, <span class="dv">55</span>,</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"onetenhundhr"</span>, <span class="dv">9</span>, <span class="dv">20</span>,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"thoushr"</span>, <span class="dv">0</span>, <span class="dv">264</span>,</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"kittredge"</span>, <span class="st">"dufflitter"</span>, <span class="dv">24</span>, <span class="dv">24</span>,</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"litter"</span>, <span class="fl">2.9</span>, <span class="fl">4.7</span>,</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"onehr"</span>, <span class="fl">2.0</span>, <span class="fl">3.4</span>,</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"tenhr"</span>, <span class="fl">2.5</span>, <span class="fl">6.1</span>,</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"hundhr"</span>, <span class="fl">3.1</span>, <span class="fl">7.6</span>,</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"thoushr_s"</span>, <span class="fl">4.9</span>, <span class="fl">76.7</span>,</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"thoushr_r"</span>, <span class="fl">3.1</span>, <span class="fl">35.2</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>total_load <span class="sc">|&gt;</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">load =</span> <span class="fu">mean</span>(load, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">low =</span> <span class="fu">min</span>(load), <span class="at">high =</span> <span class="fu">max</span>(load)) <span class="sc">|&gt;</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">"thisstudy"</span>, <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(stuart) <span class="sc">|&gt;</span> </span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(others) <span class="sc">|&gt;</span></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(class) <span class="sc">|&gt;</span></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'class'. You can override using the
 `.groups` argument.</code></pre>
@@ -681,6 +721,7 @@ override using the `.groups` argument.</code></pre>
 <table class="table table-sm table-striped small">
 <thead>
 <tr class="header">
+<th style="text-align: left;">source</th>
 <th style="text-align: left;">class</th>
 <th style="text-align: right;">low</th>
 <th style="text-align: right;">high</th>
@@ -688,87 +729,58 @@ override using the `.groups` argument.</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: left;">thisstudy</td>
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: right;">40.2</td>
 <td style="text-align: right;">60.6</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">hundhr</td>
-<td style="text-align: right;">8.9</td>
-<td style="text-align: right;">17.5</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">onehr</td>
-<td style="text-align: right;">0.6</td>
-<td style="text-align: right;">1.2</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">tenhr</td>
-<td style="text-align: right;">2.9</td>
-<td style="text-align: right;">4.7</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">thoushr_r</td>
-<td style="text-align: right;">23.0</td>
-<td style="text-align: right;">63.1</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">thoushr_s</td>
-<td style="text-align: right;">27.4</td>
-<td style="text-align: right;">72.4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">veg_herb</td>
-<td style="text-align: right;">0.2</td>
-<td style="text-align: right;">0.8</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">veg_woody</td>
-<td style="text-align: right;">12.4</td>
-<td style="text-align: right;">37.8</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Here are some other’s total fuel loads</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>stuart <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source, <span class="sc">~</span>component, <span class="sc">~</span>low, <span class="sc">~</span>high,</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"dufflitter"</span>, <span class="fl">13.78</span>, <span class="fl">32.81</span>,</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"onetenhundhr"</span>, <span class="fl">3.59</span>, <span class="fl">5.96</span>,</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"thoushr_s"</span>, <span class="fl">2.25</span>, <span class="fl">52.35</span>,</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"thoushr_r"</span>, <span class="fl">0.23</span>, <span class="fl">20.82</span>,</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"veg_woody"</span>, <span class="fl">0.04</span>, <span class="fl">2.48</span>,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>finney <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source, <span class="sc">~</span>component, <span class="sc">~</span>low, <span class="sc">~</span>high,</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"dufflitter"</span>, <span class="dv">29</span>, <span class="dv">55</span>,</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"onetenhundhr"</span>, <span class="dv">9</span>, <span class="dv">20</span>,</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"thoushr"</span>, <span class="dv">0</span>, <span class="dv">264</span>,</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>stuart <span class="sc">|&gt;</span> </span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) x <span class="sc">*</span> <span class="fl">2.54</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(finney) <span class="sc">|&gt;</span></span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">source</th>
-<th style="text-align: left;">component</th>
-<th style="text-align: right;">low</th>
-<th style="text-align: right;">high</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
 <td style="text-align: left;">stuart</td>
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: right;">35.0</td>
 <td style="text-align: right;">83.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">finney</td>
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: right;">29.0</td>
+<td style="text-align: right;">55.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">kittredge</td>
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: right;">24.0</td>
+<td style="text-align: right;">24.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">thisstudy</td>
+<td style="text-align: left;">hundhr</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">17.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">valachovic</td>
+<td style="text-align: left;">hundhr</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">7.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">valachovic</td>
+<td style="text-align: left;">litter</td>
+<td style="text-align: right;">2.9</td>
+<td style="text-align: right;">4.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">thisstudy</td>
+<td style="text-align: left;">onehr</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">1.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">valachovic</td>
+<td style="text-align: left;">onehr</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">3.4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">stuart</td>
@@ -777,10 +789,34 @@ override using the `.groups` argument.</code></pre>
 <td style="text-align: right;">15.1</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">stuart</td>
-<td style="text-align: left;">thoushr_s</td>
-<td style="text-align: right;">5.7</td>
-<td style="text-align: right;">133.0</td>
+<td style="text-align: left;">finney</td>
+<td style="text-align: left;">onetenhundhr</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">20.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">thisstudy</td>
+<td style="text-align: left;">tenhr</td>
+<td style="text-align: right;">2.9</td>
+<td style="text-align: right;">4.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">valachovic</td>
+<td style="text-align: left;">tenhr</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">6.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">finney</td>
+<td style="text-align: left;">thoushr</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">264.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">thisstudy</td>
+<td style="text-align: left;">thoushr_r</td>
+<td style="text-align: right;">23.0</td>
+<td style="text-align: right;">63.1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">stuart</td>
@@ -789,28 +825,46 @@ override using the `.groups` argument.</code></pre>
 <td style="text-align: right;">52.9</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">valachovic</td>
+<td style="text-align: left;">thoushr_r</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">35.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">thisstudy</td>
+<td style="text-align: left;">thoushr_s</td>
+<td style="text-align: right;">27.4</td>
+<td style="text-align: right;">72.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stuart</td>
+<td style="text-align: left;">thoushr_s</td>
+<td style="text-align: right;">5.7</td>
+<td style="text-align: right;">133.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">valachovic</td>
+<td style="text-align: left;">thoushr_s</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">76.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">thisstudy</td>
+<td style="text-align: left;">veg_herb</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">thisstudy</td>
+<td style="text-align: left;">veg_woody</td>
+<td style="text-align: right;">12.4</td>
+<td style="text-align: right;">37.8</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">stuart</td>
 <td style="text-align: left;">veg_woody</td>
 <td style="text-align: right;">0.1</td>
 <td style="text-align: right;">6.3</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">finney</td>
-<td style="text-align: left;">dufflitter</td>
-<td style="text-align: right;">29.0</td>
-<td style="text-align: right;">55.0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">finney</td>
-<td style="text-align: left;">onetenhundhr</td>
-<td style="text-align: right;">9.0</td>
-<td style="text-align: right;">20.0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">finney</td>
-<td style="text-align: left;">thoushr</td>
-<td style="text-align: right;">0.0</td>
-<td style="text-align: right;">264.0</td>
 </tr>
 </tbody>
 </table>

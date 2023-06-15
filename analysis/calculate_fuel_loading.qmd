@@ -403,36 +403,64 @@ total_load <- left_join(dufflitter_load, veg_load) |>
   ) |>
   bind_rows(woodydebris)
 
-total_load |>
-  group_by(class, treatment) |>
-  summarize(load = mean(load, na.rm = TRUE)) |>
-  summarize(low = min(load), high = max(load)) |>
-  knitr::kable(digits = 1)
-
 ```
 
-Here are some other's total fuel loads
+John Stuart measured old-growth forest fuels in in Bull Creek Drainage of
+Humboldt Redwood State Park, approximately 30 km inland from the coast.
+Overstory BA was about 66 m^2^ha^-1^. Plots were classifed based on their
+overstory/understory species as one of: 
+
+- redwood-Douglas-fir/tanoak-evergreen huckleberry 
+- redwood-Douglas-fir/evergreen huckleberry-tanoak
+- Douglas-fir-redwood/evergreen huckleberry
+
+@finneyFuelLoadingBulk1993 measured fuels at two loacations. In Annadel SP with
+30-40% slopes and 45 - 60 m^2^ha^-1^ of trees approximate 120 years old. At RW
+SP, BA was between 20 and 60 m^2^ha^-1^ that sprouted after harvest and were
+around 90 years old.
+
+@kittredgeComparisonForestFloors1940 studied duff and litter in redwood
+plantations with an average total depth of 4 cm.
+
+@valachovicSuddenOakDeathcaused2011 measured surface fuels in Douglas-fir-tanoak
+forests from Sonoma to northern Humboldt counteis. The values shown are from
+across this range.
 
 ```{r}
+
 stuart <- tribble(
-  ~source, ~component, ~low, ~high,
+  ~source, ~class, ~low, ~high,
   "stuart", "dufflitter", 13.78, 32.81,
   "stuart", "onetenhundhr", 3.59, 5.96,
   "stuart", "thoushr_s", 2.25, 52.35,
   "stuart", "thoushr_r", 0.23, 20.82,
   "stuart", "veg_woody", 0.04, 2.48,
 )
+stuart <- mutate(stuart, across(where(is.numeric), \(x) x * 2.54))
 
-finney <- tribble(
-  ~source, ~component, ~low, ~high,
+others <- tribble(
+  ~source, ~class, ~low, ~high,
   "finney", "dufflitter", 29, 55,
   "finney", "onetenhundhr", 9, 20,
   "finney", "thoushr", 0, 264,
+  "kittredge", "dufflitter", 24, 24,
+  "valachovic", "litter", 2.9, 4.7,
+  "valachovic", "onehr", 2.0, 3.4,
+  "valachovic", "tenhr", 2.5, 6.1,
+  "valachovic", "hundhr", 3.1, 7.6,
+  "valachovic", "thoushr_s", 4.9, 76.7,
+  "valachovic", "thoushr_r", 3.1, 35.2
 )
 
-stuart |> 
-  mutate(across(where(is.numeric), \(x) x * 2.54)) |>
-  bind_rows(finney) |>
+total_load |>
+  group_by(class, treatment) |>
+  summarize(load = mean(load, na.rm = TRUE)) |>
+  summarize(low = min(load), high = max(load)) |>
+  mutate(source = "thisstudy", .before = 1) |>
+  bind_rows(stuart) |> 
+  bind_rows(others) |>
+  ungroup() |>
+  arrange(class) |>
   knitr::kable(digits = 1)
 
 ```
