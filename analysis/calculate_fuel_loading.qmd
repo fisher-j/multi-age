@@ -30,9 +30,10 @@ cm. This requires estimating an average diameter (quadratic mean diameter is
 used) for pieces in each category which can be done using emperical data
 gathered from specific forest types [@brownHandbookInventoryingDowned1974], or
 estimated from the sampling distribution of the tallies themselves
-[@vanwagnerPracticalAspectsLine1982]. 
+[@vanwagnerPracticalAspectsLine1982]. Here we will use the former, with values
+found in the literature. 
 
-The resulting equation for estimating fuel load (Mg) is: 
+The resulting equation for estimating fuel load (Mg/ha) is: 
 
 $$Load = \frac{\sum d^2  G  k  a  c}{l}$$ {#eq-load}
 
@@ -47,7 +48,7 @@ Thus in R, our basic fuel load function will look like this:
 ```{r}
 
 simple_load <- function(sum_d2, G, k = 1.234, a, percent_slope, l) {
-  c = sqrt(1 + (percent_slope / 100)^2)
+  c <- sqrt(1 + (percent_slope / 100)^2)
   (sum_d2 * G * k * a * c) / l
 }
 
@@ -214,13 +215,15 @@ cwd <- d$coarse_woody |>
 
 ```
 
+## Dead and down woody debris loading
+
 Now, if we can be sure that the FWD and CWD data have the same column names, we
 can bind them, join the fuel parameters, and calculate the load for each class
 
 ```{r}
 
-if (setequal(names(cwd), names(fwd))) woody_fuel <- bind_rows(fwd, cwd)
-cwd <- woody_fuel |> 
+if (setequal(names(cwd), names(fwd))) woodydebris <- bind_rows(fwd, cwd)
+woodydebris <- woodydebris |> 
   left_join(get_particle_params(source = "glebocki")) |>
   mutate(
     load = simple_load(
@@ -317,13 +320,14 @@ mean of the first 3 rows in @tbl-load, an average depth to load multiplier for
 redwood forests (with 50% litter) is 7.73 Mg ha^-1^ cm^-1^.
 
 ```{r}
-summarize(
-  dufflitter,
-  avg_pct_litter = mean(
-    litter_depth / (duff_depth + litter_depth), 
-    na.rm = TRUE
-  ),
-  avg_total_depth = mean(duff_depth + litter_depth),
+dufflitter |>
+  group_by(treatment) |>
+  summarize(
+    avg_pct_litter = mean(
+      litter_depth / (duff_depth + litter_depth), 
+      na.rm = TRUE
+    ),
+    avg_total_depth = mean(duff_depth + litter_depth),
 )
 
 dufflitter <- dufflitter |>
@@ -349,11 +353,10 @@ vegetative fuel loading by multiplying estimated percent cover by height by a
 constant bulk densities of 8 and 18 t/ha/m for herbaceous and shrub components,
 respectively.
 
+<!-- TODO: find better sources of shrub bulk density. -->
 
 ```{r}
-names(d$transects)
 veg_match <- "woody|herb|avg_w_ht|avg_h_ht|species"
-d$transects |> select(!any_of(transectid))
 veg <- d$transects |>
   select(all_of(transectid), slope, matches(veg_match)) |>
   pivot_longer(
@@ -362,21 +365,80 @@ veg <- d$transects |>
     names_pattern = "(\\w+)([12])"
   ) |> 
   mutate(
-    avg_w_ht = if_else(live_woody == 0 & dead_woody == 0, 0, avg_w_ht),
-    avg_h_ht = if_else(live_herb == 0 & dead_herb == 0, 0, avg_h_ht),
-    woody = ((live_woody + dead_woody) / 100) * avg_w_ht * 18,
-    woody_prop_dead = if_else(woody == 0, 0, dead_woody / (live_woody + dead_woody)),
-    herb = ((live_herb + dead_herb) / 100) * avg_h_ht * 8,
-    herb_prop_dead = if_else(herb == 0, 0, dead_herb / (live_herb + dead_herb))
+    woody_ht = if_else(live_woody == 0 & dead_woody == 0, 0, avg_w_ht),
+    herb_ht = if_else(live_herb == 0 & dead_herb == 0, 0, avg_h_ht),
+    veg_woody_load = ((live_woody + dead_woody) / 100) * woody_ht * 18,
+    woody_p_dead = if_else(
+      veg_woody_load == 0, 0, dead_woody / (live_woody + dead_woody)
+    ),
+    veg_herb_load = ((live_herb + dead_herb) / 100) * herb_ht * 8,
+    herb_p_dead = if_else(
+      veg_herb_load == 0, 0, dead_herb / (live_herb + dead_herb)
+    )
   ) |>
-  select(!matches("live_|dead_"), woody_ht = avg_w_ht, herb_ht = avg_h_ht) 
+  select(!matches("live_|dead_|avg_"), woody_ht, herb_ht) 
 ```
 
 ## Total load {#sec-total-load}
 
 Now we can join results for fine woody debris, coarse woody debris, litter, and
-duff into a single dataframe
+duff into a single dataframe. 
+
+Vegetation and duff/litter first need to be summarized to the transect level.
 
 ```{r}
-is.nan(NaN) 
+woodydebris
+dufflitter_load <- dufflitter |> 
+  group_by(pick(all_of(transectid))) |> 
+  summarize(dufflitter_load = mean(dufflitter_load))
+veg_load <- veg |>
+  group_by(pick(all_of(transectid))) |>
+  summarize(across(contains("load"), mean))
+
+transectid
+dufflitter |> group_by(treatment) |> summarize(mean = mean(dufflitter_load), sd = sd(dufflitter_load))
+dufflitter |> ggplot2::ggplot(aes(treatment, dufflitter_load)) + geom_boxplot()
+
+
+total_load <- left_join(dufflitter_load, veg_load) |>
+  pivot_longer(
+    contains("_load"),
+    names_to = c("class", ".value"),
+    names_pattern = "(\\w+)_(load)"
+  ) |>
+  bind_rows(woodydebris)
+
+total_load |>
+  group_by(class, treatment) |>
+  summarize(load = mean(load, na.rm = TRUE)) |>
+  summarize(low = min(load), high = max(load)) |>
+  knitr::kable(digits = 1)
+
 ```
+
+Here are some other's total fuel loads
+
+```{r}
+stuart <- tribble(
+  ~source, ~component, ~low, ~high,
+  "stuart", "dufflitter", 13.78, 32.81,
+  "stuart", "onetenhundhr", 3.59, 5.96,
+  "stuart", "thoushr_s", 2.25, 52.35,
+  "stuart", "thoushr_r", 0.23, 20.82,
+  "stuart", "veg_woody", 0.04, 2.48,
+)
+
+finney <- tribble(
+  ~source, ~component, ~low, ~high,
+  "finney", "dufflitter", 29, 55,
+  "finney", "onetenhundhr", 9, 20,
+  "finney", "thoushr", 0, 264,
+)
+
+stuart |> 
+  mutate(across(where(is.numeric), \(x) x * 2.54)) |>
+  bind_rows(finney) |>
+  knitr::kable(digits = 1)
+
+```
+

@@ -1,3 +1,14 @@
+# 2023-14-08
+
+- Calculated vegetation fuel loading
+- calculate duff and litter fuel load
+  - summarize some depth to load values from literature
+- calculate vegetation fuel load
+  - research vegetation bulk density in literature
+    - we should have measured shrub basal diameter
+- Summarize total fuel load
+  - summarize values from literature
+
 # 2023-06-08
 
 - Calculate fine and coarse fuel load

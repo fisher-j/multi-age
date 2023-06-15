@@ -190,9 +190,10 @@ div.csl-indent {
   <ul>
   <li><a href="#fine-woody-debris" id="toc-fine-woody-debris" class="nav-link active" data-scroll-target="#fine-woody-debris"><span class="header-section-number">3.1</span> Fine woody debris</a></li>
   <li><a href="#coarse-woody-debris" id="toc-coarse-woody-debris" class="nav-link" data-scroll-target="#coarse-woody-debris"><span class="header-section-number">3.2</span> Coarse woody debris</a></li>
-  <li><a href="#duff-and-litter" id="toc-duff-and-litter" class="nav-link" data-scroll-target="#duff-and-litter"><span class="header-section-number">3.3</span> Duff and litter</a></li>
-  <li><a href="#vegetation" id="toc-vegetation" class="nav-link" data-scroll-target="#vegetation"><span class="header-section-number">3.4</span> Vegetation</a></li>
-  <li><a href="#sec-total-load" id="toc-sec-total-load" class="nav-link" data-scroll-target="#sec-total-load"><span class="header-section-number">3.5</span> Total load</a></li>
+  <li><a href="#dead-and-down-woody-debris-loading" id="toc-dead-and-down-woody-debris-loading" class="nav-link" data-scroll-target="#dead-and-down-woody-debris-loading"><span class="header-section-number">3.3</span> Dead and down woody debris loading</a></li>
+  <li><a href="#duff-and-litter" id="toc-duff-and-litter" class="nav-link" data-scroll-target="#duff-and-litter"><span class="header-section-number">3.4</span> Duff and litter</a></li>
+  <li><a href="#vegetation" id="toc-vegetation" class="nav-link" data-scroll-target="#vegetation"><span class="header-section-number">3.5</span> Vegetation</a></li>
+  <li><a href="#sec-total-load" id="toc-sec-total-load" class="nav-link" data-scroll-target="#sec-total-load"><span class="header-section-number">3.6</span> Total load</a></li>
   </ul>
 </nav>
     </div>
@@ -221,14 +222,14 @@ div.csl-indent {
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/process_datasheets.r"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We used the line intercept method for tallying fine and coarse woody debris <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982 brownHandbookInventoryingDowned1974">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>; <a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">Brown 1974</a>)</span>. In essence, with this technique we are recording the diameters of all dead, downed woody pieces that cross an imaginary sampling plane of a specified length and height. These diameters are convered to crossectional areas which can then be extended to a volume by multiplying by a width. Finally, volume can be converted to mass using specific gravity. This method requires the assumptions that a particle is (1) cylidrical, (2) horizontal, and (3) perpendicular to the sampling plane. While (1) may be a reasonable assumption for many woody particles, 2 and 3 are less likely. For 2, we use a factor which allows us to trade out this assumption, for the assumption that pieces are randomly oriented in the horizontal plane. For 3, we use a correction factor (<span class="math inline">\(\sec \theta\)</span>) based estimates of average paticle inclination (<span class="math inline">\(\theta\)</span>).</p>
-<p>In practice, the diameter of each piece is not measured, but tallied by size class (up to a certain size, after which it is prudent to measure individual pieces). We used the common time-lag size classes &lt; 0.635 cm; 0.635 - 2.54 cm; and 2.54 - 7.62 cm. All pieces larger than 7.62 cm were measured to the nearest cm. This requires estimating an average diameter (quadratic mean diameter is used) for pieces in each category which can be done using emperical data gathered from specific forest types <span class="citation" data-cites="brownHandbookInventoryingDowned1974">(<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">Brown 1974</a>)</span>, or estimated from the sampling distribution of the tallies themselves <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>)</span>.</p>
-<p>The resulting equation for estimating fuel load (Mg) is:</p>
+<p>In practice, the diameter of each piece is not measured, but tallied by size class (up to a certain size, after which it is prudent to measure individual pieces). We used the common time-lag size classes &lt; 0.635 cm; 0.635 - 2.54 cm; and 2.54 - 7.62 cm. All pieces larger than 7.62 cm were measured to the nearest cm. This requires estimating an average diameter (quadratic mean diameter is used) for pieces in each category which can be done using emperical data gathered from specific forest types <span class="citation" data-cites="brownHandbookInventoryingDowned1974">(<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">Brown 1974</a>)</span>, or estimated from the sampling distribution of the tallies themselves <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>)</span>. Here we will use the former, with values found in the literature.</p>
+<p>The resulting equation for estimating fuel load (Mg/ha) is:</p>
 <p><span id="eq-load"><span class="math display">\[Load = \frac{\sum d^2  G  k  a  c}{l} \tag{3.1}\]</span></span></p>
 <p>where d is diameter (cm), G is specific gravity, k=1.234 is a constant which accounts for random horizontal particle orientation, the density of water and unit conversion factors <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>)</span>, a is the particle inclination correction factor, c is the transect slope correction factor and l is the transect length. The calculation of a is described above and c is calculated as <span class="math inline">\(c = \sqrt{1 + (slope ratio)^2}\)</span>.</p>
 <p>Thus in R, our basic fuel load function will look like this:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simple_load <span class="ot">&lt;-</span> <span class="cf">function</span>(sum_d2, G, <span class="at">k =</span> <span class="fl">1.234</span>, a, percent_slope, l) {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">+</span> (percent_slope <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">+</span> (percent_slope <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (sum_d2 <span class="sc">*</span> G <span class="sc">*</span> k <span class="sc">*</span> a <span class="sc">*</span> c) <span class="sc">/</span> l</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -471,10 +472,13 @@ Joining with `by = join_by(transect)`</code></pre>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d<span class="sc">$</span>plots[<span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"thoushr_length"</span>)]) <span class="sc">|&gt;</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, class, count, <span class="at">length =</span> <span class="st">"thoushr_length"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="dead-and-down-woody-debris-loading" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="dead-and-down-woody-debris-loading"><span class="header-section-number">3.3</span> Dead and down woody debris loading</h2>
 <p>Now, if we can be sure that the FWD and CWD data have the same column names, we can bind them, join the fuel parameters, and calculate the load for each class</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">setequal</span>(<span class="fu">names</span>(cwd), <span class="fu">names</span>(fwd))) woody_fuel <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(fwd, cwd)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cwd <span class="ot">&lt;-</span> woody_fuel <span class="sc">|&gt;</span> </span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">setequal</span>(<span class="fu">names</span>(cwd), <span class="fu">names</span>(fwd))) woodydebris <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(fwd, cwd)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>woodydebris <span class="ot">&lt;-</span> woodydebris <span class="sc">|&gt;</span> </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">get_particle_params</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> <span class="fu">simple_load</span>(</span>
@@ -491,8 +495,8 @@ Joining with `by = join_by(transect)`</code></pre>
 </div>
 </div>
 </section>
-<section id="duff-and-litter" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="duff-and-litter"><span class="header-section-number">3.3</span> Duff and litter</h2>
+<section id="duff-and-litter" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="duff-and-litter"><span class="header-section-number">3.4</span> Duff and litter</h2>
 <p>We measured total duff/litter depth, and then estimated a percent of this depth that would be classified as litter. Litter is any leaf material not classified as a 1-hr fuel, that has not yet begun to break down. Particles that were very dark in color and that were broken into smaller pieces than when they had originally fallen were classified as duff.</p>
 <p>Duff and litter were measured at two locations along each transect, for a total of 16 measurements per plot.</p>
 <p>To convert these depths to load values we use a depth to load equation. <span class="citation" data-cites="finneyFuelLoadingBulk1993">Finney and Martin (<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">1993</a>)</span> found a wide variability in the bulk densities of samples, suggesting that simply using the average bulk density should be sufficient, as opposed to calculating bulk densities based on strata depth or differentiating between duff and litter.</p>
@@ -556,19 +560,24 @@ Joining with `by = join_by(transect)`</code></pre>
 </div>
 <p>On average, we have about 50% litter and a depth of about 6.2 cm. If we use the mean of the first 3 rows in <a href="#tbl-load">Table&nbsp;<span>3.2</span></a>, an average depth to load multiplier for redwood forests (with 50% litter) is 7.73 Mg ha<sup>-1</sup> cm<sup>-1</sup>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  dufflitter,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">avg_pct_litter =</span> <span class="fu">mean</span>(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    litter_depth <span class="sc">/</span> (duff_depth <span class="sc">+</span> litter_depth), </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">avg_total_depth =</span> <span class="fu">mean</span>(duff_depth <span class="sc">+</span> litter_depth),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_pct_litter =</span> <span class="fu">mean</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      litter_depth <span class="sc">/</span> (duff_depth <span class="sc">+</span> litter_depth), </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_total_depth =</span> <span class="fu">mean</span>(duff_depth <span class="sc">+</span> litter_depth),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 2
-  avg_pct_litter avg_total_depth
-           &lt;dbl&gt;           &lt;dbl&gt;
-1          0.474            6.20</code></pre>
+<pre><code># A tibble: 5 × 3
+  treatment avg_pct_litter avg_total_depth
+  &lt;chr&gt;              &lt;dbl&gt;           &lt;dbl&gt;
+1 gs                 0.482            6.26
+2 ha                 0.548            5.20
+3 hd                 0.395            7.11
+4 ld                 0.453            5.80
+5 md                 0.545            7.84</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -585,69 +594,245 @@ Krieger, R. M., Wall, B. E., et al. (2020), Chronosequence of Fuel Loading and
 Fuel Depth Following Forest Rehabilitation Frill Treatment of Tanoak to Release
 Douglas-Fir: A Case Study from Northern California. -->
 </section>
-<section id="vegetation" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="vegetation"><span class="header-section-number">3.4</span> Vegetation</h2>
+<section id="vegetation" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="vegetation"><span class="header-section-number">3.5</span> Vegetation</h2>
 <p>We based our data collection on the Firemon protocol, which determines vegetative fuel loading by multiplying estimated percent cover by height by a constant bulk densities of 8 and 18 t/ha/m for herbaceous and shrub components, respectively.</p>
+<!-- TODO: find better sources of shrub bulk density. -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(d<span class="sc">$</span>transects)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "site"         "treatment"    "corner"       "azi"          "fwd_crew"    
- [6] "veg_crew"     "slope"        "metermark1"   "metermark2"   "notes"       
-[11] "onehr_count"  "tenhr_count"  "hundhr_count" "duff_litter1" "pct_litter1" 
-[16] "fbd1"         "duff_litter2" "pct_litter2"  "fbd2"         "live_woody1" 
-[21] "dead_woody1"  "avg_w_ht1"    "live_herb1"   "dead_herb1"   "avg_h_ht1"   
-[26] "live_woody2"  "dead_woody2"  "avg_w_ht2"    "live_herb2"   "dead_herb2"  
-[31] "avg_h_ht2"    "species1"     "species2"    </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>veg_match <span class="ot">&lt;-</span> <span class="st">"woody|herb|avg_w_ht|avg_h_ht|species"</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>transects <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">!</span><span class="fu">any_of</span>(transectid))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 136 × 29
-   fwd_crew veg_crew slope metermark1 metermark2 notes   onehr_count tenhr_count
-   &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;       &lt;dbl&gt;
- 1 jd       ac           4          5          9 &lt;NA&gt;             18           8
- 2 jd       ac          11          5          9 &lt;NA&gt;              9           9
- 3 jd       ac           2          5          9 &lt;NA&gt;             12           1
- 4 jd       ac          17          5          9 &lt;NA&gt;             69          11
- 5 jd       ac           2          5          9 &lt;NA&gt;             19          14
- 6 jd       ac           4          5          9 &lt;NA&gt;              5           6
- 7 jd       ac          72          5          9 &lt;NA&gt;             45           8
- 8 jd       ac           1          5          9 &lt;NA&gt;             24          10
- 9 ac       jw          18          5          9 &lt;NA&gt;             33           0
-10 ac       jw           4          5          9 pampas…          10           0
-# ℹ 126 more rows
-# ℹ 21 more variables: hundhr_count &lt;dbl&gt;, duff_litter1 &lt;dbl&gt;,
-#   pct_litter1 &lt;dbl&gt;, fbd1 &lt;dbl&gt;, duff_litter2 &lt;dbl&gt;, pct_litter2 &lt;dbl&gt;,
-#   fbd2 &lt;dbl&gt;, live_woody1 &lt;dbl&gt;, dead_woody1 &lt;dbl&gt;, avg_w_ht1 &lt;dbl&gt;,
-#   live_herb1 &lt;dbl&gt;, dead_herb1 &lt;dbl&gt;, avg_h_ht1 &lt;dbl&gt;, live_woody2 &lt;dbl&gt;,
-#   dead_woody2 &lt;dbl&gt;, avg_w_ht2 &lt;dbl&gt;, live_herb2 &lt;dbl&gt;, dead_herb2 &lt;dbl&gt;,
-#   avg_h_ht2 &lt;dbl&gt;, species1 &lt;chr&gt;, species2 &lt;chr&gt;</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>veg <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(veg_match)) <span class="sc">|&gt;</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">c</span>(<span class="fu">any_of</span>(transectid), slope),</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"station"</span>),</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(</span><span class="sc">\\</span><span class="st">w+)([12])"</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_w_ht =</span> <span class="fu">if_else</span>(live_woody <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_woody <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_w_ht),</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_h_ht =</span> <span class="fu">if_else</span>(live_herb <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_herb <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_h_ht),</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody =</span> ((live_woody <span class="sc">+</span> dead_woody) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> avg_w_ht <span class="sc">*</span> <span class="dv">18</span>,</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_prop_dead =</span> <span class="fu">if_else</span>(woody <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_woody <span class="sc">/</span> (live_woody <span class="sc">+</span> dead_woody)),</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb =</span> ((live_herb <span class="sc">+</span> dead_herb) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> avg_h_ht <span class="sc">*</span> <span class="dv">8</span>,</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_prop_dead =</span> <span class="fu">if_else</span>(herb <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_herb <span class="sc">/</span> (live_herb <span class="sc">+</span> dead_herb))</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">matches</span>(<span class="st">"live_|dead_"</span>), <span class="at">woody_ht =</span> avg_w_ht, <span class="at">herb_ht =</span> avg_h_ht) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>veg_match <span class="ot">&lt;-</span> <span class="st">"woody|herb|avg_w_ht|avg_h_ht|species"</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>veg <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(veg_match)) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">c</span>(<span class="fu">any_of</span>(transectid), slope),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"station"</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(</span><span class="sc">\\</span><span class="st">w+)([12])"</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_ht =</span> <span class="fu">if_else</span>(live_woody <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_woody <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_w_ht),</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_ht =</span> <span class="fu">if_else</span>(live_herb <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_herb <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_h_ht),</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">veg_woody_load =</span> ((live_woody <span class="sc">+</span> dead_woody) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> woody_ht <span class="sc">*</span> <span class="dv">18</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_p_dead =</span> <span class="fu">if_else</span>(</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>      veg_woody_load <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_woody <span class="sc">/</span> (live_woody <span class="sc">+</span> dead_woody)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">veg_herb_load =</span> ((live_herb <span class="sc">+</span> dead_herb) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> herb_ht <span class="sc">*</span> <span class="dv">8</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_p_dead =</span> <span class="fu">if_else</span>(</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>      veg_herb_load <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_herb <span class="sc">/</span> (live_herb <span class="sc">+</span> dead_herb)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">matches</span>(<span class="st">"live_|dead_|avg_"</span>), woody_ht, herb_ht) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="sec-total-load" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="sec-total-load"><span class="header-section-number">3.5</span> Total load</h2>
-<p>Now we can join results for fine woody debris, coarse woody debris, litter, and duff into a single dataframe</p>
+<section id="sec-total-load" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-total-load"><span class="header-section-number">3.6</span> Total load</h2>
+<p>Now we can join results for fine woody debris, coarse woody debris, litter, and duff into a single dataframe.</p>
+<p>Vegetation and duff/litter first need to be summarized to the transect level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.nan</span>(<span class="cn">NaN</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>woodydebris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] TRUE</code></pre>
+<pre><code># A tibble: 556 × 6
+   site  treatment corner   azi class    load
+   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+ 1 camp6 gs        s        315 onehr   0.638
+ 2 camp6 gs        s        315 tenhr   3.59 
+ 3 camp6 gs        s        315 hundhr  4.90 
+ 4 camp6 gs        s         45 onehr   0.321
+ 5 camp6 gs        s         45 tenhr   4.05 
+ 6 camp6 gs        s         45 hundhr 14.8  
+ 7 camp6 gs        w         45 onehr   0.425
+ 8 camp6 gs        w         45 tenhr   0.448
+ 9 camp6 gs        w         45 hundhr  4.90 
+10 camp6 gs        w        135 onehr   2.48 
+# ℹ 546 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dufflitter_load <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">dufflitter_load =</span> <span class="fu">mean</span>(dufflitter_load))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'site', 'treatment', 'corner'. You can
+override using the `.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>veg_load <span class="ot">&lt;-</span> veg <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"load"</span>), mean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'site', 'treatment', 'corner'. You can
+override using the `.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>transectid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "site"      "treatment" "corner"    "azi"      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="sc">|&gt;</span> <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(dufflitter_load), <span class="at">sd =</span> <span class="fu">sd</span>(dufflitter_load))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  treatment  mean    sd
+  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;
+1 gs         48.4  37.0
+2 ha         40.2  29.8
+3 hd         55.0  36.1
+4 ld         44.9  27.0
+5 md         60.6  47.7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="sc">|&gt;</span> ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, dufflitter_load)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="calculate_fuel_loading_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>total_load <span class="ot">&lt;-</span> <span class="fu">left_join</span>(dufflitter_load, veg_load) <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">contains</span>(<span class="st">"_load"</span>),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(</span><span class="sc">\\</span><span class="st">w+)_(load)"</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(woodydebris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(site, treatment, corner, azi)`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>total_load <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">load =</span> <span class="fu">mean</span>(load, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">low =</span> <span class="fu">min</span>(load), <span class="at">high =</span> <span class="fu">max</span>(load)) <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'class'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">class</th>
+<th style="text-align: right;">low</th>
+<th style="text-align: right;">high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: right;">40.2</td>
+<td style="text-align: right;">60.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hundhr</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">17.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">onehr</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">1.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tenhr</td>
+<td style="text-align: right;">2.9</td>
+<td style="text-align: right;">4.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">thoushr_r</td>
+<td style="text-align: right;">23.0</td>
+<td style="text-align: right;">63.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">thoushr_s</td>
+<td style="text-align: right;">27.4</td>
+<td style="text-align: right;">72.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">veg_herb</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">veg_woody</td>
+<td style="text-align: right;">12.4</td>
+<td style="text-align: right;">37.8</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Here are some other’s total fuel loads</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>stuart <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source, <span class="sc">~</span>component, <span class="sc">~</span>low, <span class="sc">~</span>high,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"dufflitter"</span>, <span class="fl">13.78</span>, <span class="fl">32.81</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"onetenhundhr"</span>, <span class="fl">3.59</span>, <span class="fl">5.96</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"thoushr_s"</span>, <span class="fl">2.25</span>, <span class="fl">52.35</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"thoushr_r"</span>, <span class="fl">0.23</span>, <span class="fl">20.82</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"veg_woody"</span>, <span class="fl">0.04</span>, <span class="fl">2.48</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>finney <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source, <span class="sc">~</span>component, <span class="sc">~</span>low, <span class="sc">~</span>high,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"dufflitter"</span>, <span class="dv">29</span>, <span class="dv">55</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"onetenhundhr"</span>, <span class="dv">9</span>, <span class="dv">20</span>,</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"thoushr"</span>, <span class="dv">0</span>, <span class="dv">264</span>,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>stuart <span class="sc">|&gt;</span> </span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) x <span class="sc">*</span> <span class="fl">2.54</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(finney) <span class="sc">|&gt;</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">source</th>
+<th style="text-align: left;">component</th>
+<th style="text-align: right;">low</th>
+<th style="text-align: right;">high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">stuart</td>
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: right;">35.0</td>
+<td style="text-align: right;">83.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stuart</td>
+<td style="text-align: left;">onetenhundhr</td>
+<td style="text-align: right;">9.1</td>
+<td style="text-align: right;">15.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stuart</td>
+<td style="text-align: left;">thoushr_s</td>
+<td style="text-align: right;">5.7</td>
+<td style="text-align: right;">133.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stuart</td>
+<td style="text-align: left;">thoushr_r</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">52.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stuart</td>
+<td style="text-align: left;">veg_woody</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">6.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">finney</td>
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: right;">29.0</td>
+<td style="text-align: right;">55.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">finney</td>
+<td style="text-align: left;">onetenhundhr</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">20.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">finney</td>
+<td style="text-align: left;">thoushr</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">264.0</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
