@@ -395,11 +395,6 @@ veg_load <- veg |>
   group_by(pick(all_of(transectid))) |>
   summarize(across(contains("load"), mean))
 
-transectid
-dufflitter |> group_by(treatment) |> summarize(mean = mean(dufflitter_load), sd = sd(dufflitter_load))
-dufflitter |> ggplot2::ggplot(aes(treatment, dufflitter_load)) + geom_boxplot()
-
-
 total_load <- left_join(dufflitter_load, veg_load) |>
   pivot_longer(
     contains("_load"),
