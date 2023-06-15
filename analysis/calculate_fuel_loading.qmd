@@ -4,7 +4,7 @@ title: Calculate fuel loading
 
 ```{r}
 #| warning: false
-library(tidyverse, warn.conflicts = F)
+library(tidyverse, warn.conflicts = FALSE)
 source("./scripts/process_datasheets.r")
 ```
 
@@ -435,6 +435,7 @@ stuart <- tribble(
   "stuart", "thoushr_s", 2.25, 52.35,
   "stuart", "thoushr_r", 0.23, 20.82,
   "stuart", "veg_woody", 0.04, 2.48,
+  "stuart", "thoushr", 2.48, 56.34,
 )
 stuart <- mutate(stuart, across(where(is.numeric), \(x) x * 2.54))
 
@@ -449,10 +450,25 @@ others <- tribble(
   "valachovic", "tenhr", 2.5, 6.1,
   "valachovic", "hundhr", 3.1, 7.6,
   "valachovic", "thoushr_s", 4.9, 76.7,
-  "valachovic", "thoushr_r", 3.1, 35.2
+  "valachovic", "thoushr_r", 3.1, 35.2,
+  "valachovic", "thoushr", 18.3, 85.9,
 )
 
+fuel_classes <- c("litter", "dufflitter", "onehr",
+"tenhr", "hundhr", "onetenhundhr", "thoushr_s", "thoushr_r", "thoushr",
+    "veg_woody", "veg_herb")
+
+add_combined_classes <- function(data, newclass, classes) {
+  filter(data, class %in% classes) |>
+    group_by(pick(all_of(transectid))) |>
+    summarize(class = newclass, load = sum(load)) |>
+    bind_rows(data) |>
+    ungroup()
+}
+
 total_load |>
+  add_combined_classes("onetenhundhr", c("onehr", "tenhr", "hundhr")) |>
+  add_combined_classes("thoushr", c("thourshr_s", "thoushr_r")) |>
   group_by(class, treatment) |>
   summarize(load = mean(load, na.rm = TRUE)) |>
   summarize(low = min(load), high = max(load)) |>
@@ -460,8 +476,8 @@ total_load |>
   bind_rows(stuart) |> 
   bind_rows(others) |>
   ungroup() |>
-  arrange(class) |>
+  mutate(class = factor(class, levels = fuel_classes)) |>
+  arrange(class, mean(c(low, high))) |>
   knitr::kable(digits = 1)
 
 ```
-
