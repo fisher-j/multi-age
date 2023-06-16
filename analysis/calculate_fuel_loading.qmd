@@ -387,10 +387,12 @@ duff into a single dataframe.
 Vegetation and duff/litter first need to be summarized to the transect level.
 
 ```{r}
-woodydebris
+#| code-fold: true
+#| message: false
 dufflitter_load <- dufflitter |> 
   group_by(pick(all_of(transectid))) |> 
   summarize(dufflitter_load = mean(dufflitter_load))
+
 veg_load <- veg |>
   group_by(pick(all_of(transectid))) |>
   summarize(across(contains("load"), mean))
@@ -427,6 +429,8 @@ forests from Sonoma to northern Humboldt counteis. The values shown are from
 across this range.
 
 ```{r}
+#| echo: false
+#| message: false
 
 stuart <- tribble(
   ~source, ~class, ~low, ~high,
@@ -453,6 +457,12 @@ others <- tribble(
   "valachovic", "thoushr_r", 3.1, 35.2,
   "valachovic", "thoushr", 18.3, 85.9,
 )
+
+```
+
+```{r}
+#| code-fold: true
+#| message: false
 
 fuel_classes <- c("litter", "dufflitter", "onehr",
 "tenhr", "hundhr", "onetenhundhr", "thoushr_s", "thoushr_r", "thoushr",

@@ -627,47 +627,24 @@ Douglas-Fir: A Case Study from Northern California. -->
 <p>Now we can join results for fine woody debris, coarse woody debris, litter, and duff into a single dataframe.</p>
 <p>Vegetation and duff/litter first need to be summarized to the transect level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>woodydebris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 556 × 6
-   site  treatment corner   azi class    load
-   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
- 1 camp6 gs        s        315 onehr   0.638
- 2 camp6 gs        s        315 tenhr   3.59 
- 3 camp6 gs        s        315 hundhr  4.90 
- 4 camp6 gs        s         45 onehr   0.321
- 5 camp6 gs        s         45 tenhr   4.05 
- 6 camp6 gs        s         45 hundhr 14.8  
- 7 camp6 gs        w         45 onehr   0.425
- 8 camp6 gs        w         45 tenhr   0.448
- 9 camp6 gs        w         45 hundhr  4.90 
-10 camp6 gs        w        135 onehr   2.48 
-# ℹ 546 more rows</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dufflitter_load <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span> </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">dufflitter_load =</span> <span class="fu">mean</span>(dufflitter_load))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has grouped output by 'site', 'treatment', 'corner'. You can
-override using the `.groups` argument.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>veg_load <span class="ot">&lt;-</span> veg <span class="sc">|&gt;</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"load"</span>), mean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has grouped output by 'site', 'treatment', 'corner'. You can
-override using the `.groups` argument.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>total_load <span class="ot">&lt;-</span> <span class="fu">left_join</span>(dufflitter_load, veg_load) <span class="sc">|&gt;</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">contains</span>(<span class="st">"_load"</span>),</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(</span><span class="sc">\\</span><span class="st">w+)_(load)"</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(woodydebris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Joining with `by = join_by(site, treatment, corner, azi)`</code></pre>
-</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dufflitter_load <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">dufflitter_load =</span> <span class="fu">mean</span>(dufflitter_load))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>veg_load <span class="ot">&lt;-</span> veg <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"load"</span>), mean))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>total_load <span class="ot">&lt;-</span> <span class="fu">left_join</span>(dufflitter_load, veg_load) <span class="sc">|&gt;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">contains</span>(<span class="st">"_load"</span>),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(</span><span class="sc">\\</span><span class="st">w+)_(load)"</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(woodydebris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>John Stuart measured old-growth forest fuels in in Bull Creek Drainage of Humboldt Redwood State Park, approximately 30 km inland from the coast. Overstory BA was about 66 m<sup>2</sup>ha<sup>-1</sup>. Plots were classifed based on their overstory/understory species as one of:</p>
 <ul>
@@ -679,65 +656,34 @@ override using the `.groups` argument.</code></pre>
 <p><span class="citation" data-cites="kittredgeComparisonForestFloors1940">Kittredge (<a href="#ref-kittredgeComparisonForestFloors1940" role="doc-biblioref">1940</a>)</span> studied duff and litter in redwood plantations with an average total depth of 4 cm.</p>
 <p><span class="citation" data-cites="valachovicSuddenOakDeathcaused2011">Valachovic et al. (<a href="#ref-valachovicSuddenOakDeathcaused2011" role="doc-biblioref">2011</a>)</span> measured surface fuels in Douglas-fir-tanoak forests from Sonoma to northern Humboldt counteis. The values shown are from across this range.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>stuart <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source, <span class="sc">~</span>class, <span class="sc">~</span>low, <span class="sc">~</span>high,</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"dufflitter"</span>, <span class="fl">13.78</span>, <span class="fl">32.81</span>,</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"onetenhundhr"</span>, <span class="fl">3.59</span>, <span class="fl">5.96</span>,</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"thoushr_s"</span>, <span class="fl">2.25</span>, <span class="fl">52.35</span>,</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"thoushr_r"</span>, <span class="fl">0.23</span>, <span class="fl">20.82</span>,</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"veg_woody"</span>, <span class="fl">0.04</span>, <span class="fl">2.48</span>,</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stuart"</span>, <span class="st">"thoushr"</span>, <span class="fl">2.48</span>, <span class="fl">56.34</span>,</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>stuart <span class="ot">&lt;-</span> <span class="fu">mutate</span>(stuart, <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) x <span class="sc">*</span> <span class="fl">2.54</span>))</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>others <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source, <span class="sc">~</span>class, <span class="sc">~</span>low, <span class="sc">~</span>high,</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"dufflitter"</span>, <span class="dv">29</span>, <span class="dv">55</span>,</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"onetenhundhr"</span>, <span class="dv">9</span>, <span class="dv">20</span>,</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"finney"</span>, <span class="st">"thoushr"</span>, <span class="dv">0</span>, <span class="dv">264</span>,</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"kittredge"</span>, <span class="st">"dufflitter"</span>, <span class="dv">24</span>, <span class="dv">24</span>,</span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"litter"</span>, <span class="fl">2.9</span>, <span class="fl">4.7</span>,</span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"onehr"</span>, <span class="fl">2.0</span>, <span class="fl">3.4</span>,</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"tenhr"</span>, <span class="fl">2.5</span>, <span class="fl">6.1</span>,</span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"hundhr"</span>, <span class="fl">3.1</span>, <span class="fl">7.6</span>,</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"thoushr_s"</span>, <span class="fl">4.9</span>, <span class="fl">76.7</span>,</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"thoushr_r"</span>, <span class="fl">3.1</span>, <span class="fl">35.2</span>,</span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valachovic"</span>, <span class="st">"thoushr"</span>, <span class="fl">18.3</span>, <span class="fl">85.9</span>,</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>fuel_classes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"litter"</span>, <span class="st">"dufflitter"</span>, <span class="st">"onehr"</span>,</span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>, <span class="st">"onetenhundhr"</span>, <span class="st">"thoushr_s"</span>, <span class="st">"thoushr_r"</span>, <span class="st">"thoushr"</span>,</span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"veg_woody"</span>, <span class="st">"veg_herb"</span>)</span>
-<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>add_combined_classes <span class="ot">&lt;-</span> <span class="cf">function</span>(data, newclass, classes) {</span>
-<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data, class <span class="sc">%in%</span> classes) <span class="sc">|&gt;</span></span>
-<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span></span>
-<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">class =</span> newclass, <span class="at">load =</span> <span class="fu">sum</span>(load)) <span class="sc">|&gt;</span></span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>(data) <span class="sc">|&gt;</span></span>
-<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
-<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>total_load <span class="sc">|&gt;</span></span>
-<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_combined_classes</span>(<span class="st">"onetenhundhr"</span>, <span class="fu">c</span>(<span class="st">"onehr"</span>, <span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_combined_classes</span>(<span class="st">"thoushr"</span>, <span class="fu">c</span>(<span class="st">"thourshr_s"</span>, <span class="st">"thoushr_r"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
-<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">load =</span> <span class="fu">mean</span>(load, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">low =</span> <span class="fu">min</span>(load), <span class="at">high =</span> <span class="fu">max</span>(load)) <span class="sc">|&gt;</span></span>
-<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">"thisstudy"</span>, <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
-<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(stuart) <span class="sc">|&gt;</span> </span>
-<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(others) <span class="sc">|&gt;</span></span>
-<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">factor</span>(class, <span class="at">levels =</span> fuel_classes)) <span class="sc">|&gt;</span></span>
-<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(class, <span class="fu">mean</span>(<span class="fu">c</span>(low, high))) <span class="sc">|&gt;</span></span>
-<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has grouped output by 'site', 'treatment', 'corner'. You can
-override using the `.groups` argument.
-`summarise()` has grouped output by 'site', 'treatment', 'corner'. You can
-override using the `.groups` argument.
-`summarise()` has grouped output by 'class'. You can override using the
-`.groups` argument.</code></pre>
-</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fuel_classes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"litter"</span>, <span class="st">"dufflitter"</span>, <span class="st">"onehr"</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>, <span class="st">"onetenhundhr"</span>, <span class="st">"thoushr_s"</span>, <span class="st">"thoushr_r"</span>, <span class="st">"thoushr"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"veg_woody"</span>, <span class="st">"veg_herb"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>add_combined_classes <span class="ot">&lt;-</span> <span class="cf">function</span>(data, newclass, classes) {</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data, class <span class="sc">%in%</span> classes) <span class="sc">|&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">class =</span> newclass, <span class="at">load =</span> <span class="fu">sum</span>(load)) <span class="sc">|&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>(data) <span class="sc">|&gt;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>total_load <span class="sc">|&gt;</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_combined_classes</span>(<span class="st">"onetenhundhr"</span>, <span class="fu">c</span>(<span class="st">"onehr"</span>, <span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_combined_classes</span>(<span class="st">"thoushr"</span>, <span class="fu">c</span>(<span class="st">"thourshr_s"</span>, <span class="st">"thoushr_r"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">load =</span> <span class="fu">mean</span>(load, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">low =</span> <span class="fu">min</span>(load), <span class="at">high =</span> <span class="fu">max</span>(load)) <span class="sc">|&gt;</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">"thisstudy"</span>, <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(stuart) <span class="sc">|&gt;</span> </span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(others) <span class="sc">|&gt;</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">factor</span>(class, <span class="at">levels =</span> fuel_classes)) <span class="sc">|&gt;</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(class, <span class="fu">mean</span>(<span class="fu">c</span>(low, high))) <span class="sc">|&gt;</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <thead>
