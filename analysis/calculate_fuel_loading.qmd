@@ -37,11 +37,12 @@ The resulting equation for estimating fuel load (Mg/ha) is:
 
 $$Load = \frac{\sum d^2  G  k  a  c}{l}$$ {#eq-load}
 
-where d is diameter (cm), G is specific gravity, k=1.234 is a constant which accounts
-for random horizontal particle orientation, the density of water and unit
-conversion factors [@vanwagnerPracticalAspectsLine1982], a is the particle inclination correction factor, c is the
-transect slope correction factor and l is the transect length. The calculation
-of a is described above and c is calculated as $c = \sqrt{1 + (slope ratio)^2}$.
+where d is diameter (cm), G is specific gravity, k=1.234 is a constant which
+accounts for random horizontal particle orientation, the density of water and
+unit conversion factors [@vanwagnerPracticalAspectsLine1982], a is the particle
+inclination correction factor, c is the transect slope correction factor and l
+is the transect length. The calculation of a is described above and c is
+calculated as $c = \sqrt{1 + (slope ratio)^2}$.
 
 Thus in R, our basic fuel load function will look like this:
 
@@ -144,9 +145,9 @@ estimates of fuel loading ranged from 40% less to 8% more than when using those
 suggested by @brownHandbookInventoryingDowned1974. A study of young, treated
 redwood and Douglas-fir stands [@glebockiFuelLoadingMoisture2015] found similar
 values for G to those of @brownHandbookInventoryingDowned1974, and values for a
-much closer to those of @vanwagtendonkPhysicalPropertiesWoody1996
-(@tbl-params). Note that the 1's for thousand hr fuels reflect that the
-diameters were measured in the field.
+much closer to those of @vanwagtendonkPhysicalPropertiesWoody1996 (@tbl-params).
+Note that the 1's for thousand hr fuel diameters reflect that the diameters, not
+counts were measured in the field.
 
 ```{r}
 #| echo: false
@@ -162,6 +163,7 @@ lit_particle_params |> knitr::kable()
 
 ```{r}
 #| echo: false
+#| message: false
 # load data and ensure unique transects
 source("./scripts/test_funs.r")
 d <- combine_fuels_datasheets("../data")
@@ -197,9 +199,12 @@ fwd <- d$transects |>
 
 Coarse woody debris is already in a long format so we don't need to pivot
 longer, but we will summarize the data for each transect by getting the sum of
-squared diameters. Also, we only have parameters for "sound" and "rotten"
-particles, so anything over decay class 3 will be considered "rotten". Finally,
-we need to join in transect slopes, and transect lengths.
+squared diameters. This differs from the fine woody data because we have actual
+diameters instead of counts, each diameter corresponds to a single observation.
+
+We only have parameters for "sound" and "rotten" particles, so anything
+over decay class 3 will be considered "rotten". Finally, we need to join in
+transect slopes, and transect lengths.
 
 ```{r}
 #| message: false
@@ -208,21 +213,23 @@ cwd <- d$coarse_woody |>
   mutate(class = if_else(decay > 3, "thoushr_r", "thoushr_s")) |>
   group_by(site, treatment, corner, azi, class) |>
   # named count to match fwd table, but these are actually summed d^2
-  summarize(count = sum(dia^2), .groups = "drop") |>
+  summarize(sum_d2 = sum(dia^2), .groups = "drop") |>
   left_join(d$transects[c(transectid, "slope")]) |>
   left_join(d$plots[c("site", "treatment", "thoushr_length")]) |>
-  select(all_of(transectid), slope, class, count, length = "thoushr_length")
+  select(all_of(transectid), slope, class, sum_d2, length = "thoushr_length")
 
 ```
 
 ## Dead and down woody debris loading
 
 Now, if we can be sure that the FWD and CWD data have the same column names, we
-can bind them, join the fuel parameters, and calculate the load for each class
+can bind them, join the fuel parameters, and calculate the load for each class.
+We will use the sum of squared diameters as the `count` column, which just gets
+multiplied by 1 -- the corresponding `d2` parameter.
 
 ```{r}
 
-if (setequal(names(cwd), names(fwd))) woodydebris <- bind_rows(fwd, cwd)
+woodydebris <- bind_rows(fwd, rename(cwd, count = sum_d2))
 woodydebris <- woodydebris |> 
   left_join(get_particle_params(source = "glebocki")) |>
   mutate(
@@ -353,6 +360,14 @@ vegetative fuel loading by multiplying estimated percent cover by height by a
 constant bulk densities of 8 and 18 t/ha/m for herbaceous and shrub components,
 respectively.
 
+Here I want to standardize the data so that heights are all zero (instead of
+NA), if percent cover for live and dead were both zero. Also, I want total
+percent cover, with total proportion dead.
+
+Theoretically, with the Firemon protocol, total percent cover could be greater
+than 100, because live and dead percent covers are assessed separately. In
+practice, sum of live and dead cover was over 100 percent.
+
 <!-- TODO: find better sources of shrub bulk density. -->
 
 ```{r}
@@ -387,7 +402,7 @@ duff into a single dataframe.
 Vegetation and duff/litter first need to be summarized to the transect level.
 
 ```{r}
-#| code-fold: true
+#| code-fold: false
 #| message: false
 dufflitter_load <- dufflitter |> 
   group_by(pick(all_of(transectid))) |> 
@@ -435,6 +450,9 @@ across this range.
 stuart <- tribble(
   ~source, ~class, ~low, ~high,
   "stuart", "dufflitter", 13.78, 32.81,
+  "stuart", "onehr", .41, .93,
+  "stuart", "tenhr", 1.57, 2.86,
+  "stuart", "hundhr", 1.26, 3.36,
   "stuart", "onetenhundhr", 3.59, 5.96,
   "stuart", "thoushr_s", 2.25, 52.35,
   "stuart", "thoushr_r", 0.23, 20.82,
@@ -456,18 +474,31 @@ others <- tribble(
   "valachovic", "thoushr_s", 4.9, 76.7,
   "valachovic", "thoushr_r", 3.1, 35.2,
   "valachovic", "thoushr", 18.3, 85.9,
-)
+  "valachovic", "onetenhundhr", 9, 15.5,
+) |> bind_rows(stuart)
 
 ```
 
 ```{r}
-#| code-fold: true
+#| echo: false
 #| message: false
+#| warning: false
+#| label: tbl-total-load
+#| tbl-cap: "Summary of fuel loading metrics for this and other studies."
+#| tbl-subcap:
+#|   - ""
+#|   - ""
+#| layout-ncol: 2
+
+
 
 fuel_classes <- c("litter", "dufflitter", "onehr",
 "tenhr", "hundhr", "onetenhundhr", "thoushr_s", "thoushr_r", "thoushr",
     "veg_woody", "veg_herb")
 
+# This function adds a summary row that sums load values from other rows, this
+# is to be able to compare among multiple sources that report slightly different
+# metrics
 add_combined_classes <- function(data, newclass, classes) {
   filter(data, class %in% classes) |>
     group_by(pick(all_of(transectid))) |>
@@ -476,18 +507,63 @@ add_combined_classes <- function(data, newclass, classes) {
     ungroup()
 }
 
-total_load |>
+tl_tab <- total_load |>
   add_combined_classes("onetenhundhr", c("onehr", "tenhr", "hundhr")) |>
-  add_combined_classes("thoushr", c("thourshr_s", "thoushr_r")) |>
+  add_combined_classes("thoushr", c("thoushr_s", "thoushr_r")) |>
   group_by(class, treatment) |>
   summarize(load = mean(load, na.rm = TRUE)) |>
   summarize(low = min(load), high = max(load)) |>
   mutate(source = "thisstudy", .before = 1) |>
-  bind_rows(stuart) |> 
   bind_rows(others) |>
   ungroup() |>
-  mutate(class = factor(class, levels = fuel_classes)) |>
-  arrange(class, mean(c(low, high))) |>
-  knitr::kable(digits = 1)
+  mutate(class = factor(class, levels = fuel_classes)) |> # intuitive row order
+  arrange(class, mean(c(low, high)))
+
+tl_tab[1:18, ] |>
+  gt::gt(groupname_col = "class") |>
+  gt::tab_options(row_group.as_column = TRUE) |>
+  gt::fmt_number(decimals = 1)
+
+tl_tab[19:nrow(tl_tab), ] |>
+  gt::gt(groupname_col = "class") |>
+  gt::tab_options(row_group.as_column = TRUE) |>
+  gt::fmt_number(decimals = 1)
+
+```
+
+## Summary
+
+Our combined duff-litter depths were comparable to other studies, resulting in
+comparable loading for litter and duff.
+
+Onehr fuels were lower than then other redwood study and that found in
+Douglas-fir/tanoak forests, which is somewhat supprising.
+
+Hundhr fuels were higher in our stands. This makes sense given the logging.
+
+Total fine fuel loading (onetenhundhr) was similar to other studies, but
+apprently with more hundhr particles.
+
+Thoushr fuels are notoriously variable. Those on our sites were  more
+consistent and within the middle of the range of other reported values.
+
+Woody vegetation was much higher than in the one other reported study. That
+study was in old-growth redwoods. Our values include tree sprout vegetation,
+which can be several times taller than evergreen huckleberry and much bushier
+than understory tanoak saplings. Stuart did mention the presence of "nearly
+inpenetrable [evergreen huckleberry] thickets." @stuartRedwoodFireEcology1985
+found good correlation of live fuels (which included leaves and "twigs") with
+basal diamter for both huckleberry and tanoak saplings. The simple scaling
+factor and/or the occular estimates we used may be biased.
+
+I'll Save this data so it can be used in subsequent analysis.
+
+- dufflitter, fwd, cwd, and veg, represent mostly raw data in a long format
+  - this includes two stations per transect for classes for veg and dufflitter
+- total_load is the summarized loading for all classes by transect.
+
+```{r}
+
+save(dufflitter, fwd, cwd, veg, total_load, file = "data_long.RData")
 
 ```
