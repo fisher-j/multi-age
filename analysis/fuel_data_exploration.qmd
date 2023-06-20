@@ -1,0 +1,83 @@
+---
+title: Fuel data exploration
+---
+
+Our main questions regarding fuel loading are:
+
+1. Are there differences in fuel loading between treatments?
+2. If so, what is the magnitude of the difference?
+
+We have a range of response variables that include loading in several different
+classes of surface fuels. Some of these may be correlated with each other, which
+may have an effect on our interpretation of differences between treatments. For
+instance, if duff-litter load is negatively correlated with vegetation, even if
+we don't see differences between treatment in either of these variables
+separately, it might be found that for any given level of vegetation loading, one
+treatment, or another may have consistently higher levels of duff-litter.
+Capturing differences between treatments in terms of interactions like these
+requires different tools than assessing any one variable on its own.
+
+In order to assess potential outliers, co-linearity, interactions, and other
+problems with statistical tests, we'll first conduct some data exploration as
+outlined by @zuurProtocolDataExploration2010.
+
+For reference, here is a list of the fuel loading (response) variables of
+interest.
+
+1. duff/litter load
+2. woody vegetation
+3. herbaceous vegetation
+4. one hr fuels
+5. ten hr fuels
+6. hundred hr fuels
+7. fine woody debris (one, ten, and hundred hr fuels)
+8. coarse woody debris
+
+It's important to note that variables 1-3 were measured twice per transect and
+the rest were measured once per transect.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(tidyverse)
+load("./data_long.RData")
+transectid <- c("site", "treatment", "corner", "azi")
+```
+
+## Outliers
+
+```{r}
+#| warning: false
+#| message: false
+
+cleavland_plot <- function(data, title, load_var = load) {
+  data |>
+    group_by(site, treatment) |>
+    mutate(replicate_mean_load = mean({{load_var}}, na.rm = TRUE)) |>
+    ggplot(
+      aes(
+        {{load_var}},
+        fct_reorder( interaction(site, treatment, sep = " "), {{load_var}}),
+        color = treatment)
+    ) +
+    geom_jitter(width = 0, height = 0.2) +
+    labs(x = expression(Load~(Mg%.%ha^-1)), y = "Data order", title = title)
+}
+
+cwd |>
+  summarize( load = sum(load, na.rm = TRUE), .by = all_of(transectid)) |> 
+  cleavland_plot("CWD")
+
+dufflitter |>
+  cleavland_plot("Duff/litter")
+
+fwd |> 
+  group_by(class) |> 
+  group_walk(\(data, groups) print(cleavland_plot(data, groups$class)))
+
+veg |>
+  group_by(class) |>
+  group_walk(\(data, groups) print(cleavland_plot(data, groups$class)))
+
+```

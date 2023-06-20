@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Redwoood multi-age experiment - Work log</title>
+<title>Redwoood multi-age experiment - 4&nbsp; Fuel data exploration</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,60 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -30,7 +83,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./fuel_data_exploration.html" rel="prev">
+<link href="./work_log.html" rel="next">
+<link href="./calculate_fuel_loading.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -73,7 +127,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./work_log.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Work log</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./fuel_data_exploration.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -118,13 +172,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./fuel_data_exploration.html" class="sidebar-item-text sidebar-link">
+  <a href="./fuel_data_exploration.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./work_log.html" class="sidebar-item-text sidebar-link active">
+  <a href="./work_log.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
   </div>
 </li>
@@ -138,13 +192,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">2023-06-08</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">2023-06-05</a></li>
-  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">2023-06-01</a></li>
-  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">2023-05-31</a></li>
-  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">2023-5-26</a></li>
-  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">2023-05-23</a></li>
-  <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6">2023-05-22</a></li>
+  <li><a href="#outliers" id="toc-outliers" class="nav-link active" data-scroll-target="#outliers"><span class="header-section-number">4.1</span> Outliers</a></li>
   </ul>
 </nav>
     </div>
@@ -153,7 +201,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Work log</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></h1>
 </div>
 
 
@@ -168,69 +216,82 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p><em>The following is a log of the work completed for this project</em></p>
-<section id="section" class="level1">
-<h1>2023-06-08</h1>
-<ul>
-<li>Calculate fine and coarse fuel load</li>
-<li>create test for duplicated transect or plot ids</li>
-<li>fix wrong azimuths in datasheet</li>
-<li>start with duff and litter load</li>
-</ul>
-</section>
-<section id="section-1" class="level1">
-<h1>2023-06-05</h1>
-<ul>
-<li>Start calculate fuel loading</li>
-<li>some background research on the theory behind planar intercept</li>
-<li>compile fuel particle parameters from multiple sources</li>
-</ul>
-</section>
-<section id="section-2" class="level1">
-<h1>2023-06-01</h1>
-<ul>
-<li>Finish data entry</li>
-</ul>
-</section>
-<section id="section-3" class="level1">
-<h1>2023-05-31</h1>
-<ul>
-<li>Figure showing fuel (and vegetation) sampling layout</li>
-<li>Function to combine data from all datasheets</li>
-<li>Refine data description text</li>
-<li>continued data entry</li>
-</ul>
-</section>
-<section id="section-4" class="level1">
-<h1>2023-5-26</h1>
-<ul>
-<li>Developed data input format
-<ul>
-<li>one file for each plot</li>
-</ul></li>
-<li>Created R function to ingest a datasheet in the specified format</li>
-<li><a href="./data_description.html">Documented</a> the input format and processing function</li>
-<li>Fuel data entered for 7 replicates</li>
-</ul>
-</section>
-<section id="section-5" class="level1">
-<h1>2023-05-23</h1>
-<ul>
-<li>work on development environment for coding</li>
-</ul>
-</section>
-<section id="section-6" class="level1">
-<h1>2023-05-22</h1>
-<ul>
-<li>Initialized project as a quarto book
-<ul>
-<li>learning to use Quarto building analysis website</li>
-<li>set up GitHub repository</li>
-<li>start log to track progress</li>
-</ul></li>
-</ul>
+<p>Our main questions regarding fuel loading are:</p>
+<ol type="1">
+<li>Are there differences in fuel loading between treatments?</li>
+<li>If so, what is the magnitude of the difference?</li>
+</ol>
+<p>We have a range of response variables that include loading in several different classes of surface fuels. Some of these may be correlated with each other, which may have an effect on our interpretation of differences between treatments. For instance, if duff-litter load is negatively correlated with vegetation, even if we don’t see differences between treatment in either of these variables separately, it might be found that for any given level of vegetation loading, one treatment, or another may have consistently higher levels of duff-litter. Capturing differences between treatments in terms of interactions like these requires different tools than assessing any one variable on its own.</p>
+<p>In order to assess potential outliers, co-linearity, interactions, and other problems with statistical tests, we’ll first conduct some data exploration as outlined by <span class="citation" data-cites="zuurProtocolDataExploration2010">Zuur, Ieno, and Elphick (<a href="#ref-zuurProtocolDataExploration2010" role="doc-biblioref">2010</a>)</span>.</p>
+<p>For reference, here is a list of the fuel loading (response) variables of interest.</p>
+<ol type="1">
+<li>duff/litter load</li>
+<li>woody vegetation</li>
+<li>herbaceous vegetation</li>
+<li>one hr fuels</li>
+<li>ten hr fuels</li>
+<li>hundred hr fuels</li>
+<li>fine woody debris (one, ten, and hundred hr fuels)</li>
+<li>coarse woody debris</li>
+</ol>
+<p>It’s important to note that variables 1-3 were measured twice per transect and the rest were measured once per transect.</p>
+<section id="outliers" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="outliers"><span class="header-section-number">4.1</span> Outliers</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cleavland_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, title, <span class="at">load_var =</span> load) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(site, treatment) <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">replicate_mean_load =</span> <span class="fu">mean</span>({{load_var}}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        {{load_var}},</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">fct_reorder</span>( <span class="fu">interaction</span>(site, treatment, <span class="at">sep =</span> <span class="st">" "</span>), {{load_var}}),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> treatment)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Data order"</span>, <span class="at">title =</span> title)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>cwd <span class="sc">|&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>( <span class="at">load =</span> <span class="fu">sum</span>(load, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> <span class="fu">all_of</span>(transectid)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cleavland_plot</span>(<span class="st">"CWD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cleavland_plot</span>(<span class="st">"Duff/litter"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fwd <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_walk</span>(\(data, groups) <span class="fu">print</span>(<span class="fu">cleavland_plot</span>(data, groups<span class="sc">$</span>class)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>veg <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_walk</span>(\(data, groups) <span class="fu">print</span>(<span class="fu">cleavland_plot</span>(data, groups<span class="sc">$</span>class)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-7.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-zuurProtocolDataExploration2010" class="csl-entry" role="listitem">
+Zuur, Alain F., Elena N. Ieno, and Chris S. Elphick. 2010. <span>“A Protocol for Data Exploration to Avoid Common Statistical Problems.”</span> <em>Methods in Ecology and Evolution</em> 1 (1): 3–14. <a href="https://doi.org/10.1111/j.2041-210X.2009.00001.x">https://doi.org/10.1111/j.2041-210X.2009.00001.x</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -469,11 +530,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./fuel_data_exploration.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></span>
+      <a href="./calculate_fuel_loading.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Calculate fuel loading</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./work_log.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Work log</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

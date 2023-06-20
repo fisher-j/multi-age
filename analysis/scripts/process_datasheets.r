@@ -85,6 +85,7 @@ wrangle_datasheet <- function(file) {
 }
 
 data_dir <- "../data"
+
 # Combine fuels data for each plot
 #
 # This function expects all fuel datasheets to begin with "fuel" and end with

@@ -176,6 +176,8 @@ The above information will allow us to calculate fuel loading for fine and
 coarse woody debris. First we'll load our data and get the FWD (and the fuel
 particle parameters) in a long format for easier calculations.
 
+Two transects are missing slope. I'm giving them a slope of 0 for now.
+
 ```{r}
 #| message: false
 #| code-fold: true
@@ -184,6 +186,7 @@ transectid <- c("site", "treatment", "corner", "azi")
 
 fwd <- d$transects |>
   select(all_of(transectid), slope, matches("one|ten|hun")) |>
+  mutate(slope = if_else(is.na(slope), 0, slope)) |>
   left_join(select(d$plots, site, treatment, matches("one|ten|hun"))) |>
   # move onehr, tenhr, etc to new column and create new columns for transect
   # length and particle counts
@@ -191,7 +194,18 @@ fwd <- d$transects |>
     matches("count|len"),
     names_to = c("class", ".value"),
     names_sep = "_"
-  ) 
+  ) |> 
+  left_join(get_particle_params(source = "glebocki")) |>
+  mutate(
+    load = simple_load(
+    sum_d2 = count * d2,
+    l = length,
+    percent_slope = slope,
+    G = G,
+    a = a
+    )
+  ) |>
+  select(-c(G, a))
 
 ```
 
@@ -206,6 +220,8 @@ We only have parameters for "sound" and "rotten" particles, so anything
 over decay class 3 will be considered "rotten". Finally, we need to join in
 transect slopes, and transect lengths.
 
+I'm setting a couple of missing slope to zero.
+
 ```{r}
 #| message: false
 
@@ -213,35 +229,26 @@ cwd <- d$coarse_woody |>
   mutate(class = if_else(decay > 3, "thoushr_r", "thoushr_s")) |>
   group_by(site, treatment, corner, azi, class) |>
   # named count to match fwd table, but these are actually summed d^2
-  summarize(sum_d2 = sum(dia^2), .groups = "drop") |>
+  summarize(
+    sum_d2 = sum(dia^2),
+    count = n(),
+    med_d = median(dia),
+    .groups = "drop"
+  ) |>
   left_join(d$transects[c(transectid, "slope")]) |>
+  mutate(slope = if_else(is.na(slope), 0, slope)) |>
   left_join(d$plots[c("site", "treatment", "thoushr_length")]) |>
-  select(all_of(transectid), slope, class, sum_d2, length = "thoushr_length")
-
-```
-
-## Dead and down woody debris loading
-
-Now, if we can be sure that the FWD and CWD data have the same column names, we
-can bind them, join the fuel parameters, and calculate the load for each class.
-We will use the sum of squared diameters as the `count` column, which just gets
-multiplied by 1 -- the corresponding `d2` parameter.
-
-```{r}
-
-woodydebris <- bind_rows(fwd, rename(cwd, count = sum_d2))
-woodydebris <- woodydebris |> 
   left_join(get_particle_params(source = "glebocki")) |>
   mutate(
     load = simple_load(
-      sum_d2 = count * d2,
-      l = length,
+      sum_d2 = sum_d2,
+      l = thoushr_length,
       percent_slope = slope,
       G = G,
       a = a
-    ),
-    .keep = "unused"
-  )
+    )
+  ) |>
+  select(-c(G, a, d2), length = thoushr_length)
 
 ```
 
@@ -339,7 +346,7 @@ dufflitter |>
 
 dufflitter <- dufflitter |>
   mutate(
-    dufflitter_load = (duff_depth + litter_depth) * 7.73
+    load = (duff_depth + litter_depth) * 7.73
   )
 ```
 
@@ -371,7 +378,9 @@ practice, sum of live and dead cover was over 100 percent.
 <!-- TODO: find better sources of shrub bulk density. -->
 
 ```{r}
+
 veg_match <- "woody|herb|avg_w_ht|avg_h_ht|species"
+
 veg <- d$transects |>
   select(all_of(transectid), slope, matches(veg_match)) |>
   pivot_longer(
@@ -382,16 +391,22 @@ veg <- d$transects |>
   mutate(
     woody_ht = if_else(live_woody == 0 & dead_woody == 0, 0, avg_w_ht),
     herb_ht = if_else(live_herb == 0 & dead_herb == 0, 0, avg_h_ht),
-    veg_woody_load = ((live_woody + dead_woody) / 100) * woody_ht * 18,
+    woody_load = ((live_woody + dead_woody) / 100) * woody_ht * 18,
     woody_p_dead = if_else(
-      veg_woody_load == 0, 0, dead_woody / (live_woody + dead_woody)
+      woody_load == 0, 0, dead_woody / (live_woody + dead_woody)
     ),
-    veg_herb_load = ((live_herb + dead_herb) / 100) * herb_ht * 8,
+    herb_load = ((live_herb + dead_herb) / 100) * herb_ht * 8,
     herb_p_dead = if_else(
-      veg_herb_load == 0, 0, dead_herb / (live_herb + dead_herb)
+      herb_load == 0, 0, dead_herb / (live_herb + dead_herb)
     )
   ) |>
-  select(!matches("live_|dead_|avg_"), woody_ht, herb_ht) 
+  select(!matches("live_|dead_|avg_"), woody_ht, herb_ht) |>
+  pivot_longer(
+    matches("woody|herb"),
+    names_to = c("class", ".value"),
+    names_pattern = "(woody|herb)_(.*)"
+  )
+
 ```
 
 ## Total load {#sec-total-load}
@@ -406,19 +421,18 @@ Vegetation and duff/litter first need to be summarized to the transect level.
 #| message: false
 dufflitter_load <- dufflitter |> 
   group_by(pick(all_of(transectid))) |> 
-  summarize(dufflitter_load = mean(dufflitter_load))
+  summarize(load = mean(load))
 
 veg_load <- veg |>
-  group_by(pick(all_of(transectid))) |>
-  summarize(across(contains("load"), mean))
+  group_by(pick(all_of(transectid)), class) |>
+  summarize(load = mean(load))
 
-total_load <- left_join(dufflitter_load, veg_load) |>
-  pivot_longer(
-    contains("_load"),
-    names_to = c("class", ".value"),
-    names_pattern = "(\\w+)_(load)"
-  ) |>
-  bind_rows(woodydebris)
+fwd_load <- fwd |> select(all_of(transectid), class, load)
+cwd_load <- cwd |> select(all_of(transectid), class, load)
+
+total_load <- dufflitter |>
+  bind_rows(dufflitter_load, veg_load, fwd_load, cwd_load) |>
+  ungroup()
 
 ```
 
@@ -555,6 +569,8 @@ inpenetrable [evergreen huckleberry] thickets." @stuartRedwoodFireEcology1985
 found good correlation of live fuels (which included leaves and "twigs") with
 basal diamter for both huckleberry and tanoak saplings. The simple scaling
 factor and/or the occular estimates we used may be biased.
+
+## Save data
 
 I'll Save this data so it can be used in subsequent analysis.
 
