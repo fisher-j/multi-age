@@ -250,40 +250,87 @@ div.csl-indent {
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Data order"</span>, <span class="at">title =</span> title)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>cwd <span class="sc">|&gt;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>( <span class="at">load =</span> <span class="fu">sum</span>(load, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> <span class="fu">all_of</span>(transectid)) <span class="sc">|&gt;</span> </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cleavland_plot</span>(<span class="st">"CWD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cleavland_plot</span>(<span class="st">"Duff/litter"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-fwd" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+<div id="fig-fwd-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-fwd-1.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672"></p>
+<figcaption class="figure-caption">(a) One hour fuels</figcaption>
+</figure>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fwd <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_walk</span>(\(data, groups) <span class="fu">print</span>(<span class="fu">cleavland_plot</span>(data, groups<span class="sc">$</span>class)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid" width="672"></p>
+<div id="fig-fwd-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-fwd-2.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672"></p>
+<figcaption class="figure-caption">(b) Ten hour fuels</figcaption>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-5.png" class="img-fluid" width="672"></p>
+<div id="fig-fwd-3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-fwd-3.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672"></p>
+<figcaption class="figure-caption">(c) Hundred hour fuels</figcaption>
+</figure>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>veg <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_walk</span>(\(data, groups) <span class="fu">print</span>(<span class="fu">cleavland_plot</span>(data, groups<span class="sc">$</span>class)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;4.1: Data distribution of loading for fine woody debris classes. Data are sorted by mean loading within each replicate. Jitter has been added to aid in visual interpretation.</figcaption>
+</figure>
+</div>
+<div class="cell">
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-6.png" class="img-fluid" width="672"></p>
+<div id="fig-fwd-all" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-fwd-all-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.2: Combined fuel loading in one, ten, and hundred hour classes. Data are sorted as described in <a href="#fig-fwd">Figure&nbsp;<span>4.1</span></a>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-cwd" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-cwd-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.3: Sum of coarse woody (&gt;7.64 cm, sound and rotten wood combined) fuel loading for transects. The y-axis is sorted by mean CWD loading for each replicate.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-dufflitter" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-dufflitter-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.4: Combined duff and litter loading at each station along trancects. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span>4.3</span></a>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="fig-veg" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell-output-display">
+<div id="fig-veg-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-veg-1.png" class="img-fluid figure-img" data-ref-parent="fig-veg" width="672"></p>
+<figcaption class="figure-caption">(a) Woody vegetation</figcaption>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-7.png" class="img-fluid" width="672"></p>
+<div id="fig-veg-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-veg-2.png" class="img-fluid figure-img" data-ref-parent="fig-veg" width="672"></p>
+<figcaption class="figure-caption">(b) herbaceous vegetation</figcaption>
+</figure>
 </div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;4.5: Vegetation fuel loading for each station along transects, including live and dead fuels attached to live vegetation. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span>4.3</span></a>.</figcaption>
+</figure>
 </div>
 
 

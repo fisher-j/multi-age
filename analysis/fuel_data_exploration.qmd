@@ -65,19 +65,84 @@ cleavland_plot <- function(data, title, load_var = load) {
     labs(x = expression(Load~(Mg%.%ha^-1)), y = "Data order", title = title)
 }
 
+
+```
+
+```{r}
+#| echo: false
+#| label: fig-fwd
+#| fig-cap: >
+#|   Data distribution of loading for fine woody debris classes. Data are
+#|   sorted by mean loading within each replicate. Jitter has been added to aid
+#|   in visual interpretation.
+#| fig-subcap:
+#|   - One hour fuels
+#|   - Ten hour fuels
+#|   - Hundred hour fuels
+
+fwd |> 
+  mutate(class = factor(class, levels = c("onehr", "tenhr", "hundhr"))) |>
+  group_by(class) |> 
+  group_walk(\(data, groups) print(cleavland_plot(data, groups$class)))
+
+```
+
+```{r}
+#| echo: false
+#| label: fig-fwd-all
+#| fig-cap: >
+#|   Combined fuel loading in one, ten, and hundred hour classes. Data are
+#|   sorted as described in @fig-fwd.
+
+fwd |> summarize(.by = all_of(transectid), load = sum(load)) |>
+cleavland_plot("One, ten, and hund. hr")
+
+```
+
+```{r}
+#| echo: false
+#| label: fig-cwd
+#| fig-cap: >
+#|   Sum of coarse woody (>7.64 cm, sound and rotten wood combined) fuel loading
+#|   for transects. The y-axis is sorted by mean CWD loading for each replicate.
+
 cwd |>
   summarize( load = sum(load, na.rm = TRUE), .by = all_of(transectid)) |> 
   cleavland_plot("CWD")
 
+```
+
+```{r}
+#| echo: false
+#| label: fig-dufflitter
+#| fig-cap: >
+#|   Combined duff and litter loading at each station along trancects. Y-axis is
+#|   sorted as in @fig-cwd.
+
 dufflitter |>
   cleavland_plot("Duff/litter")
 
-fwd |> 
-  group_by(class) |> 
-  group_walk(\(data, groups) print(cleavland_plot(data, groups$class)))
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-veg
+#| fig-cap: >
+#|   Vegetation fuel loading for each station along transects, including live
+#|   and dead fuels attached to live vegetation. Y-axis is sorted as in
+#|   @fig-cwd.
+#| fig-subcap:
+#|   - Woody vegetation
+#|   - herbaceous vegetation
 
 veg |>
+  mutate(class = factor(class, levels = c("woody", "herb"))) |>
   group_by(class) |>
-  group_walk(\(data, groups) print(cleavland_plot(data, groups$class)))
+  group_walk(
+    \(data, groups) print(cleavland_plot(data, paste(groups$class, "veg")))
+  )
 
 ```
+

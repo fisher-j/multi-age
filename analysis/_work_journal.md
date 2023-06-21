@@ -1,3 +1,8 @@
+# 2023-06-20
+
+- Begin fuels data exploration
+- Look for outliers
+
 # 2023-06-15
 
 - Improve presentation of fuel loading values from literature
