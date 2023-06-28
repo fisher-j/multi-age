@@ -166,7 +166,8 @@ lit_particle_params |> knitr::kable()
 #| message: false
 # load data and ensure unique transects
 source("./scripts/test_funs.r")
-d <- combine_fuels_datasheets("../data")
+d <- combine_fuels_datasheets("../data") |>
+  map(\(x) filter(x, treatment != "md"))
 warn_duplicates(d$transects, site, treatment, corner, azi)
 ```
 
@@ -419,9 +420,10 @@ Vegetation and duff/litter first need to be summarized to the transect level.
 ```{r}
 #| code-fold: false
 #| message: false
+
 dufflitter_load <- dufflitter |> 
   group_by(pick(all_of(transectid))) |> 
-  summarize(load = mean(load))
+  summarize(class = "dufflitter", load = mean(load))
 
 veg_load <- veg |>
   group_by(pick(all_of(transectid)), class) |>
@@ -430,8 +432,7 @@ veg_load <- veg |>
 fwd_load <- fwd |> select(all_of(transectid), class, load)
 cwd_load <- cwd |> select(all_of(transectid), class, load)
 
-total_load <- dufflitter |>
-  bind_rows(dufflitter_load, veg_load, fwd_load, cwd_load) |>
+total_load <- bind_rows(dufflitter_load, veg_load, fwd_load, cwd_load)|>
   ungroup()
 
 ```
@@ -504,8 +505,6 @@ others <- tribble(
 #|   - ""
 #| layout-ncol: 2
 
-
-
 fuel_classes <- c("litter", "dufflitter", "onehr",
 "tenhr", "hundhr", "onetenhundhr", "thoushr_s", "thoushr_r", "thoushr",
     "veg_woody", "veg_herb")
@@ -533,15 +532,17 @@ tl_tab <- total_load |>
   mutate(class = factor(class, levels = fuel_classes)) |> # intuitive row order
   arrange(class, mean(c(low, high)))
 
-tl_tab[1:18, ] |>
-  gt::gt(groupname_col = "class") |>
-  gt::tab_options(row_group.as_column = TRUE) |>
-  gt::fmt_number(decimals = 1)
+# if(!interactive()) {
+  tl_tab[1:18, ] |>
+    gt::gt(groupname_col = "class") |>
+    gt::tab_options(row_group.as_column = TRUE) |>
+    gt::fmt_number(decimals = 1)
 
-tl_tab[19:nrow(tl_tab), ] |>
-  gt::gt(groupname_col = "class") |>
-  gt::tab_options(row_group.as_column = TRUE) |>
-  gt::fmt_number(decimals = 1)
+  tl_tab[19:nrow(tl_tab), ] |>
+    gt::gt(groupname_col = "class") |>
+    gt::tab_options(row_group.as_column = TRUE) |>
+    gt::fmt_number(decimals = 1)
+# }
 
 ```
 

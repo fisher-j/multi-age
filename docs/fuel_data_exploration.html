@@ -193,6 +193,8 @@ div.csl-indent {
    
   <ul>
   <li><a href="#outliers" id="toc-outliers" class="nav-link active" data-scroll-target="#outliers"><span class="header-section-number">4.1</span> Outliers</a></li>
+  <li><a href="#sec-Normality" id="toc-sec-Normality" class="nav-link" data-scroll-target="#sec-Normality"><span class="header-section-number">4.2</span> Normality</a></li>
+  <li><a href="#sec-homogeneity-of-variance" id="toc-sec-homogeneity-of-variance" class="nav-link" data-scroll-target="#sec-homogeneity-of-variance"><span class="header-section-number">4.3</span> Homogeneity of variance</a></li>
   </ul>
 </nav>
     </div>
@@ -332,6 +334,347 @@ div.csl-indent {
 <figcaption class="figure-caption">Figure&nbsp;4.5: Vegetation fuel loading for each station along transects, including live and dead fuels attached to live vegetation. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span>4.3</span></a>.</figcaption>
 </figure>
 </div>
+</section>
+<section id="sec-Normality" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-Normality"><span class="header-section-number">4.2</span> Normality</h2>
+<p>For further testing, I will summarize the data somewhat, by combining vegetation loading (woody and herb), and coarse woody loading (sound and rotten) into just two loading metrics.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simple_load <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  tl <span class="ot">&lt;-</span> <span class="fu">pivot_wider</span>(total_load, <span class="at">names_from =</span> class, <span class="at">values_from =</span> load) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">thoushr =</span> <span class="fu">rowSums</span>(<span class="fu">pick</span>(<span class="fu">c</span>(thoushr_s, thoushr_r)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">veg =</span> <span class="fu">rowSums</span>(<span class="fu">pick</span>(<span class="fu">c</span>(woody, herb)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">.keep =</span> <span class="st">"unused"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(select)) {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(tl)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(tl, ...)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  } </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>} </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When using manova to test for difference between groups with multiple response variables, it is important that the response variables are multivariate normally distributed. Unfortunately, it would appear that we have a probelem with normality. The raw data for each loading variable is clearly not normally distributed <a href="#fig-qqplot-naive">Figure&nbsp;<span>4.6</span></a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>load_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dufflitter"</span>, <span class="st">"onehr"</span>, <span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>, <span class="st">"thoushr"</span>, <span class="st">"veg"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">simple_load</span>(treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>treatment) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> value)) <span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name, <span class="at">scales =</span> <span class="st">"free"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-qqplot-naive" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-qqplot-naive-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.6: Naive qq plot of loading variables. This doesn’t take into account the fact that we are interested in within group normality.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model">Figure&nbsp;<span>4.7</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
+<div id="fig-qqplot-model" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">simple_load</span>(treatment, <span class="fu">all_of</span>(load_vars))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>load_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.matrix</span>(tl[<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">~</span> treatment, <span class="at">data =</span> tl)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>m_dist <span class="ot">&lt;-</span> heplots<span class="sc">::</span><span class="fu">cqplot</span>(load_mod)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">simple_load</span>(<span class="fu">everything</span>())[<span class="fu">order</span>(m_dist, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 10
+   site    treatment corner   azi dufflitter onehr  tenhr hundhr thoushr    veg
+   &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+ 1 waldos  ha        nw        90       23.2 1.27  10.7    21.2    593.   16.2 
+ 2 waldos  gs        ne       270      131.  1.72   6.46   16.1     36.3 199.  
+ 3 whiskey ha        n        225       27.1 2.76  13.3    45.2     32.1   8.5 
+ 4 waldos  gs        se       270       54.1 0.504 11.6    34.8    280.    0.9 
+ 5 whiskey gs        n        225       27.1 0.124  2.09    8.56     0   121.  
+ 6 waldos  ha        se       270      112.  2.32   0.930   2.54     0    46.1 
+ 7 waldos  ha        se         0       15.5 3.34   6.53   13.7     17.7   6.31
+ 8 waldos  gs        se         0       38.7 1.08   7.31   37.3     17.6   4.23
+ 9 waldon  gs        e        225      112.  0.711  8.98   14.7     89.6  34.6 
+10 whiskey ld        s        315       77.3 0.390  5.38   31.9     59.8  74.2 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>treatments <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"gs"</span>, <span class="st">"ha"</span>, <span class="st">"ld"</span>, <span class="st">"hd"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(treatments, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  \(x) heplots<span class="sc">::</span><span class="fu">cqplot</span>(<span class="fu">filter</span>(tl, treatment <span class="sc">==</span> x)[<span class="sc">-</span><span class="dv">1</span>], <span class="at">main =</span> x)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-qqplot-model-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-qqplot-model-1.png" class="img-fluid figure-img" data-ref-parent="fig-qqplot-model" width="672"></p>
+<figcaption class="figure-caption">(a)</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div id="fig-qqplot-model-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-qqplot-model-2.png" class="img-fluid figure-img" data-ref-parent="fig-qqplot-model" width="672"></p>
+<figcaption class="figure-caption">(b)</figcaption>
+</figure>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;4.7: Plot A assessed the multivariate normality of residuals given the model where all loading variabels are a function of the treatment group.</figcaption>
+</figure>
+</div>
+<p>A number of different tests of multivariate normaliy also confirm the lack of evidence for meeting this assumption (<a href="#tbl-norm-test">Table&nbsp;<span>4.1</span></a>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"mardia"</span>, <span class="st">"hz"</span>, <span class="st">"royston"</span>, <span class="st">"dh"</span>, <span class="st">"energy"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) MVN<span class="sc">::</span><span class="fu">mvn</span>(<span class="at">data =</span> data, <span class="at">subset =</span> <span class="st">"treatment"</span>, <span class="at">mvnTest =</span> x)) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) x<span class="sc">$</span>multivariateNormality) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) <span class="fu">bind_rows</span>(x, <span class="at">.id =</span> <span class="st">"treatment"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(\(x) </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(x, Test <span class="sc">!=</span> <span class="st">"MVN"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>( <span class="fu">across</span>(<span class="fu">where</span>(is.factor), \(f) <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(f)))) <span class="sc">|&gt;</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">statistic =</span> <span class="dv">3</span>, <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">Result =</span> <span class="fu">last_col</span>())</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">all_mvn_tests</span>(<span class="fu">simple_load</span>(treatment, <span class="fu">all_of</span>(load_vars))) <span class="sc">|&gt;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="tbl-norm-test" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;4.1: Several different tests of multivariate normality indicate a lack of evidence to support this assumption.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">treatment</th>
+<th style="text-align: left;">Test</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p value</th>
+<th style="text-align: left;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">gs</td>
+<td style="text-align: left;">Mardia Skewness</td>
+<td style="text-align: right;">156.2386</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gs</td>
+<td style="text-align: left;">Mardia Kurtosis</td>
+<td style="text-align: right;">4.1306</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ha</td>
+<td style="text-align: left;">Mardia Skewness</td>
+<td style="text-align: right;">198.9055</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ha</td>
+<td style="text-align: left;">Mardia Kurtosis</td>
+<td style="text-align: right;">5.8903</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hd</td>
+<td style="text-align: left;">Mardia Skewness</td>
+<td style="text-align: right;">85.1671</td>
+<td style="text-align: right;">0.0072</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hd</td>
+<td style="text-align: left;">Mardia Kurtosis</td>
+<td style="text-align: right;">0.7268</td>
+<td style="text-align: right;">0.4673</td>
+<td style="text-align: left;">YES</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ld</td>
+<td style="text-align: left;">Mardia Skewness</td>
+<td style="text-align: right;">122.0012</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ld</td>
+<td style="text-align: left;">Mardia Kurtosis</td>
+<td style="text-align: right;">3.2534</td>
+<td style="text-align: right;">0.0011</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gs</td>
+<td style="text-align: left;">Henze-Zirkler</td>
+<td style="text-align: right;">1.1979</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ha</td>
+<td style="text-align: left;">Henze-Zirkler</td>
+<td style="text-align: right;">1.2792</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hd</td>
+<td style="text-align: left;">Henze-Zirkler</td>
+<td style="text-align: right;">1.0978</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ld</td>
+<td style="text-align: left;">Henze-Zirkler</td>
+<td style="text-align: right;">1.1036</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gs</td>
+<td style="text-align: left;">Royston</td>
+<td style="text-align: right;">79.7755</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ha</td>
+<td style="text-align: left;">Royston</td>
+<td style="text-align: right;">105.5921</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hd</td>
+<td style="text-align: left;">Royston</td>
+<td style="text-align: right;">51.6106</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ld</td>
+<td style="text-align: left;">Royston</td>
+<td style="text-align: right;">65.9480</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gs</td>
+<td style="text-align: left;">Doornik-Hansen</td>
+<td style="text-align: right;">49.1719</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ha</td>
+<td style="text-align: left;">Doornik-Hansen</td>
+<td style="text-align: right;">57.0579</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hd</td>
+<td style="text-align: left;">Doornik-Hansen</td>
+<td style="text-align: right;">67.4352</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ld</td>
+<td style="text-align: left;">Doornik-Hansen</td>
+<td style="text-align: right;">43.8086</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gs</td>
+<td style="text-align: left;">E-statistic</td>
+<td style="text-align: right;">1.9038</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ha</td>
+<td style="text-align: left;">E-statistic</td>
+<td style="text-align: right;">2.1409</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hd</td>
+<td style="text-align: left;">E-statistic</td>
+<td style="text-align: right;">1.6312</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ld</td>
+<td style="text-align: left;">E-statistic</td>
+<td style="text-align: right;">1.7881</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">NO</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The often recommended Pillai’s Trace Test is robust to the normality assumption. Follow up with linear discriminant analysis, or multiple one-way anovas dependidng on research question. Using a Bonferroni correction for rejecting the null of alpha / m, for m hypothesis, we get an alpha of 0.008 for an alpha of 0.05 and 6 tests.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">simple_load</span>(treatment, <span class="fu">all_of</span>(load_vars))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>myexpr <span class="ot">&lt;-</span> <span class="fu">expr</span>(<span class="fu">cbind</span>(<span class="sc">!!!</span><span class="fu">syms</span>(load_vars)) <span class="sc">~</span> treatment)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="st">"manova"</span>, <span class="fu">list</span>(myexpr, <span class="at">data =</span> <span class="fu">quote</span>(tl)))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(test1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Df  Pillai approx F num Df den Df    Pr(&gt;F)    
+treatment   3 0.35947   2.7454     18    363 0.0001889 ***
+Residuals 124                                             
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary.aov</span>(test1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Response dufflitter :
+             Df Sum Sq Mean Sq F value Pr(&gt;F)
+treatment     3   3700 1233.42   1.882 0.1361
+Residuals   124  81268  655.39               
+
+ Response onehr :
+             Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+treatment     3  8.064 2.68805  6.8571 0.0002596 ***
+Residuals   124 48.609 0.39201                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ Response tenhr :
+             Df Sum Sq Mean Sq F value Pr(&gt;F)
+treatment     3  11.57  3.8560  0.6308 0.5965
+Residuals   124 757.95  6.1125               
+
+ Response hundhr :
+             Df Sum Sq Mean Sq F value Pr(&gt;F)
+treatment     3  120.8  40.253  0.5701 0.6357
+Residuals   124 8755.7  70.611               
+
+ Response thoushr :
+             Df Sum Sq Mean Sq F value Pr(&gt;F)
+treatment     3   1571   523.6  0.1092 0.9546
+Residuals   124 594732  4796.2               
+
+ Response veg :
+             Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+treatment     3  11769  3923.2  6.2403 0.0005564 ***
+Residuals   124  77957   628.7                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="sec-homogeneity-of-variance" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-homogeneity-of-variance"><span class="header-section-number">4.3</span> Homogeneity of variance</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">

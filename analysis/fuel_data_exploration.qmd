@@ -36,7 +36,7 @@ interest.
 It's important to note that variables 1-3 were measured twice per transect and
 the rest were measured once per transect.
 
-```{r}
+```{r init}
 #| echo: false
 #| message: false
 #| warning: false
@@ -47,7 +47,7 @@ transectid <- c("site", "treatment", "corner", "azi")
 
 ## Outliers
 
-```{r}
+```{r outlier-cleveland-func}
 #| warning: false
 #| message: false
 
@@ -68,7 +68,7 @@ cleavland_plot <- function(data, title, load_var = load) {
 
 ```
 
-```{r}
+```{r outlier-plot-fwd-sep}
 #| echo: false
 #| label: fig-fwd
 #| fig-cap: >
@@ -87,7 +87,7 @@ fwd |>
 
 ```
 
-```{r}
+```{r outlier-plot-fwd-all}
 #| echo: false
 #| label: fig-fwd-all
 #| fig-cap: >
@@ -99,7 +99,7 @@ cleavland_plot("One, ten, and hund. hr")
 
 ```
 
-```{r}
+```{r outlier-plot-cwd}
 #| echo: false
 #| label: fig-cwd
 #| fig-cap: >
@@ -112,7 +112,7 @@ cwd |>
 
 ```
 
-```{r}
+```{r outlier-plot-dufflitter}
 #| echo: false
 #| label: fig-dufflitter
 #| fig-cap: >
@@ -124,7 +124,7 @@ dufflitter |>
 
 ```
 
-```{r}
+```{r outlier-plot-veg}
 #| echo: false
 #| warning: false
 #| message: false
@@ -145,4 +145,122 @@ veg |>
   )
 
 ```
+
+## Normality {#sec-Normality}
+
+For further testing, I will summarize the data somewhat, by combining vegetation
+loading (woody and herb), and coarse woody loading (sound and rotten) into just
+two loading metrics.
+
+```{r reduce-vars}
+
+simple_load <- function(...) {
+  tl <- pivot_wider(total_load, names_from = class, values_from = load) |>
+    mutate(
+      thoushr = rowSums(pick(c(thoushr_s, thoushr_r)), na.rm = TRUE),
+      veg = rowSums(pick(c(woody, herb)), na.rm = TRUE),
+      .keep = "unused"
+    )
+    if (is.null(select)) {
+      return(tl)
+    } else {
+    select(tl, ...)
+  } 
+} 
+
+```
+
+When using manova to test for difference between groups with multiple response
+variables, it is important that the response variables are multivariate normally
+distributed. Unfortunately, it would appear that we have a probelem with
+normality. The raw data for each loading variable is clearly not normally
+distributed @fig-qqplot-naive.
+
+```{r qq-plot}
+#| label: fig-qqplot-naive
+#| fig-cap: >
+#|   Naive qq plot of loading variables. This doesn't take into account
+#|   the fact that we are interested in within group normality.
+
+load_vars <- c("dufflitter", "onehr", "tenhr", "hundhr", "thoushr", "veg")
+
+simple_load(treatment, all_of(load_vars)) |> 
+  pivot_longer(-treatment) |>
+  ggplot(aes(sample = value)) +
+  stat_qq() +
+  stat_qq_line() +
+  facet_wrap(~name, scales = "free") 
+
+```
+
+For MANOVA we are concered with the within group multivariate normality, the
+assumption does not appear to be met here either (@fig-qqplot-model). The code
+output below indicates the rows with the greatest deviation from normal.
+
+```{r qq-resid}
+#| label: fig-qqplot-model
+#| fig-cap: >
+#|   Plot A assessed the multivariate normality of residuals given the model
+#|   where all loading variabels are a function of the treatment group.
+#| fig-subcap:
+#|   - ""
+#|   - ""
+
+tl <- simple_load(treatment, all_of(load_vars))
+load_mod <- lm(as.matrix(tl[-1]) ~ treatment, data = tl)
+m_dist <- heplots::cqplot(load_mod)
+
+simple_load(everything())[order(m_dist, decreasing = TRUE)[1:10], ]
+
+treatments = c("gs", "ha", "ld", "hd")
+par(mfrow = c(2, 2))
+invisible(lapply(treatments, 
+  \(x) heplots::cqplot(filter(tl, treatment == x)[-1], main = x)
+))
+
+```
+
+A number of different tests of multivariate normaliy also confirm the lack of
+evidence for meeting this assumption (@tbl-norm-test).
+
+```{r norm-test}
+#| label: tbl-norm-test
+#| tbl-cap: >
+#|   Several different tests of multivariate normality indicate a lack of
+#|   evidence to support this assumption.
+
+all_mvn_tests <- function(data) {
+  c("mardia", "hz", "royston", "dh", "energy") |>
+  map(\(x) MVN::mvn(data = data, subset = "treatment", mvnTest = x)) |>
+  map(\(x) x$multivariateNormality) |>
+  map(\(x) bind_rows(x, .id = "treatment")) |>
+  map_dfr(\(x) 
+    filter(x, Test != "MVN") |> 
+    mutate( across(where(is.factor), \(f) as.numeric(as.character(f)))) |> 
+    select(1:2, statistic = 3, `p value`, Result = last_col())
+  )
+}
+
+all_mvn_tests(simple_load(treatment, all_of(load_vars))) |>
+  knitr::kable(digits = 4)
+
+```
+
+The often recommended Pillai's Trace Test is robust to the normality assumption.
+Follow up with linear discriminant analysis, or multiple one-way anovas
+dependidng on research question. Using a Bonferroni correction for rejecting the
+null of alpha / m, for m hypothesis, we get an alpha of 0.008 for an alpha of
+0.05 and 6 tests.
+
+```{r}
+tl <- simple_load(treatment, all_of(load_vars))
+myexpr <- expr(cbind(!!!syms(load_vars)) ~ treatment)
+test1 <- do.call("manova", list(myexpr, data = quote(tl)))
+summary(test1)
+summary.aov(test1)
+```
+
+
+## Homogeneity of variance {#sec-homogeneity-of-variance}
+
 
