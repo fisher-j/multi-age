@@ -221,7 +221,8 @@ div.csl-indent {
 <p>Our main questions regarding fuel loading are:</p>
 <ol type="1">
 <li>Are there differences in fuel loading between treatments?</li>
-<li>If so, what is the magnitude of the difference?</li>
+<li>If so, what fuel loading components differ, and in which treatments?</li>
+<li>What is the magnitude of the difference by treatment?</li>
 </ol>
 <p>We have a range of response variables that include loading in several different classes of surface fuels. Some of these may be correlated with each other, which may have an effect on our interpretation of differences between treatments. For instance, if duff-litter load is negatively correlated with vegetation, even if we don’t see differences between treatment in either of these variables separately, it might be found that for any given level of vegetation loading, one treatment, or another may have consistently higher levels of duff-litter. Capturing differences between treatments in terms of interactions like these requires different tools than assessing any one variable on its own.</p>
 <p>In order to assess potential outliers, co-linearity, interactions, and other problems with statistical tests, we’ll first conduct some data exploration as outlined by <span class="citation" data-cites="zuurProtocolDataExploration2010">Zuur, Ieno, and Elphick (<a href="#ref-zuurProtocolDataExploration2010" role="doc-biblioref">2010</a>)</span>.</p>
@@ -247,12 +248,17 @@ div.csl-indent {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        {{load_var}},</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">fct_reorder</span>( <span class="fu">interaction</span>(site, treatment, <span class="at">sep =</span> <span class="st">" "</span>), {{load_var}}),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> treatment)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Data order"</span>, <span class="at">title =</span> title)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">fct_reorder</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>          <span class="fu">interaction</span>(site, treatment, <span class="at">sep =</span> <span class="st">" "</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>          {{load_var}},</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">.na_rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> treatment</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Data order"</span>, <span class="at">title =</span> title)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="fig-fwd" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -315,6 +321,10 @@ div.csl-indent {
 </div>
 <div id="fig-veg" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing missing values (`geom_point()`).
+Removed 1 rows containing missing values (`geom_point()`).</code></pre>
+</div>
 <div class="cell-output-display">
 <div id="fig-veg-1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -337,32 +347,49 @@ div.csl-indent {
 </section>
 <section id="sec-Normality" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="sec-Normality"><span class="header-section-number">4.2</span> Normality</h2>
-<p>For further testing, I will summarize the data somewhat, by combining vegetation loading (woody and herb), and coarse woody loading (sound and rotten) into just two loading metrics.</p>
+<p>For further testing, I will summarize the data somewhat, by combining vegetation loading (woody and herb), and coarse woody loading (sound and rotten) into just two loading metrics. Now we have the following response variables:</p>
+<ol type="1">
+<li>dufflitter</li>
+<li>onehr</li>
+<li>tenhr</li>
+<li>hundhr</li>
+<li>thoushr</li>
+<li>veg</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simple_load <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  tl <span class="ot">&lt;-</span> <span class="fu">pivot_wider</span>(total_load, <span class="at">names_from =</span> class, <span class="at">values_from =</span> load) <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">thoushr =</span> <span class="fu">rowSums</span>(<span class="fu">pick</span>(<span class="fu">c</span>(thoushr_s, thoushr_r)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">veg =</span> <span class="fu">rowSums</span>(<span class="fu">pick</span>(<span class="fu">c</span>(woody, herb)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">.keep =</span> <span class="st">"unused"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(select)) {</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(tl)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(tl, ...)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  } </span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>} </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>load2 <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">shape =</span> <span class="st">"wide"</span>, ...) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  load_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"onehr"</span>, <span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>, <span class="st">"dufflitter"</span>, <span class="st">"thoushr"</span>, <span class="st">"veg"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  tl <span class="ot">&lt;-</span> <span class="fu">pivot_wider</span>(total_load, <span class="at">names_from =</span> class, <span class="at">values_from =</span> load) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">thoushr =</span> <span class="fu">rowSums</span>(<span class="fu">pick</span>(<span class="fu">c</span>(thoushr_s, thoushr_r)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">veg =</span> <span class="fu">rowSums</span>(<span class="fu">pick</span>(<span class="fu">c</span>(woody, herb)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">.keep =</span> <span class="st">"unused"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">missing</span>(...)) tl <span class="ot">&lt;-</span> <span class="fu">select</span>(tl, ...)  </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (shape <span class="sc">==</span> <span class="st">"long"</span>) {</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    tl <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(tl, </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="sc">-</span><span class="fu">any_of</span>(<span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"corner"</span>, <span class="st">"azi"</span>)),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_to =</span> <span class="st">"class"</span>, </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">values_to =</span> <span class="st">"load"</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    load_vars <span class="ot">&lt;-</span> load_vars[load_vars <span class="sc">%in%</span> tl<span class="sc">$</span>class]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    tl <span class="ot">&lt;-</span> <span class="fu">mutate</span>(tl, <span class="at">class =</span> <span class="fu">factor</span>(class, <span class="at">levels =</span> load_vars))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  tl</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>} </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>When using manova to test for difference between groups with multiple response variables, it is important that the response variables are multivariate normally distributed. Unfortunately, it would appear that we have a probelem with normality. The raw data for each loading variable is clearly not normally distributed <a href="#fig-qqplot-naive">Figure&nbsp;<span>4.6</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>load_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dufflitter"</span>, <span class="st">"onehr"</span>, <span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>, <span class="st">"thoushr"</span>, <span class="st">"veg"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">simple_load</span>(treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>treatment) <span class="sc">|&gt;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> value)) <span class="sc">+</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name, <span class="at">scales =</span> <span class="st">"free"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>load_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"onehr"</span>, <span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>, <span class="st">"dufflitter"</span>, <span class="st">"thoushr"</span>, <span class="st">"veg"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> load)) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-qqplot-naive" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -372,14 +399,83 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model">Figure&nbsp;<span>4.7</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>bins <span class="ot">&lt;-</span> <span class="dv">16</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>hist_dat <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Facet grid each column (class) has same scale, find limits to calculate bin</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># width, limits are either implied by the constructed normal curce, or the raw</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="fu">min</span>(<span class="fu">c</span>(<span class="fu">mean</span>(load) <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(load), load)),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmax =</span> <span class="fu">max</span>(<span class="fu">c</span>(<span class="fu">mean</span>(load) <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(load), load))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment, class) <span class="sc">|&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>(<span class="at">data =</span> load) <span class="sc">|&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># generate data for a normal curve with mean and sd from observed data to</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cover 3 sd.</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">norm_x =</span> <span class="fu">map</span>(data, <span class="cf">function</span> (d) {</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">seq</span>(</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">from =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load) <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>load), </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">to =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load) <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>load), </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">length.out =</span> <span class="dv">100</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    }),</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># scale curve to expected binwidth based on plot layout (same x scale across</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># all fuel classes) multiplied by the number of observations. The histogram</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and normal curve should represent the same total area.</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">norm_y =</span> <span class="fu">map</span>(data, <span class="cf">function</span> (d) {</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      dens <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">unlist</span>(norm_x), <span class="at">mean =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load), <span class="at">sd =</span> <span class="fu">sd</span>(d<span class="sc">$</span>load))</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      dens <span class="sc">*</span> ((xmax <span class="sc">-</span> xmin) <span class="sc">/</span> bins) <span class="sc">*</span> <span class="fu">nrow</span>(d)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="fig-hist" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Break plot into two panels for higher resolution.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">filter</span>(hist_dat, class <span class="sc">%in%</span> load_vars[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] )) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_histogram</span>(<span class="at">data =</span> \(x) <span class="fu">unnest</span>(x, data), <span class="fu">aes</span>(<span class="at">x =</span> load), <span class="at">bins =</span> bins) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="at">data =</span> \(x) <span class="fu">unnest</span>(x, <span class="fu">c</span>(norm_x, norm_y)), <span class="fu">aes</span>(norm_x, norm_y)) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_grid</span>(treatment <span class="sc">~</span> class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"count"</span>, <span class="at">x =</span> <span class="st">"Load Mg/ha"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">filter</span>(hist_dat, class <span class="sc">%in%</span> load_vars[<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>] )) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_histogram</span>(<span class="at">data =</span> \(x) <span class="fu">unnest</span>(x, data), <span class="fu">aes</span>(<span class="at">x =</span> load), <span class="at">bins =</span> bins) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="at">data =</span> \(x) <span class="fu">unnest</span>(x, <span class="fu">c</span>(norm_x, norm_y)), <span class="fu">aes</span>(norm_x, norm_y)) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_grid</span>(treatment <span class="sc">~</span> class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"count"</span>, <span class="at">x =</span> <span class="st">"Load Mg/ha"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-hist-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-hist-1.png" class="img-fluid figure-img" data-ref-parent="fig-hist" width="672"></p>
+<figcaption class="figure-caption">(a)</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div id="fig-hist-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-hist-2.png" class="img-fluid figure-img" data-ref-parent="fig-hist" width="672"></p>
+<figcaption class="figure-caption">(b)</figcaption>
+</figure>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;4.7: Histotrams for the fuel loading response variables. A normal curve with the same mean as sd as the data (and scaled to the same area as that covered by the bins) has been superimposed for reference.</figcaption>
+</figure>
+</div>
+<p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model">Figure&nbsp;<span>4.8</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
 <div id="fig-qqplot-model" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">simple_load</span>(treatment, <span class="fu">all_of</span>(load_vars))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>load_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.matrix</span>(tl[<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">~</span> treatment, <span class="at">data =</span> tl)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>m_dist <span class="ot">&lt;-</span> heplots<span class="sc">::</span><span class="fu">cqplot</span>(load_mod)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">simple_load</span>(<span class="fu">everything</span>())[<span class="fu">order</span>(m_dist, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>load_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.matrix</span>(tl[<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">~</span> treatment, <span class="at">data =</span> tl)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>m_dist <span class="ot">&lt;-</span> heplots<span class="sc">::</span><span class="fu">cqplot</span>(load_mod)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="fu">everything</span>())[<span class="fu">order</span>(m_dist, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 10
    site    treatment corner   azi dufflitter onehr  tenhr hundhr thoushr    veg
@@ -395,11 +491,11 @@ div.csl-indent {
  9 waldon  gs        e        225      112.  0.711  8.98   14.7     89.6  34.6 
 10 whiskey ld        s        315       77.3 0.390  5.38   31.9     59.8  74.2 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>treatments <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"gs"</span>, <span class="st">"ha"</span>, <span class="st">"ld"</span>, <span class="st">"hd"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(treatments, </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  \(x) heplots<span class="sc">::</span><span class="fu">cqplot</span>(<span class="fu">filter</span>(tl, treatment <span class="sc">==</span> x)[<span class="sc">-</span><span class="dv">1</span>], <span class="at">main =</span> x)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>treatments <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"gs"</span>, <span class="st">"ha"</span>, <span class="st">"ld"</span>, <span class="st">"hd"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(treatments, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  \(x) heplots<span class="sc">::</span><span class="fu">cqplot</span>(<span class="fu">filter</span>(tl, treatment <span class="sc">==</span> x)[<span class="sc">-</span><span class="dv">1</span>], <span class="at">main =</span> x)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-qqplot-model-1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -416,25 +512,25 @@ div.csl-indent {
 </figure>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;4.7: Plot A assessed the multivariate normality of residuals given the model where all loading variabels are a function of the treatment group.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.8: Plot A assessed the multivariate normality of residuals given the model where all loading variabels are a function of the treatment group.</figcaption>
 </figure>
 </div>
 <p>A number of different tests of multivariate normaliy also confirm the lack of evidence for meeting this assumption (<a href="#tbl-norm-test">Table&nbsp;<span>4.1</span></a>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"mardia"</span>, <span class="st">"hz"</span>, <span class="st">"royston"</span>, <span class="st">"dh"</span>, <span class="st">"energy"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) MVN<span class="sc">::</span><span class="fu">mvn</span>(<span class="at">data =</span> data, <span class="at">subset =</span> <span class="st">"treatment"</span>, <span class="at">mvnTest =</span> x)) <span class="sc">|&gt;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) x<span class="sc">$</span>multivariateNormality) <span class="sc">|&gt;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) <span class="fu">bind_rows</span>(x, <span class="at">.id =</span> <span class="st">"treatment"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(\(x) </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(x, Test <span class="sc">!=</span> <span class="st">"MVN"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>( <span class="fu">across</span>(<span class="fu">where</span>(is.factor), \(f) <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(f)))) <span class="sc">|&gt;</span> </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">statistic =</span> <span class="dv">3</span>, <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">Result =</span> <span class="fu">last_col</span>())</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">all_mvn_tests</span>(<span class="fu">simple_load</span>(treatment, <span class="fu">all_of</span>(load_vars))) <span class="sc">|&gt;</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"mardia"</span>, <span class="st">"hz"</span>, <span class="st">"royston"</span>, <span class="st">"dh"</span>, <span class="st">"energy"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) MVN<span class="sc">::</span><span class="fu">mvn</span>(<span class="at">data =</span> data, <span class="at">subset =</span> <span class="st">"treatment"</span>, <span class="at">mvnTest =</span> x)) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) x<span class="sc">$</span>multivariateNormality) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) <span class="fu">bind_rows</span>(x, <span class="at">.id =</span> <span class="st">"treatment"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(\(x) </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(x, Test <span class="sc">!=</span> <span class="st">"MVN"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>( <span class="fu">across</span>(<span class="fu">where</span>(is.factor), \(f) <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(f)))) <span class="sc">|&gt;</span> </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">statistic =</span> <span class="dv">3</span>, <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">Result =</span> <span class="fu">last_col</span>())</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">all_mvn_tests</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))) <span class="sc">|&gt;</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="tbl-norm-test" class="anchored">
 <table class="table table-sm table-striped small">
@@ -564,29 +660,29 @@ div.csl-indent {
 <tr class="odd">
 <td style="text-align: left;">gs</td>
 <td style="text-align: left;">Doornik-Hansen</td>
-<td style="text-align: right;">49.1719</td>
+<td style="text-align: right;">45.8165</td>
 <td style="text-align: right;">0.0000</td>
 <td style="text-align: left;">NO</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">ha</td>
 <td style="text-align: left;">Doornik-Hansen</td>
-<td style="text-align: right;">57.0579</td>
+<td style="text-align: right;">57.3566</td>
 <td style="text-align: right;">0.0000</td>
 <td style="text-align: left;">NO</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hd</td>
 <td style="text-align: left;">Doornik-Hansen</td>
-<td style="text-align: right;">67.4352</td>
+<td style="text-align: right;">65.4678</td>
 <td style="text-align: right;">0.0000</td>
 <td style="text-align: left;">NO</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">ld</td>
 <td style="text-align: left;">Doornik-Hansen</td>
-<td style="text-align: right;">43.8086</td>
-<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">38.4513</td>
+<td style="text-align: right;">0.0001</td>
 <td style="text-align: left;">NO</td>
 </tr>
 <tr class="odd">
@@ -620,56 +716,6 @@ div.csl-indent {
 </tbody>
 </table>
 </div>
-</div>
-</div>
-<p>The often recommended Pillai’s Trace Test is robust to the normality assumption. Follow up with linear discriminant analysis, or multiple one-way anovas dependidng on research question. Using a Bonferroni correction for rejecting the null of alpha / m, for m hypothesis, we get an alpha of 0.008 for an alpha of 0.05 and 6 tests.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">simple_load</span>(treatment, <span class="fu">all_of</span>(load_vars))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>myexpr <span class="ot">&lt;-</span> <span class="fu">expr</span>(<span class="fu">cbind</span>(<span class="sc">!!!</span><span class="fu">syms</span>(load_vars)) <span class="sc">~</span> treatment)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="st">"manova"</span>, <span class="fu">list</span>(myexpr, <span class="at">data =</span> <span class="fu">quote</span>(tl)))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(test1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>           Df  Pillai approx F num Df den Df    Pr(&gt;F)    
-treatment   3 0.35947   2.7454     18    363 0.0001889 ***
-Residuals 124                                             
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary.aov</span>(test1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> Response dufflitter :
-             Df Sum Sq Mean Sq F value Pr(&gt;F)
-treatment     3   3700 1233.42   1.882 0.1361
-Residuals   124  81268  655.39               
-
- Response onehr :
-             Df Sum Sq Mean Sq F value    Pr(&gt;F)    
-treatment     3  8.064 2.68805  6.8571 0.0002596 ***
-Residuals   124 48.609 0.39201                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
- Response tenhr :
-             Df Sum Sq Mean Sq F value Pr(&gt;F)
-treatment     3  11.57  3.8560  0.6308 0.5965
-Residuals   124 757.95  6.1125               
-
- Response hundhr :
-             Df Sum Sq Mean Sq F value Pr(&gt;F)
-treatment     3  120.8  40.253  0.5701 0.6357
-Residuals   124 8755.7  70.611               
-
- Response thoushr :
-             Df Sum Sq Mean Sq F value Pr(&gt;F)
-treatment     3   1571   523.6  0.1092 0.9546
-Residuals   124 594732  4796.2               
-
- Response veg :
-             Df Sum Sq Mean Sq F value    Pr(&gt;F)    
-treatment     3  11769  3923.2  6.2403 0.0005564 ***
-Residuals   124  77957   628.7                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 </section>

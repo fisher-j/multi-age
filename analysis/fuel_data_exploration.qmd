@@ -2,10 +2,18 @@
 title: Fuel data exploration
 ---
 
+```{r init}
+#| echo: false
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+load("./data_long.RData")
+transectid <- c("site", "treatment", "corner", "azi")
+```
+
 Our main questions regarding fuel loading are:
 
 1. Are there differences in fuel loading between treatments?
-2. If so, what is the magnitude of the difference?
+2. If so, what fuel loading components differ, and in which treatments?
+3. What is the magnitude of the difference by treatment?
 
 We have a range of response variables that include loading in several different
 classes of surface fuels. Some of these may be correlated with each other, which
@@ -36,20 +44,9 @@ interest.
 It's important to note that variables 1-3 were measured twice per transect and
 the rest were measured once per transect.
 
-```{r init}
-#| echo: false
-#| message: false
-#| warning: false
-library(tidyverse)
-load("./data_long.RData")
-transectid <- c("site", "treatment", "corner", "azi")
-```
-
 ## Outliers
 
 ```{r outlier-cleveland-func}
-#| warning: false
-#| message: false
 
 cleavland_plot <- function(data, title, load_var = load) {
   data |>
@@ -58,8 +55,13 @@ cleavland_plot <- function(data, title, load_var = load) {
     ggplot(
       aes(
         {{load_var}},
-        fct_reorder( interaction(site, treatment, sep = " "), {{load_var}}),
-        color = treatment)
+        fct_reorder(
+          interaction(site, treatment, sep = " "),
+          {{load_var}},
+          .na_rm = TRUE
+        ),
+        color = treatment
+      )
     ) +
     geom_jitter(width = 0, height = 0.2) +
     labs(x = expression(Load~(Mg%.%ha^-1)), y = "Data order", title = title)
@@ -126,16 +128,15 @@ dufflitter |>
 
 ```{r outlier-plot-veg}
 #| echo: false
-#| warning: false
-#| message: false
 #| label: fig-veg
-#| fig-cap: >
-#|   Vegetation fuel loading for each station along transects, including live
-#|   and dead fuels attached to live vegetation. Y-axis is sorted as in
-#|   @fig-cwd.
+#| fig-cap: !expr caption
 #| fig-subcap:
 #|   - Woody vegetation
 #|   - herbaceous vegetation
+
+caption <- "Vegetation fuel loading for each station along transects, including
+  live and dead fuels attached to live vegetation. Y-axis is sorted as in
+  @fig-cwd."
 
 veg |>
   mutate(class = factor(class, levels = c("woody", "herb"))) |>
@@ -150,22 +151,37 @@ veg |>
 
 For further testing, I will summarize the data somewhat, by combining vegetation
 loading (woody and herb), and coarse woody loading (sound and rotten) into just
-two loading metrics.
+two loading metrics. Now we have the following response variables:
+
+1. dufflitter
+2. onehr
+3. tenhr
+4. hundhr
+5. thoushr
+6. veg
 
 ```{r reduce-vars}
+#| code-fold: true
 
-simple_load <- function(...) {
+load2 <- function(shape = "wide", ...) {
+  load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
   tl <- pivot_wider(total_load, names_from = class, values_from = load) |>
     mutate(
       thoushr = rowSums(pick(c(thoushr_s, thoushr_r)), na.rm = TRUE),
       veg = rowSums(pick(c(woody, herb)), na.rm = TRUE),
       .keep = "unused"
     )
-    if (is.null(select)) {
-      return(tl)
-    } else {
-    select(tl, ...)
-  } 
+  if (!missing(...)) tl <- select(tl, ...)  
+  if (shape == "long") {
+    tl <- pivot_longer(tl, 
+      -any_of(c("site", "treatment", "corner", "azi")),
+      names_to = "class", 
+      values_to = "load"
+    )
+    load_vars <- load_vars[load_vars %in% tl$class]
+    tl <- mutate(tl, class = factor(class, levels = load_vars))
+  }
+  tl
 } 
 
 ```
@@ -182,14 +198,75 @@ distributed @fig-qqplot-naive.
 #|   Naive qq plot of loading variables. This doesn't take into account
 #|   the fact that we are interested in within group normality.
 
-load_vars <- c("dufflitter", "onehr", "tenhr", "hundhr", "thoushr", "veg")
+load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
 
-simple_load(treatment, all_of(load_vars)) |> 
-  pivot_longer(-treatment) |>
-  ggplot(aes(sample = value)) +
+load2("long", treatment, all_of(load_vars)) |> 
+  ggplot(aes(sample = load)) +
   stat_qq() +
   stat_qq_line() +
-  facet_wrap(~name, scales = "free") 
+  facet_wrap(~class, scales = "free")
+
+```
+
+```{r hist-data}
+
+bins <- 16
+hist_dat <- load2("long", treatment, all_of(load_vars)) |>
+  drop_na() |>
+  # Facet grid each column (class) has same scale, find limits to calculate bin
+  # width, limits are either implied by the constructed normal curce, or the raw
+  # data
+  group_by(class) |>
+  mutate(
+    xmin = min(c(mean(load) - 3 * sd(load), load)),
+    xmax = max(c(mean(load) + 3 * sd(load), load))
+  ) |>
+  group_by(treatment, class) |>
+  nest(data = load) |>
+  # generate data for a normal curve with mean and sd from observed data to
+  # cover 3 sd.
+  mutate(
+    norm_x = map(data, function (d) {
+      seq(
+        from = mean(d$load) - 3 * sd(d$load), 
+        to = mean(d$load) + 3 * sd(d$load), 
+        length.out = 100
+      )
+    }),
+    # scale curve to expected binwidth based on plot layout (same x scale across
+    # all fuel classes) multiplied by the number of observations. The histogram
+    # and normal curve should represent the same total area.
+    norm_y = map(data, function (d) {
+      dens <- dnorm(unlist(norm_x), mean = mean(d$load), sd = sd(d$load))
+      dens * ((xmax - xmin) / bins) * nrow(d)
+    })
+  )
+
+```
+
+```{r}
+#| code-fold: true
+#| label: fig-hist
+#| fig-cap: Histotrams for the fuel loading response variables. A normal curve
+#|   with the same mean as sd as the data (and scaled to the same area as that
+#|   covered by the bins) has been superimposed for reference.
+#| fig-subcap:
+#|   - ""
+#|   - ""
+
+
+# Break plot into two panels for higher resolution.
+ggplot(filter(hist_dat, class %in% load_vars[1:3] )) +
+geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +
+geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +
+facet_grid(treatment ~ class, scales = "free") +
+labs(y = "count", x = "Load Mg/ha")
+
+ggplot(filter(hist_dat, class %in% load_vars[4:6] )) +
+geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +
+geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +
+facet_grid(treatment ~ class, scales = "free") +
+labs(y = "count", x = "Load Mg/ha")
 
 ```
 
@@ -206,11 +283,11 @@ output below indicates the rows with the greatest deviation from normal.
 #|   - ""
 #|   - ""
 
-tl <- simple_load(treatment, all_of(load_vars))
+tl <- load2("wide", treatment, all_of(load_vars))
 load_mod <- lm(as.matrix(tl[-1]) ~ treatment, data = tl)
 m_dist <- heplots::cqplot(load_mod)
 
-simple_load(everything())[order(m_dist, decreasing = TRUE)[1:10], ]
+load2("wide", everything())[order(m_dist, decreasing = TRUE)[1:10], ]
 
 treatments = c("gs", "ha", "ld", "hd")
 par(mfrow = c(2, 2))
@@ -241,23 +318,9 @@ all_mvn_tests <- function(data) {
   )
 }
 
-all_mvn_tests(simple_load(treatment, all_of(load_vars))) |>
+all_mvn_tests(load2("wide", treatment, all_of(load_vars))) |>
   knitr::kable(digits = 4)
 
-```
-
-The often recommended Pillai's Trace Test is robust to the normality assumption.
-Follow up with linear discriminant analysis, or multiple one-way anovas
-dependidng on research question. Using a Bonferroni correction for rejecting the
-null of alpha / m, for m hypothesis, we get an alpha of 0.008 for an alpha of
-0.05 and 6 tests.
-
-```{r}
-tl <- simple_load(treatment, all_of(load_vars))
-myexpr <- expr(cbind(!!!syms(load_vars)) ~ treatment)
-test1 <- do.call("manova", list(myexpr, data = quote(tl)))
-summary(test1)
-summary.aov(test1)
 ```
 
 

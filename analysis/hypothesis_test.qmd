@@ -1,0 +1,30 @@
+---
+title: Hypothesis testing
+---
+
+```{r init}
+#| echo: false
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+load("./data_long.RData")
+source("./scripts/utils.r")
+transectid <- c("site", "treatment", "corner", "azi")
+```
+
+## Manova and multiple anovas
+
+The often recommended Pillai's Trace Test is robust to the normality assumption.
+Follow up with linear discriminant analysis, or multiple one-way anovas
+dependidng on research question. Using a Bonferroni correction for rejecting the
+null of alpha / m, for m hypothesis, we get an alpha of 0.008 for an alpha of
+0.05 and 6 tests.
+
+```{r}
+
+tl <- load2("wide", treatment, all_of(load_vars))
+myexpr <- expr(cbind(!!!syms(load_vars)) ~ treatment)
+test1 <- do.call("manova", list(myexpr, data = quote(tl)))
+summary(test1)
+summary.aov(test1)
+
+```
+
