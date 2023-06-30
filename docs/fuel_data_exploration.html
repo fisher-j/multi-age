@@ -83,7 +83,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./work_log.html" rel="next">
+<link href="./hypothesis_test.html" rel="next">
 <link href="./calculate_fuel_loading.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -178,8 +178,14 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./hypothesis_test.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./work_log.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
   </div>
 </li>
     </ul>
@@ -193,13 +199,19 @@ div.csl-indent {
    
   <ul>
   <li><a href="#outliers" id="toc-outliers" class="nav-link active" data-scroll-target="#outliers"><span class="header-section-number">4.1</span> Outliers</a></li>
-  <li><a href="#sec-Normality" id="toc-sec-Normality" class="nav-link" data-scroll-target="#sec-Normality"><span class="header-section-number">4.2</span> Normality</a></li>
+  <li><a href="#sec-Normality" id="toc-sec-Normality" class="nav-link" data-scroll-target="#sec-Normality"><span class="header-section-number">4.2</span> Normality</a>
+  <ul class="collapse">
+  <li><a href="#sec-other-distributions" id="toc-sec-other-distributions" class="nav-link" data-scroll-target="#sec-other-distributions"><span class="header-section-number">4.2.1</span> Other distributions</a></li>
+  </ul></li>
   <li><a href="#sec-homogeneity-of-variance" id="toc-sec-homogeneity-of-variance" class="nav-link" data-scroll-target="#sec-homogeneity-of-variance"><span class="header-section-number">4.3</span> Homogeneity of variance</a></li>
+  <li><a href="#zeros" id="toc-zeros" class="nav-link" data-scroll-target="#zeros"><span class="header-section-number">4.4</span> Zeros</a></li>
+  <li><a href="#correlation-of-response-variables" id="toc-correlation-of-response-variables" class="nav-link" data-scroll-target="#correlation-of-response-variables"><span class="header-section-number">4.5</span> Correlation of response variables</a></li>
+  <li><a href="#independence" id="toc-independence" class="nav-link" data-scroll-target="#independence"><span class="header-section-number">4.6</span> Independence</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -345,7 +357,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </figure>
 </div>
 </section>
-<section id="sec-Normality" class="level2" data-number="4.2">
+<section id="sec-Normality" class="level2 page-columns page-full" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="sec-Normality"><span class="header-section-number">4.2</span> Normality</h2>
 <p>For further testing, I will summarize the data somewhat, by combining vegetation loading (woody and herb), and coarse woody loading (sound and rotten) into just two loading metrics. Now we have the following response variables:</p>
 <ol type="1">
@@ -718,9 +730,322 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 </div>
 </div>
+<section id="sec-other-distributions" class="level3 page-columns page-full" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="sec-other-distributions"><span class="header-section-number">4.2.1</span> Other distributions</h3>
+<p>If our data is not normally distributed, then what distribution is it? I’m going to assume what we are interested in the distribution of data within groups (treatments).</p>
+<p>I attemped to model the distribution of our conditional response data (fuel size class by treatment), but it mostly didn’t work.</p>
+<p>Our data is positive, and mostly highly skewed.</p>
+<div class="page-columns page-full">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(<span class="sc">~</span>class) <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span><span class="fu">split</span>(.x, <span class="sc">~</span>treatment))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># imap_dfr(d, \(x, y) tibble(class = y, treatment = names(x) )) |&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   with(paste0("Treatment ", treatment, ", fuel class ", class)) |&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   cat(sep = "\n")</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># par(mfrow = c(2,2))</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(d, <span class="sc">~</span> <span class="fu">walk</span>(.x, \(x) fitdistrplus<span class="sc">::</span><span class="fu">descdist</span>(x<span class="sc">$</span>load, <span class="at">boot =</span> <span class="dv">111</span>)))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_exp &lt;- map(d, ~fitdistrplus::fitdist(.x, "exp"))</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co"># walk(fit_exp, ~plot(.x))</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co"># map(d, \(x) gamlss::fitDist(x, k = 2, type = "realplus")$fits) |&gt;</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   bind_rows(.id = "trt")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-skew-kurt" class="cell column-page quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-1.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(a) Treatment gs, fuel class onehr</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-2.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(b) Treatment ha, fuel class onehr</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-3.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(c) Treatment hd, fuel class onehr</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-4" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-4.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(d) Treatment ld, fuel class onehr</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-5" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-5.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(e) Treatment gs, fuel class tenhr</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-6" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-6.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(f) Treatment ha, fuel class tenhr</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-7" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-7.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(g) Treatment hd, fuel class tenhr</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-8" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-8.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(h) Treatment ld, fuel class tenhr</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-9" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-9.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(i) Treatment gs, fuel class hundhr</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-10" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-10.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(j) Treatment ha, fuel class hundhr</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-11" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-11.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(k) Treatment hd, fuel class hundhr</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-12" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-12.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(l) Treatment ld, fuel class hundhr</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-13" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-13.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(m) Treatment gs, fuel class dufflitter</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-14" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-14.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(n) Treatment ha, fuel class dufflitter</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-15" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-15.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(o) Treatment hd, fuel class dufflitter</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-16" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-16.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(p) Treatment ld, fuel class dufflitter</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-17" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-17.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(q) Treatment gs, fuel class thoushr</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-18" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-18.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(r) Treatment ha, fuel class thoushr</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-19" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-19.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(s) Treatment hd, fuel class thoushr</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-20" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-20.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(t) Treatment ld, fuel class thoushr</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-21" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-21.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(u) Treatment gs, fuel class veg</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-22" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-22.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(v) Treatment ha, fuel class veg</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-23" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-23.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(w) Treatment hd, fuel class veg</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-skew-kurt-24" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-24.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="672"></p>
+<figcaption class="figure-caption">(x) Treatment ld, fuel class veg</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;4.9: Skewness and kurtosis for fuel classes within treatments.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</section>
 </section>
 <section id="sec-homogeneity-of-variance" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="sec-homogeneity-of-variance"><span class="header-section-number">4.3</span> Homogeneity of variance</h2>
+<p>There seem to be some pretty big differences in the variance between treatments. This is likely to do with outliers. For linear regression, it is recommended that maximum variance ration should be below 4.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>max_var <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">var =</span> <span class="fu">sd</span>(load)<span class="sc">^</span><span class="dv">2</span>, <span class="at">load =</span> <span class="fu">max</span>(load)) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">max_var_rat =</span> <span class="fu">round</span>(<span class="fu">max</span>(var) <span class="sc">/</span> <span class="fu">min</span>(var)), <span class="at">x =</span> <span class="dv">3</span>, <span class="at">y =</span> <span class="fu">max</span>(load))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'class'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, load)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> max_var, <span class="fu">aes</span>(x, y, <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"Maximum variance ratio: "</span>, max_var_rat))) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="zeros" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="zeros"><span class="header-section-number">4.4</span> Zeros</h2>
+<p>We do have zeros, which is importnat if we want to employ a glm like Gamma, which is only defined for positive values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">zeros =</span> <span class="fu">sum</span>(load <span class="sc">==</span> <span class="dv">0</span>), <span class="at">percent =</span> zeros <span class="sc">/</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, percent)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">if_else</span>(zeros <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">NA</span>, zeros), <span class="at">y =</span> percent <span class="sc">/</span> <span class="dv">2</span>), <span class="at">color =</span> <span class="st">"gray70"</span>) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'class'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 13 rows containing missing values (`geom_text()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="correlation-of-response-variables" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="correlation-of-response-variables"><span class="header-section-number">4.5</span> Correlation of response variables</h2>
+<p>I’m not sure if it’s important, but I was curious if the various fuel loading classes were correlated with eachother. Either across the board, or within a givin treatment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>GGally<span class="sc">::</span><span class="fu">ggpairs</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="fu">all_of</span>(load_vars)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'GGally':
+  method from   
+  +.gg   ggplot2</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-response-corr" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/fig-response-corr-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.10: Correlation among the response variables (fuel classes).</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="independence" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="independence"><span class="header-section-number">4.6</span> Independence</h2>
+<p>Because of how are data were collected they are not indepdent. The current data is summarized at the transect level. At that level. We have two transects at each corner. Because of spatial autocorrelation, these may be correlated with eachother. Corners (and thus transects) are nested within plots, and plots are within treatments. Each plot received a different treatment. What I’m not clear about is: should I incldude a random variable for plots, if i’m including a fixed effect for treatment?</p>
+<p>There are also question about at what level to summarize/model the data. I’ve already averaged stations within transects for several variable that were collected at the station level (two within each transect). What are the tradeoffs for either averaging at the the corner level, or alternatively, analyzing our raw station data instead of averaging.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
@@ -971,8 +1296,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./work_log.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Work log</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./hypothesis_test.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

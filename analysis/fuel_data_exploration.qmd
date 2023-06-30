@@ -67,7 +67,6 @@ cleavland_plot <- function(data, title, load_var = load) {
     labs(x = expression(Load~(Mg%.%ha^-1)), y = "Data order", title = title)
 }
 
-
 ```
 
 ```{r outlier-plot-fwd-sep}
@@ -323,7 +322,136 @@ all_mvn_tests(load2("wide", treatment, all_of(load_vars))) |>
 
 ```
 
+### Other distributions {#sec-other-distributions}
+
+If our data is not normally distributed, then what distribution is it? I'm going
+to assume what we are interested in the distribution of data within groups
+(treatments).
+
+I attemped to model the distribution of our conditional response data (fuel size
+class by treatment), but it mostly didn't work.
+
+Our data is positive, and mostly highly skewed.
+
+```{r}
+#| label: fig-skew-kurt
+#| fig-cap: Skewness and kurtosis for fuel classes within treatments.
+#| fig-subcap:
+#|   - Treatment gs, fuel class onehr      
+#|   - Treatment ha, fuel class onehr      
+#|   - Treatment hd, fuel class onehr      
+#|   - Treatment ld, fuel class onehr      
+#|   - Treatment gs, fuel class tenhr      
+#|   - Treatment ha, fuel class tenhr      
+#|   - Treatment hd, fuel class tenhr      
+#|   - Treatment ld, fuel class tenhr      
+#|   - Treatment gs, fuel class hundhr     
+#|   - Treatment ha, fuel class hundhr     
+#|   - Treatment hd, fuel class hundhr     
+#|   - Treatment ld, fuel class hundhr     
+#|   - Treatment gs, fuel class dufflitter 
+#|   - Treatment ha, fuel class dufflitter 
+#|   - Treatment hd, fuel class dufflitter 
+#|   - Treatment ld, fuel class dufflitter 
+#|   - Treatment gs, fuel class thoushr    
+#|   - Treatment ha, fuel class thoushr    
+#|   - Treatment hd, fuel class thoushr    
+#|   - Treatment ld, fuel class thoushr    
+#|   - Treatment gs, fuel class veg        
+#|   - Treatment ha, fuel class veg        
+#|   - Treatment hd, fuel class veg        
+#|   - Treatment ld, fuel class veg        
+#| layout-ncol: 2
+#| column: page
+
+d <- load2("long", treatment, all_of(load_vars)) |> 
+  split(~class) |> map(~split(.x, ~treatment))
+
+# imap_dfr(d, \(x, y) tibble(class = y, treatment = names(x) )) |>
+#   with(paste0("Treatment ", treatment, ", fuel class ", class)) |>
+#   cat(sep = "\n")
+
+# par(mfrow = c(2,2))
+walk(d, ~ walk(.x, \(x) fitdistrplus::descdist(x$load, boot = 111)))
+
+# fit_exp <- map(d, ~fitdistrplus::fitdist(.x, "exp"))
+
+# walk(fit_exp, ~plot(.x))
+
+# map(d, \(x) gamlss::fitDist(x, k = 2, type = "realplus")$fits) |>
+#   bind_rows(.id = "trt")
+
+```
 
 ## Homogeneity of variance {#sec-homogeneity-of-variance}
+
+There seem to be some pretty big differences in the variance between treatments.
+This is likely to do with outliers. For linear regression, it is recommended
+that maximum variance ration should be below 4.
+
+```{r}
+
+max_var <- load2("long", everything()) |>
+  group_by(class, treatment) |>
+  summarize(var = sd(load)^2, load = max(load)) |>
+  summarize(max_var_rat = round(max(var) / min(var)), x = 3, y = max(load))
+
+
+load2("long", everything()) |>
+  ggplot(aes(treatment, load)) +
+  geom_boxplot() +
+  geom_text(data = max_var, aes(x, y, label = paste("Maximum variance ratio: ", max_var_rat))) +
+  facet_wrap(~class, scales = "free")
+
+```
+
+## Zeros
+
+We do have zeros, which is importnat if we want to employ a glm like Gamma,
+which is only defined for positive values.
+
+```{r}
+
+load2("long", everything()) |>
+  group_by(class, treatment) |>
+  summarize(zeros = sum(load == 0), percent = zeros / n()) |>
+  ggplot(aes(treatment, percent)) +
+  geom_col() +
+  geom_text(aes(label = if_else(zeros == 0, NA, zeros), y = percent / 2), color = "gray70") +
+  facet_wrap(~class) +
+  scale_y_continuous(labels = scales::percent)
+
+```
+
+## Correlation of response variables
+
+I'm not sure if it's important, but I was curious if the various fuel loading
+classes were correlated with eachother. Either across the board, or within a
+givin treatment.
+
+```{r}
+#| label: fig-response-corr
+#| fig-cap: Correlation among the response variables (fuel classes).
+
+GGally::ggpairs(load2("wide", all_of(load_vars)))
+
+```
+
+## Independence
+
+Because of how are data were collected they are not indepdent. The current data
+is summarized at the transect level. At that level. We have two transects at
+each corner. Because of spatial autocorrelation, these may be correlated with
+eachother. Corners (and thus transects) are nested within plots, and plots are
+within treatments. Each plot received a different treatment. What I'm not clear
+about is: should I incldude a random variable for plots, if i'm including a
+fixed effect for treatment?
+
+There are also question about at what level to summarize/model the data. I've
+already averaged stations within transects for several variable that were
+collected at the station level (two within each transect). What are the
+tradeoffs for either averaging at the the corner level, or alternatively,
+analyzing our raw station data instead of averaging.
+
 
 
