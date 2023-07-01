@@ -193,17 +193,27 @@ distributed @fig-qqplot-naive.
 
 ```{r qq-plot}
 #| label: fig-qqplot-naive
+#| fig-heigth: 8
 #| fig-cap: >
 #|   Naive qq plot of loading variables. This doesn't take into account
 #|   the fact that we are interested in within group normality.
 
 load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
 
-load2("long", treatment, all_of(load_vars)) |> 
-  ggplot(aes(sample = load)) +
+myqqplot <- function(data, var) {
+  data |>
+  ggplot(aes(sample = {{ var }})) +
   stat_qq() +
   stat_qq_line() +
-  facet_wrap(~class, scales = "free")
+  facet_grid(class ~ treatment, scales = "free") +
+  labs(
+    x = "Theoretical quantiles", y = "Sample quantiles",
+    title = "Normal Q-Q Plot"
+  )
+}
+
+load2("long", treatment, all_of(load_vars)) |> 
+myqqplot(load)
 
 ```
 
@@ -269,6 +279,35 @@ labs(y = "count", x = "Load Mg/ha")
 
 ```
 
+### Box-Cox transformation {#sec-box-cox-transformation}
+
+I would like to look at the effect of this transformation on the response data.
+
+```{r}
+
+boxcox <- function(y, lambda1, lambda2) {
+  if(lambda1 == 0) {
+    ln(y + lambda2)
+  } else {
+    ((y + lambda2)^lambda1 - 1) / lambda1
+  }
+}
+
+load2("long", treatment, all_of(load_vars)) |>
+  group_by(class) |> nest() |> rowwise() |>
+  mutate(
+    lambda = list(suppressMessages(geoR::boxcoxfit(data$load, lambda2 = TRUE)$lambda)),
+    load_bc = list(boxcox(data$load, lambda[1], lambda[2]))
+  ) |>
+  unnest(c(data, load_bc)) |> ungroup() |>
+  myqqplot(load_bc)
+
+```
+
+While, this looks somewhat more normal, the zeros end up being a little strange.
+I applied a separte transformation for each fuel class, but all treatments
+within a fuel class have the same transformation.
+
 For MANOVA we are concered with the within group multivariate normality, the
 assumption does not appear to be met here either (@fig-qqplot-model). The code
 output below indicates the rows with the greatest deviation from normal.
@@ -331,7 +370,9 @@ to assume what we are interested in the distribution of data within groups
 I attemped to model the distribution of our conditional response data (fuel size
 class by treatment), but it mostly didn't work.
 
-Our data is positive, and mostly highly skewed.
+Our data is non-negative (contains zeros) continuous (for the most part) and highly variable in
+terms of skew and kurtosis. The presence of zeros, makes using the Gamma
+distribution
 
 ```{r}
 #| label: fig-skew-kurt
@@ -374,12 +415,74 @@ d <- load2("long", treatment, all_of(load_vars)) |>
 # par(mfrow = c(2,2))
 walk(d, ~ walk(.x, \(x) fitdistrplus::descdist(x$load, boot = 111)))
 
-# fit_exp <- map(d, ~fitdistrplus::fitdist(.x, "exp"))
+```
 
-# walk(fit_exp, ~plot(.x))
+### Zero-adjusted Gamma
 
-# map(d, \(x) gamlss::fitDist(x, k = 2, type = "realplus")$fits) |>
-#   bind_rows(.id = "trt")
+```{r}
+
+# Zero adjusted Gamma distribution fit to histograms
+plot_zaga <- function(i, d) {
+  m1 <- gamlss::gamlssML(d, family = gamlss.dist::ZAGA())
+  hist(d, prob = TRUE, main = i, breaks = 20)
+  curve(gamlss.dist::dZAGA(x, mu = m1$mu, sigma = m1$sigma, nu = m1$nu), from = min(d), to = max(d), add = TRUE)
+}
+
+plot_zaga_class <- function(data, class_name) {
+  if(missing(class_name)) {
+    class_name <- as.character(substitute(data))
+    class_name <- class_name[length(class_name)]
+  }
+  par(mfrow = c(2,2))
+  iwalk(data, ~plot_zaga(.y, .x))
+  mtext(class_name, cex = 1.6, side = 3, line = -2, outer = TRUE)
+}
+
+d2 <- d |> map(~ map(.x, "load"))
+iwalk(d2, ~plot_zaga_class(.x, .y))
+
+```
+
+### Poisson fit of count data {#sec-poisson-fit-of-count-data}
+
+All of the woody debris can be viewed as count data, and mean diameter. The mean
+diameter implies a distribution, which we actually have for coarse woody, but
+not for FWD.
+
+I wonder If I can model these counts as a Poisson process.
+
+```{r}
+
+cwd_counts <- cwd |> 
+  group_by(site, treatment, corner, azi) |>
+  summarize(count = sum(count), .groups = "drop")
+
+par(mfrow = c(2,2))
+cwd_counts |>
+  group_by(treatment) |>
+  group_walk( function (data, group) {
+    n <- data$count
+    hist(n, main = group, prob = TRUE)
+    lines(0:max(n), dpois(0:max(n), mean(n)))
+  })
+
+```
+
+That didn't look so great, so I also tried using a Zero-inflated Poisson
+distribution, but the model fit an extremely small value for the parameter that
+controls the probabiliy of zero (refered to here as sigma) and so was
+effectively the same as the Poisson fit.
+
+```{r}
+
+par(mfrow = c(2,2))
+cwd_counts |> 
+  group_by(treatment) |> nest() |>
+  transmute(
+    sigma = map_dbl(data, 
+      ~gamlss::gamlssML(.x$count, family = gamlss.dist::ZIP())$sigma
+    )
+  )
 
 ```
 
@@ -393,14 +496,15 @@ that maximum variance ration should be below 4.
 
 max_var <- load2("long", everything()) |>
   group_by(class, treatment) |>
-  summarize(var = sd(load)^2, load = max(load)) |>
-  summarize(max_var_rat = round(max(var) / min(var)), x = 3, y = max(load))
-
+  summarize(var = sd(load)^2, load = max(load), .groups = "drop_last") |>
+  summarize(
+    max_var_rat = paste("Max. var. ratio: ", round(max(var) / min(var))),
+    x = 1.1, y = max(load) * 1.1, .groups = "drop")
 
 load2("long", everything()) |>
   ggplot(aes(treatment, load)) +
   geom_boxplot() +
-  geom_text(data = max_var, aes(x, y, label = paste("Maximum variance ratio: ", max_var_rat))) +
+  geom_text(data = max_var, aes(x, y, label = max_var_rat, hjust = "inward")) +
   facet_wrap(~class, scales = "free")
 
 ```
@@ -414,10 +518,13 @@ which is only defined for positive values.
 
 load2("long", everything()) |>
   group_by(class, treatment) |>
-  summarize(zeros = sum(load == 0), percent = zeros / n()) |>
+  summarize(zeros = sum(load == 0), percent = zeros / n(), .groups = "drop") |>
   ggplot(aes(treatment, percent)) +
   geom_col() +
-  geom_text(aes(label = if_else(zeros == 0, NA, zeros), y = percent / 2), color = "gray70") +
+  geom_text(
+    aes(label = if_else(zeros == 0, NA, zeros), y = percent / 2),
+    color = "gray70", na.rm = TRUE
+  ) +
   facet_wrap(~class) +
   scale_y_continuous(labels = scales::percent)
 
@@ -433,7 +540,7 @@ givin treatment.
 #| label: fig-response-corr
 #| fig-cap: Correlation among the response variables (fuel classes).
 
-GGally::ggpairs(load2("wide", all_of(load_vars)))
+suppressMessages(GGally::ggpairs(load2("wide", all_of(load_vars))))
 
 ```
 

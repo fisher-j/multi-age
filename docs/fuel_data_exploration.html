@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.361">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -201,7 +201,10 @@ div.csl-indent {
   <li><a href="#outliers" id="toc-outliers" class="nav-link active" data-scroll-target="#outliers"><span class="header-section-number">4.1</span> Outliers</a></li>
   <li><a href="#sec-Normality" id="toc-sec-Normality" class="nav-link" data-scroll-target="#sec-Normality"><span class="header-section-number">4.2</span> Normality</a>
   <ul class="collapse">
-  <li><a href="#sec-other-distributions" id="toc-sec-other-distributions" class="nav-link" data-scroll-target="#sec-other-distributions"><span class="header-section-number">4.2.1</span> Other distributions</a></li>
+  <li><a href="#sec-box-cox-transformation" id="toc-sec-box-cox-transformation" class="nav-link" data-scroll-target="#sec-box-cox-transformation"><span class="header-section-number">4.2.1</span> Box-Cox transformation</a></li>
+  <li><a href="#sec-other-distributions" id="toc-sec-other-distributions" class="nav-link" data-scroll-target="#sec-other-distributions"><span class="header-section-number">4.2.2</span> Other distributions</a></li>
+  <li><a href="#zero-adjusted-gamma" id="toc-zero-adjusted-gamma" class="nav-link" data-scroll-target="#zero-adjusted-gamma"><span class="header-section-number">4.2.3</span> Zero-adjusted Gamma</a></li>
+  <li><a href="#sec-poisson-fit-of-count-data" id="toc-sec-poisson-fit-of-count-data" class="nav-link" data-scroll-target="#sec-poisson-fit-of-count-data"><span class="header-section-number">4.2.4</span> Poisson fit of count data</a></li>
   </ul></li>
   <li><a href="#sec-homogeneity-of-variance" id="toc-sec-homogeneity-of-variance" class="nav-link" data-scroll-target="#sec-homogeneity-of-variance"><span class="header-section-number">4.3</span> Homogeneity of variance</a></li>
   <li><a href="#zeros" id="toc-zeros" class="nav-link" data-scroll-target="#zeros"><span class="header-section-number">4.4</span> Zeros</a></li>
@@ -394,14 +397,23 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </details>
 </div>
 <p>When using manova to test for difference between groups with multiple response variables, it is important that the response variables are multivariate normally distributed. Unfortunately, it would appear that we have a probelem with normality. The raw data for each loading variable is clearly not normally distributed <a href="#fig-qqplot-naive">Figure&nbsp;<span>4.6</span></a>.</p>
-<div class="cell">
+<div class="cell" data-fig.heigth="8">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>load_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"onehr"</span>, <span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>, <span class="st">"dufflitter"</span>, <span class="st">"thoushr"</span>, <span class="st">"veg"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> load)) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>myqqplot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, var) {</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> {{ var }})) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(class <span class="sc">~</span> treatment, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Theoretical quantiles"</span>, <span class="at">y =</span> <span class="st">"Sample quantiles"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Normal Q-Q Plot"</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">myqqplot</span>(load)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-qqplot-naive" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -480,14 +492,39 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <figcaption class="figure-caption">Figure&nbsp;4.7: Histotrams for the fuel loading response variables. A normal curve with the same mean as sd as the data (and scaled to the same area as that covered by the bins) has been superimposed for reference.</figcaption>
 </figure>
 </div>
+<section id="sec-box-cox-transformation" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="sec-box-cox-transformation"><span class="header-section-number">4.2.1</span> Box-Cox transformation</h3>
+<p>I would like to look at the effect of this transformation on the response data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>boxcox <span class="ot">&lt;-</span> <span class="cf">function</span>(y, lambda1, lambda2) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(lambda1 <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ln</span>(y <span class="sc">+</span> lambda2)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    ((y <span class="sc">+</span> lambda2)<span class="sc">^</span>lambda1 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> lambda1</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span> <span class="fu">nest</span>() <span class="sc">|&gt;</span> <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">lambda =</span> <span class="fu">list</span>(<span class="fu">suppressMessages</span>(geoR<span class="sc">::</span><span class="fu">boxcoxfit</span>(data<span class="sc">$</span>load, <span class="at">lambda2 =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>lambda)),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">load_bc =</span> <span class="fu">list</span>(<span class="fu">boxcox</span>(data<span class="sc">$</span>load, lambda[<span class="dv">1</span>], lambda[<span class="dv">2</span>]))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="fu">c</span>(data, load_bc)) <span class="sc">|&gt;</span> <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">myqqplot</span>(load_bc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>While, this looks somewhat more normal, the zeros end up being a little strange. I applied a separte transformation for each fuel class, but all treatments within a fuel class have the same transformation.</p>
 <p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model">Figure&nbsp;<span>4.8</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
 <div id="fig-qqplot-model" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>load_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.matrix</span>(tl[<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">~</span> treatment, <span class="at">data =</span> tl)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>m_dist <span class="ot">&lt;-</span> heplots<span class="sc">::</span><span class="fu">cqplot</span>(load_mod)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="fu">everything</span>())[<span class="fu">order</span>(m_dist, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>load_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.matrix</span>(tl[<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">~</span> treatment, <span class="at">data =</span> tl)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>m_dist <span class="ot">&lt;-</span> heplots<span class="sc">::</span><span class="fu">cqplot</span>(load_mod)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="fu">everything</span>())[<span class="fu">order</span>(m_dist, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 10
    site    treatment corner   azi dufflitter onehr  tenhr hundhr thoushr    veg
@@ -503,11 +540,11 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
  9 waldon  gs        e        225      112.  0.711  8.98   14.7     89.6  34.6 
 10 whiskey ld        s        315       77.3 0.390  5.38   31.9     59.8  74.2 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>treatments <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"gs"</span>, <span class="st">"ha"</span>, <span class="st">"ld"</span>, <span class="st">"hd"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(treatments, </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  \(x) heplots<span class="sc">::</span><span class="fu">cqplot</span>(<span class="fu">filter</span>(tl, treatment <span class="sc">==</span> x)[<span class="sc">-</span><span class="dv">1</span>], <span class="at">main =</span> x)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>treatments <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"gs"</span>, <span class="st">"ha"</span>, <span class="st">"ld"</span>, <span class="st">"hd"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(treatments, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  \(x) heplots<span class="sc">::</span><span class="fu">cqplot</span>(<span class="fu">filter</span>(tl, treatment <span class="sc">==</span> x)[<span class="sc">-</span><span class="dv">1</span>], <span class="at">main =</span> x)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-qqplot-model-1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -529,20 +566,20 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 <p>A number of different tests of multivariate normaliy also confirm the lack of evidence for meeting this assumption (<a href="#tbl-norm-test">Table&nbsp;<span>4.1</span></a>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"mardia"</span>, <span class="st">"hz"</span>, <span class="st">"royston"</span>, <span class="st">"dh"</span>, <span class="st">"energy"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) MVN<span class="sc">::</span><span class="fu">mvn</span>(<span class="at">data =</span> data, <span class="at">subset =</span> <span class="st">"treatment"</span>, <span class="at">mvnTest =</span> x)) <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) x<span class="sc">$</span>multivariateNormality) <span class="sc">|&gt;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) <span class="fu">bind_rows</span>(x, <span class="at">.id =</span> <span class="st">"treatment"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(\(x) </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(x, Test <span class="sc">!=</span> <span class="st">"MVN"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>( <span class="fu">across</span>(<span class="fu">where</span>(is.factor), \(f) <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(f)))) <span class="sc">|&gt;</span> </span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">statistic =</span> <span class="dv">3</span>, <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">Result =</span> <span class="fu">last_col</span>())</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">all_mvn_tests</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))) <span class="sc">|&gt;</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"mardia"</span>, <span class="st">"hz"</span>, <span class="st">"royston"</span>, <span class="st">"dh"</span>, <span class="st">"energy"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) MVN<span class="sc">::</span><span class="fu">mvn</span>(<span class="at">data =</span> data, <span class="at">subset =</span> <span class="st">"treatment"</span>, <span class="at">mvnTest =</span> x)) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) x<span class="sc">$</span>multivariateNormality) <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) <span class="fu">bind_rows</span>(x, <span class="at">.id =</span> <span class="st">"treatment"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(\(x) </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(x, Test <span class="sc">!=</span> <span class="st">"MVN"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>( <span class="fu">across</span>(<span class="fu">where</span>(is.factor), \(f) <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(f)))) <span class="sc">|&gt;</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">statistic =</span> <span class="dv">3</span>, <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">Result =</span> <span class="fu">last_col</span>())</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">all_mvn_tests</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))) <span class="sc">|&gt;</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="tbl-norm-test" class="anchored">
 <table class="table table-sm table-striped small">
@@ -730,28 +767,22 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 </div>
 </div>
-<section id="sec-other-distributions" class="level3 page-columns page-full" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="sec-other-distributions"><span class="header-section-number">4.2.1</span> Other distributions</h3>
+</section>
+<section id="sec-other-distributions" class="level3 page-columns page-full" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="sec-other-distributions"><span class="header-section-number">4.2.2</span> Other distributions</h3>
 <p>If our data is not normally distributed, then what distribution is it? I’m going to assume what we are interested in the distribution of data within groups (treatments).</p>
 <p>I attemped to model the distribution of our conditional response data (fuel size class by treatment), but it mostly didn’t work.</p>
-<p>Our data is positive, and mostly highly skewed.</p>
+<p>Our data is non-negative (contains zeros) continuous (for the most part) and highly variable in terms of skew and kurtosis. The presence of zeros, makes using the Gamma distribution</p>
 <div class="page-columns page-full">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(<span class="sc">~</span>class) <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span><span class="fu">split</span>(.x, <span class="sc">~</span>treatment))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># imap_dfr(d, \(x, y) tibble(class = y, treatment = names(x) )) |&gt;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   with(paste0("Treatment ", treatment, ", fuel class ", class)) |&gt;</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   cat(sep = "\n")</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># par(mfrow = c(2,2))</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(d, <span class="sc">~</span> <span class="fu">walk</span>(.x, \(x) fitdistrplus<span class="sc">::</span><span class="fu">descdist</span>(x<span class="sc">$</span>load, <span class="at">boot =</span> <span class="dv">111</span>)))</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_exp &lt;- map(d, ~fitdistrplus::fitdist(.x, "exp"))</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co"># walk(fit_exp, ~plot(.x))</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co"># map(d, \(x) gamlss::fitDist(x, k = 2, type = "realplus")$fits) |&gt;</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   bind_rows(.id = "trt")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(<span class="sc">~</span>class) <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span><span class="fu">split</span>(.x, <span class="sc">~</span>treatment))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># imap_dfr(d, \(x, y) tibble(class = y, treatment = names(x) )) |&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   with(paste0("Treatment ", treatment, ", fuel class ", class)) |&gt;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   cat(sep = "\n")</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># par(mfrow = c(2,2))</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(d, <span class="sc">~</span> <span class="fu">walk</span>(.x, \(x) fitdistrplus<span class="sc">::</span><span class="fu">descdist</span>(x<span class="sc">$</span>load, <span class="at">boot =</span> <span class="dv">111</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="fig-skew-kurt" class="cell column-page quarto-layout-panel">
 <figure class="figure">
 <div class="quarto-layout-row quarto-layout-valign-top">
@@ -975,26 +1006,110 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 </div>
 </section>
+<section id="zero-adjusted-gamma" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="zero-adjusted-gamma"><span class="header-section-number">4.2.3</span> Zero-adjusted Gamma</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zero adjusted Gamma distribution fit to histograms</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plot_zaga <span class="ot">&lt;-</span> <span class="cf">function</span>(i, d) {</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> gamlss<span class="sc">::</span><span class="fu">gamlssML</span>(d, <span class="at">family =</span> gamlss.dist<span class="sc">::</span><span class="fu">ZAGA</span>())</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(d, <span class="at">prob =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> i, <span class="at">breaks =</span> <span class="dv">20</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">curve</span>(gamlss.dist<span class="sc">::</span><span class="fu">dZAGA</span>(x, <span class="at">mu =</span> m1<span class="sc">$</span>mu, <span class="at">sigma =</span> m1<span class="sc">$</span>sigma, <span class="at">nu =</span> m1<span class="sc">$</span>nu), <span class="at">from =</span> <span class="fu">min</span>(d), <span class="at">to =</span> <span class="fu">max</span>(d), <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>plot_zaga_class <span class="ot">&lt;-</span> <span class="cf">function</span>(data, class_name) {</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">missing</span>(class_name)) {</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    class_name <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="fu">substitute</span>(data))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    class_name <span class="ot">&lt;-</span> class_name[<span class="fu">length</span>(class_name)]</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">iwalk</span>(data, <span class="sc">~</span><span class="fu">plot_zaga</span>(.y, .x))</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtext</span>(class_name, <span class="at">cex =</span> <span class="fl">1.6</span>, <span class="at">side =</span> <span class="dv">3</span>, <span class="at">line =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">outer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">map</span>(.x, <span class="st">"load"</span>))</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="fu">iwalk</span>(d2, <span class="sc">~</span><span class="fu">plot_zaga_class</span>(.x, .y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="sec-poisson-fit-of-count-data" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="sec-poisson-fit-of-count-data"><span class="header-section-number">4.2.4</span> Poisson fit of count data</h3>
+<p>All of the woody debris can be viewed as count data, and mean diameter. The mean diameter implies a distribution, which we actually have for coarse woody, but not for FWD.</p>
+<p>I wonder If I can model these counts as a Poisson process.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cwd_counts <span class="ot">&lt;-</span> cwd <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, treatment, corner, azi) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">sum</span>(count), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>cwd_counts <span class="sc">|&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_walk</span>( <span class="cf">function</span> (data, group) {</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> data<span class="sc">$</span>count</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hist</span>(n, <span class="at">main =</span> group, <span class="at">prob =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="fu">max</span>(n), <span class="fu">dpois</span>(<span class="dv">0</span><span class="sc">:</span><span class="fu">max</span>(n), <span class="fu">mean</span>(n)))</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>That didn’t look so great, so I also tried using a Zero-inflated Poisson distribution, but the model fit an extremely small value for the parameter that controls the probabiliy of zero (refered to here as sigma) and so was effectively the same as the Poisson fit.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>cwd_counts <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span> <span class="fu">nest</span>() <span class="sc">|&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma =</span> <span class="fu">map_dbl</span>(data, </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span>gamlss<span class="sc">::</span><span class="fu">gamlssML</span>(.x<span class="sc">$</span>count, <span class="at">family =</span> gamlss.dist<span class="sc">::</span><span class="fu">ZIP</span>())<span class="sc">$</span>sigma</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+# Groups:   treatment [4]
+  treatment    sigma
+  &lt;chr&gt;        &lt;dbl&gt;
+1 gs        2.61e-10
+2 ha        1.61e-10
+3 hd        2.42e-10
+4 ld        2.71e-10</code></pre>
+</div>
+</div>
+</section>
 </section>
 <section id="sec-homogeneity-of-variance" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="sec-homogeneity-of-variance"><span class="header-section-number">4.3</span> Homogeneity of variance</h2>
 <p>There seem to be some pretty big differences in the variance between treatments. This is likely to do with outliers. For linear regression, it is recommended that maximum variance ration should be below 4.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>max_var <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">var =</span> <span class="fu">sd</span>(load)<span class="sc">^</span><span class="dv">2</span>, <span class="at">load =</span> <span class="fu">max</span>(load)) <span class="sc">|&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">max_var_rat =</span> <span class="fu">round</span>(<span class="fu">max</span>(var) <span class="sc">/</span> <span class="fu">min</span>(var)), <span class="at">x =</span> <span class="dv">3</span>, <span class="at">y =</span> <span class="fu">max</span>(load))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has grouped output by 'class'. You can override using the
-`.groups` argument.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, load)) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> max_var, <span class="fu">aes</span>(x, y, <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"Maximum variance ratio: "</span>, max_var_rat))) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>max_var <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">var =</span> <span class="fu">sd</span>(load)<span class="sc">^</span><span class="dv">2</span>, <span class="at">load =</span> <span class="fu">max</span>(load), <span class="at">.groups =</span> <span class="st">"drop_last"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_var_rat =</span> <span class="fu">paste</span>(<span class="st">"Max. var. ratio: "</span>, <span class="fu">round</span>(<span class="fu">max</span>(var) <span class="sc">/</span> <span class="fu">min</span>(var))),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">1.1</span>, <span class="at">y =</span> <span class="fu">max</span>(load) <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, load)) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> max_var, <span class="fu">aes</span>(x, y, <span class="at">label =</span> max_var_rat, <span class="at">hjust =</span> <span class="st">"inward"</span>)) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -1002,23 +1117,19 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <h2 data-number="4.4" class="anchored" data-anchor-id="zeros"><span class="header-section-number">4.4</span> Zeros</h2>
 <p>We do have zeros, which is importnat if we want to employ a glm like Gamma, which is only defined for positive values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">zeros =</span> <span class="fu">sum</span>(load <span class="sc">==</span> <span class="dv">0</span>), <span class="at">percent =</span> zeros <span class="sc">/</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, percent)) <span class="sc">+</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">if_else</span>(zeros <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">NA</span>, zeros), <span class="at">y =</span> percent <span class="sc">/</span> <span class="dv">2</span>), <span class="at">color =</span> <span class="st">"gray70"</span>) <span class="sc">+</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class) <span class="sc">+</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has grouped output by 'class'. You can override using the
-`.groups` argument.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 13 rows containing missing values (`geom_text()`).</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">zeros =</span> <span class="fu">sum</span>(load <span class="sc">==</span> <span class="dv">0</span>), <span class="at">percent =</span> zeros <span class="sc">/</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, percent)) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">if_else</span>(zeros <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">NA</span>, zeros), <span class="at">y =</span> percent <span class="sc">/</span> <span class="dv">2</span>),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray70"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class) <span class="sc">+</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -1026,12 +1137,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <h2 data-number="4.5" class="anchored" data-anchor-id="correlation-of-response-variables"><span class="header-section-number">4.5</span> Correlation of response variables</h2>
 <p>I’m not sure if it’s important, but I was curious if the various fuel loading classes were correlated with eachother. Either across the board, or within a givin treatment.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>GGally<span class="sc">::</span><span class="fu">ggpairs</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="fu">all_of</span>(load_vars)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Registered S3 method overwritten by 'GGally':
-  method from   
-  +.gg   ggplot2</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(GGally<span class="sc">::</span><span class="fu">ggpairs</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="fu">all_of</span>(load_vars))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-response-corr" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
