@@ -19,13 +19,106 @@ dependidng on research question. Using a Bonferroni correction for rejecting the
 null of alpha / m, for m hypothesis, we get an alpha of 0.008 for an alpha of
 0.05 and 6 tests.
 
+This suggests that it is unlikely that all treatemnts are equal.
+
 ```{r}
 
 tl <- load2("wide", treatment, all_of(load_vars))
 myexpr <- expr(cbind(!!!syms(load_vars)) ~ treatment)
 test1 <- do.call("manova", list(myexpr, data = quote(tl)))
 summary(test1)
-summary.aov(test1)
 
 ```
 
+## Levene test for homogeneity of variance {#sec-levene-test-for-homogeneity-of-variance}
+
+From the looks of the levene test (using median), onehr, tenhr, and veg may all
+have different *variances* between groups. 
+
+The one-way anova test results are the same though between equal and unequal
+variance assumptions. These tests support the notion that we can't assume that
+the mean vegetatvie and onehr fuel loading are equal across all treatments, but
+there isn't such evidence for the other fuel loading classes.
+
+```{r}
+
+d <- load2("long", treatment, all_of(load_vars)) |> group_by(class)
+
+d |> nest() |> rowwise() |>
+  transmute(
+    levene = car::leveneTest(load ~ factor(treatment), data)[[3]][1],
+    welch_uneq_var = oneway.test(load ~ treatment, data)$p.value,
+    welch_eq_var = oneway.test(load ~ treatment, var.equal = TRUE, data = data)$p.value,
+  ) |>
+  knitr::kable(digits = 3)
+
+```
+
+We can use the Games Howell test for pairwise comparrisons to follow up on the
+welches test for differences between means when there is unequal variance among
+groups. These p-values provide evidence that for onehr fuels, the mean value of
+ha is greater than gs and ld, and the mean value for hd is also greater than gs
+and ld. Also, for vegetation, gs is greater than ha only.
+
+```{r}
+
+gh_test <- d |> rstatix::games_howell_test(load ~ treatment) |>
+  filter(p.adj.signif != "ns") |>
+  rstatix::add_y_position(scales = "free", step.increase = 0.5)
+ggpubr::ggboxplot(d, x = "treatment", y = "load", facet.by = "class") +
+facet_wrap(~class, scales = "free") +
+ggpubr::stat_pvalue_manual(gh_test, label = "p.adj")
+
+```
+
+## Multi-level model {#sec-multi-level-model}
+
+We have transects nested within plot corners, corners nested within plots, and
+plots nested within sites. We would like to detect a treatment effect, while
+accounting for the non-independence of this nested data structure. The following
+model, I believe, captures this grouping structure.
+
+```{r}
+form <- load ~ treatment + (1 | site/treatment/corner)
+```
+
+```{r}
+
+d <- load2("long", site, treatment, corner, all_of(load_vars)) |> group_by(class)
+
+m1 <- d |> nest() |> rowwise() |>
+  transmute(
+    mod = list(lme4::lmer(form, data = data)),
+    emmeans = list(emmeans::emmeans(mod, "treatment")),
+    pairs = list(as_tibble(pairs(emmeans, infer = TRUE))),
+  )
+
+```
+
+Pairwise comparisons with Tukey adjustment for each of 6 multilevel models
+represeing different fuel loading classes reveals that the only evidence for
+differences in means among treatments is with vegetation between the gs and ha
+treatments. Another sizeable difference in means is between gs and ha for the
+onehr fuels (@fig-multilevel-p-value).
+
+```{r}
+#| label: tbl-multilevel-p-values
+#| tbl-cap: Pairwise comparisons among treatments with p-values < 0.05 for 6
+#|   multilevel models.
+
+select(m1, pairs) |> unnest(pairs) |>
+  filter(p.value <= 0.05) |>
+  knitr::kable(digits = 3)
+
+```
+
+```{r}
+#| label: fig-multilevel-p-value
+#| fig-cap: 95% confidence intervals and pairwise comparisons of means for 6
+#|   mixed models representing differnt fuel loading classes using package
+#|   emmeans.
+
+group_map(m1, ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
+  patchwork::wrap_plots()
+
+```

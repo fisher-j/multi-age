@@ -180,6 +180,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#manova-and-multiple-anovas" id="toc-manova-and-multiple-anovas" class="nav-link active" data-scroll-target="#manova-and-multiple-anovas"><span class="header-section-number">5.1</span> Manova and multiple anovas</a></li>
+  <li><a href="#sec-levene-test-for-homogeneity-of-variance" id="toc-sec-levene-test-for-homogeneity-of-variance" class="nav-link" data-scroll-target="#sec-levene-test-for-homogeneity-of-variance"><span class="header-section-number">5.2</span> Levene test for homogeneity of variance</a></li>
+  <li><a href="#sec-multi-level-model" id="toc-sec-multi-level-model" class="nav-link" data-scroll-target="#sec-multi-level-model"><span class="header-section-number">5.3</span> Multi-level model</a></li>
   </ul>
 </nav>
     </div>
@@ -206,6 +208,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="manova-and-multiple-anovas" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="manova-and-multiple-anovas"><span class="header-section-number">5.1</span> Manova and multiple anovas</h2>
 <p>The often recommended Pillai’s Trace Test is robust to the normality assumption. Follow up with linear discriminant analysis, or multiple one-way anovas dependidng on research question. Using a Bonferroni correction for rejecting the null of alpha / m, for m hypothesis, we get an alpha of 0.008 for an alpha of 0.05 and 6 tests.</p>
+<p>This suggests that it is unlikely that all treatemnts are equal.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>myexpr <span class="ot">&lt;-</span> <span class="fu">expr</span>(<span class="fu">cbind</span>(<span class="sc">!!!</span><span class="fu">syms</span>(load_vars)) <span class="sc">~</span> treatment)</span>
@@ -218,41 +221,171 @@ Residuals 124
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary.aov</span>(test1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> Response onehr :
-             Df Sum Sq Mean Sq F value    Pr(&gt;F)    
-treatment     3  8.064 2.68805  6.8571 0.0002596 ***
-Residuals   124 48.609 0.39201                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
- Response tenhr :
-             Df Sum Sq Mean Sq F value Pr(&gt;F)
-treatment     3  11.57  3.8560  0.6308 0.5965
-Residuals   124 757.95  6.1125               
-
- Response hundhr :
-             Df Sum Sq Mean Sq F value Pr(&gt;F)
-treatment     3  120.8  40.253  0.5701 0.6357
-Residuals   124 8755.7  70.611               
-
- Response dufflitter :
-             Df Sum Sq Mean Sq F value Pr(&gt;F)
-treatment     3   3700 1233.42   1.882 0.1361
-Residuals   124  81268  655.39               
-
- Response thoushr :
-             Df Sum Sq Mean Sq F value Pr(&gt;F)
-treatment     3   1571   523.6  0.1092 0.9546
-Residuals   124 594732  4796.2               
-
- Response veg :
-             Df Sum Sq Mean Sq F value    Pr(&gt;F)    
-treatment     3  11769  3923.2  6.2403 0.0005564 ***
-Residuals   124  77957   628.7                      
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</section>
+<section id="sec-levene-test-for-homogeneity-of-variance" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="sec-levene-test-for-homogeneity-of-variance"><span class="header-section-number">5.2</span> Levene test for homogeneity of variance</h2>
+<p>From the looks of the levene test (using median), onehr, tenhr, and veg may all have different <em>variances</em> between groups.</p>
+<p>The one-way anova test results are the same though between equal and unequal variance assumptions. These tests support the notion that we can’t assume that the mean vegetatvie and onehr fuel loading are equal across all treatments, but there isn’t such evidence for the other fuel loading classes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> <span class="fu">group_by</span>(class)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">nest</span>() <span class="sc">|&gt;</span> <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">levene =</span> car<span class="sc">::</span><span class="fu">leveneTest</span>(load <span class="sc">~</span> <span class="fu">factor</span>(treatment), data)[[<span class="dv">3</span>]][<span class="dv">1</span>],</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">welch_uneq_var =</span> <span class="fu">oneway.test</span>(load <span class="sc">~</span> treatment, data)<span class="sc">$</span>p.value,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">welch_eq_var =</span> <span class="fu">oneway.test</span>(load <span class="sc">~</span> treatment, <span class="at">var.equal =</span> <span class="cn">TRUE</span>, <span class="at">data =</span> data)<span class="sc">$</span>p.value,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">class</th>
+<th style="text-align: right;">levene</th>
+<th style="text-align: right;">welch_uneq_var</th>
+<th style="text-align: right;">welch_eq_var</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">onehr</td>
+<td style="text-align: right;">0.043</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tenhr</td>
+<td style="text-align: right;">0.020</td>
+<td style="text-align: right;">0.491</td>
+<td style="text-align: right;">0.596</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hundhr</td>
+<td style="text-align: right;">0.937</td>
+<td style="text-align: right;">0.648</td>
+<td style="text-align: right;">0.636</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: right;">0.118</td>
+<td style="text-align: right;">0.152</td>
+<td style="text-align: right;">0.136</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">thoushr</td>
+<td style="text-align: right;">0.955</td>
+<td style="text-align: right;">0.919</td>
+<td style="text-align: right;">0.955</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">veg</td>
+<td style="text-align: right;">0.006</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.001</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We can use the Games Howell test for pairwise comparrisons to follow up on the welches test for differences between means when there is unequal variance among groups. These p-values provide evidence that for onehr fuels, the mean value of ha is greater than gs and ld, and the mean value for hd is also greater than gs and ld. Also, for vegetation, gs is greater than ha only.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gh_test <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> rstatix<span class="sc">::</span><span class="fu">games_howell_test</span>(load <span class="sc">~</span> treatment) <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p.adj.signif <span class="sc">!=</span> <span class="st">"ns"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">add_y_position</span>(<span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">step.increase =</span> <span class="fl">0.5</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ggpubr<span class="sc">::</span><span class="fu">ggboxplot</span>(d, <span class="at">x =</span> <span class="st">"treatment"</span>, <span class="at">y =</span> <span class="st">"load"</span>, <span class="at">facet.by =</span> <span class="st">"class"</span>) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ggpubr<span class="sc">::</span><span class="fu">stat_pvalue_manual</span>(gh_test, <span class="at">label =</span> <span class="st">"p.adj"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hypothesis_test_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="sec-multi-level-model" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="sec-multi-level-model"><span class="header-section-number">5.3</span> Multi-level model</h2>
+<p>We have transects nested within plot corners, corners nested within plots, and plots nested within sites. We would like to detect a treatment effect, while accounting for the non-independence of this nested data structure. The following model, I believe, captures this grouping structure.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> load <span class="sc">~</span> treatment <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site<span class="sc">/</span>treatment<span class="sc">/</span>corner)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, site, treatment, corner, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> <span class="fu">group_by</span>(class)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">nest</span>() <span class="sc">|&gt;</span> <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mod =</span> <span class="fu">list</span>(lme4<span class="sc">::</span><span class="fu">lmer</span>(form, <span class="at">data =</span> data)),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">emmeans =</span> <span class="fu">list</span>(emmeans<span class="sc">::</span><span class="fu">emmeans</span>(mod, <span class="st">"treatment"</span>)),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">pairs =</span> <span class="fu">list</span>(<span class="fu">as_tibble</span>(<span class="fu">pairs</span>(emmeans, <span class="at">infer =</span> <span class="cn">TRUE</span>))),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')
+boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+</div>
+<p>Pairwise comparisons with Tukey adjustment for each of 6 multilevel models represeing different fuel loading classes reveals that the only evidence for differences in means among treatments is with vegetation between the gs and ha treatments. Another sizeable difference in means is between gs and ha for the onehr fuels (<a href="#fig-multilevel-p-value">Figure&nbsp;<span>5.1</span></a>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(m1, pairs) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(pairs) <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p.value <span class="sc">&lt;=</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Adding missing grouping variables: `class`</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="tbl-multilevel-p-values" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;5.1: Pairwise comparisons among treatments with p-values &lt; 0.05 for 6 multilevel models.</caption>
+<colgroup>
+<col style="width: 8%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 4%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">class</th>
+<th style="text-align: left;">contrast</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">lower.CL</th>
+<th style="text-align: right;">upper.CL</th>
+<th style="text-align: right;">t.ratio</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">veg</td>
+<td style="text-align: left;">gs - ha</td>
+<td style="text-align: right;">25.31</td>
+<td style="text-align: right;">6.879</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3.835</td>
+<td style="text-align: right;">46.786</td>
+<td style="text-align: right;">3.679</td>
+<td style="text-align: right;">0.022</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group_map</span>(m1, <span class="sc">~</span> <span class="fu">plot</span>(.x<span class="sc">$</span>emmeans[[<span class="dv">1</span>]], <span class="at">comparisons =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(.x<span class="sc">$</span>class)) <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-multilevel-p-value" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="hypothesis_test_files/figure-html/fig-multilevel-p-value-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;5.1: 95% confidence intervals and pairwise comparisons of means for 6 mixed models representing differnt fuel loading classes using package emmeans.</figcaption>
+</figure>
+</div>
 </div>
 </div>
 
