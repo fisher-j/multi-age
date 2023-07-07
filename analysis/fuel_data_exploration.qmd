@@ -13,7 +13,7 @@ Our main questions regarding fuel loading are:
 
 1. Are there differences in fuel loading between treatments?
 2. If so, what fuel loading components differ, and in which treatments?
-3. What is the magnitude of the difference by treatment?
+3. What is the magnitude of the difference (for each fuel class) by treatment?
 
 We have a range of response variables that include loading in several different
 classes of surface fuels. Some of these may be correlated with each other, which
@@ -470,7 +470,7 @@ cwd_counts |>
 
 That didn't look so great, so I also tried using a Zero-inflated Poisson
 distribution, but the model fit an extremely small value for the parameter that
-controls the probabiliy of zero (refered to here as sigma) and so was
+controls the probability of zero (referred to here as sigma) and so was
 effectively the same as the Poisson fit.
 
 ```{r}
@@ -511,7 +511,7 @@ load2("long", everything()) |>
 
 ## Zeros
 
-We do have zeros, which is importnat if we want to employ a glm like Gamma,
+We do have zeros, which is important if we want to employ a glm like Gamma,
 which is only defined for positive values.
 
 ```{r}
@@ -533,8 +533,8 @@ load2("long", everything()) |>
 ## Correlation of response variables
 
 I'm not sure if it's important, but I was curious if the various fuel loading
-classes were correlated with eachother. Either across the board, or within a
-givin treatment.
+classes were correlated with each other. Either across the board, or within a
+given treatment.
 
 ```{r}
 #| label: fig-response-corr
@@ -546,18 +546,18 @@ suppressMessages(GGally::ggpairs(load2("wide", all_of(load_vars))))
 
 ## Independence
 
-Because of how are data were collected they are not indepdent. The current data
+Because of how are data were collected they are not independent. The current data
 is summarized at the transect level. At that level. We have two transects at
 each corner. Because of spatial autocorrelation, these may be correlated with
-eachother. Corners (and thus transects) are nested within plots, and plots are
+each other. Corners (and thus transects) are nested within plots, and plots are
 within treatments. Each plot received a different treatment. What I'm not clear
-about is: should I incldude a random variable for plots, if i'm including a
+about is: should I include a random variable for plots, if I'm including a
 fixed effect for treatment?
 
 There are also question about at what level to summarize/model the data. I've
 already averaged stations within transects for several variable that were
 collected at the station level (two within each transect). What are the
-tradeoffs for either averaging at the the corner level, or alternatively,
+trade-offs for either averaging at the corner level, or alternatively,
 analyzing our raw station data instead of averaging.
 
 

@@ -9,6 +9,7 @@ load("./data_long.RData")
 source("./scripts/utils.r")
 transectid <- c("site", "treatment", "corner", "azi")
 load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
+
 ```
 
 ## Manova and multiple anovas
@@ -54,7 +55,7 @@ d |> nest() |> rowwise() |>
 
 ```
 
-We can use the Games Howell test for pairwise comparrisons to follow up on the
+We can use the Games Howell test for pairwise comparisons to follow up on the
 welches test for differences between means when there is unequal variance among
 groups. These p-values provide evidence that for onehr fuels, the mean value of
 ha is greater than gs and ld, and the mean value for hd is also greater than gs
@@ -79,7 +80,9 @@ accounting for the non-independence of this nested data structure. The following
 model, I believe, captures this grouping structure.
 
 ```{r}
+
 form <- load ~ treatment + (1 | site/treatment/corner)
+
 ```
 
 ```{r}
@@ -90,18 +93,19 @@ m1 <- d |> nest() |> rowwise() |>
   transmute(
     mod = list(lme4::lmer(form, data = data)),
     emmeans = list(emmeans::emmeans(mod, "treatment")),
-    pairs = list(as_tibble(pairs(emmeans, infer = TRUE))),
+    pairs = list(as_tibble(pairs(emmeans, infer = TRUE)))
   )
 
 ```
 
 Pairwise comparisons with Tukey adjustment for each of 6 multilevel models
-represeing different fuel loading classes reveals that the only evidence for
+representing different fuel loading classes reveals that the only evidence for
 differences in means among treatments is with vegetation between the gs and ha
 treatments. Another sizeable difference in means is between gs and ha for the
 onehr fuels (@fig-multilevel-p-value).
 
 ```{r}
+
 #| label: tbl-multilevel-p-values
 #| tbl-cap: Pairwise comparisons among treatments with p-values < 0.05 for 6
 #|   multilevel models.
@@ -115,10 +119,229 @@ select(m1, pairs) |> unnest(pairs) |>
 ```{r}
 #| label: fig-multilevel-p-value
 #| fig-cap: 95% confidence intervals and pairwise comparisons of means for 6
-#|   mixed models representing differnt fuel loading classes using package
+#|   mixed models representing different fuel loading classes using package
 #|   emmeans.
 
 group_map(m1, ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
   patchwork::wrap_plots()
 
 ```
+
+Hypothesis testing with multi-level models is not as straight forward with
+multi-level models. The problem, [explained here](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#inference-and-confidence-intervals)
+is two fold. For GLMMs and unbalanced experimental designs, the null
+distribution for the F-statistic may not be F-distributed.
+
+For us, we have a balanced design (I think) and so the F-statistic should be F
+distributed *and* degrees of freedom should be clear from the details of the
+design. Because of our balanced design, the Kenward-Rogers approach and
+"inner-outer" design approach (which is used by `nlme::lme`) give the same
+result of 9.
+
+Using the package `pbkrtest` we can get parametric bootstrap liklihood ratio
+statistics and test this statistic in a number of different ways. The PBtest
+should probably be the most reliable, but I've included descriptions of the
+others from the package documentation for reference. I'm also including an
+F-test in which degrees of freedom are estimated with Kenward-Rogers approach.
+
+LRT
+: Assuming that LRT has a chi-square distribution.
+
+PBtest
+: The fraction of simulated LRT-values that are larger or equal to the observed
+LRT value.
+
+Bartlett
+: A Bartlett correction is of LRT is calculated from the mean of the simulated
+LRT-values
+
+Gamma
+: The reference distribution of LRT is assumed to be a gamma distribution with
+mean and variance determined as the sample mean and sample variance of the
+simulated LRT-values.
+
+F
+: The LRT divided by the number of degrees of freedom is assumed to be
+F-distributed, where the denominator degrees of freedom are determined by
+matching the first moment of the reference distribution. 
+
+```{r}
+#| cache: true
+
+d <- load2("long", all_of(c(transectid, load_vars)))
+dd <- ungroup(d) |> split(~class)
+
+cluster <- parallel::makeCluster(rep("localhost", parallel::detectCores()))
+pmod <- imap(dd, function(d, i) {
+  form <- load ~ treatment + (1 | site/treatment/corner)
+  amod <- lme4::lmer(form, d, REML = FALSE)
+  nmod <- update(amod, . ~ . -treatment)
+  krtest <- pbkrtest::KRmodcomp(amod, nmod) |>
+    pluck("test", \(x) slice(x, 1)) |>
+    rename(df = ndf) |>
+    rownames_to_column("test")
+  pbkrtest::PBmodcomp(amod, nmod, cl = cluster) |>
+    pluck(summary, "test") |>
+    rownames_to_column("test") |>
+    bind_rows(krtest) |>
+    mutate(class = i, .before = 1) |>
+    relocate(c(df, ddf, F.scaling), .after = stat)
+}) |> 
+  list_rbind()
+parallel::stopCluster(cluster)
+
+pmod |> knitr::kable(digits = c(NA, NA, 2, 1, 2, 1, 4))
+
+```
+
+## Model checking
+
+Taking a look at residual vs. fitted and qqplots of the model, it looks like our
+residuals are not normally distributed and there is not constant variance.
+
+```{r}
+#| code-fold: true
+
+resid_plot <- function(data) {
+  data |>
+    ggplot(aes(fitted, resid)) +
+    geom_point() +
+    facet_wrap(~class, scales = "free") +
+    geom_hline(yintercept = 0)
+}
+
+qq_plot <- function(data) {
+  data |>
+    ggplot(aes(sample = resid)) +
+    stat_qq() +
+    stat_qq_line() +
+    facet_wrap(~class, scales = "free")
+}
+
+resid_qq_plot <- function(data) {
+  data <- unnest(data, c(resid, fitted))
+  list(
+    a = resid_plot(data),
+    b = qq_plot(data)
+  )
+}
+
+d <- load2("long", all_of(c(transectid, load_vars))) |>
+  group_by(class) |> nest() |> rowwise()
+
+```
+
+```{r}
+#| label: fig-mod1-diagnostic1
+#| fig-height: 10
+
+form <- load ~ treatment + (1 | site/treatment/corner)
+
+mod1 <- d |>
+  mutate(
+    mod = list(lme4::lmer(form, data)),
+    fitted = list(fitted(mod)),
+    resid = list(resid(mod, type = "pearson", scaled = TRUE)),
+    .keep = "unused"
+  ) 
+  
+resid_qq_plot(mod1) |> patchwork::wrap_plots(ncol = 1)
+
+```
+
+I'll try to control the variance by refitting the model with `nlme::lme` and
+using the weights argument. I'll be using the pearson residuals which are
+[corrected for heteroscedasticity](https://stackoverflow.com/a/24108158).
+
+I had to use the control argument `sigma = 1` for the model to fit. I'm not sure
+why, I read it in the documentation for `nlme::varConstProp`. I'm modeling
+variance as a constant proportion of the fitted values of the model. This seems
+to have cleaned up the variance.
+
+```{r}
+#| label: fig-mod1-diagnostic2
+#| fig-height: 10
+
+mod2 <- d |>
+  mutate(
+    mod = list(nlme::lme(
+      fixed = load ~ treatment,
+      random = ~ 1 | site/treatment/corner,
+      data = data,
+      weights = nlme::varConstProp(),
+      control = nlme::lmeControl(sigma = 1)
+    )),
+    fitted = list(fitted(mod)),
+    resid = list(resid(mod, type = "pearson")),
+    .keep = "unused"
+  )
+
+patchwork::wrap_plots(resid_qq_plot(mod2), ncol = 1)
+
+```
+
+I'll compare AIC of the two models to see if one performs better than the other.
+
+
+first, I want to see if the models produced by lme and lmer are equivalent
+
+```{r}
+
+d |>
+  mutate(
+    mod1 = list(lme4::lmer(form, data)),
+    mod2 = list(nlme::lme(
+      fixed = load ~ treatment,
+      random = ~ 1 | site/treatment/corner,
+      data = data
+    )),
+    .keep = "unused"
+  ) |>
+  pivot_longer(-class, names_to = "model") |>
+  rowwise() |>
+  mutate(s = list(broom.mixed::tidy(value, effect = "fixed"))) |>
+  select(class, model, s) |>
+  unnest(everything()) |>
+  arrange(class, term)
+
+```
+
+they seem equivalent enough, although the random effects variances estimated by
+`lmer` are somewhat smaller. Now, lets compare the two `lme` models. I'm fitting
+with REML because I'm not changing the fixed effects structure.
+
+```{r}
+
+mod_c <- d |>
+  mutate(
+    mod2 = list(nlme::lme(
+      fixed = load ~ treatment,
+      random = ~ 1 | site/treatment/corner,
+      data = data,
+    )),
+    mod3 = list(nlme::lme(
+      fixed = load ~ treatment,
+      random = ~ 1 | site/treatment/corner,
+      data = data,
+      weights = nlme::varConstProp(),
+      control = nlme::lmeControl(sigma = 1),
+    )),
+    .keep = "unused"
+  ) 
+
+mod_c |>
+  mutate(aic = list(across(starts_with("mod"), ~ AIC(.x))))|>
+  select(aic)|> unnest(aic)
+
+```
+
+## Other random effects structures
+
+I'm not sure I'm using the correct random effects specification. The somewhat
+confusing thing is that I have a random effects nested above *and* below my
+fixed effect. This means that when I specify my random effect using the nesting
+notation: `1 | site/treatment/corner`, I'm estimating a variance for
+`corner:treatment:site`, `treatment:site`, and `site`. The interaction of
+treatment and site here is analagous to a plot effect, of which there are 16.
+
+## Bayesian mode

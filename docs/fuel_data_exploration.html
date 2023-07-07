@@ -237,7 +237,7 @@ div.csl-indent {
 <ol type="1">
 <li>Are there differences in fuel loading between treatments?</li>
 <li>If so, what fuel loading components differ, and in which treatments?</li>
-<li>What is the magnitude of the difference by treatment?</li>
+<li>What is the magnitude of the difference (for each fuel class) by treatment?</li>
 </ol>
 <p>We have a range of response variables that include loading in several different classes of surface fuels. Some of these may be correlated with each other, which may have an effect on our interpretation of differences between treatments. For instance, if duff-litter load is negatively correlated with vegetation, even if we don’t see differences between treatment in either of these variables separately, it might be found that for any given level of vegetation loading, one treatment, or another may have consistently higher levels of duff-litter. Capturing differences between treatments in terms of interactions like these requires different tools than assessing any one variable on its own.</p>
 <p>In order to assess potential outliers, co-linearity, interactions, and other problems with statistical tests, we’ll first conduct some data exploration as outlined by <span class="citation" data-cites="zuurProtocolDataExploration2010">Zuur, Ieno, and Elphick (<a href="#ref-zuurProtocolDataExploration2010" role="doc-biblioref">2010</a>)</span>.</p>
@@ -1069,7 +1069,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>That didn’t look so great, so I also tried using a Zero-inflated Poisson distribution, but the model fit an extremely small value for the parameter that controls the probabiliy of zero (refered to here as sigma) and so was effectively the same as the Poisson fit.</p>
+<p>That didn’t look so great, so I also tried using a Zero-inflated Poisson distribution, but the model fit an extremely small value for the parameter that controls the probability of zero (referred to here as sigma) and so was effectively the same as the Poisson fit.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>cwd_counts <span class="sc">|&gt;</span> </span>
@@ -1115,7 +1115,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </section>
 <section id="zeros" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="zeros"><span class="header-section-number">4.4</span> Zeros</h2>
-<p>We do have zeros, which is importnat if we want to employ a glm like Gamma, which is only defined for positive values.</p>
+<p>We do have zeros, which is important if we want to employ a glm like Gamma, which is only defined for positive values.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
@@ -1135,7 +1135,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </section>
 <section id="correlation-of-response-variables" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="correlation-of-response-variables"><span class="header-section-number">4.5</span> Correlation of response variables</h2>
-<p>I’m not sure if it’s important, but I was curious if the various fuel loading classes were correlated with eachother. Either across the board, or within a givin treatment.</p>
+<p>I’m not sure if it’s important, but I was curious if the various fuel loading classes were correlated with each other. Either across the board, or within a given treatment.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(GGally<span class="sc">::</span><span class="fu">ggpairs</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="fu">all_of</span>(load_vars))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1150,8 +1150,8 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </section>
 <section id="independence" class="level2" data-number="4.6">
 <h2 data-number="4.6" class="anchored" data-anchor-id="independence"><span class="header-section-number">4.6</span> Independence</h2>
-<p>Because of how are data were collected they are not indepdent. The current data is summarized at the transect level. At that level. We have two transects at each corner. Because of spatial autocorrelation, these may be correlated with eachother. Corners (and thus transects) are nested within plots, and plots are within treatments. Each plot received a different treatment. What I’m not clear about is: should I incldude a random variable for plots, if i’m including a fixed effect for treatment?</p>
-<p>There are also question about at what level to summarize/model the data. I’ve already averaged stations within transects for several variable that were collected at the station level (two within each transect). What are the tradeoffs for either averaging at the the corner level, or alternatively, analyzing our raw station data instead of averaging.</p>
+<p>Because of how are data were collected they are not independent. The current data is summarized at the transect level. At that level. We have two transects at each corner. Because of spatial autocorrelation, these may be correlated with each other. Corners (and thus transects) are nested within plots, and plots are within treatments. Each plot received a different treatment. What I’m not clear about is: should I include a random variable for plots, if I’m including a fixed effect for treatment?</p>
+<p>There are also question about at what level to summarize/model the data. I’ve already averaged stations within transects for several variable that were collected at the station level (two within each transect). What are the trade-offs for either averaging at the corner level, or alternatively, analyzing our raw station data instead of averaging.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">

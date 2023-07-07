@@ -28,3 +28,39 @@ treatment_effect = rep(c(rep(0, 6), rep(1, 6)), 8)
 response = treatment_effect + field_effect + field_pair_effect + colony_effect
 df1 = data.frame(treatment, field_pair, field, colony, response)
 df1
+
+
+#########################################################
+######## Am I specifying the correct model? #############
+#########################################################
+
+form <- load ~ treatment + (1 | site:treatment:corner) + (1 | site)
+amod <- lme4::lmer(form, dd$onehr, REML = FALSE)
+summary(amod)
+form2 <- load ~ 1 + (1 | site/treatment/corner)
+nmod <- lme4::lmer(form2, dd$onehr, REML = FALSE)
+summary(nmod)
+res <- pbkrtest::PBmodcomp(amod, nmod)
+summary(res)
+res2 <- pbkrtest::KRmodcomp(amod, nmod)
+res2
+pluck(tmod, summary, "test")
+pluck(tmod2, "test", \(x) `[`(x, 1, ))
+
+
+# Using NLME, gives an estimated DF
+m2 <- nlme::lme(
+  fixed = load ~ treatment,
+  random = ~ 1 | site/treatment/corner,
+  data = dd$onehr
+)
+summary(m2)
+
+m3 <- aov(load ~ treatment, dd$onehr)
+anova(m3)
+
+m4 <- lmerTest::lmer(form, dd$onehr, REML = FALSE)
+anova(m4)
+
+amod <- lme4::lmer(form, dd$onehr, REML = TRUE)
+ggplot2::stat_qq
