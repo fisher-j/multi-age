@@ -3,6 +3,7 @@ title: Hypothesis testing
 ---
 
 ```{r init}
+
 #| echo: false
 suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
 load("./data_long.RData")
@@ -345,3 +346,142 @@ notation: `1 | site/treatment/corner`, I'm estimating a variance for
 treatment and site here is analagous to a plot effect, of which there are 16.
 
 ## Bayesian mode
+
+I'll use mostly `brms` defaults (notably, priors) to do a basic bayesian
+analysis, using the same formula I used for the lmm above:
+
+```{r}
+form <- load ~ treatment + (1 | site/treatment/corner)
+```
+
+All the data is nested to facilitate modeling each fuel class separately. We'll
+look at the average loading to get an idea of the data.
+
+```{r}
+
+d <- load2("long", all_of(c(transectid, load_vars))) |>
+  group_by(class) |> nest() |> rowwise()
+
+unnest(d, data) |> 
+  group_by(class, treatment) |>
+  summarize(avg_load = mean(load)) |>
+  ggplot(aes(treatment, avg_load)) +
+    geom_col() +
+    facet_wrap(~class, scales = "free_y")
+```
+
+Now we'll the model
+
+```{r}
+#| message: false
+#| warning: false
+#| cache: true
+
+bf <- d |>
+  mutate(
+    mod = list(brms::brm(form, data,
+      warmup = 2000,
+      iter = 4000,
+      cores = 4,
+      control = list(adapt_delta = 0.99)
+    ))
+  )
+
+```
+
+Now I'll add global expected predictions. This represents global expected effect
+size, as opposed to the prediction for a new site, or a new plot, or a new
+transect. I'm also establishing a region of practical equivalence (ROPE) as 0.2
+* sd(load) for each fuel class, that is, I'm suggesting that a difference of
+  less than 0.2sd(load) is not enough to consider significant.
+
+```{r}
+  
+global_mean_epred_contrats <- function(mod) {
+  treat_lvls <- mod$data["treatment"] |> unique()
+  mod |>
+    tidybayes::epred_draws(treat_lvls, re_formula = NA, value = "epred") |>
+    tidybayes::compare_levels(epred, by = treatment) |>
+    select(contrast = treatment, epred) 
+}
+
+rope_size <- 0.2
+bf <- bf |>
+  mutate(
+    epred = list(global_mean_epred_contrats(mod)),
+    rope = list(c(-rope_size * sd(data$load), rope_size * sd(data$load)))
+  ) 
+
+```
+
+Finally, I'll plot the distributions of the pairwise differences between each
+treatment, for each fuel class, with bars to indicate the 95% highest density
+region and vertical lines around the ROPE.
+
+```{r}
+
+
+unnest(bf, c(epred)) |>
+  ggplot(aes(x = epred, y = contrast)) +
+  tidybayes::stat_halfeye(normalize = "panels") +
+  geom_vline(data = unnest(bf, rope), aes(xintercept = rope))  +
+  facet_wrap(~class, scales = "free_x") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+```
+
+We can see these results, numerically, by calculating the area of the posterior
+that is greater than (less than) the upper (lower) bounds of the ROPE. I'm
+picking which side to compare to based on the sign of the median.
+
+```{r}
+
+# We are [blank] percent certain that the magnitude of the difference between
+# treatments is as least 100 kg/ha
+unnest(bf, epred) |>
+group_by(class, contrast) |>
+  summarize(
+    rope = rope_size * sd(epred),
+    prob = if_else(median(epred) > 0, 
+      mean(epred > rope),
+      mean(epred < -rope)
+    )
+  )
+
+```
+
+Here is what the posterior draws look like for the estimated marginal means of
+the treatments.
+
+```{r}
+
+# bf1 |>
+# emmeans::emmeans(~ treatment, epred = TRUE) |>
+#   tidybayes::gather_emmeans_draws() |>
+#     ggplot(aes(.value, fill = treatment)) +
+#     geom_density(alpha = 0.7) +
+#     theme(
+#       panel.grid.minor = element_blank(),
+#       panel.grid.major = element_blank()
+#     ) 
+
+```
+
+## Bayesian model checking
+
+I've heard I should check pairs plots for convergence related problems. To check
+model fit, I'll want to do prior predictive and posterior predictive checks. I'm
+not sure if normality of residuals comes into play, and I'm not really worried
+about normality of the random effects.
+
+```{r}
+# This is proposed as a check for model problems, I' not sure what it means, but
+# there is correlation among predictors, which is expected here, so I'm not sure
+# it's a problem
+# brms::mcmc_plot(bf1, type = "pairs", variable = "^b_", regex = TRUE)
+#
+# brms::prior_summary(bf1)
+#
+# brms::brm(form, data = d1, sample_prior = "only") |>
+#   brms::pp_check(nsamples = 50)
+```
