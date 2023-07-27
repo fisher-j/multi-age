@@ -3,13 +3,17 @@ title: Hypothesis testing
 ---
 
 ```{r init}
-
 #| echo: false
+
 suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
 load("./data_long.RData")
 source("./scripts/utils.r")
 transectid <- c("site", "treatment", "corner", "azi")
 load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
+theme_update(
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank()
+)
 
 ```
 
@@ -32,17 +36,22 @@ summary(test1)
 
 ```
 
-## Levene test for homogeneity of variance {#sec-levene-test-for-homogeneity-of-variance}
+## Multiple one-way anovas
 
-From the looks of the levene test (using median), onehr, tenhr, and veg may all
-have different *variances* between groups. 
+One way anova (using the welch test) can either assume constant variance or not.
+A levene test (using median) indicates onehr, tenhr, and veg may all have
+different *variances* between groups. 
 
 The one-way anova test results are the same though between equal and unequal
 variance assumptions. These tests support the notion that we can't assume that
-the mean vegetatvie and onehr fuel loading are equal across all treatments, but
+the mean *vegetatvie* and *onehr* fuel loading are equal across all treatments, but
 there isn't such evidence for the other fuel loading classes.
 
 ```{r}
+#| label: tbl-anovas
+#| tbl-cap: Levene tests suggest that variances are unequal across treatments
+#|   for all fuel loading classes. Welches tests suggest that veg and onehr
+#|   fuels may have different means among treatments.
 
 d <- load2("long", treatment, all_of(load_vars)) |> group_by(class)
 
@@ -60,16 +69,25 @@ We can use the Games Howell test for pairwise comparisons to follow up on the
 welches test for differences between means when there is unequal variance among
 groups. These p-values provide evidence that for onehr fuels, the mean value of
 ha is greater than gs and ld, and the mean value for hd is also greater than gs
-and ld. Also, for vegetation, gs is greater than ha only.
+and ld. Also, for vegetation, gs is greater than ha only. While this test is
+robust to the assumptions of normality, some of our data is highly skewed. Also,
+because of the nesting of our data, observations are not independent, so our
+effective sample size is not what is assumed by this test.
 
 ```{r}
+#| label: fig-pairwise
+#| fig-cap: pair-wise tests using Games-Howell, for unequal variances across
+#|   groups. This shows many statistically significant differences, but the
+#|   assumption of independence, which is likely to have a significant effect on
+#|   our effective sample size.
 
 gh_test <- d |> rstatix::games_howell_test(load ~ treatment) |>
   filter(p.adj.signif != "ns") |>
   rstatix::add_y_position(scales = "free", step.increase = 0.5)
 ggpubr::ggboxplot(d, x = "treatment", y = "load", facet.by = "class") +
 facet_wrap(~class, scales = "free") +
-ggpubr::stat_pvalue_manual(gh_test, label = "p.adj")
+ggpubr::stat_pvalue_manual(gh_test, label = "p.adj") +
+scale_y_continuous(expand = expansion(mult = c(0.05, 0.1)))
 
 ```
 
@@ -86,9 +104,13 @@ form <- load ~ treatment + (1 | site/treatment/corner)
 
 ```
 
+This will estimate a group-wise intercept adjustments for each site, plot, and
+corner, based on modeled variances for each of these grouping levels. 
+
 ```{r}
 
-d <- load2("long", site, treatment, corner, all_of(load_vars)) |> group_by(class)
+d <- load2("long", site, treatment, corner, all_of(load_vars)) |> 
+  group_by(class)
 
 m1 <- d |> nest() |> rowwise() |>
   transmute(
@@ -106,10 +128,9 @@ treatments. Another sizeable difference in means is between gs and ha for the
 onehr fuels (@fig-multilevel-p-value).
 
 ```{r}
-
 #| label: tbl-multilevel-p-values
 #| tbl-cap: Pairwise comparisons among treatments with p-values < 0.05 for 6
-#|   multilevel models.
+#|   multilevel models. Only Veg, gs-ha comparison is statistically significant.
 
 select(m1, pairs) |> unnest(pairs) |>
   filter(p.value <= 0.05) |>
@@ -167,29 +188,43 @@ F-distributed, where the denominator degrees of freedom are determined by
 matching the first moment of the reference distribution. 
 
 ```{r}
-#| cache: true
+#| warning: false
+#| label: tbl-pbtest
+#| tbl-cap: >
+#|   Liklihood ratio tests and parametric boot strap tests of model
+#|   significance: whether the model with treatment, fits the data better than
+#|   the intercept only model (adjusting for nesting structure).
 
 d <- load2("long", all_of(c(transectid, load_vars)))
 dd <- ungroup(d) |> split(~class)
 
-cluster <- parallel::makeCluster(rep("localhost", parallel::detectCores()))
-pmod <- imap(dd, function(d, i) {
-  form <- load ~ treatment + (1 | site/treatment/corner)
-  amod <- lme4::lmer(form, d, REML = FALSE)
-  nmod <- update(amod, . ~ . -treatment)
-  krtest <- pbkrtest::KRmodcomp(amod, nmod) |>
-    pluck("test", \(x) slice(x, 1)) |>
-    rename(df = ndf) |>
-    rownames_to_column("test")
-  pbkrtest::PBmodcomp(amod, nmod, cl = cluster) |>
-    pluck(summary, "test") |>
-    rownames_to_column("test") |>
-    bind_rows(krtest) |>
-    mutate(class = i, .before = 1) |>
-    relocate(c(df, ddf, F.scaling), .after = stat)
-}) |> 
-  list_rbind()
-parallel::stopCluster(cluster)
+
+if(file.exists("pmod.Rdata")) {
+  load("pmod.Rdata")
+} else {
+  cluster <- parallel::makeCluster(rep("localhost", parallel::detectCores()))
+
+  pmod <- imap(dd, function(d, i) {
+    form <- load ~ treatment + (1 | site/treatment/corner)
+    amod <- lme4::lmer(form, d, REML = FALSE)
+    nmod <- update(amod, . ~ . -treatment)
+    krtest <- pbkrtest::KRmodcomp(amod, nmod) |>
+      pluck("test", \(x) slice(x, 1)) |>
+      rename(df = ndf) |>
+      rownames_to_column("test")
+    pbkrtest::PBmodcomp(amod, nmod, cl = cluster) |>
+      pluck(summary, "test") |>
+      rownames_to_column("test") |>
+      bind_rows(krtest) |>
+      mutate(class = i, .before = 1) |>
+      relocate(c(df, ddf, F.scaling), .after = stat)
+  }) |> 
+    list_rbind() |>
+    filter(test %in% c("LRT", "PBtest"))
+ 
+  parallel::stopCluster(cluster)
+  save(pmod, file = "pmod.Rdata")
+}
 
 pmod |> knitr::kable(digits = c(NA, NA, 2, 1, 2, 1, 4))
 
@@ -203,6 +238,8 @@ residuals are not normally distributed and there is not constant variance.
 ```{r}
 #| code-fold: true
 
+# These are functions to plot for each model, residuals vs fitted and normal
+# quantiles. The third function is a wrapper to do both.
 resid_plot <- function(data) {
   data |>
     ggplot(aes(fitted, resid)) +
@@ -233,8 +270,12 @@ d <- load2("long", all_of(c(transectid, load_vars))) |>
 ```
 
 ```{r}
-#| label: fig-mod1-diagnostic1
+#| label: fig-mod1-diagnostic
 #| fig-height: 10
+#| fig-cap: Residual vs fitted and normal quantile-quantile plots for a
+#|   multi-level model with un-pooled treatment intercepts and partially pooled
+#|   (random effects) for nested data. Fit using `lme4` The residuals are not
+#|   homogenous.
 
 form <- load ~ treatment + (1 | site/treatment/corner)
 
@@ -260,8 +301,11 @@ variance as a constant proportion of the fitted values of the model. This seems
 to have cleaned up the variance.
 
 ```{r}
-#| label: fig-mod1-diagnostic2
+#| label: fig-mod2-diagnostic
 #| fig-height: 10
+#| fig-cap: Same as @fig-mod1-diagnostic but variance is modeled as a function
+#|   fitted values, assuming a linear relationship. Fit with `nlme`. The
+#|   (scaled) residuals are more homogenous now.
 
 mod2 <- d |>
   mutate(
@@ -282,7 +326,6 @@ patchwork::wrap_plots(resid_qq_plot(mod2), ncol = 1)
 ```
 
 I'll compare AIC of the two models to see if one performs better than the other.
-
 
 first, I want to see if the models produced by lme and lmer are equivalent
 
@@ -315,12 +358,12 @@ with REML because I'm not changing the fixed effects structure.
 
 mod_c <- d |>
   mutate(
-    mod2 = list(nlme::lme(
+    mod1 = list(nlme::lme(
       fixed = load ~ treatment,
       random = ~ 1 | site/treatment/corner,
       data = data,
     )),
-    mod3 = list(nlme::lme(
+    mod2 = list(nlme::lme(
       fixed = load ~ treatment,
       random = ~ 1 | site/treatment/corner,
       data = data,
@@ -336,6 +379,56 @@ mod_c |>
 
 ```
 
+This indicates that the model with modeled variance fits the data better than
+the model without.
+
+Does this change our conclusions about the effect of the treatment?
+
+```{r}
+
+d <- load2("long", site, treatment, corner, all_of(load_vars)) |> 
+  group_by(class)
+
+m2 <- d |> nest() |> rowwise() |>
+  transmute(
+    mod = list(nlme::lme(
+      fixed = load ~ treatment,
+      random = ~ 1 | site/treatment/corner,
+      data = data,
+      weights = nlme::varConstProp(),
+      control = nlme::lmeControl(sigma = 1),
+    )),
+    emmeans = list(emmeans::emmeans(mod, "treatment")),
+    pairs = list(as_tibble(pairs(emmeans, infer = TRUE)))
+  )
+
+```
+
+```{r}
+#| label: tbl-multilevel-p-values2
+#| tbl-cap: Pairwise comparisons among treatments with p-values < 0.05 for 6
+#|   multilevel models using a model with variance modeled as a linear
+#|   relationsihp with the fitted value.
+
+select(m2, pairs) |> unnest(pairs) |>
+  filter(p.value <= 0.05) |>
+  knitr::kable(digits = 3)
+
+```
+
+```{r}
+#| label: fig-multilevel-p-value2
+#| fig-cap: 95% confidence intervals and pairwise comparisons of means for 6
+#|   mixed models representing different fuel loading classes using a model with
+#|   variance modeled as a linear relationsihp with the fitted value.
+ 
+group_map(m2, ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
+  patchwork::wrap_plots()
+
+```
+
+No, it doesn't seem to make much of a difference.
+
 ## Other random effects structures
 
 I'm not sure I'm using the correct random effects specification. The somewhat
@@ -347,12 +440,12 @@ treatment and site here is analagous to a plot effect, of which there are 16.
 
 ## Bayesian mode
 
-I'll use mostly `brms` defaults (notably, priors) to do a basic bayesian
-analysis, using the same formula I used for the lmm above:
+I'll use mostly `brms` defaults (notably, priors, which is [not
+recommended](https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations))
+to do a basic bayesian analysis, using the same formula I used for the lmm
+above:
 
-```{r}
-form <- load ~ treatment + (1 | site/treatment/corner)
-```
+### Data
 
 All the data is nested to facilitate modeling each fuel class separately. We'll
 look at the average loading to get an idea of the data.
@@ -362,126 +455,488 @@ look at the average loading to get an idea of the data.
 d <- load2("long", all_of(c(transectid, load_vars))) |>
   group_by(class) |> nest() |> rowwise()
 
-unnest(d, data) |> 
-  group_by(class, treatment) |>
-  summarize(avg_load = mean(load)) |>
-  ggplot(aes(treatment, avg_load)) +
-    geom_col() +
-    facet_wrap(~class, scales = "free_y")
 ```
 
-Now we'll the model
+### Model formula
+
+We're modeling intercepts for each treatment seperately with no baseline
+intercept. The partilly pooled interecepts (site/treatment/corner) are based on
+the way the data was collected. Transects within corners, corners within plots
+(combination of site and treatment) and plots within sites.
 
 ```{r}
-#| message: false
-#| warning: false
-#| cache: true
+form <- load ~ treatment - 1 + (1 | site/treatment/corner)
+```
 
-bf <- d |>
+### Priors
+
+We are using mostly uninformative priors for our un-pooled (fixed) estimates of
+treatment intercepts. They are all set as normal distributions, centered at the
+median of the fuel load with a sd of 2.5 times the sd of the data. They are
+contrained to be positive, as it's not possible to have a negative fuel load.
+
+```{r define-priors}
+#| label: fig-priors
+#| fig-cap: Normal priors centered at the median and sd of 2.5 times the sd of
+#|   the data
+
+# add calcualted priors to the data
+d <- mutate(d, 
+  priors = list(brms::set_prior(
+    str_glue(
+    "normal( {round(median(data$load))}, {round(2.5 * sd(data$load))} )"), 
+    lb = 0
+  ))
+)
+
+# Plot the priors
+d |>
   mutate(
-    mod = list(brms::brm(form, data,
-      warmup = 2000,
-      iter = 4000,
-      cores = 4,
-      control = list(adapt_delta = 0.99)
-    ))
-  )
+    prior_dist = list(select(tidybayes::parse_dist(priors), .dist_obj))
+  ) |>
+  unnest(prior_dist) |>
+  ggplot(aes(xdist = .dist_obj)) +
+    tidybayes::stat_halfeye(normalize = "panels") +
+    geom_text(aes(label = format(.dist_obj), x = 0, y = 0.97, hjust = 0)) +
+    facet_wrap(~ class, scales = "free_x")
 
 ```
 
+### Model fitting
+
+Now we'll fit the model
+
+```{r model-spec}
+#| message: false
+
+if (file.exists("bf2.Rdata")) {
+  load("bf2.Rdata")
+} else {
+  bf2 <- mutate(d,
+    mod = list(brms::brm(form, data,
+      warmup = 3000,
+      iter = 4000,
+      cores = 4,
+      control = list(adapt_delta = 0.99),
+      prior = priors
+    ))
+  )
+  save(bf2, file = "bf2.Rdata")
+}
+
+```
+
+### Expected predictions
+<!--
 Now I'll add global expected predictions. This represents global expected effect
 size, as opposed to the prediction for a new site, or a new plot, or a new
-transect. I'm also establishing a region of practical equivalence (ROPE) as 0.2
-* sd(load) for each fuel class, that is, I'm suggesting that a difference of
-  less than 0.2sd(load) is not enough to consider significant.
+transect. Alternatively, I could get predictions for any level of nesting. I
+tried this at the transect (unit) level, incorporating all prediction
+uncertainty, and the differences were very small. I think this means our global
+mean is not much more informative then a single transect, which is interesting
+and probably deserves more exploration.
+
+This is how I would predict for a new transect:
+
+```{r}
+#| eval: false
+
+newdata <- expand(bf$data[[1]], nesting(site, treatment, corner))
+tidybayes::predicted_draws(mod, newdata)
+```
+
+```{r}
+# get posterior predictions for treatments, ignoring random effects. These are
+# predictions for the expected value across all sites.
+posterior_expected_predicitons <- function(data, plot = TRUE) {
+  newdata <- expand(data$data[[1]], nesting(treatment))
+  data <- data |>
+    mutate(
+      pred = list(
+        tidybayes::epred_draws(mod, newdata, re_formula = NA, value = "pred")),
+      )
+  if (plot) {
+    p <- data |> unnest(pred) |>
+      ggplot(aes(pred, treatment)) +
+      tidybayes::stat_halfeye(normalize = "panels") +
+      facet_wrap(~class, scales = "free_x")
+    print(p)
+  }
+  invisible(data)
+}
+
+```
+
+```{r}
+#| label: fig-posterior-pred
+#| fig-cap: Posterior expected predictions, with no random effects. This
+#|   reprsents the expected average conditions across all sites.  The point
+#|   estimate is the mode. Units are mg ha^-1^. Upper and lower limits are the
+#|   95% credible intervals.
+
+expected_predictions <- posterior_expected_predicitons(bf2, plot = TRUE)
+
+```
+
+```{r}
+#| label: tbl-posterior-pred
+#| tbl-cap: Posterior expected predictions, with no random effects. This
+#|   reprsents the expected average conditions across all sites.
+
+expected_predictions |>
+  mutate(
+    summary = list(tidybayes::mode_hdi(pred))
+  ) |> select(summary) |> unnest(summary) |>
+  select(treatment, prediction = pred, lower = .lower, upper = .upper) |>
+    gt::gt(groupname_col = "class") |>
+    gt::tab_options(row_group.as_column = TRUE) |>
+    gt::fmt_number(decimals = 1)
+
+```
+
+I'll plot the distributions of the pairwise differences between each
+treatment, for each fuel class, with bars to indicate the 95% highest density
+region. I could specify here a factor of the SD of the data that I thought would
+be practically significant for management, but for now, we'll just assess
+whether the effect is different from zero
 
 ```{r}
   
-global_mean_epred_contrats <- function(mod) {
-  treat_lvls <- mod$data["treatment"] |> unique()
-  mod |>
-    tidybayes::epred_draws(treat_lvls, re_formula = NA, value = "epred") |>
-    tidybayes::compare_levels(epred, by = treatment) |>
-    select(contrast = treatment, epred) 
+plot_pair_comparisons <- function(data, rope_size) {
+  # Assume treatment levels are the same for all models: they are.
+  newdata <- expand(data$data[[1]], nesting(treatment))
+  nd <- data |>
+    mutate(
+      pred = list(
+        tidybayes::epred_draws(mod, newdata, re_formula = NA, value = "pred") |>
+        tidybayes::compare_levels(pred, by = treatment) |>
+        select(contrast = treatment, pred) 
+      ),
+      rope = rope_size * sd(data$load)
+    )
+  p <- nd |>
+    unnest(c(pred)) |>
+    ggplot(aes(x = pred, y = contrast)) +
+    tidybayes::stat_halfeye(normalize = "panels") +
+    geom_vline(aes(xintercept = rope))  +
+    geom_vline(aes(xintercept = -rope))  +
+    facet_wrap(~class, scales = "free_x")
+  print(p)
+  invisible(nd)
 }
 
-rope_size <- 0.2
-bf <- bf |>
+```
+
+```{r compare-levels}
+#| label: fig-pairs
+#| fig-cap: Here I've set the ROPE line to zero to emphasize any treatment
+#|   difference that is expected to be different than zero
+
+pairs_data <- plot_pair_comparisons(bf2, 0)
+
+```
+
+And here is a table for the same data.
+
+```{r}
+#| label: tbl-pairs-pred
+#| tbl-cap: Posterior expected predictions of pairwise differences in means,
+#|   with no random effects. This reprsents the expected average conditions
+#|   across all sites. Units are Mg ha^-1^. The point estimate is the mode.
+#|   Upper and lower limits are the 95% credible intervals. Prob is the
+#|   probability that the predicted difference matches the sign of its
+#|   median--the probability that it is not zero.
+
+pairs_data |>
   mutate(
-    epred = list(global_mean_epred_contrats(mod)),
-    rope = list(c(-rope_size * sd(data$load), rope_size * sd(data$load)))
-  ) 
+    summary = list(tidybayes::mode_hdi(pred)),
+    pred = list(group_by(pred, contrast)),
+    prob = list(summarize(pred,
+      prob = if_else(median(pred) > 0, 
+        mean(pred > rope),
+        mean(pred < rope)
+      )
+    )),
+    summary = list(left_join(summary, prob, by = "contrast"))
+  ) |> select(summary) |> unnest(c(summary)) |>
+  select(contrast, prediction = pred, lower = .lower, upper = .upper, prob) |>
+  knitr::kable(digits = 2)
+
+  #   gt::gt(groupname_col = "class") |>
+  #   gt::tab_options(row_group.as_column = TRUE) |>
+  #   gt::fmt_number(columns = -prob, decimals = 1) |>
+  #   gt::fmt_number(columns = prob, decimals = 2)
 
 ```
+-->
 
-Finally, I'll plot the distributions of the pairwise differences between each
-treatment, for each fuel class, with bars to indicate the 95% highest density
-region and vertical lines around the ROPE.
+### Posterior Predictive check (Gaussian)
 
-```{r}
+```{r pp-check-func}
+#| code-fold: true
 
+# this allows to adjust each panels coordinate limits
+source("./scripts/coord_cartesian_panels.r")
 
-unnest(bf, c(epred)) |>
-  ggplot(aes(x = epred, y = contrast)) +
-  tidybayes::stat_halfeye(normalize = "panels") +
-  geom_vline(data = unnest(bf, rope), aes(xintercept = rope))  +
-  facet_wrap(~class, scales = "free_x") +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-
-```
-
-We can see these results, numerically, by calculating the area of the posterior
-that is greater than (less than) the upper (lower) bounds of the ROPE. I'm
-picking which side to compare to based on the sign of the median.
-
-```{r}
-
-# We are [blank] percent certain that the magnitude of the difference between
-# treatments is as least 100 kg/ha
-unnest(bf, epred) |>
-group_by(class, contrast) |>
-  summarize(
-    rope = rope_size * sd(epred),
-    prob = if_else(median(epred) > 0, 
-      mean(epred > rope),
-      mean(epred < -rope)
+posterior_predictive_check <- function(models) {
+  models <- mutate(models,
+    pred = list(tidybayes::add_predicted_draws(data, mod, ndraws = 15)),
+    lims = list(tibble(
+      xmin = min(
+        quantile(data$load, .0001),
+        quantile(pred$.prediction, .0001)
+      ),
+      xmax = max(
+        quantile(data$load, .9999),
+        quantile(pred$.prediction, .9999)
+      ))
     )
   )
+  ggplot() + 
+  geom_line(
+    data = unnest(models, data),
+    aes(x = load),
+    stat = "density", size = 1
+  ) +
+  geom_line(
+    data = unnest(models, pred),
+    aes(x = .prediction, group = .draw),
+    stat = "density", alpha = 0.15, size = 1
+  ) +
+  facet_wrap(~class, scales = "free") +
+  coord_cartesian_panels(
+    panel_limits = unnest(select(models, lims), lims)
+  )
+}
 
 ```
 
-Here is what the posterior draws look like for the estimated marginal means of
-the treatments.
+Here is the default posterior predictive check provided by the `bayesplot`
+package. Each light curve is a predicted replication of the original, observed
+response (a predicted transect).
 
 ```{r}
+#| label: fig-gaus-pp-check
+#| fig-cap: Density of the observed data (y) plotted against 10 random draws
+#|   from the posterior predictive distribution.
 
-# bf1 |>
-# emmeans::emmeans(~ treatment, epred = TRUE) |>
-#   tidybayes::gather_emmeans_draws() |>
-#     ggplot(aes(.value, fill = treatment)) +
-#     geom_density(alpha = 0.7) +
-#     theme(
-#       panel.grid.minor = element_blank(),
-#       panel.grid.major = element_blank()
-#     ) 
+posterior_predictive_check(bf2)
 
 ```
 
-## Bayesian model checking
+The Gaussian distribution is symmetric and doesn't capture well the peak near
+zero and the long right tail of our observed values for most of the fuel
+classes. It also dramatically overpredicts negative values (which are absent
+from our data, despite the fact that the density smoothing of the observed
+values seems to suggest there are some.)
 
-I've heard I should check pairs plots for convergence related problems. To check
-model fit, I'll want to do prior predictive and posterior predictive checks. I'm
-not sure if normality of residuals comes into play, and I'm not really worried
-about normality of the random effects.
+The fact that the model predicts negative values suggests that it is not right
+for our data, and could potentially be biasing comparissons between treatments.
+A Gamma distribution for the response makes more sense.
+
+### Gamma model
 
 ```{r}
-# This is proposed as a check for model problems, I' not sure what it means, but
-# there is correlation among predictors, which is expected here, so I'm not sure
-# it's a problem
-# brms::mcmc_plot(bf1, type = "pairs", variable = "^b_", regex = TRUE)
-#
-# brms::prior_summary(bf1)
-#
-# brms::brm(form, data = d1, sample_prior = "only") |>
-#   brms::pp_check(nsamples = 50)
+#| message: false
+
+if (file.exists("bf3.Rdata")) {
+  load("bf3.Rdata")
+} else {
+  bf3 <- mutate(d,
+    mod = list(brms::brm(form, data,
+      warmup = 10000,
+      iter = 11000,
+      cores = 4,
+      control = list(adapt_delta = 0.99),
+      family = brms::hurdle_gamma(),
+      prior = priors
+    ))
+  )
+  save(bf3, file = "bf3.Rdata")
+}
+
 ```
+
+The model fit without convergence problems. I used the same priors as before,
+but with a hurdle gamma response. This fits one model for the zeros and another
+for the non-zero values, which are expected to be gamma distributed, that is,
+positive and right skewed.
+
+### Posterior Predictive check (Gamma)
+
+```{r}
+#| label: fig-gamma-pp-check
+#| fig-cap: Density of the observed data (y) plotted against 10 random draws
+#|   from the posterior predictive distribution.
+
+posterior_predictive_check(bf3)
+```
+
+The gamma model fits the data better. There are no predictions below zero
+anymore. It does seem like the gamma distribution tends to predict higher
+densities of lower values than we observed, as seen in the plots for the tenhr, thoushr, and
+veg fuel classes. But generally, the predictions appear to agree with the
+observed data pretty well.
+
+## Expected value of the posterior predictive
+
+
+
+```{r predict-func}
+
+# get posterior predictions for treatments, ignoring random effects. These are
+# predictions for the expected value across all sites.
+
+predict_posterior_expected <- function(data, plot = TRUE) {
+  newdata <- expand(data$data[[1]], nesting(treatment))
+  data <- mutate(data,
+    pred = list(
+      tidybayes::epred_draws(mod, newdata, re_formula = NA, value = "pred")
+    ),
+    lims = list(
+      tibble(xmin = 0, xmax = quantile(pred$pred, .995))
+    )
+  )
+  if (plot) {
+    p <- data |> unnest(pred) |>
+      ggplot(aes(pred, treatment)) +
+      tidybayes::stat_halfeye(normalize = "panels") +
+      facet_wrap(~class, scales = "free_x") +
+      coord_cartesian_panels(panel_limits = unnest(select(data, lims), lims))
+    print(p)
+  }
+  invisible(data)
+}
+
+
+```
+
+```{r}
+#| label: fig-expected-predictions
+#| fig-cap: >
+#|   Posterior expected predictions, with no random effects. This reprsents the
+#|   expected average conditions across all sites. The point estimate is the
+#|   mode. Units are mg ha-1. Upper and lower limits are the 95% credible
+#|   intervals.
+
+expected_predictions <- predict_posterior_expected(bf3)
+
+```
+
+These are the expected predictions, or predictions for the mean. It only
+includes the uncertainty in the mean and not the variance in predictions
+estimated by the model.
+
+There is quite a bit of uncertainty about the mean all around, but there is a
+notable difference in that uncertainty among treatments for the onehr and veg
+fuel classes.
+
+Table @tbl-expected-predictions shows these data in a tabular format. I'm using
+the highest density continuous interval because, while its hard to see in
+@fig-expected-predictions, the highest desity region is actually slightly
+discontinuous.
+
+```{r}
+#| label: tbl-expected-predictions
+#| tbl-cap: Tabular data associated with @fig-expected-predictions. Upper and
+#|   lower pertain to the 95% highest density *continuous* interval.
+
+expected_predictions |>
+  mutate(
+    summary = list(tidybayes::mode_hdci(pred))
+  ) |> select(summary) |> unnest(summary) |>
+  select(treatment, prediction = pred, lower = .lower, upper = .upper) |>
+    gt::gt(groupname_col = "class") |>
+    gt::tab_options(row_group.as_column = TRUE) |>
+    gt::fmt_number(decimals = 1)
+
+```
+
+
+```{r comparisons-func}
+#| code-fold: true
+
+predict_expected_contrasts <- function(data, rope_size, plot = TRUE) {
+  # Assume treatment levels are the same for all models: they are.
+  newdata <- expand(data$data[[1]], nesting(treatment))
+  d <- data |>
+    mutate(
+      pred = list(
+        tidybayes::epred_draws(mod, newdata, re_formula = NA, value = "pred") |>
+        tidybayes::compare_levels(pred, by = treatment) |>
+        select(contrast = treatment, pred) 
+      ),
+      rope = rope_size * sd(data$load),
+      lims = list(
+        tibble(xmin = quantile(pred$pred, .001), xmax = quantile(pred$pred, .999))
+      )
+    )
+  if (plot) {
+    p <- d |>
+      unnest(c(pred)) |>
+      ggplot(aes(x = pred, y = contrast)) +
+      tidybayes::stat_halfeye(normalize = "panels") +
+      geom_vline(aes(xintercept = rope))  +
+      geom_vline(aes(xintercept = -rope))  +
+      facet_wrap(~class, scales = "free_x") +
+      coord_cartesian_panels(
+        panel_limits = unnest(select(d, lims), lims)
+      )
+    print(p)
+  }
+  invisible(d)
+}
+
+```
+
+```{r}
+#| label: fig-compare-expected
+#| fig-cap: Differences between expected values for each treatment, with 95%
+#|   continuous interval shown. 
+
+expected_contrasts <- predict_expected_contrasts(bf3, 0)
+
+```
+
+```{r}
+#| label: tbl-expected-contrasts
+#| tbl-cap: >
+#|   Posterior expected predictions of pairwise differences in means, with no
+#|   random effects. This reprsents the expected average conditions across all
+#|   sites. Units are Mg ha-1. The point estimate is the mode. Upper and lower
+#|   limits are the 95% credible intervals. Prob is the probability that the
+#|   predicted difference matches the sign of its median–the probability that it
+#|   is not zero.
+
+expected_contrasts |>
+  mutate(
+    summary = list(tidybayes::mode_hdci(pred)),
+    pred = list(group_by(pred, contrast)),
+    prob = list(summarize(pred,
+      prob = if_else(median(pred) > 0, 
+        mean(pred > rope),
+        mean(pred < rope)
+      )
+    )),
+    summary = list(left_join(summary, prob, by = "contrast"))
+  ) |> select(summary) |> unnest(c(summary)) |>
+  select(contrast, prediction = pred, lower = .lower, upper = .upper, prob) |>
+  knitr::kable(digits = 2)
+
+```
+
+# TODO:
+
+- [ ] Is there a problem with mispecification of the model (predicting negative
+      loading values for individual transects) if we are just wanting to compare
+      treatments?
+- [ ] How do we interpret ICC when there are several grouping levels? What can we
+      say about variance partitioning given our model?
+- [ ] How do we interpret the estimated sd of our grouping levels for our model?
+- [x] How do we interpret sigma for the liklihood distribution?
+- [x] In a posterior predictive check, do we use the expected value of the
+      prediciton, or individual predictions (including residual variance (i
+      think))?
+- [x] How different are the predictions between the Gaussian and the Gamma model?
+
+

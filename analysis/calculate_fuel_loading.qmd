@@ -532,7 +532,6 @@ tl_tab <- total_load |>
   mutate(class = factor(class, levels = fuel_classes)) |> # intuitive row order
   arrange(class, mean(c(low, high)))
 
-# if(!interactive()) {
   tl_tab[1:18, ] |>
     gt::gt(groupname_col = "class") |>
     gt::tab_options(row_group.as_column = TRUE) |>
@@ -542,7 +541,6 @@ tl_tab <- total_load |>
     gt::gt(groupname_col = "class") |>
     gt::tab_options(row_group.as_column = TRUE) |>
     gt::fmt_number(decimals = 1)
-# }
 
 ```
 
