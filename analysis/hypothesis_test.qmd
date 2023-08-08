@@ -14,6 +14,8 @@ theme_update(
   panel.grid.major = element_blank(),
   panel.grid.minor = element_blank()
 )
+# this allows to adjust each panels coordinate limits
+source("./scripts/coord_cartesian_panels.r")
 
 ```
 
@@ -100,7 +102,7 @@ model, I believe, captures this grouping structure.
 
 ```{r}
 
-form <- load ~ treatment + (1 | site/treatment/corner)
+form <- load ~ 0 + treatment + (1 | site/treatment/corner)
 
 ```
 
@@ -440,10 +442,14 @@ treatment and site here is analagous to a plot effect, of which there are 16.
 
 ## Bayesian mode
 
-I'll use mostly `brms` defaults (notably, priors, which is [not
-recommended](https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations))
-to do a basic bayesian analysis, using the same formula I used for the lmm
-above:
+```{r}
+#| include: false
+library(tidybayes)
+library(brms)
+library(bayesplot)
+```
+
+I'll use `brms` with the same formula I used for the lmm above:
 
 ### Data
 
@@ -459,21 +465,13 @@ d <- load2("long", all_of(c(transectid, load_vars))) |>
 
 ### Model formula
 
-We're modeling intercepts for each treatment seperately with no baseline
-intercept. The partilly pooled interecepts (site/treatment/corner) are based on
-the way the data was collected. Transects within corners, corners within plots
-(combination of site and treatment) and plots within sites.
-
-```{r}
-form <- load ~ treatment - 1 + (1 | site/treatment/corner)
-```
 
 ### Priors
 
 We are using mostly uninformative priors for our un-pooled (fixed) estimates of
 treatment intercepts. They are all set as normal distributions, centered at the
 median of the fuel load with a sd of 2.5 times the sd of the data. They are
-contrained to be positive, as it's not possible to have a negative fuel load.
+constrained to be positive, as it's not possible to have a negative fuel load.
 
 ```{r define-priors}
 #| label: fig-priors
@@ -509,174 +507,25 @@ Now we'll fit the model
 ```{r model-spec}
 #| message: false
 
-if (file.exists("bf2.Rdata")) {
-  load("bf2.Rdata")
-} else {
-  bf2 <- mutate(d,
-    mod = list(brms::brm(form, data,
-      warmup = 3000,
-      iter = 4000,
-      cores = 4,
-      control = list(adapt_delta = 0.99),
-      prior = priors
-    ))
-  )
-  save(bf2, file = "bf2.Rdata")
-}
+form <- load ~  1 + treatment + (1 | site/treatment/corner)
+
+bf2 <- mutate(d,
+  mod = list(brms::brm(form, data,
+    warmup = 3000,
+    iter = 4000,
+    cores = 4,
+    control = list(adapt_delta = 0.99),
+    prior = priors,
+    file = paste0("fits/bf2_", class)
+  ))
+)
 
 ```
-
-### Expected predictions
-<!--
-Now I'll add global expected predictions. This represents global expected effect
-size, as opposed to the prediction for a new site, or a new plot, or a new
-transect. Alternatively, I could get predictions for any level of nesting. I
-tried this at the transect (unit) level, incorporating all prediction
-uncertainty, and the differences were very small. I think this means our global
-mean is not much more informative then a single transect, which is interesting
-and probably deserves more exploration.
-
-This is how I would predict for a new transect:
-
-```{r}
-#| eval: false
-
-newdata <- expand(bf$data[[1]], nesting(site, treatment, corner))
-tidybayes::predicted_draws(mod, newdata)
-```
-
-```{r}
-# get posterior predictions for treatments, ignoring random effects. These are
-# predictions for the expected value across all sites.
-posterior_expected_predicitons <- function(data, plot = TRUE) {
-  newdata <- expand(data$data[[1]], nesting(treatment))
-  data <- data |>
-    mutate(
-      pred = list(
-        tidybayes::epred_draws(mod, newdata, re_formula = NA, value = "pred")),
-      )
-  if (plot) {
-    p <- data |> unnest(pred) |>
-      ggplot(aes(pred, treatment)) +
-      tidybayes::stat_halfeye(normalize = "panels") +
-      facet_wrap(~class, scales = "free_x")
-    print(p)
-  }
-  invisible(data)
-}
-
-```
-
-```{r}
-#| label: fig-posterior-pred
-#| fig-cap: Posterior expected predictions, with no random effects. This
-#|   reprsents the expected average conditions across all sites.  The point
-#|   estimate is the mode. Units are mg ha^-1^. Upper and lower limits are the
-#|   95% credible intervals.
-
-expected_predictions <- posterior_expected_predicitons(bf2, plot = TRUE)
-
-```
-
-```{r}
-#| label: tbl-posterior-pred
-#| tbl-cap: Posterior expected predictions, with no random effects. This
-#|   reprsents the expected average conditions across all sites.
-
-expected_predictions |>
-  mutate(
-    summary = list(tidybayes::mode_hdi(pred))
-  ) |> select(summary) |> unnest(summary) |>
-  select(treatment, prediction = pred, lower = .lower, upper = .upper) |>
-    gt::gt(groupname_col = "class") |>
-    gt::tab_options(row_group.as_column = TRUE) |>
-    gt::fmt_number(decimals = 1)
-
-```
-
-I'll plot the distributions of the pairwise differences between each
-treatment, for each fuel class, with bars to indicate the 95% highest density
-region. I could specify here a factor of the SD of the data that I thought would
-be practically significant for management, but for now, we'll just assess
-whether the effect is different from zero
-
-```{r}
-  
-plot_pair_comparisons <- function(data, rope_size) {
-  # Assume treatment levels are the same for all models: they are.
-  newdata <- expand(data$data[[1]], nesting(treatment))
-  nd <- data |>
-    mutate(
-      pred = list(
-        tidybayes::epred_draws(mod, newdata, re_formula = NA, value = "pred") |>
-        tidybayes::compare_levels(pred, by = treatment) |>
-        select(contrast = treatment, pred) 
-      ),
-      rope = rope_size * sd(data$load)
-    )
-  p <- nd |>
-    unnest(c(pred)) |>
-    ggplot(aes(x = pred, y = contrast)) +
-    tidybayes::stat_halfeye(normalize = "panels") +
-    geom_vline(aes(xintercept = rope))  +
-    geom_vline(aes(xintercept = -rope))  +
-    facet_wrap(~class, scales = "free_x")
-  print(p)
-  invisible(nd)
-}
-
-```
-
-```{r compare-levels}
-#| label: fig-pairs
-#| fig-cap: Here I've set the ROPE line to zero to emphasize any treatment
-#|   difference that is expected to be different than zero
-
-pairs_data <- plot_pair_comparisons(bf2, 0)
-
-```
-
-And here is a table for the same data.
-
-```{r}
-#| label: tbl-pairs-pred
-#| tbl-cap: Posterior expected predictions of pairwise differences in means,
-#|   with no random effects. This reprsents the expected average conditions
-#|   across all sites. Units are Mg ha^-1^. The point estimate is the mode.
-#|   Upper and lower limits are the 95% credible intervals. Prob is the
-#|   probability that the predicted difference matches the sign of its
-#|   median--the probability that it is not zero.
-
-pairs_data |>
-  mutate(
-    summary = list(tidybayes::mode_hdi(pred)),
-    pred = list(group_by(pred, contrast)),
-    prob = list(summarize(pred,
-      prob = if_else(median(pred) > 0, 
-        mean(pred > rope),
-        mean(pred < rope)
-      )
-    )),
-    summary = list(left_join(summary, prob, by = "contrast"))
-  ) |> select(summary) |> unnest(c(summary)) |>
-  select(contrast, prediction = pred, lower = .lower, upper = .upper, prob) |>
-  knitr::kable(digits = 2)
-
-  #   gt::gt(groupname_col = "class") |>
-  #   gt::tab_options(row_group.as_column = TRUE) |>
-  #   gt::fmt_number(columns = -prob, decimals = 1) |>
-  #   gt::fmt_number(columns = prob, decimals = 2)
-
-```
--->
 
 ### Posterior Predictive check (Gaussian)
 
 ```{r pp-check-func}
 #| code-fold: true
-
-# this allows to adjust each panels coordinate limits
-source("./scripts/coord_cartesian_panels.r")
 
 posterior_predictive_check <- function(models) {
   models <- mutate(models,
@@ -711,9 +560,7 @@ posterior_predictive_check <- function(models) {
 
 ```
 
-Here is the default posterior predictive check provided by the `bayesplot`
-package. Each light curve is a predicted replication of the original, observed
-response (a predicted transect).
+Here is a posterior predictive check.
 
 ```{r}
 #| label: fig-gaus-pp-check
@@ -736,24 +583,221 @@ A Gamma distribution for the response makes more sense.
 
 ### Gamma model
 
+#### Formula
+
+I'm assuming the outcome is hurdle gamma distributed:
+
+$$
+\operatorname{HurdleGamma}(y \mid \mu, \text{shape}, \text{hu}) =
+\begin{cases}
+\text{hu} 
+  &\quad\text{if } y = 0, \text{ and}\\
+(1 - \text{hu}) \operatorname{Gamma}(y \mid \alpha, \beta)
+  &\quad\text{if } y > 0,
+\end{cases}
+$$
+
+Where $\mu = frac{\alpha}{\beta} and \text{shape} = \beta$. 
+
+$$
+\begin{align*}
+y_i &\sim \operatorname{HurdleGamma}(\mu, \text{shape}, \text{hu})\\
+\log(\mu_i) &= \bar{\alpha} + 
+  U_{\text{site}[i]}\sigma_{u} +
+  V_{\text{plot}[i]}\sigma_{v} +
+  W_{\text{corner}[i]}\sigma_{w} +
+  \beta_{treatment[i]}\\
+\bar{\alpha} &\sim \operatornam{normal}(M, S)\\
+U_j &\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 4\\
+V_j &\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 16\\
+W_j &\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
+\sigma_u &\sim \operatorname{StudentT^+}(3, 0.15, 0.01)\\
+\sigma_v &\sim \operatorname{StudentT^+}(3, 0.15, 0.01)\\
+\sigma_w &\sim \operatorname{StudentT^+}(3, 0.15, 0.01)\\
+\beta_j &\sim \operatorname{normal}(0, .15) \qquad \text{for } j=1 \dots 4\\
+\text{shape} &\sim \operatorname{Gamma}(0.01, 0.01)\\
+\text{hu} &\sim \operatorname{beta}(1, 1)
+\end{align*}
+$$
+
+
+$$
+\begin{aligned}
+  \operatorname{load}_{i}  &\sim \operatorname{Gamma} \left(\alpha_{j[i],k[i],l[i],m[i]}, \sigma^2 \right) \\
+    \alpha_{j}  &\sim \operatorname{Normal} \left(\mu_{\alpha_{j}}, \sigma^2_{\alpha_{j}} \right)
+    \text{, for corner:(treatment:site) j = 1,} \dots \text{,J} \\
+    \alpha_{k}  &\sim \operatorname{Normal} \left(\mu_{\alpha_{k}}, \sigma^2_{\alpha_{k}} \right)
+    \text{, for treatment:site k = 1,} \dots \text{,K} \\
+    \alpha_{l}  &\sim \operatorname{Normal}\left(\mu_{\alpha_{l}}, \sigma^2_{\alpha_{l}} \right)
+    \text{, for site l = 1,} \dots \text{,L} \\
+    \alpha_{m}  &\sim \operatorname{Normal} \left(\mu_{\alpha_{m}}, \sigma^2_{\alpha_{m}} \right)
+    \text{, for treatment m = 1,} \dots \text{,M}
+\end{aligned}
+$$
+
+#### Gamma Priors
+
+First I'll set my prior. This is complicated because we are now working with a
+log link. According to Solomon Kurz, [this is how] to transform your mean and sd
+for a normal distribution on the identity scale, to the equivalent normal
+distribution on the log scale.
+
+[this is how](https://solomonkurz.netlify.app/blog/2023-05-14-causal-inference-with-gamma-regression-or-the-problem-is-with-the-link-function-not-the-likelihood/#causal-inference-with-bayesian-gamma-regression)
+
+```{r convert-prior}
+
+d <- load2("long", all_of(c(transectid, load_vars))) |>
+  group_by(class) |> nest() |> rowwise()
+
+lnp <- function(data) {
+  # Desired values
+  m <- mean(data)
+  s <- 2 * sd(data)
+  # use the equations
+  mu    <- log(m / sqrt(s^2 / m^2 + 1))
+  sigma <- sqrt(log(s^2 / m^2 + 1))
+  # output mu and sigma on lognormals own scale
+  list(mu = round(mu, 4), sigma = round(sigma, 4))
+}
+
+```
+
+```{r define-priors2}
+#| label: fig-priors2
+#| fig-cap: Normal priors centered at the median and sd of 2.5 times the sd of
+#|   the data
+
+# add calcualted priors to the data
+d <- mutate(d, 
+  priors = list(brms::set_prior(
+    str_glue("normal({mu}, {sigma})", .envir = lnp(data$load))
+  ))
+)
+
+# Plot the priors
+pd <- d |>
+  mutate(
+    prior_dist = list( tidybayes::parse_dist(priors)),
+    lims = list(
+      tibble(
+        xmin = quantile(exp(prior_dist$.dist_obj), .01),
+        xmax = quantile(exp(prior_dist$.dist_obj), .99)
+      )
+    )
+  ) |>
+  rename(fuel_class = class)
+
+ggplot(data = unnest(pd, prior_dist, names_repair = "universal")) +
+tidybayes::stat_halfeye(
+  aes(xdist = exp(.dist_obj)), 
+  normalize = "panels"
+) +
+geom_text(aes(label = format(.dist_obj), x = mean(exp(.dist_obj)), y = 0.97, hjust = 0)) +
+facet_wrap(~ fuel_class, scales = "free_x") +
+coord_cartesian_panels(panel_limits = unnest(select(pd, lims), lims))
+
+```
+
+#### Gamma Prior predictive check
+
+The below code ran with very many divergent transitions and the results did not
+really make sense. This may have to do with [a comment I found here](https://discourse.mc-stan.org/t/prior-predictive-simulation-gives-unreasonable-results-for-lognormal-brms-model/16914/2?u=fisher-j): independent priors specified on the log link usually don't sample.
+
+An alternative is refitting the whole model with different priors and comparing
+the output to infer the prior influence. I'm not going to do that right now.
+
+```{r}
+
+# temp <- mutate(bf3, 
+#   mod_prior = list(update(mod, 
+#     sample_prior = "only", 
+#     cores = 4,
+#     warmup = 6000,
+#     iter = 7000,
+#     control = list(adapt_delta = .999)
+#   ))
+# )
+
+```
+
+#### Gamma model fitting
+
 ```{r}
 #| message: false
 
-if (file.exists("bf3.Rdata")) {
-  load("bf3.Rdata")
-} else {
-  bf3 <- mutate(d,
-    mod = list(brms::brm(form, data,
-      warmup = 10000,
-      iter = 11000,
-      cores = 4,
-      control = list(adapt_delta = 0.99),
-      family = brms::hurdle_gamma(),
-      prior = priors
-    ))
+# This takes a while to run, so I'm caching the model output, I need to make
+# sure to manually delete "bf3.Rdata" when something changes and I need to
+# re-run the model.
+bf3 <- mutate(d,
+  mod = list(brms::brm(form, data,
+    warmup = 5000,
+    iter = 6000,
+    cores = 4,
+    control = list(adapt_delta = 0.99),
+    family = brms::hurdle_gamma(),
+    prior = priors,
+    file = paste0("fits/bf3_", class)
+  ))
+)
+
+# change priors for non-linear model
+d <- mutate(d, 
+  priors = list(brms::set_prior(
+    str_glue("normal({mu}, {sigma})", .envir = lnp(data$load)),
+    nlpar = "a", coef = "Intercept"
+    ) +
+    set_prior("normal(0, 1)", nlpar = "b")  
   )
-  save(bf3, file = "bf3.Rdata")
-}
+)
+
+bf4 <- mutate(d,
+  priors = list(
+    set_prior(
+      str_glue("normal({mu}, {sigma})", .envir = lnp(data$load)),
+      nlpar = "a", coef = "Intercept"
+    ) +
+    set_prior("student_t(3, 0.15, 0.1)", nlpar = "a", class = "sd") +
+    set_prior("student_t(3, 0, 0.3)", nlpar = "b", class = "b")
+  ),
+  mod = list(brms::brm(
+    brms::bf(
+      load ~ a + b,
+      a ~ 1 + (1 | site/treatment/corner),
+      b ~ 0 + treatment,
+      nl = TRUE),
+    data,
+    warmup = 3000,
+    iter = 4000,
+    cores = 4,
+    control = list(adapt_delta = 0.99),
+    family = brms::hurdle_gamma(),
+    prior = priors,
+    sample_prior = TRUE,
+    file = paste0("fits/bf4_", class)
+  ))
+)
+
+bf5 <- mutate(d,
+  priors = list(brms::set_prior(
+    str_glue("normal({mu}, {sigma})", .envir = lnp(data$load))
+  )),
+  mod = list(brms::brm(
+    brms::bf(load ~ 0 + Intercept + (1 | site/treatment/corner) + (1 | treatment)),
+    data,
+    warmup = 3000,
+    iter = 4000,
+    cores = 4,
+    control = list(adapt_delta = 0.99),
+    family = brms::hurdle_gamma(),
+    prior = priors,
+    file = paste0("fits/bf5_", class)
+  ))
+)
+
+
+# predict_posterior_expected2(bf5)
+# predict_expected_contrasts2(bf5, 0)
+# posterior_predictive_check(bf5)
 
 ```
 
@@ -762,7 +806,7 @@ but with a hurdle gamma response. This fits one model for the zeros and another
 for the non-zero values, which are expected to be gamma distributed, that is,
 positive and right skewed.
 
-### Posterior Predictive check (Gamma)
+#### Gamma Posterior Predictive check
 
 ```{r}
 #| label: fig-gamma-pp-check
@@ -778,9 +822,7 @@ densities of lower values than we observed, as seen in the plots for the tenhr, 
 veg fuel classes. But generally, the predictions appear to agree with the
 observed data pretty well.
 
-## Expected value of the posterior predictive
-
-
+#### Expected value of the posterior predictive
 
 ```{r predict-func}
 
@@ -788,7 +830,7 @@ observed data pretty well.
 # predictions for the expected value across all sites.
 
 predict_posterior_expected <- function(data, plot = TRUE) {
-  newdata <- expand(data$data[[1]], nesting(treatment))
+  newdata <- tidyr::expand(data$data[[1]], nesting(treatment))
   data <- mutate(data,
     pred = list(
       tidybayes::epred_draws(mod, newdata, re_formula = NA, value = "pred")
@@ -846,9 +888,11 @@ expected_predictions |>
     summary = list(tidybayes::mode_hdci(pred))
   ) |> select(summary) |> unnest(summary) |>
   select(treatment, prediction = pred, lower = .lower, upper = .upper) |>
-    gt::gt(groupname_col = "class") |>
-    gt::tab_options(row_group.as_column = TRUE) |>
-    gt::fmt_number(decimals = 1)
+  knitr::kable(digits = 1)
+
+    # gt::gt(groupname_col = "class") |>
+    # gt::tab_options(row_group.as_column = TRUE) |>
+    # gt::fmt_number(decimals = 1)
 
 ```
 
@@ -924,6 +968,27 @@ expected_contrasts |>
   knitr::kable(digits = 2)
 
 ```
+
+## Final
+
+### Model
+
+#### Priors explanation
+
+### fiting and diagnostics
+
+#### Convergence
+
+#### Posterior predictive check
+
+### Results
+
+
+#### Predicted means
+
+
+#### Predicted contrasts
+
 
 # TODO:
 
