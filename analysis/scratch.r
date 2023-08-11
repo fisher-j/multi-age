@@ -14,16 +14,16 @@ set.seed(123)
 colony = as.factor(1:96)
 colony_effect = rnorm(96, mean = 2)
 
-field = as.factor(sort(rep(c(1:16),6)))
+field = as.factor(sort(rep(all(1:16),6)))
 field_e = rnorm(16, mean = 2)
 field_effect = rep(field_e, each = 6)
 
-field_pair = as.factor(sort(rep(c(1:8),12)))
+field_pair = as.factor(sort(rep(all(1:8),12)))
 field_pair_e = rnorm(8, mean = 2)
 field_pair_effect = rep(field_pair_e, each = 12)
 
-treatment = as.factor(rep(c(rep("control", 6), rep("treat", 6)), 8))
-treatment_effect = rep(c(rep(0, 6), rep(1, 6)), 8)     
+treatment = as.factor(rep(all(rep("control", 6), rep("treat", 6)), 8))
+treatment_effect = rep(all(rep(0, 6), rep(1, 6)), 8)     
 
 response = treatment_effect + field_effect + field_pair_effect + colony_effect
 df1 = data.frame(treatment, field_pair, field, colony, response)
@@ -189,3 +189,663 @@ posterior_expected_predicitons <- function(data, plot = TRUE) {
 }
 
 posterior_expected_predicitons(bf3)
+
+pars <- tidybayes::get_variables(bf3$mod[[5]]) |>
+  str_match("^b|^sd|shape|hu")
+
+bayesplot::mcmc_parcoord(bf3$mod[[4]], alpha = 0.05, np = bayesplot::nuts_params(bf3$mod[[4]]), regex_pars = "^b|^sd|shape|hu")
+
+######################################################################
+######################## diagnostic functions ########################
+######################################################################
+
+show_pairs <- function(obj, class, pars, mod) {
+  mod <- filter(obj, class == .env$class) |> pluck(mod, 1)
+  n_p <- bayesplot::nuts_params(mod)
+  bayesplot::mcmc_pairs(mod, np = n_p, regex_pars = pars)
+}
+
+show_parameters <- function(obj, class, pars = "^b|^sd|shape|hu", mod) {
+  mod <- filter(obj, class == .env$class) |> pluck(mod, 1)
+  n_p <- bayesplot::nuts_params(mod)
+  bayesplot::mcmc_parcoord(mod, np = n_p, regex_pars = pars)
+}
+
+count_divergent <- function(obj, mod) {
+  transmute(obj, 
+    n_divergent = nrow(filter(
+      brms::nuts_params(.data[[mod]]), 
+      Parameter == "divergent__" & Value == 1
+    ))
+  )
+}
+
+######################################################################
+
+show_pairs(bf3, "dufflitter", "^b", "prior_mod")
+
+mod <- filter(bf3, class == "dufflitter") |> pluck("mod", 1)
+n_p <- brms::nuts_params(mod)
+bayesplot::mcmc_scatter(mod, np = n_p, pars = )
+
+plot(bf3$mod[[4]])
+
+bf4 <- mutate(bf3,
+  mod = list(
+    update(mod, cores = 4, iter = 6000, warmup = 5000,
+      control = list(adapt_delta = 0.99)
+    )
+  )
+)
+
+tidybayes::get_variables(bf4$mod[[1]])
+count_divergent(bf3, "mod")
+show_parameters(temp, "hundhr", mod = "mod_prior")
+show_pairs(temp, "hundhr", "b_treatmentgs|sd", "mod_prior")
+
+plot(bf4$mod[[4]])
+summary(bf4$mod[[4]])
+
+sprintf("%.2f, %.2f", )
+all(pi, 2*pi)
+
+
+sprintf("%s %d", "test", 1:3)
+
+brms::prior(lognormal(5.053056, 0.09562761)) %>% 
+  tidybayes::parse_dist() %>% 
+  ggplot(aes(xdist = .dist_obj, y = prior)) + 
+  tidybayes::stat_halfeye(.width = all(.5, .95), p_limits = all(.0001, .9999)) +
+  scale_y_discrete(NULL, breaks = NULL, expand = expansion(add = 0.1)) +
+  labs(title = "Lognormal(5.053056, 0.09562761)",
+       subtitle = "A normal prior on the log link is like a lognormal prior on the identity link.",
+       x = expression(exp(italic(p)(beta[0])))) +
+  coord_cartesian(xlim = all(100, 250))
+
+
+
+par(mfrow = all(1, 2))
+curve(dnorm(x, 43, 65), from = 0, to = 200)
+curve(dlnorm(x, 3.323, 0.6), from = 0, to = 200)
+
+quantile(rlnorm(150, 3.323, 1.029), all(0.025, 0.975))
+
+draws <- rnorm(1e6, 43, 65)
+draws <- draws[draws > 0]
+lnorm_param(draws)
+par(mfrow = all(1, 2))
+curve(pnorm(x, 43, 65), from = 0, to = 200)
+curve(plnorm(x, 3.6, 1.15), from = 0, to = 200)
+
+par(mfrow = all(1, 2))
+curve(dnorm(x, 43, 65), from = 0, to = 200)
+curve(dlnorm(x, 4.1, 0.9), from = 0, to = 200)
+
+length(draws)
+quantile(draws, all(0.025, 0.975))
+mean(draws)
+sd(draws)
+
+# trying to figure out the right distribution for prior with log scale
+log(71 / sqrt(47^2 / 71^2 + 1))
+sqrt(log(47^2 / 71^2 + 1))
+a <- rlnorm(1e6, 3.323, 1.029)
+mean(a)
+sd(a)
+sd(bf3$data[[4]]$load) * 2.5
+mean(bf3$data[[4]]$load)
+mean(bf3$data[[3]]$load)
+mean(bf3$data[[6]]$load)
+sd(bf3$data[[6]]$load) * 2.5
+
+count_divergent(temp, "mod_prior")
+brms::prior_summary(temp$mod[[4]])
+temp$mod[[3]]
+mean(temp$data[[3]]$load == 0)
+
+
+curve(dbeta(x, 1,1), 1, 10)
+
+# Student t distribution with flexible location and scale
+my_t <- function(N, nu, mu, sd) {
+  x1 <- rt(N, nu) # 1
+  x2 <- x1/sqrt(nu/(nu-2)) # 2
+  x3 <- x2 * sd # 3
+  x4 <- x3 + mu # 4
+  return(x4)
+}
+
+a <- rlnorm(1e5, 4.1, 0.6)
+plot(density(log(a)))
+plot(density(a))
+plot(density(rnorm(1e5, 4.1, 0.6)))
+plot(density(exp(rnorm(1e5, 4.1, 0.6))))
+tt <- exp(my_t(1e5, 3, -0.7, 1))
+median(tt)
+lnorm_param(d$data[[1]]$load)
+plot(density(my_t(1e5, 3, -0.7, 1)), xlim = c(-5, 3))
+
+hist(tt)
+plot(density(log(rnorm(1e5, 4.1, 0.6))))
+
+sum(rexp(1e5, 1 / 47) == 0)
+hist((rexp(1e5, 1 / 47)))
+pexp(0, 1/47)
+plnorm(0, 4.1, 0.6)
+
+log(all(47, 71))
+a <- rnorm(1e5, 3.8, 4.2)
+a <- a[a > 0]
+plot(density(exp(a)))
+
+
+m1$mod[[1]]
+bf2$mod[[1]]
+bf3$mod[[1]]
+brms::standata(bf3$mod[[1]])
+brms::stancode(bf3$mod[[1]])
+summary(bf3$mod[[1]])
+
+brms::ranef(bf3$mod[[1]])
+coef(bf3$mod[[1]])
+
+# camp6 GS
+
+exp(-.7)
+
+bf3$data[[1]][1:3,]
+# 1 camp6 gs        e        225 1.96
+# 2 camp6 gs        e        315 0.850
+# 3 camp6 gs        n        135 0.673
+
+coef(bf3$mod[[1]])$site[1, 1, 1, drop = F]
+coef(bf3$mod[[1]])$`site:treatment`[1, 1, 1, drop = F]
+coef(bf3$mod[[1]])$`site:treatment:corner`[1, 1, 1, drop = F]
+exp(-.7 + .2629 + .2513 + .0606)
+exp(-0.6999828 + 0.262 + 0.2512 + 0.0606)
+brms::posterior_epred(bf3$mod[[1]])[ ,1] |> exp() |> sd()
+
+predict_expected_contrasts2 <- function(data, rope_size, plot = TRUE) {
+  # Assume treatment levels are the same for all models: they are.
+  newdata <- tidyr::expand(data$data[[1]], nesting(treatment))
+  d <- data |>
+    mutate(
+      pred = list(
+        tidybayes::epred_draws(mod, newdata, re_formula = ~ (1 | treatment), value = "pred") |>
+        tidybayes::compare_levels(pred, by = treatment) |>
+        select(contrast = treatment, pred) 
+      ),
+      rope = rope_size * sd(data$load),
+      lims = list(
+        tibble(xmin = quantile(pred$pred, .001), xmax = quantile(pred$pred, .999))
+      )
+    )
+  if (plot) {
+    p <- d |>
+      unnest(c(pred)) |>
+      ggplot(aes(x = pred, y = contrast)) +
+      tidybayes::stat_halfeye(normalize = "panels") +
+      geom_vline(aes(xintercept = rope))  +
+      geom_vline(aes(xintercept = -rope))  +
+      facet_wrap(~class, scales = "free_x") +
+      coord_cartesian_panels(
+        panel_limits = unnest(select(d, lims), lims)
+      )
+    print(p)
+  }
+  invisible(d)
+}
+
+predict_posterior_expected2 <- function(data, plot = TRUE) {
+  newdata <- tidyr::expand(data$data[[1]], nesting(treatment))
+  data <- mutate(data,
+    pred = list(
+      tidybayes::epred_draws(mod, newdata, re_formula = ~(1 | treatment), value = "pred")
+    ),
+    lims = list(
+      tibble(xmin = 0, xmax = quantile(pred$pred, .995))
+    )
+  )
+  if (plot) {
+    p <- data |> unnest(pred) |>
+      ggplot(aes(pred, treatment)) +
+      tidybayes::stat_halfeye(normalize = "panels") +
+      facet_wrap(~class, scales = "free_x") +
+      coord_cartesian_panels(panel_limits = unnest(select(data, lims), lims))
+    print(p)
+  }
+  invisible(data)
+}
+
+
+################################################################################
+############################# compare some models ##############################
+################################################################################
+
+# treatment as random, intercept specified with prior
+m2<-brms::posterior_summary(bf4$mod[[1]], variable = c("b_Intercept", "r_treatment"))
+m2 <- exp(m2[-1,1] + m2[1,1]) |> as_tibble(rownames = "treatment") |> rename(bf4 = 2)
+
+all <- unnest(d, data) |> 
+  filter(class == "onehr") |>
+  group_by(treatment) |>
+  summarize(mean = mean(load))
+
+# ill specified model?
+m1 <- brms::posterior_summary(bf3$mod[[1]])[1:4, 1] |> exp() |> as_tibble(rownames = "treatment") |> rename(bf3 = 2)
+
+# Here I use the default prior which is student_t(3, -0.3, 2.5)
+# this gives slightly higher estimates all around
+m3<-brms::posterior_summary(bf5$mod[[1]], variable = c("b_Intercept", "r_treatment"))
+m3 <- exp(m3[-1,1] + m3[1,1]) |> as_tibble(rownames = "treatment") |> rename(bf5 = 2)
+
+cbind(all, m1[2], m2[2], m3[2])
+
+brms::prior_summary(bf5$mod[[1]])
+pluck(d, "data", 1, "load") |> log() |> mean()
+
+
+
+##############################################################################
+############################# Interesting plots ############################## 
+##############################################################################
+
+# Look at coefficients currently for bf4
+bf4$mod[[1]] |>
+  bayesplot::mcmc_intervals(
+    regex_pars = c("^r_site__a", "^r_site:treatment__a", "^b", "^sd")
+    # transformations = "exp"
+  )
+
+# plot variance of each group
+brms::as_draws_df(bf4$mod[[1]]) |>
+  pivot_longer(starts_with("sd")) |>
+  ggplot(aes(x = value, fill = name)) +
+  geom_density(linewidth = 0, alpha = 3/4, adjust = 2/3) +
+  scale_fill_manual(values = c("tan4", "tomato1", "thistle", "steelblue3")) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  ggtitle(expression(sigma["<group>"])) +
+  coord_cartesian(xlim = c(0, 4))
+################################################################################
+
+# Grand mean of data
+d$data[[1]]$load |> mean()
+
+# Grand mean of model
+as_draws_df(bf4$mod[[1]]) |> 
+  transmute(alpha = b_a_Intercept) |>
+  mean_qi() |>
+  mutate(across(1:3, exp))
+
+######## building up ########
+m1 <- glm(load ~ 0 + treatment + site, d$data[[1]], family = Gamma(link = "log"))
+exp(coef(m1))
+m2 <- glm(load ~ 0 + treatment + site, d$data[[1]], family = Gamma(link = "log"))
+exp(coef(m2))
+library(emmeans)
+emmeans(m2, ~ treatment, type = "response")
+library(lme4)
+m3 <- glmer(
+  load ~ 0 + treatment + (1 | site), d$data[[1]], family = Gamma(link = "log"))
+fixef(m3) |> exp()
+emmeans(m3, ~ treatment, type = "response")
+m4 <- glmer(
+  load ~ 0 + treatment + (1 | site/treatment ), d$data[[1]], family = Gamma(link
+    = "log"))
+fixef(m4) |> exp()
+emmeans(m4, ~ treatment, type = "response")
+#############################
+
+# mean of data by treatment
+d$data[[1]] |> 
+  group_by(treatment) |>
+  summarize(load = mean(load))
+
+as_draws_df(bf4$mod[[1]]) |> 
+  select(starts_with("b_b_treatment"), b_a_Intercept) |>
+  pivot_longer(
+    starts_with("b_b_treatment"),
+    names_transform = \(x) str_remove(x, "b_b_treatment")) |>
+  mutate(mu = value + b_a_Intercept) |>
+  group_by(name) |>
+  mean_qi(mu) |> mutate(across(2:4, exp))
+
+as_draws_df(bf5$mod[[1]]) |>
+  select(matches("^r_treatment")) |>
+  pivot_longer(everything()) |>
+  mutate(name = str_extract(name, "gs|ha|hd|ld")) |>
+  group_by(name) |>
+  mean_qi(value) |> mutate(across(2:4, exp))
+
+
+# I'm going to try to start small and build up, I want to see what the priors
+# look like, I'm working through section 11.1 of SK's version of rethinking.
+#
+# This prior (sd = 1) is about 1.5 sds of the raw data
+
+treatprior <- "normal(0, 1)"
+bt1 <- mutate(d[1,],
+  priors = list(
+    set_prior(
+      str_glue("normal({mu}, {sigma})", .envir = lnp(data$load)),
+      nlpar = "a"
+    ) +
+    set_prior(treatprior, nlpar = "b", coef = "treatmentgs") +
+    set_prior(treatprior, nlpar = "b", coef = "treatmentha") +
+    set_prior(treatprior, nlpar = "b", coef = "treatmenthd") +
+    set_prior(treatprior, nlpar = "b", coef = "treatmentld")
+  ),
+  mod = list(brm(
+    bf(
+      load ~ a + b, a ~ 1, b ~ 0 + treatment, nl = TRUE
+    ),
+    data = data,
+    family = brms::hurdle_gamma(),
+    prior = priors,
+    sample_prior = TRUE,
+    warmup = 3000,
+    iter = 4000,
+    cores = 4,
+    control = list(adapt_delta = 0.95)
+    # file = paste0("fits/bf4_", class)
+  ))
+)
+
+# This is how I can check the prior difference between treatments
+prior <- prior_draws(bt1$mod[[1]]) |>
+  mutate(
+    p1 = exp(b_a + b_b_treatmentgs),
+    p2 = exp(b_a + b_b_treatmentha),
+    diff = abs(p1 - p2)
+  )
+prior |>
+  ggplot(aes(x = diff)) +
+  geom_density(linewidth = 0, alpha = 3/4, adjust = 0.1) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(
+    title = treatprior,
+    x = "prior diff between treatments"
+  )
+  # coord_cartesian(xlim = c(0, 5))
+
+
+# This is how I simulate prior draws for this model
+a <-  rnorm(1e6, -.73, 1.1)
+b1 <- rnorm(1e6, 0, 1)
+b2 <- rnorm(1e6, 0, 1)
+diff = abs(exp(a + b1) - exp(a + b2))
+mean(diff)
+quantile(diff)
+tibble(diff = diff) |>
+  ggplot(aes(x = diff)) +
+  geom_density(linewidth = 0, adjust = 0.1) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  # coord_cartesian(xlim = c(0, 7)) +
+  ggtitle("prior diff")
+
+# emperical and modeled grand mean
+mean(bt1$data[[1]]$load) #0.876
+as_draws_df(bt1$mod[[1]]) |> 
+  transmute(alpha = exp(b_a_Intercept)) |>
+  mean_qi() 
+# alpha .lower .upper .width .point .interval
+#   <dbl>  <dbl>  <dbl>  <dbl> <chr>  <chr>
+# 1 0.857  0.316   1.84   0.95 mean   qi
+
+
+# emperical and modeled conditional means
+d$data[[1]] |> group_by(treatment) |>
+  summarize(mean = mean(load))
+#   treatment  mean
+#   <chr>     <dbl>
+# 1 gs        0.598
+# 2 ha        1.20
+# 3 hd        1.04
+# 4 ld        0.668
+
+
+as_draws_df(bt1$mod[[1]]) |>
+  pivot_longer(starts_with("b_b_treatment")) |>
+  mutate(
+    name = str_extract(name, "gs|ha|hd|ld"),
+    mean = exp(b_a_Intercept + value)
+  ) |>
+  group_by(name) |>
+  mean_qi(mean)
+
+#   name   mean .lower .upper .width .point .interval
+#   <chr> <dbl>  <dbl>  <dbl>  <dbl> <chr>  <chr>
+# 1 gs    0.610  0.474  0.784   0.95 mean   qi
+# 2 ha    1.22   0.947  1.58    0.95 mean   qi
+# 3 hd    1.05   0.809  1.35    0.95 mean   qi
+# 4 ld    0.682  0.532  0.881   0.95 mean   qi
+
+
+as_draws_df(bf5$mod[[1]]) |>
+  pivot_longer(starts_with("r_treatment")) |>
+  mutate(
+    name = str_extract(name, "gs|ha|hd|ld"),
+    mean = exp(b_Intercept + value)
+  ) |>
+  group_by(name) |>
+  mean_qi(mean)
+
+# Look at coefficients currently
+get_variables(bf5$mod[[1]])
+bf5$mod[[1]] |>
+  bayesplot::mcmc_intervals(
+    regex_pars = c("^r_treatment", "^r_site\\[", "^r_site:treatment\\[", "^b", "^sd")
+    # transformations = "exp"
+  )
+
+# Grand mean of model
+as_draws_df(bf5$mod[[1]]) |> 
+  transmute(alpha = exp(b_Intercept)) |>
+  mean_qi()
+
+# this shows the difference between the sample means and the models with
+# variable, and fixed treatment effects.
+plotdat <- list()
+plotdat$bf5 <- as_draws_df(bf5$mod[[1]]) |>
+  transmute(
+    across(starts_with("r_treatment"), \(x) exp(x + b_Intercept))
+  ) |>
+  pivot_longer(everything(), values_to = "load") |>
+  mutate(treatment = str_extract(name, "gs|ha|hd|ld")) |>
+  group_by(treatment) |>
+  mean_qi(load)
+plotdat$bf4 <- as_draws_df(bf4$mod[[1]]) |>
+  transmute(
+    across(starts_with("b_b_treatment"), \(x) exp(x + b_a_Intercept))
+  ) |>
+  pivot_longer(everything(), values_to = "load") |>
+  mutate(treatment = str_extract(name, "gs|ha|hd|ld")) |>
+  group_by(treatment) |>
+  mean_qi(load)
+plotdat$sample <- d$data[[1]] |>
+  group_by(treatment) |>
+  mean_qi(load)
+graphics <- aes(treatment, load, ymin = .lower, ymax = .upper, color = group)
+p5 <- ggplot(bind_rows(plotdat, .id = "group"), graphics) +
+geom_pointrange(position = position_dodge(0.4)) +
+geom_hline(yintercept = d$data[[1]]$load |> mean(), color = "gray50")
+
+p5 + ggtitle("intercept, all~s_t(3, 0, 2)")
+p4 + ggtitle("intercept, treat~s_t(3, 0, 1), sd~s_t(3, 0, 1)")
+p3 + ggtitle("intercept, treatment~n(0, 1), sd~s_t(3, 0, 0.25)")
+p2 + ggtitle("intercept, sd~s_t(3, 0, 2.5)")
+p1 + ggtitle("wrong prior")
+
+predict_expected_contrasts(bf4, 0)
+predict_expected_contrasts2(bf5, 0)
+
+get_variables(bf4$mod[[1]])
+prior_summary(bf4$mod[[1]])
+
+intercept <- rnorm(1e5, -0.733, 1.0962)
+treatment <- rnorm(1e5, 0, 1)
+ran_sd <- 1
+site <- my_t(1e5, 3, 0, ran_sd)
+plot <- my_t(1e5, 3, 0, ran_sd)
+corner <- my_t(1e5, 3, 0, ran_sd)
+res <- exp(intercept + treatment + site + plot + corner)
+plot(density(res), xlim = c(0, 7))
+mean(res)
+quantile(res, c(.05, .5, .95))
+
+prior_summary(bf4$mod[[1]])
+stancode(bf4$mod[[1]])
+post <- posterior_samples(bf4$mod[[1]])
+str(post)
+bf4$mod[[1]]
+prior_summary(bf4$mod[[1]])
+
+################################################################################
+############################### prior prediction ###############################
+################################################################################
+
+# Student t distribution with flexible location and scale
+my_t <- function(N, nu, mu, sd) {
+  x1 <- rt(N, nu) # 1
+  x2 <- x1/sqrt(nu/(nu-2)) # 2
+  x3 <- x2 * sd # 3
+  x4 <- x3 + mu # 4
+  return(x4)
+}
+
+student_t_plus <- function(N, nu, mu, sd) {
+  N3 <- N*3
+  y <- ggdist::rstudent_t(N3, nu, mu, sd)
+  y <- y[y > 0]
+  y <- sample(y, N)
+}
+
+N <- 1e4
+M <- -0.73
+S <- 1.1
+a_bar <- rnorm(N, M, S)
+U <- rnorm(N, 0, 1)
+V <- rnorm(N, 0, 1)
+W <- rnorm(N, 0, 1)
+sigma_rand <- 1
+sigma_u <- student_t_plus(N, 3, 0.15, sigma_rand)
+sigma_v <- student_t_plus(N, 3, 0.15, sigma_rand)
+sigma_w <- student_t_plus(N, 3, 0.15, sigma_rand)
+beta <- rnorm(N, 0, 2)
+
+post <- exp(a_bar + U*sigma_u + V*sigma_v + W*sigma_w + beta)
+
+posterior::summarize_draws(bf4a$mod[[1]]) |>
+  filter(str_detect(variable, "prior_b_a|prior_b_b|prior_sd_site$"))
+posterior::summarize_draws(cbind(a_bar, beta, sigma_u))
+
+#### Plot prior vs. posterior distributions ####
+get_variables(m)
+
+mod <- bf4$mod[[1]]
+
+# Plod density of model priors against posterior to get a sense of the
+# informativeness of the prior. Average over all fixed effects.
+plot_pri_post <- function(mod) {
+  gather_draws(mod, `prior.*`, `b_a.*`, `sd.*`, `b_b_.*`, regex = TRUE) |> 
+    mutate(.variable = if_else(
+      str_starts(.variable, "prior"),
+      .variable, paste0("posterior_", .variable)
+    )) |>
+    separate_wider_regex(.variable, 
+      c(
+        phase = "prior|posterior", "_",
+        .variable = ".*"
+      ),
+    ) |>
+    mutate(
+      .variable = str_remove(.variable, "__a.*|_treatment..")
+    ) |>
+    filter(!str_detect(.variable, "hu")) |>
+    ggplot(aes(x = .value, color = phase, fill = phase)) +
+    stat_slab(alpha = .4, normalize = "panels") +
+    stat_pointinterval(
+      position = position_dodge(width = 0.3, preserve = "single")
+    ) +
+    facet_wrap(~.variable, scales = "free")
+}
+
+plot_pri_post(bf4$mod[[1]])
+
+
+
+# Plot prior vs posterior densities for each level of fixed effect.
+plot_pri_post_fixed <- function(mod) {
+  tidy_draws(mod) |> 
+  select(prior = prior_b_b, matches("b_b_treatment")) |>
+  pivot_longer(contains("treatment"), names_to = "treatment") |>
+    ggplot() +
+    stat_halfeye(aes(x = value)) +
+    stat_slab(aes(x = prior), color = "tomato3", fill = NA) +
+    geom_vline(xintercept = 0) +
+    facet_wrap(~ treatment)
+}
+
+plot_pri_post(bf4$mod[[1]])
+plot_pri_post_fixed(bf4$mod[[1]])
+
+bf4a <- mutate(d[1,],
+  priors = list(
+    set_prior(
+      str_glue("normal({mu}, {sigma})", .envir = lnp(data$load)),
+      nlpar = "a", coef = "Intercept"
+    ) +
+    set_prior("student_t(3, 0.15, 1)", nlpar = "a", class = "sd") +
+    set_prior("normal(0, 2)", nlpar = "b", class = "b")
+  ),
+  mod = list(brms::brm(
+    brms::bf(
+      load ~ a + b,
+      a ~ 1 + (1 | site/treatment/corner),
+      b ~ 0 + treatment,
+      nl = TRUE),
+    data,
+    warmup = 3000,
+    iter = 4000,
+    cores = 4,
+    control = list(adapt_delta = 0.99),
+    family = brms::hurdle_gamma(),
+    prior = priors,
+    sample_prior = TRUE,
+    file = paste0("fits/bf4a_", class)
+  ))
+)
+
+plot_pri_post_fixed(bf4a$mod[[1]])
+plot_pri_post(bf4a$mod[[1]])
+predict_posterior_expected(bf4)
+predict_expected_contrasts(bf4, 0)
+
+####################### expose stan function #########################
+# and compare to other methods
+# <https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html>
+
+library(rstan)
+
+model_code <- "
+  functions {
+    real stan_student_t_rng() {
+      return student_t_rng(3, 2, 2);
+    }
+  }
+  model {} 
+"
+expose_stan_functions(stanc(model_code = model_code))
+
+y1 <- modified_t(1e4, 3, 2, 2)
+y2 <- ggdist::rstudent_t(1e4, 3, 2, 2)
+y3 <- sapply(numeric(1e4), \(x) stan_student_t_rng())
+
+l1 <- list(
+modified_t = quantile(y1, c(0.05, 0.5, 0.95)),
+rstudent_t = quantile(y2, c(0.05, 0.5, 0.95)),
+stan_student_t_rng = quantile(y3, c(0.05, 0.5, 0.95))
+)
+do.call(rbind, l1)
+
+#######################################################################

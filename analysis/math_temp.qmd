@@ -1,0 +1,42 @@
+### Model formula
+
+I'm assuming the outcome is hurdle gamma distributed:
+
+$$
+\operatorname{HurdleGamma}(y \mid \mu, \text{shape}, \text{hu}) =
+\begin{cases}
+\text{hu} 
+  &\quad\text{if } y = 0, \text{ and}\\
+(1 - \text{hu}) \operatorname{Gamma}(y \mid \alpha, \beta)
+  &\quad\text{if } y > 0,
+\end{cases}
+$$
+
+Where $\mu = \frac{\alpha}{\beta} \text{ and shape} = \beta$, using the
+gamma distribution parameterization with scale = $\alpha$ and shape =
+$\beta$. 
+
+$$
+\begin{align*}
+y_i &\sim \operatorname{HurdleGamma}(\mu, \text{shape}, \text{hu})\\
+\log(\mu_i) &= \bar{\alpha} + 
+  U_{\text{site}[i]}\sigma_{u} +
+  V_{\text{plot}[i]}\sigma_{v} +
+  W_{\text{corner}[i]}\sigma_{w} +
+  \beta_{treatment[i]}\\
+\bar{\alpha} &\sim \operatorname{normal}(M, S)\\
+U_j &\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 4\\
+V_j &\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 16\\
+W_j &\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
+\sigma_u &\sim \operatorname{StudentT^+}(3, 0.15, 0.01)\\
+\sigma_v &\sim \operatorname{StudentT^+}(3, 0.15, 0.01)\\
+\sigma_w &\sim \operatorname{StudentT^+}(3, 0.15, 0.01)\\
+\beta_j &\sim \operatorname{normal}(0, .15) \qquad \text{for } j=1 \dots 4\\
+\text{shape} &\sim \operatorname{Gamma}(0.01, 0.01)\\
+\text{hu} &\sim \operatorname{beta}(1, 1)
+\end{align*}
+$$
+
+Where $M$ and $S$ are the mean and standard deviation of a
+lognormal distribution with mean and 2.5 times SD times the SD of the
+sample data, on the log scale.
