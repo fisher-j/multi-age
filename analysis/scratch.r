@@ -365,58 +365,6 @@ exp(-.7 + .2629 + .2513 + .0606)
 exp(-0.6999828 + 0.262 + 0.2512 + 0.0606)
 brms::posterior_epred(bf3$mod[[1]])[ ,1] |> exp() |> sd()
 
-predict_expected_contrasts2 <- function(data, rope_size, plot = TRUE) {
-  # Assume treatment levels are the same for all models: they are.
-  newdata <- tidyr::expand(data$data[[1]], nesting(treatment))
-  d <- data |>
-    mutate(
-      pred = list(
-        tidybayes::epred_draws(mod, newdata, re_formula = ~ (1 | treatment), value = "pred") |>
-        tidybayes::compare_levels(pred, by = treatment) |>
-        select(contrast = treatment, pred) 
-      ),
-      rope = rope_size * sd(data$load),
-      lims = list(
-        tibble(xmin = quantile(pred$pred, .001), xmax = quantile(pred$pred, .999))
-      )
-    )
-  if (plot) {
-    p <- d |>
-      unnest(c(pred)) |>
-      ggplot(aes(x = pred, y = contrast)) +
-      tidybayes::stat_halfeye(normalize = "panels") +
-      geom_vline(aes(xintercept = rope))  +
-      geom_vline(aes(xintercept = -rope))  +
-      facet_wrap(~class, scales = "free_x") +
-      coord_cartesian_panels(
-        panel_limits = unnest(select(d, lims), lims)
-      )
-    print(p)
-  }
-  invisible(d)
-}
-
-predict_posterior_expected2 <- function(data, plot = TRUE) {
-  newdata <- tidyr::expand(data$data[[1]], nesting(treatment))
-  data <- mutate(data,
-    pred = list(
-      tidybayes::epred_draws(mod, newdata, re_formula = ~(1 | treatment), value = "pred")
-    ),
-    lims = list(
-      tibble(xmin = 0, xmax = quantile(pred$pred, .995))
-    )
-  )
-  if (plot) {
-    p <- data |> unnest(pred) |>
-      ggplot(aes(pred, treatment)) +
-      tidybayes::stat_halfeye(normalize = "panels") +
-      facet_wrap(~class, scales = "free_x") +
-      coord_cartesian_panels(panel_limits = unnest(select(data, lims), lims))
-    print(p)
-  }
-  invisible(data)
-}
-
 
 ################################################################################
 ############################# compare some models ##############################
@@ -720,21 +668,38 @@ student_t_plus <- function(N, nu, mu, sd) {
   y <- sample(y, N)
 }
 
-N <- 1e4
-M <- -0.73
-S <- 1.1
-a_bar <- rnorm(N, M, S)
-U <- rnorm(N, 0, 1)
-V <- rnorm(N, 0, 1)
-W <- rnorm(N, 0, 1)
-sigma_rand <- 1
-sigma_u <- student_t_plus(N, 3, 0.15, sigma_rand)
-sigma_v <- student_t_plus(N, 3, 0.15, sigma_rand)
-sigma_w <- student_t_plus(N, 3, 0.15, sigma_rand)
-beta <- rnorm(N, 0, 2)
+rnorm_plus <- function(N, mu, sd) {
+  N3 <- N*3
+  y <- rnorm(N3, mu, sd)
+  y <- y[y>0]
+  sample(y, N)
+}
 
-post <- exp(a_bar + U*sigma_u + V*sigma_v + W*sigma_w + beta)
+prior_sim <- function() {
+  N <- 1e4
+  M <- -0.73
+  S <- 1.1
+  a_bar <- rnorm(N, M, S)
+  U <- rnorm(N, 0, 1)
+  V <- rnorm(N, 0, 1)
+  W <- rnorm(N, 0, 1)
+  sigma_rand <- 1
+  sigma_u <- rnorm_plus(N, 0, 1)
+  sigma_v <- rnorm_plus(N, 0, 1)
+  sigma_w <- rnorm_plus(N, 0, 1)
+  beta <- rnorm(N, 0, 1)
+  shape <- rgamma(N, 0.01, 0.01)
+  hu <- rbeta(N, 1, 1)
+  mu <- exp(a_bar + U*sigma_u + V*sigma_v + W*sigma_w + beta)
+  post <- rgamma(N, shape, shape / mu)
+}
 
+summary(mu)
+hist(mu)
+map(1:15, prior_sim)
+sum(mu < 0.1)
+plot(density(post), xlim = c(0, 200))
+lines(density(post, adjust = 3))
 posterior::summarize_draws(bf4a$mod[[1]]) |>
   filter(str_detect(variable, "prior_b_a|prior_b_b|prior_sd_site$"))
 posterior::summarize_draws(cbind(a_bar, beta, sigma_u))
@@ -744,59 +709,20 @@ get_variables(m)
 
 mod <- bf4$mod[[1]]
 
-# Plod density of model priors against posterior to get a sense of the
-# informativeness of the prior. Average over all fixed effects.
-plot_pri_post <- function(mod) {
-  gather_draws(mod, `prior.*`, `b_a.*`, `sd.*`, `b_b_.*`, regex = TRUE) |> 
-    mutate(.variable = if_else(
-      str_starts(.variable, "prior"),
-      .variable, paste0("posterior_", .variable)
-    )) |>
-    separate_wider_regex(.variable, 
-      c(
-        phase = "prior|posterior", "_",
-        .variable = ".*"
-      ),
-    ) |>
-    mutate(
-      .variable = str_remove(.variable, "__a.*|_treatment..")
-    ) |>
-    filter(!str_detect(.variable, "hu")) |>
-    ggplot(aes(x = .value, color = phase, fill = phase)) +
-    stat_slab(alpha = .4, normalize = "panels") +
-    stat_pointinterval(
-      position = position_dodge(width = 0.3, preserve = "single")
-    ) +
-    facet_wrap(~.variable, scales = "free")
-}
 
-plot_pri_post(bf4$mod[[1]])
+# TODO: Compare this model to current model bf4 to assess the much wider priors
 
-
-
-# Plot prior vs posterior densities for each level of fixed effect.
-plot_pri_post_fixed <- function(mod) {
-  tidy_draws(mod) |> 
-  select(prior = prior_b_b, matches("b_b_treatment")) |>
-  pivot_longer(contains("treatment"), names_to = "treatment") |>
-    ggplot() +
-    stat_halfeye(aes(x = value)) +
-    stat_slab(aes(x = prior), color = "tomato3", fill = NA) +
-    geom_vline(xintercept = 0) +
-    facet_wrap(~ treatment)
-}
-
-plot_pri_post(bf4$mod[[1]])
-plot_pri_post_fixed(bf4$mod[[1]])
-
-bf4a <- mutate(d[1,],
+bf4a <- mutate(d,
   priors = list(
     set_prior(
       str_glue("normal({mu}, {sigma})", .envir = lnp(data$load)),
       nlpar = "a", coef = "Intercept"
     ) +
-    set_prior("student_t(3, 0.15, 1)", nlpar = "a", class = "sd") +
-    set_prior("normal(0, 2)", nlpar = "b", class = "b")
+    set_prior("normal(0, 1)", nlpar = "a", class = "sd") +
+    set_prior("normal(0, 1)", nlpar = "b", coef = "treatmentgs") +
+    set_prior("normal(0, 1)", nlpar = "b", coef = "treatmentha") +
+    set_prior("normal(0, 1)", nlpar = "b", coef = "treatmenthd") +
+    set_prior("normal(0, 1)", nlpar = "b", coef = "treatmentld")
   ),
   mod = list(brms::brm(
     brms::bf(
@@ -805,8 +731,8 @@ bf4a <- mutate(d[1,],
       b ~ 0 + treatment,
       nl = TRUE),
     data,
-    warmup = 3000,
-    iter = 4000,
+    warmup = 4000,
+    iter = 5000,
     cores = 4,
     control = list(adapt_delta = 0.99),
     family = brms::hurdle_gamma(),
@@ -816,8 +742,33 @@ bf4a <- mutate(d[1,],
   ))
 )
 
+####### Balance divergent transitions with low effective sample size ########
+bf4a <- mutate(bf4a,
+  mod = list(update(mod,
+    file = paste0("fits/bf4a_", class),
+    control = list(adapt_delta = 0.99),
+    warmup = 4000,
+    iter = 5000,
+    cores = 4
+  ))
+)
+
+bf4 <- mutate(bf4,
+  mod = list(update(mod,
+    file = paste0("fits/bf4_", class),
+    control = list(adapt_delta = 0.95),
+    warmup = 4000,
+    iter = 5000,
+    cores = 4
+  ))
+)
+#############################################################################
+
+
+plot_pri_post_fixed(bf4$mod[[1]])
+plot_pri_post_sd(bf4$mod[[1]])
+plot_pri_post_sd(bf4a$mod[[1]])
 plot_pri_post_fixed(bf4a$mod[[1]])
-plot_pri_post(bf4a$mod[[1]])
 predict_posterior_expected(bf4)
 predict_expected_contrasts(bf4, 0)
 
@@ -849,3 +800,91 @@ stan_student_t_rng = quantile(y3, c(0.05, 0.5, 0.95))
 do.call(rbind, l1)
 
 #######################################################################
+
+
+d |>
+  mutate(
+    prior_dist = list(tidybayes::parse_dist(priors) |> 
+    rename(dist_class = class))
+  ) |>
+  unnest(prior_dist) |>
+    ggplot(aes(ydist = .dist_obj, color = coef)) +
+    stat_slab(fill = NA)
+
+library(ggdist)
+brms::set_prior("student_t(3, 0, 2)", class = "sd") |>
+tidybayes::parse_dist()
+ggplot(aes(ydist = .dist_obj)) +
+stat_slab()
+
+temp <- bf4a$mod[[1]]
+
+tidy_draws(temp) |> 
+select(starts_with("prior")) |>
+rename_with(~ str_remove(.x, "prior_"))
+predict.brmsfit
+
+mod <- prior_only_bf4a$mod[[1]]
+dd <- prior_only_bf4a$data[[1]]
+pp_check(dd$load, posterior_predict(mod, ndraws = 15), ppc_dens_overlay)
+coord_cartesian(xlim = c(0, 10), ylim = c(0, 1))
+
+summary(dd)
+hist(dd$load)
+plot(density(dd$load))
+summary(t(posterior_predict(mod)))
+
+
+prior_predictive_check <- function(models) {
+  # models <- bf4a
+  models <- mutate(models,
+    newdata = list(select(tidy_draws(mod), starts_with("prior")) |>
+      rename_with(~ str_remove(.x, "prior_"))
+  ))
+  models <- mutate(models,
+    pred = list(tidybayes::add_predicted_draws(newdata, mod, ndraws = 15)),
+    lims = list(tibble(
+      xmin = min(
+        quantile(data$load, .001),
+        quantile(pred$.prediction, .001)
+      ),
+      xmax = max(
+        quantile(data$load, .999),
+        quantile(pred$.prediction, .999)
+      ))
+    )
+  )
+  ggplot() + 
+  geom_line(
+    data = unnest(models, data),
+    aes(x = load),
+    stat = "density", size = 1
+  ) +
+  geom_line(
+    data = unnest(models, pred),
+    aes(x = .prediction, group = .draw),
+    stat = "density", alpha = 0.15, size = 1
+  ) +
+  facet_wrap(~class, scales = "free", labeller = fuel_class_labeller) +
+  coord_cartesian_panels(
+    panel_limits = unnest(select(models, lims), lims)
+  )
+}
+prior_predictive_check(bf4a)
+
+summary(bf4a$mod[[1]])$fixed
+summary(bf4a$mod[[1]])$random
+
+rhat(bf4a$mod[[1]]$fit)
+neff_ratio(bf4a$mod[[1]]$fit)
+summary(bf4a$mod[[1]])
+rstan::summary.stanfit(bf4a$mod[[1]])
+
+
+# summarize draws for selected variables
+as_draws_df(bf4a$mod[[1]]) |>
+  select(starts_with(c("b_", "sd_")), shape, hu) |>
+  posterior::summarize_draws(
+    "mean", ~posterior::quantile2(.x, c(0.05, .5, .95)), "rhat", "ess_bulk",
+    "ess_tail"
+  )

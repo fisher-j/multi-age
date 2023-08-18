@@ -487,9 +487,8 @@ library(bayesplot)
 library(ggdist)
 ```
 
-I'll use `brms` with the same formula I used for the lmm above:
-
-### Data
+I'll use `brms` with the same formula I used for the lmm above. First we'll
+reload our data.
 
 All the data is nested to facilitate modeling each fuel class separately. We'll
 look at the average loading to get an idea of the data.
@@ -609,7 +608,7 @@ bf2 <- mutate(d,
 
 plot_pri_post <- function(mod) {
   tidy_draws(mod) |> 
-  select(c(matches("b_"), matches("sd"), matches("sigma"))) |>
+  select(c(matches("b_"), matches("sd"), matches("sigma"), matches("hu"))) |>
   pivot_longer(everything()) |>
   mutate(
     name = if_else(
@@ -662,12 +661,12 @@ posterior_predictive_check <- function(models) {
     pred = list(tidybayes::add_predicted_draws(data, mod, ndraws = 15)),
     lims = list(tibble(
       xmin = min(
-        quantile(data$load, .0001),
-        quantile(pred$.prediction, .0001)
+        quantile(data$load, .001),
+        quantile(pred$.prediction, .001)
       ),
       xmax = max(
-        quantile(data$load, .9999),
-        quantile(pred$.prediction, .9999)
+        quantile(data$load, .999),
+        quantile(pred$.prediction, .999)
       ))
     )
   )
@@ -761,7 +760,7 @@ W_j &\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 \text{shape} &\sim \operatorname{Gamma}(0.01, 0.01)\\
 \text{hu} &\sim \operatorname{beta}(1, 1)
 \end{align*}
-$$
+$$ {#eq-bf4a}
 
 Here is an interpretation for each line of the above model.
 
@@ -814,7 +813,7 @@ proportions of that total.
 In this regard, with either independent, or independet priors, further work 
 could be done on establshing the relative importance of each variance component
 and setting priors that reflect these differences. For our nesting structure, 
-this means defining the lenght scale over which fuels are expected to vary 
+this means defining the length scale over which fuels are expected to vary 
 most/least, from 10 m to 50 m to > 100 m, to thousands of meters.
 
 #### Compute priors
@@ -894,13 +893,13 @@ I will though, sample from the priors while fitting the model in order to plot t
 
 ```{r}
 
-# temp <- mutate(bf3, 
-#   mod_prior = list(update(mod, 
+# prior_only_bf4a <- mutate(bf4a, 
+#   mod = list(update(mod, 
 #     sample_prior = "only", 
 #     cores = 4,
-#     warmup = 6000,
-#     iter = 7000,
-#     control = list(adapt_delta = .999)
+#     warmup = 4000,
+#     iter = 5000,
+#     control = list(adapt_delta = .99)
 #   ))
 # )
 
@@ -1016,6 +1015,39 @@ bf5 <- mutate(d,
 )
 
 ```
+
+#### Model summaries
+
+```{r}
+#| warning: false
+#| label: tbl-model-summaries
+#| tbl-cap: >
+#|   Summaries of parameters and dianostics. Rhat is a measure of model
+#|   convergence, well mixed chains have an Rhat of 1, bulk and tail ESS are
+#|   measures of effective sample size.
+
+my_summary <- function(mod) {
+  as_draws_df(mod) |>
+    select(starts_with(c("b_", "sd_")), shape, hu) |>
+    posterior::summarize_draws(
+      "mean", ~posterior::quantile2(.x, c(0.05, .5, .95)), "rhat", "ess_bulk",
+      "ess_tail"
+    )
+}
+
+bf4a |>
+  mutate(
+    summary = list(my_summary(mod))
+  ) |>
+  select(summary) |>
+  unnest(summary) |>
+  mutate(
+    variable = str_remove_all(variable, "b_._|_a_")
+  ) |>
+  knitr::kable(digits = c(NA, NA, 2, 2, 2, 2, 2, 0, 0))
+
+```
+
 
 #### Prior check
 
@@ -1171,8 +1203,9 @@ predict_expected_contrasts <- function(data, rope_size, plot = TRUE,
 
 ```{r}
 #| label: fig-compare-expected
-#| fig-cap: Differences between expected values for each treatment, with 95%
-#|   continuous interval shown. 
+#| fig-cap: 
+#|   Differences between expected values for each treatment, with 95% continuous
+#|   interval shown.
 #| echo: false
 
 expected_contrasts <- predict_expected_contrasts(bf4a, 0)
@@ -1207,27 +1240,86 @@ expected_contrasts |>
 
 ```
 
+#### R squared
+
+```{r}
+#| label: tbl-R2
+#| tbl-cap: >
+#|   This version of R2 is recommended by Gelman et al. (2019). It is defined as
+#|   the variance in predictions divided by the variance in predictions plus
+#|   the expected variance of the errors.
+
+bf4a |>
+mutate(
+  R_squared = list(as_tibble(bayes_R2(mod)))
+) |>
+select(R_squared) |>
+unnest(R_squared) |>
+knitr::kable(digits = 2)
+
+```
+
 ## Final
 
-### Model
+### Model formula and prior explanation
 
-#### Priors explanation
+The final model is described in @eq-bf4a. The description of the meaning of the
+priors in the following list should probably be included for explanation.
 
 ### fiting and diagnostics
 
-#### Convergence
-
-#### Posterior predictive check
+- The actual code used to fit the model in `brms` should be included in an
+  appendix. 
+- @fig-gamma-pri-post should be included as an example of the connection between
+  our priors and posterior distributions.
+- We should summarize rhat and tail ess for all models as shown in @tbl-model-summaries
+  - R-hat values were all below 1.005
+  - Bulk and tail effective sample sizes were generally above 1000, with the
+    exception of plot and corner SD's for 1000-hr and Live vegetation fuels,
+    which were above 640.
+  - These should be adequate effective sample sizes for robust inference.
+- @fig-gamma-pp-check should be included to show model fit 
+- @tbl-R2 gives an interpretation of R-squared for bayesian models for each of
+  our models.
 
 ### Results
 
 #### Predicted means
 
+- The posterior effect of treatment is summarized in @fig-expected-predictions.
+- For 1-hr fuels, treatments HD and HA show patterns of higher loading. This may
+  have to do with more fine fuel inputs from higher retention. This could lead
+  to increased fire behavior, which could be of benefit if attempting to burn
+  under marginal conditions.
+- The HD treatment shows the potential for higher loading of duff and litter.
+  This could be due to the same effect as for 1-hr fuels, but the HA treatement
+  does not show a similar trend in this case. This could be explained by a
+  higher probability of sampling near a trees base, where duff and litter load
+  are known to be higher.
+- An obvious trend in live vegetation is revealed in the GS treatment, where
+  tree sprouts and brush was able to regenerate without any competition. The
+  potentially reduced live vegetation in the HA treatment is unexpected.
+
 #### Predicted contrasts
+
+- Pairwise comparison of treatment efffect is sumarized in @fig-compare-expected
+- Contrasts take into account how expected predictions co-vary and is a better
+  indicato of potential differences between treatments.
+- If we take the 95% credible interval as the measure of "significant
+  differences" between treatments, then the HA treatment would be considered to
+  result in greater fuel load than the GS treatment, and the opposite trend
+  would be true for live vegetation: HA is greater than GS.
+- The posterior distributions of contrasts reveal more potential differences
+  with somewhat reduced certainty for 1-hr, Duff & litter, and Live vegetation.
+  - It is also likely that the LD treatment has lower 1-hr fuel loading than HA.
+  - Similar to the HA treatment, the HD treatment also appears to have greater
+    loading than GS.
+  - For Duff & litter, the HD treatment may have greater load than HA
+  - For live vegetation, LD may have greater load than HA.
+- For 10, 100, and 1000-hr fuels, there is no real detectable differences
+  between treatments.
+
 
 # TODO:
 
 - ICC
-- R2
-- x and y axis labels
-- finalize final section
