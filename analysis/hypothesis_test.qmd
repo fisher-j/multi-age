@@ -24,13 +24,13 @@ theme_update(
 source("./scripts/coord_cartesian_panels.r")
 
 class_labels <- c(
-    onehr = "1-hr",
-    tenhr = "10-hr",
-    hundhr = "100-hr",
-    thoushr = "1,000-hr",
-    dufflitter = "Duff & litter",
-    veg = "Live vegetation"
-  )
+  onehr = "1-hr",
+  tenhr = "10-hr",
+  hundhr = "100-hr",
+  thoushr = "1,000-hr",
+  dufflitter = "Duff & litter",
+  veg = "Live vegetation"
+)
 fuel_class_labeller <- labeller(class = class_labels, fuel_class = class_labels)
 
 ```
@@ -112,9 +112,9 @@ gh_test <- d |> rstatix::games_howell_test(load ~ treatment) |>
   rstatix::add_y_position(scales = "free", step.increase = 0.5)
 
 ggpubr::ggboxplot(d, x = "treatment", y = "load", facet.by = "class") +
-facet_wrap(~class, scales = "free") +
-ggpubr::stat_pvalue_manual(gh_test, label = "p.adj") +
-scale_y_continuous(expand = expansion(mult = c(0.05, 0.1)))
+  facet_wrap(~class, scales = "free") +
+  ggpubr::stat_pvalue_manual(gh_test, label = "p.adj") +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.1)))
 
 ```
 
@@ -1319,7 +1319,21 @@ priors in the following list should probably be included for explanation.
 - For 10, 100, and 1000-hr fuels, there is no real detectable differences
   between treatments.
 
+## TODO:
 
-# TODO:
+- Inter-class correlation: ICC
+- multivariate response to accont for correlations between fuel classes
+- Dirichlet, or similiar joint priors on random group SD's to control
+  exponential increase due to multiple independent priors
+- Include model for measurement error
+- model stations along transects
+  - this requires some fuel classes being modeled at an added heirarchical
+    level (station) while the others only get modeled to the transect level
+- Include model for deriving biomass from counts, heights, and percent cover
+  estiamtes
+  - variability + uncertainty about particle density
+  - variability + uncertainty about diameter distributions
+  - variability + uncertainty about relationship between vegetation sampling
+    cylinder observations and biomass.
+- Sample size calculations
 
-- ICC
