@@ -132,6 +132,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
@@ -141,12 +147,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
-  </div>
-</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./data_description.html" class="sidebar-item-text sidebar-link">
@@ -224,65 +224,325 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<!--
+source(knitr::purl("sprouts_import_data.qmd", tempfile()))
+-->
+<p>First, we’ll load some libraries and our data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.2     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.0
-✔ ggplot2   3.4.2     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-✔ purrr     1.0.1     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggridges)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sprouts <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"../data/Sprouts10yr.xlsx"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sprouts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 692 × 18
-   Site      Plot Trtmt  Tree Species HT1yr_m HT5yr_m HT10yr_m `HTI1-5yr`
-   &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
- 1 Camp Six     1 GS       16 LIDE       1.92    5.48     10.1      0.89 
- 2 Camp Six     1 GS       15 LIDE       1.4     3.81      9.1      0.602
- 3 Camp Six     1 GS        2 LIDE       1.34    4.26      8.9      0.73 
- 4 Camp Six     1 GS        4 LIDE       1.95    5.34      8.9      0.847
- 5 Camp Six     1 GS       18 LIDE       1.99    4.42      7.9      0.607
- 6 Camp Six     1 GS       19 LIDE       2.25    5.03      7.6      0.695
- 7 Camp Six     1 GS       21 LIDE       1.36    3.36      7.4      0.5  
- 8 Camp Six     1 GS       22 LIDE       1.04    3.11      7.2      0.518
- 9 Camp Six     1 GS        1 LIDE       0.69    3.64      7.1      0.738
-10 Camp Six     1 GS        9 LIDE       0.77    4.07      7.1      0.825
-# ℹ 682 more rows
-# ℹ 9 more variables: `HTI5-10yr` &lt;dbl&gt;, DBH10yr_cm &lt;dbl&gt;, LCBH10yr &lt;dbl&gt;,
-#   CR10yr &lt;dbl&gt;, HD10yr &lt;dbl&gt;, SDIinit &lt;dbl&gt;, AggregatedYN &lt;dbl&gt;,
-#   ResidRWonClumpYN &lt;dbl&gt;, HT10rank &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"HT..?yr_m"</span>),</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"height"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_transform =</span> \(x) <span class="fu">as.integer</span>(<span class="fu">str_extract</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>))</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(height, <span class="fu">fct_rev</span>(<span class="fu">factor</span>(year)), <span class="at">color =</span> Trtmt)) <span class="sc">+</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Species) <span class="sc">+</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Height"</span>, <span class="at">y =</span> <span class="st">"Year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Picking joint bandwidth of 0.277</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Picking joint bandwidth of 0.602</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressWarnings</span>(<span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(tidyverse)))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggridges)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggokabeito)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>sprouts <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"../data/Sprouts10yr.xlsx"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">743</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_sample</span>(sprouts, <span class="at">n =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="sprouts_import_data_files/figure-html/data-summary-1.png" class="img-fluid" width="768"></p>
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 2%">
+<col style="width: 3%">
+<col style="width: 2%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 7%">
+<col style="width: 10%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Site</th>
+<th style="text-align: right;">Plot</th>
+<th style="text-align: left;">Trtmt</th>
+<th style="text-align: right;">Tree</th>
+<th style="text-align: left;">Species</th>
+<th style="text-align: right;">HT1yr_m</th>
+<th style="text-align: right;">HT5yr_m</th>
+<th style="text-align: right;">HT10yr_m</th>
+<th style="text-align: right;">HTI1-5yr</th>
+<th style="text-align: right;">HTI5-10yr</th>
+<th style="text-align: right;">DBH10yr_cm</th>
+<th style="text-align: right;">LCBH10yr</th>
+<th style="text-align: right;">CR10yr</th>
+<th style="text-align: right;">HD10yr</th>
+<th style="text-align: right;">SDIinit</th>
+<th style="text-align: right;">AggregatedYN</th>
+<th style="text-align: right;">ResidRWonClumpYN</th>
+<th style="text-align: right;">HT10rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Waldo North</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">GS</td>
+<td style="text-align: right;">285</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: right;">1.72</td>
+<td style="text-align: right;">3.55</td>
+<td style="text-align: right;">6.30</td>
+<td style="text-align: right;">0.4575</td>
+<td style="text-align: right;">0.550</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Waldo South</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">GS</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">3.11</td>
+<td style="text-align: right;">6.00</td>
+<td style="text-align: right;">0.4925</td>
+<td style="text-align: right;">0.578</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">0.900000</td>
+<td style="text-align: right;">90.90909</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Whiskey Springs</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">HA</td>
+<td style="text-align: right;">1904</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">1.94</td>
+<td style="text-align: right;">0.1675</td>
+<td style="text-align: right;">0.196</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">536.33</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Whiskey Springs</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">HD</td>
+<td style="text-align: right;">1405</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: right;">1.83</td>
+<td style="text-align: right;">5.21</td>
+<td style="text-align: right;">9.20</td>
+<td style="text-align: right;">0.8450</td>
+<td style="text-align: right;">0.798</td>
+<td style="text-align: right;">12.5</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.998913</td>
+<td style="text-align: right;">73.60000</td>
+<td style="text-align: right;">509.90</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The data is in a wide format, variables are as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>variable_descriptions <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Site =</span> <span class="st">"One of four sites where treatments were replicated. Sites were located</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">  on similar slope positions, but across a range of aspects."</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Plot =</span> <span class="st">"There were 4 plots at each site and each was randomly assigned a</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  treatment"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Trtmt =</span> <span class="st">"Treatemnt type: GS = group selection, which is basically a small</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">  clearing, LD = low density--fewer trees remaining; HD = high density--more</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">  trees remain and they are dispersed; HA = high density aggregated--more trees</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">  remain and they are grouped into clumps."</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Tree =</span> <span class="st">"Unique sprout ID."</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Species =</span> <span class="st">"SESE = coast redwood, and LIDE = tanoak."</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">HT1yr_m =</span> <span class="st">"Sprout height one year after treatment."</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">HT5yr_m =</span> <span class="st">"Same as above, but for year 5"</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">HT10yr_m =</span> <span class="st">"Same as above, but for year 10"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">HT1-5yr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Height growth between years 1 and 5"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">HT5-10yr</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Height growth between years 5 and 10"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">DBH10yr_cm =</span> <span class="st">"Diameter at breast height in cm at year 10. Only collected for</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="st">  redwood"</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">LCBH10yr =</span> <span class="st">"Live crown base height (height to first live branch) at year 10. </span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="st">  Only collected for redwood."</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">CR10yr =</span> <span class="st">"Crown ratio (live crown length / total height) at year 10, only for</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="st">  redwood"</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">HD10yr =</span> <span class="st">"Unknown."</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">SDIinit =</span> <span class="st">"Stand density index of plot immediately after treatment."</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">AggregatedYN =</span> <span class="st">"Indicator for treatment HA."</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">ResidRWonClumpYN =</span> <span class="st">"Unknown."</span>,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">HT10rank =</span> <span class="st">"Trees species specific height ranking within plot."</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>variable_descriptions <span class="sc">|&gt;</span> </span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">imap</span>(\(x, y) <span class="fu">tibble</span>(<span class="at">Variable =</span> y, <span class="at">Description =</span> <span class="fu">gsub</span>(<span class="st">"[[:space:]]{2,}"</span>, <span class="st">" "</span>, x))) <span class="sc">|&gt;</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>(<span class="at">names_to =</span> <span class="st">"Variable"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="tbl-variable-descriptions" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;7.1: Descriptions of variables in dataset.</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 93%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Site</td>
+<td style="text-align: left;">One of four sites where treatments were replicated. Sites were located on similar slope positions, but across a range of aspects.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Plot</td>
+<td style="text-align: left;">There were 4 plots at each site and each was randomly assigned a treatment</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Trtmt</td>
+<td style="text-align: left;">Treatemnt type: GS = group selection, which is basically a small clearing, LD = low density–fewer trees remaining; HD = high density–more trees remain and they are dispersed; HA = high density aggregated–more trees remain and they are grouped into clumps.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tree</td>
+<td style="text-align: left;">Unique sprout ID.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Species</td>
+<td style="text-align: left;">SESE = coast redwood, and LIDE = tanoak.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HT1yr_m</td>
+<td style="text-align: left;">Sprout height one year after treatment.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HT5yr_m</td>
+<td style="text-align: left;">Same as above, but for year 5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HT10yr_m</td>
+<td style="text-align: left;">Same as above, but for year 10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HT1-5yr</td>
+<td style="text-align: left;">Height growth between years 1 and 5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HT5-10yr</td>
+<td style="text-align: left;">Height growth between years 5 and 10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DBH10yr_cm</td>
+<td style="text-align: left;">Diameter at breast height in cm at year 10. Only collected for redwood</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LCBH10yr</td>
+<td style="text-align: left;">Live crown base height (height to first live branch) at year 10. Only collected for redwood.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CR10yr</td>
+<td style="text-align: left;">Crown ratio (live crown length / total height) at year 10, only for redwood</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HD10yr</td>
+<td style="text-align: left;">Unknown.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SDIinit</td>
+<td style="text-align: left;">Stand density index of plot immediately after treatment.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AggregatedYN</td>
+<td style="text-align: left;">Indicator for treatment HA.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ResidRWonClumpYN</td>
+<td style="text-align: left;">Unknown.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HT10rank</td>
+<td style="text-align: left;">Trees species specific height ranking within plot.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"HT..?yr_m"</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"height"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_transform =</span> \(x) <span class="fu">as.integer</span>(<span class="fu">str_extract</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(height, <span class="fu">fct_rev</span>(<span class="fu">factor</span>(year)), <span class="at">color =</span> Trtmt)) <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Species) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Height (m)"</span>, <span class="at">y =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_okabe_ito</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-data-summary-treatments" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="sprouts_import_data_files/figure-html/fig-data-summary-treatments-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption class="figure-caption">Figure&nbsp;7.1: Height distributions for tanoak and redwood over time for each of four treatments. Treatments GS and LD have higher proportions of taller trees. Years refers to number of years after treatment.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"HT..?yr_m"</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"height"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_transform =</span> \(x) <span class="fu">as.integer</span>(<span class="fu">str_extract</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> height,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">factor</span>(Trtmt,<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"GS"</span>, <span class="st">"LD"</span>, <span class="st">"HA"</span>, <span class="st">"HD"</span>)),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">factor</span>(Species, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"SESE"</span>, <span class="st">"LIDE"</span>))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(year <span class="sc">~</span> ., <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Height (m)"</span>, <span class="at">y =</span> <span class="st">"Treatment"</span>) <span class="sc">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_okabe_ito</span>(<span class="at">name =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-data-summary-spp" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="sprouts_import_data_files/figure-html/fig-data-summary-spp-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;7.2: Similar to <a href="#fig-data-summary-treatments">Figure&nbsp;<span>7.1</span></a>, but with an emphasis on differences between speceis responses across treatments. Comparisons are made for each year. The GS treatment appears to favor redwood response the most, but all treatments show redwoods are taller than tanoak. Years refers to number of years after treatment.</figcaption>
+</figure>
+</div>
 </div>
 </div>
 

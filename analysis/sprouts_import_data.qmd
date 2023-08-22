@@ -6,26 +6,81 @@ title: Data import and description
 source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 -->
 
-```{r import}
-library("tidyverse")
+```{r}
+#| include: false
+
+ggplot2::theme_update(
+  panel.grid.major = ggplot2::element_blank(),
+  panel.grid.minor = ggplot2::element_blank()
+)
+```
+
+First, we'll load some libraries and our data.
+
+```{r}
+#| label: import-data
+
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
 library(ggridges)
 library(ggokabeito)
 
-theme_update(
-  panel.grid.major = element_blank(),
-  panel.grid.minor = element_blank()
+sprouts <- readxl::read_excel("../data/Sprouts10yr.xlsx")
+
+set.seed(743)
+slice_sample(sprouts, n = 4) |> knitr::kable()
+```
+
+The data is in a wide format, variables are as follows:
+
+```{r}
+#| label: tbl-variable-descriptions
+#| tbl-cap: Descriptions of variables in dataset.
+
+variable_descriptions <- list(
+  Site = "One of four sites where treatments were replicated. Sites were located
+  on similar slope positions, but across a range of aspects.",
+  Plot = "There were 4 plots at each site and each was randomly assigned a
+  treatment",
+  Trtmt = "Treatemnt type: GS = group selection, which is basically a small
+  clearing, LD = low density--fewer trees remaining; HD = high density--more
+  trees remain and they are dispersed; HA = high density aggregated--more trees
+  remain and they are grouped into clumps.",
+  Tree = "Unique sprout ID.",
+  Species = "SESE = coast redwood, and LIDE = tanoak.",
+  HT1yr_m = "Sprout height one year after treatment.",
+  HT5yr_m = "Same as above, but for year 5",
+  HT10yr_m = "Same as above, but for year 10",
+  `HT1-5yr` = "Height growth between years 1 and 5",
+  `HT5-10yr` = "Height growth between years 5 and 10",
+  DBH10yr_cm = "Diameter at breast height in cm at year 10. Only collected for
+  redwood",
+  LCBH10yr = "Live crown base height (height to first live branch) at year 10. 
+  Only collected for redwood.",
+  CR10yr = "Crown ratio (live crown length / total height) at year 10, only for
+  redwood",
+  HD10yr = "Unknown.",
+  SDIinit = "Stand density index of plot immediately after treatment.",
+  AggregatedYN = "Indicator for treatment HA.",
+  ResidRWonClumpYN = "Unknown.",
+  HT10rank = "Trees species specific height ranking within plot."
 )
 
-sprouts <- readxl::read_excel("../data/Sprouts10yr.xlsx")
-sprouts |> print(n=20)
-
-sprouts
+variable_descriptions |> 
+  imap(\(x, y) tibble(Variable = y, Description = gsub("[[:space:]]{2,}", " ", x))) |>
+  list_rbind(names_to = "Variable") |>
+  knitr::kable()
 
 ```
+
 
 ```{r}
 #| label: fig-data-summary-treatments
 #| fig-width: 8
+#| fig-cap: >
+#|   Height distributions for tanoak and redwood over time for each of four
+#|   treatments. Treatments GS and LD have higher proportions of taller trees.
+#|   Years refers to number of years after treatment.
+#| message: false
 
 sprouts |>
   pivot_longer(
@@ -39,7 +94,7 @@ sprouts |>
   coord_cartesian(clip = "off") +
   geom_density_ridges(alpha = .3, size = 1) +
   facet_wrap(~Species) +
-  labs(x = "Height", y = "Year") +
+  labs(x = "Height (m)", y = "Year") +
   scale_color_okabe_ito()
 
 ```
@@ -47,6 +102,13 @@ sprouts |>
 ```{r}
 #| label: fig-data-summary-spp
 #| fig-height: 8
+#| fig-cap: >
+#|   Similar to @fig-data-summary-treatments, but with an emphasis on
+#|   differences between speceis responses across treatments. Comparisons are
+#|   made for each year. The GS treatment appears to favor redwood response the
+#|   most, but all treatments show redwoods are taller than tanoak. Years refers
+#|   to number of years after treatment.
+#| message: false
 
 sprouts |>
   pivot_longer(
@@ -64,7 +126,9 @@ sprouts |>
   coord_cartesian(clip = "off") +
   geom_density_ridges(alpha = .3, size = 1) +
   facet_grid(year ~ ., labeller = label_both) +
-  labs(x = "Height", y = "Year") +
+  labs(x = "Height (m)", y = "Treatment") +
   scale_color_okabe_ito(name = "Species")
 
 ```
+
+
