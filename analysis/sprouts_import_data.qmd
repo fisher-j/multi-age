@@ -2,14 +2,29 @@
 title: Data import and description
 ---
 
+<!--
+source(knitr::purl("sprouts_import_data.qmd", tempfile()))
+-->
+
 ```{r import}
 library("tidyverse")
 library(ggridges)
+library(ggokabeito)
+
+theme_update(
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank()
+)
+
 sprouts <- readxl::read_excel("../data/Sprouts10yr.xlsx")
+sprouts |> print(n=20)
+
 sprouts
+
 ```
 
-```{r data-summary}
+```{r}
+#| label: fig-data-summary-treatments
 #| fig-width: 8
 
 sprouts |>
@@ -24,7 +39,32 @@ sprouts |>
   coord_cartesian(clip = "off") +
   geom_density_ridges(alpha = .3, size = 1) +
   facet_wrap(~Species) +
-  labs(x = "Height", y = "Year")
+  labs(x = "Height", y = "Year") +
+  scale_color_okabe_ito()
 
+```
+
+```{r}
+#| label: fig-data-summary-spp
+#| fig-height: 8
+
+sprouts |>
+  pivot_longer(
+    matches("HT..?yr_m"),
+    names_to = "year", values_to = "height",
+    names_transform = \(x) as.integer(str_extract(x, "\\d+"))
+  ) |>
+  ggplot(aes(
+    x = height,
+    y = factor(Trtmt,levels = c("GS", "LD", "HA", "HD")),
+    color = factor(Species, levels = c("SESE", "LIDE"))
+  )) +
+  scale_y_discrete(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  geom_density_ridges(alpha = .3, size = 1) +
+  facet_grid(year ~ ., labeller = label_both) +
+  labs(x = "Height", y = "Year") +
+  scale_color_okabe_ito(name = "Species")
 
 ```
