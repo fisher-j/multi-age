@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Redwoood multi-age experiment - Work log</title>
+<title>Redwoood multi-age experiment - 7&nbsp; Data import and description</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +64,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./sprouts_import_data.html" rel="next">
-<link href="./hypothesis_test.html" rel="prev">
+<link href="./work_log.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -74,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Fuels</a></li><li class="breadcrumb-item"><a href="./work_log.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Work log</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sprouts_import_data.html">Sprouts</a></li><li class="breadcrumb-item"><a href="./sprouts_import_data.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data import and description</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -140,7 +173,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./work_log.html" class="sidebar-item-text sidebar-link active">
+  <a href="./work_log.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
   </div>
 </li>
@@ -157,7 +190,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./sprouts_import_data.html" class="sidebar-item-text sidebar-link">
+  <a href="./sprouts_import_data.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data import and description</span></span></a>
   </div>
 </li>
@@ -169,41 +202,14 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">2023-07-07</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">2023-07-03</a></li>
-  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">2023-06-30</a></li>
-  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">2023-06-29</a></li>
-  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">2023-06-28</a></li>
-  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">2023-06-27</a></li>
-  <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6">2023-06-20</a></li>
-  <li><a href="#section-7" id="toc-section-7" class="nav-link" data-scroll-target="#section-7">2023-06-16</a></li>
-  <li><a href="#section-8" id="toc-section-8" class="nav-link" data-scroll-target="#section-8">2023-06-15</a></li>
-  <li><a href="#section-9" id="toc-section-9" class="nav-link" data-scroll-target="#section-9">2023-06-14</a></li>
-  <li><a href="#section-10" id="toc-section-10" class="nav-link" data-scroll-target="#section-10">2023-06-13</a></li>
-  <li><a href="#section-11" id="toc-section-11" class="nav-link" data-scroll-target="#section-11">2023-06-12</a></li>
-  <li><a href="#section-12" id="toc-section-12" class="nav-link" data-scroll-target="#section-12">2023-06-20</a></li>
-  <li><a href="#section-13" id="toc-section-13" class="nav-link" data-scroll-target="#section-13">2023-06-15</a></li>
-  <li><a href="#section-14" id="toc-section-14" class="nav-link" data-scroll-target="#section-14">2023-14-08</a></li>
-  <li><a href="#section-15" id="toc-section-15" class="nav-link" data-scroll-target="#section-15">2023-06-08</a></li>
-  <li><a href="#section-16" id="toc-section-16" class="nav-link" data-scroll-target="#section-16">2023-06-05</a></li>
-  <li><a href="#section-17" id="toc-section-17" class="nav-link" data-scroll-target="#section-17">2023-06-01</a></li>
-  <li><a href="#section-18" id="toc-section-18" class="nav-link" data-scroll-target="#section-18">2023-05-31</a></li>
-  <li><a href="#section-19" id="toc-section-19" class="nav-link" data-scroll-target="#section-19">2023-5-26</a></li>
-  <li><a href="#section-20" id="toc-section-20" class="nav-link" data-scroll-target="#section-20">2023-05-23</a></li>
-  <li><a href="#section-21" id="toc-section-21" class="nav-link" data-scroll-target="#section-21">2023-05-22</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Work log</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data import and description</span></h1>
 </div>
 
 
@@ -218,186 +224,69 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p><em>The following is a log of the work completed for this project</em></p>
-<section id="section" class="level1">
-<h1>2023-07-07</h1>
-<ul>
-<li>Emmeans for multilevel model</li>
-<li>bootstrap test of treatment significance</li>
-<li>compare to <code>nlme</code></li>
-<li>compare to model addressing heterscedasticity</li>
-</ul>
-</section>
-<section id="section-1" class="level1">
-<h1>2023-07-03</h1>
-<ul>
-<li>multi-level model</li>
-</ul>
-</section>
-<section id="section-2" class="level1">
-<h1>2023-06-30</h1>
-<ul>
-<li>explore more distributions</li>
-</ul>
-</section>
-<section id="section-3" class="level1">
-<h1>2023-06-29</h1>
-<ul>
-<li>explore other distributions, zeros</li>
-</ul>
-</section>
-<section id="section-4" class="level1">
-<h1>2023-06-28</h1>
-<ul>
-<li>added histograms + normal curves</li>
-</ul>
-</section>
-<section id="section-5" class="level1">
-<h1>2023-06-27</h1>
-<ul>
-<li>forgot these files</li>
-<li>test normality</li>
-</ul>
-</section>
-<section id="section-6" class="level1">
-<h1>2023-06-20</h1>
-<ul>
-<li>added captions</li>
-<li>look at outliers in fuel data</li>
-</ul>
-</section>
-<section id="section-7" class="level1">
-<h1>2023-06-16</h1>
-<ul>
-<li>interpret fuel load summary</li>
-</ul>
-</section>
-<section id="section-8" class="level1">
-<h1>2023-06-15</h1>
-<ul>
-<li>clean up code blocks</li>
-<li>Merge branch ‘main’ of https://github.com/fisher-j/multi-age</li>
-<li>Improve presentation of fuel loading from literature</li>
-</ul>
-</section>
-<section id="section-9" class="level1">
-<h1>2023-06-14</h1>
-<ul>
-<li>minor website change</li>
-<li>summarize total fuel loading</li>
-</ul>
-</section>
-<section id="section-10" class="level1">
-<h1>2023-06-13</h1>
-<ul>
-<li>complete vegetation loading</li>
-<li>website</li>
-<li>complete dufflitter fuel loading</li>
-</ul>
-</section>
-<section id="section-11" class="level1">
-<h1>2023-06-12</h1>
-<ul>
-<li>work on duff/litter, values from lit.</li>
-</ul>
-</section>
-<section id="section-12" class="level1">
-<h1>2023-06-20</h1>
-<ul>
-<li>Begin fuels data exploration</li>
-<li>Look for outliers</li>
-</ul>
-</section>
-<section id="section-13" class="level1">
-<h1>2023-06-15</h1>
-<ul>
-<li>Improve presentation of fuel loading values from literature</li>
-</ul>
-</section>
-<section id="section-14" class="level1">
-<h1>2023-14-08</h1>
-<ul>
-<li>Calculated vegetation fuel loading</li>
-<li>calculate duff and litter fuel load
-<ul>
-<li>summarize some depth to load values from literature</li>
-</ul></li>
-<li>calculate vegetation fuel load
-<ul>
-<li>research vegetation bulk density in literature
-<ul>
-<li>we should have measured shrub basal diameter</li>
-</ul></li>
-</ul></li>
-<li>Summarize total fuel load
-<ul>
-<li>summarize values from literature</li>
-</ul></li>
-</ul>
-</section>
-<section id="section-15" class="level1">
-<h1>2023-06-08</h1>
-<ul>
-<li>Calculate fine and coarse fuel load</li>
-<li>create test for duplicated transect or plot ids</li>
-<li>fix wrong azimuths in datasheet</li>
-<li>start with duff and litter load</li>
-</ul>
-</section>
-<section id="section-16" class="level1">
-<h1>2023-06-05</h1>
-<ul>
-<li>Start calculate fuel loading</li>
-<li>some background research on the theory behind planar intercept</li>
-<li>compile fuel particle parameters from multiple sources</li>
-</ul>
-</section>
-<section id="section-17" class="level1">
-<h1>2023-06-01</h1>
-<ul>
-<li>Finish data entry</li>
-</ul>
-</section>
-<section id="section-18" class="level1">
-<h1>2023-05-31</h1>
-<ul>
-<li>Figure showing fuel (and vegetation) sampling layout</li>
-<li>Function to combine data from all datasheets</li>
-<li>Refine data description text</li>
-<li>continued data entry</li>
-</ul>
-</section>
-<section id="section-19" class="level1">
-<h1>2023-5-26</h1>
-<ul>
-<li>Developed data input format
-<ul>
-<li>one file for each plot</li>
-</ul></li>
-<li>Created R function to ingest a datasheet in the specified format</li>
-<li><a href="./data_description.html">Documented</a> the input format and processing function</li>
-<li>Fuel data entered for 7 replicates</li>
-</ul>
-</section>
-<section id="section-20" class="level1">
-<h1>2023-05-23</h1>
-<ul>
-<li>work on development environment for coding</li>
-</ul>
-</section>
-<section id="section-21" class="level1">
-<h1>2023-05-22</h1>
-<ul>
-<li>Initialized project as a quarto book
-<ul>
-<li>learning to use Quarto building analysis website</li>
-<li>set up GitHub repository</li>
-<li>start log to track progress</li>
-</ul></li>
-</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggridges)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sprouts <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"../data/Sprouts10yr.xlsx"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sprouts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 692 × 18
+   Site      Plot Trtmt  Tree Species HT1yr_m HT5yr_m HT10yr_m `HTI1-5yr`
+   &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+ 1 Camp Six     1 GS       16 LIDE       1.92    5.48     10.1      0.89 
+ 2 Camp Six     1 GS       15 LIDE       1.4     3.81      9.1      0.602
+ 3 Camp Six     1 GS        2 LIDE       1.34    4.26      8.9      0.73 
+ 4 Camp Six     1 GS        4 LIDE       1.95    5.34      8.9      0.847
+ 5 Camp Six     1 GS       18 LIDE       1.99    4.42      7.9      0.607
+ 6 Camp Six     1 GS       19 LIDE       2.25    5.03      7.6      0.695
+ 7 Camp Six     1 GS       21 LIDE       1.36    3.36      7.4      0.5  
+ 8 Camp Six     1 GS       22 LIDE       1.04    3.11      7.2      0.518
+ 9 Camp Six     1 GS        1 LIDE       0.69    3.64      7.1      0.738
+10 Camp Six     1 GS        9 LIDE       0.77    4.07      7.1      0.825
+# ℹ 682 more rows
+# ℹ 9 more variables: `HTI5-10yr` &lt;dbl&gt;, DBH10yr_cm &lt;dbl&gt;, LCBH10yr &lt;dbl&gt;,
+#   CR10yr &lt;dbl&gt;, HD10yr &lt;dbl&gt;, SDIinit &lt;dbl&gt;, AggregatedYN &lt;dbl&gt;,
+#   ResidRWonClumpYN &lt;dbl&gt;, HT10rank &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"HT..?yr_m"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"height"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_transform =</span> \(x) <span class="fu">as.integer</span>(<span class="fu">str_extract</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(height, <span class="fu">fct_rev</span>(<span class="fu">factor</span>(year)), <span class="at">color =</span> Trtmt)) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Species) <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Height"</span>, <span class="at">y =</span> <span class="st">"Year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Picking joint bandwidth of 0.277</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Picking joint bandwidth of 0.602</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="sprouts_import_data_files/figure-html/data-summary-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -635,14 +524,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./hypothesis_test.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span>
+      <a href="./work_log.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Work log</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./sprouts_import_data.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data import and description</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
