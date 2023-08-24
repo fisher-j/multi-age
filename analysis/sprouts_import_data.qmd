@@ -35,6 +35,7 @@ The data is in a wide format, variables are as follows:
 ```{r}
 #| label: tbl-variable-descriptions
 #| tbl-cap: Descriptions of variables in dataset.
+#| echo: false
 
 variable_descriptions <- list(
   Site = "One of four sites where treatments were replicated. Sites were located
@@ -72,6 +73,14 @@ variable_descriptions |>
 
 ```
 
+Our main objectives are to:
+
+- Test for treatment effects on redwood height and diameter at year 10
+- Explore treatment effect on competition between redwood and tanoak
+- Model the relationship between both of these and harvest intensity (SDIinit)
+- Explore differences in height response over multiple remeasurements
+
+The following figures reveal possible trends in the raw data.
 
 ```{r}
 #| label: fig-data-summary-treatments
@@ -110,12 +119,17 @@ sprouts |>
 #|   to number of years after treatment.
 #| message: false
 
-sprouts |>
-  pivot_longer(
+# Function to convert heights from multiple years to long format
+lengthen_heights <- function(data) {
+  pivot_longer(data,
     matches("HT..?yr_m"),
     names_to = "year", values_to = "height",
     names_transform = \(x) as.integer(str_extract(x, "\\d+"))
-  ) |>
+  )
+}
+
+sprouts |>
+  lengthen_heights() |>
   ggplot(aes(
     x = height,
     y = factor(Trtmt,levels = c("GS", "LD", "HA", "HD")),

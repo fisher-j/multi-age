@@ -493,6 +493,14 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 </div>
 </div>
 </div>
+<p>Our main objectives are to:</p>
+<ul>
+<li>Test for treatment effects on redwood height and diameter at year 10</li>
+<li>Explore treatment effect on competition between redwood and tanoak</li>
+<li>Model the relationship between both of these and harvest intensity (SDIinit)</li>
+<li>Explore differences in height response over multiple remeasurements</li>
+</ul>
+<p>The following figures reveal possible trends in the raw data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
@@ -545,6 +553,12 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 </div>
 </div>
 </div>
+<p>Our data though are nested, we have:</p>
+<pre><code>Sites
+└─ Plots
+   └─ Trees
+      └─ Observations</code></pre>
+<p>Each Treatment is represented by one site/plot combination. Each site belongs to each treatment and vice versa. I think the terminology here is that Sites and treatments are crossed.</p>
 
 
 
