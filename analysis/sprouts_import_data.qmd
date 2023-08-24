@@ -131,4 +131,22 @@ sprouts |>
 
 ```
 
+```{r}
+#| label: fig-data-summary-sdi
+#| fig-cap: SDI vs HT for both species, across measurement years.
+#| fig-width: 8.5
+
+sprouts |>
+  lengthen_heights() |>
+  ggplot(aes(SDIinit, height, color = factor(year))) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(span = 1.2) +
+  facet_wrap(~Species) +
+  scale_okabe_ito("color")
+
+```
+
+@fig-data-summary-sdi shows that above around 400 SDI, tree heights level off.
+It also implies a steady decrease in height from 0 to around 400 SDI.
+
 
