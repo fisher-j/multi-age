@@ -39,6 +39,63 @@ composition) and the small orange circles are transect stations where duff,
 litter, and live and dead vegetation density were
 measured.](./figures/fuel_sampling_layout.png){#fig-sampling-diagram}
 
+```{r}
+#| label: fig-sampling-design
+#| fig-cap: >
+#|   Diagrammatic representation of the experimental design. Black points
+#|   are fuel transect corners, and line segments represent individual
+#|   transects.
+#| code-fold: true
+
+library(ggplot2)
+library(gt)
+library(dplyr)
+
+draw_sampling_design <- function() {
+  max <- 44.7
+  # CW from bottom left
+  xdir <- c(1, 1, -1, -1)
+  ydir <- c(1, -1, -1, 1)
+  corner_inset <- 10 / sqrt(2)
+  centerx <- xdir * corner_inset + c(0, 0, max, max)
+  centery <- ydir * corner_inset + c(0, max, max, 0)
+  xend <- xdir * 10 + centerx
+  yend <- ydir * 10 + centery
+  centers <- data.frame(centerx, centery)
+  ends <- rbind(centers, centers)
+  # Half of the x and y coordinates of the transect ends are the same as the
+  # center, and half are different.
+  ends$xend <- c(xend, centerx)
+  ends$yend <- c(centery, yend)
+
+  tidyr::expand_grid(
+    treatment = c("GS", "LD", "HA", "HD"),
+    site = factor(c(1, 2, 3, 4)), 
+    ends
+  ) |>
+    ggplot() +
+  geom_rect(
+    aes(xmin = 0, ymin = 0, xmax = 44.7, ymax = 44.7),
+    color = "black",
+    fill = NA
+  )+
+  geom_point(aes(centerx, centery)) +
+  geom_segment(aes(centerx, centery, xend = xend, yend = yend)) +
+  facet_grid(site ~ treatment, switch = "y", labeller = label_both) +
+  theme(
+    panel.grid = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.spacing = unit(0, "in")
+  ) |>
+  print()
+}
+
+draw_sampling_design()
+
+```
+
 ### Data entry
 
 Data was entered using Excel and exported as a UTF-8 csv. The file format
