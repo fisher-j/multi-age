@@ -165,7 +165,52 @@ sprouts |>
   geom_point(alpha = 0.5) +
   geom_smooth(span = 1.2) +
   facet_wrap(~Species) +
-  scale_okabe_ito("color")
+  scale_color_brewer(palette = "Set2")
+
+```
+
+Lets see what the variability among sites and plots looks like, I'll focus on
+year 10 only.
+
+@fig-data-summary-sites reveals some differences between sites, particularly for
+redwoods. Waldo North tends to have larger redwoods and Camp 6 has a large
+proportion of smaller redwoods.
+
+We can see in @fig-data-summary-plots that there seems to be differences among
+plots beyond site differences and treatment differences. We should expect plots
+to capture a portion of the variance.
+
+```{r}
+#| label: fig-data-summary-sites
+#| fig-cap: >
+#|   Distribution of heights at year 10 at each site for two species. Slabs are
+#|   normalized by sample size to reflect the raw data, plotted as dots below.
+
+library(ggdist)
+
+sprouts |>
+  ggplot(aes(HT10yr_m, Site, fill = Species)) +
+  stat_slab(aes(thickness = after_stat(pdf*n)), alpha = 0.6, scale = 0.7) +
+  stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA) +
+  scale_fill_brewer(palette = "Set2")
+
+```
+
+```{r}
+#| label: fig-data-summary-plots
+#| fig-cap: >
+#|   Same as for @fig-data-summary-sites, but for each plot (Site/treatment
+#|   interaction). Grouped by treatment.
+
+sprouts |>
+  ggplot(aes(
+      HT10yr_m,
+      interaction(Site, Trtmt, sep = " - "),
+      fill = Trtmt
+  )) +
+  stat_slab(aes(thickness = after_stat(pdf * n)), alpha = 0.5, scale = 0.7) +
+  stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA) +
+  scale_color_brewer(palette = "Set2")
 
 ```
 
