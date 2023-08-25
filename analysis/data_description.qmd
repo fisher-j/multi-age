@@ -44,7 +44,7 @@ measured.](./figures/fuel_sampling_layout.png){#fig-sampling-diagram}
 #| fig-cap: >
 #|   Diagrammatic representation of the experimental design. Black points
 #|   are fuel transect corners, and line segments represent individual
-#|   transects.
+#|   transects. The outline represent the macro-plot boundaries.
 #| code-fold: true
 
 library(ggplot2)
@@ -68,12 +68,13 @@ draw_sampling_design <- function() {
   ends$xend <- c(xend, centerx)
   ends$yend <- c(centery, yend)
 
-  tidyr::expand_grid(
+  data <- tidyr::expand_grid(
     treatment = c("GS", "LD", "HA", "HD"),
     site = factor(c(1, 2, 3, 4)), 
     ends
-  ) |>
-    ggplot() +
+  )
+  
+  p <- ggplot(data) +
   geom_rect(
     aes(xmin = 0, ymin = 0, xmax = 44.7, ymax = 44.7),
     color = "black",
@@ -81,15 +82,19 @@ draw_sampling_design <- function() {
   )+
   geom_point(aes(centerx, centery)) +
   geom_segment(aes(centerx, centery, xend = xend, yend = yend)) +
-  facet_grid(site ~ treatment, switch = "y", labeller = label_both) +
+  facet_grid(
+    site ~ treatment,
+    switch = "y"
+  ) +
   theme(
     panel.grid = element_blank(),
     axis.ticks = element_blank(),
     axis.text = element_blank(),
-    axis.title = element_blank(),
     panel.spacing = unit(0, "in")
-  ) |>
-  print()
+  ) +
+  scale_x_continuous(position = "top") +
+  labs(x = "Treatment", y = "Site")
+  print(p)
 }
 
 draw_sampling_design()
