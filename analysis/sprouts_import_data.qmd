@@ -82,6 +82,19 @@ Our main objectives are to:
 
 The following figures reveal possible trends in the raw data.
 
+@fig-data-summary-treatments shows that over time, LD and GS treatments have
+more taller trees than the other treatments, with GS having the most. This is
+true for both redwood and tanoak.
+
+@fig-data-summary-spp seems to suggest that redwood are taller across all
+treatments and years, but the GS treatment is the only one that provides a clear
+advantage to redwood.
+
+@fig-data-summary-sdi shows that above around 400 SDI, tree heights level off.
+It also implies a steady decrease in height from 0 to around 400 SDI. The
+strength of the relationship appears to be increasing over time, particularly
+for redwood.
+
 ```{r}
 #| label: fig-data-summary-treatments
 #| fig-width: 8
@@ -91,12 +104,17 @@ The following figures reveal possible trends in the raw data.
 #|   Years refers to number of years after treatment.
 #| message: false
 
-sprouts |>
-  pivot_longer(
+# Function to convert heights from multiple years to long format
+lengthen_heights <- function(data) {
+  pivot_longer(data,
     matches("HT..?yr_m"),
     names_to = "year", values_to = "height",
     names_transform = \(x) as.integer(str_extract(x, "\\d+"))
-  ) |>
+  )
+}
+
+sprouts |>
+  lengthen_heights() |>
   ggplot(aes(height, fct_rev(factor(year)), color = Trtmt)) +
   scale_y_discrete(expand = c(0, 0)) +
   scale_x_continuous(expand = c(0, 0)) +
@@ -118,15 +136,6 @@ sprouts |>
 #|   most, but all treatments show redwoods are taller than tanoak. Years refers
 #|   to number of years after treatment.
 #| message: false
-
-# Function to convert heights from multiple years to long format
-lengthen_heights <- function(data) {
-  pivot_longer(data,
-    matches("HT..?yr_m"),
-    names_to = "year", values_to = "height",
-    names_transform = \(x) as.integer(str_extract(x, "\\d+"))
-  )
-}
 
 sprouts |>
   lengthen_heights() |>
@@ -159,9 +168,6 @@ sprouts |>
   scale_okabe_ito("color")
 
 ```
-
-@fig-data-summary-sdi shows that above around 400 SDI, tree heights level off.
-It also implies a steady decrease in height from 0 to around 400 SDI.
 
 Our data though are nested, we have:
 

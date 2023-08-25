@@ -46,6 +46,7 @@ measured.](./figures/fuel_sampling_layout.png){#fig-sampling-diagram}
 #|   are fuel transect corners, and line segments represent individual
 #|   transects. The outline represent the macro-plot boundaries.
 #| code-fold: true
+#| message: false
 
 library(ggplot2)
 library(gt)
@@ -90,7 +91,8 @@ draw_sampling_design <- function() {
     panel.grid = element_blank(),
     axis.ticks = element_blank(),
     axis.text = element_blank(),
-    panel.spacing = unit(0, "in")
+    panel.spacing = unit(0, "in"),
+    aspect.ratio = 1
   ) +
   scale_x_continuous(position = "top") +
   labs(x = "Treatment", y = "Site")
