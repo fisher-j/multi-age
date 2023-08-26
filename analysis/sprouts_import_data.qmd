@@ -46,7 +46,7 @@ variable_descriptions <- list(
   clearing, LD = low density--fewer trees remaining; HD = high density--more
   trees remain and they are dispersed; HA = high density aggregated--more trees
   remain and they are grouped into clumps.",
-  Tree = "Unique sprout ID.",
+  Tree = "Unique sprout ID within Site, Plot, and Species",
   Species = "SESE = coast redwood, and LIDE = tanoak.",
   HT1yr_m = "Sprout height one year after treatment.",
   HT5yr_m = "Same as above, but for year 5",
@@ -110,7 +110,8 @@ lengthen_heights <- function(data) {
     matches("HT..?yr_m"),
     names_to = "year", values_to = "height",
     names_transform = \(x) as.integer(str_extract(x, "\\d+"))
-  )
+  ) |>
+  relocate(c(year, height), .after = Species)
 }
 
 sprouts |>
@@ -122,7 +123,7 @@ sprouts |>
   geom_density_ridges(alpha = .3, size = 1) +
   facet_wrap(~Species) +
   labs(x = "Height (m)", y = "Year") +
-  scale_color_okabe_ito()
+  scale_color_brewer(palette = "Set2")
 
 ```
 
@@ -150,7 +151,7 @@ sprouts |>
   geom_density_ridges(alpha = .3, size = 1) +
   facet_grid(year ~ ., labeller = label_both) +
   labs(x = "Height (m)", y = "Treatment") +
-  scale_color_okabe_ito(name = "Species")
+  scale_color_brewer(palette = "Set2", name = "Species")
 
 ```
 
@@ -247,4 +248,46 @@ d <- sprouts |>
   implicit_grouping() |>
   lengthen_heights()
 ```
+
+## Model 1
+
+In addition to characterizing redwood growth response, we would also like to
+accurately describe differences between redwood and tanoak. This is probably
+best accomplished by including species in the model, and modeling the difference
+directly.
+
+because of our multiple grouping variables, model complexity can grow quickly,
+especially when considering how covariates interact with grouping variables,
+which lead to random slope models
+
+I'm also wondering what it means to include a categorical variable as a random
+slope (on the LHS of the random parts). Michael Clark [explores this scenario],
+with some simpler data.
+
+[explores this scenario]: https://m-clark.github.io/posts/2020-03-01-random-categorical
+
+```{r}
+
+m <- lmer(
+  height ~ scale(SDIinit) * factor(year) * Species + (1 | Site) + (1 | Plot) + (1 | Tree),
+  # data = subset(d, Species == "SESE")
+  data = d
+)
+m2 <- lmer(
+  height ~ scale(SDIinit) * factor(year) * Species + (1 | Site) + (1 | Plot) + (1 | Tree),
+  # data = subset(d, Species == "SESE")
+  data = d
+)
+m3 <- lmer(
+  height ~ scale(SDIinit) * factor(year) * Species + (Species | Site) + (Species | Plot) + (Species | Tree),
+  # data = subset(d, Species == "SESE")
+  data = d
+)
+
+m
+m2
+m3
+
+```
+
 

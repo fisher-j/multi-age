@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Redwoood multi-age experiment - 7&nbsp; Data import and description</title>
+<title>Redwoood multi-age experiment - 6&nbsp; Data import and description</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +64,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./work_log.html" rel="prev">
+<link href="./work_log.html" rel="next">
+<link href="./hypothesis_test.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -107,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sprouts_import_data.html">Sprouts</a></li><li class="breadcrumb-item"><a href="./sprouts_import_data.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data import and description</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sprouts_import_data.html">Sprouts</a></li><li class="breadcrumb-item"><a href="./sprouts_import_data.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data import and description</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -171,12 +172,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./work_log.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
-  </div>
-</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -191,25 +186,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./sprouts_import_data.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data import and description</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data import and description</span></span></a>
   </div>
 </li>
       </ul>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./work_log.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link active" data-scroll-target="#data-wrangling"><span class="header-section-number">6.1</span> Data wrangling</a></li>
+  <li><a href="#model-1" id="toc-model-1" class="nav-link" data-scroll-target="#model-1"><span class="header-section-number">6.2</span> Model 1</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data import and description</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data import and description</span></h1>
 </div>
 
 
@@ -371,7 +379,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <div class="cell-output-display">
 <div id="tbl-variable-descriptions" class="anchored">
 <table class="table table-sm table-striped small">
-<caption>Table&nbsp;7.1: Descriptions of variables in dataset.</caption>
+<caption>Table&nbsp;6.1: Descriptions of variables in dataset.</caption>
 <colgroup>
 <col style="width: 6%">
 <col style="width: 93%">
@@ -397,7 +405,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 </tr>
 <tr class="even">
 <td style="text-align: left;">Tree</td>
-<td style="text-align: left;">Unique sprout ID.</td>
+<td style="text-align: left;">Unique sprout ID within Site, Plot, and Species</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Species</td>
@@ -468,9 +476,9 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <li>Explore differences in height response over multiple remeasurements</li>
 </ul>
 <p>The following figures reveal possible trends in the raw data.</p>
-<p><a href="#fig-data-summary-treatments">Figure&nbsp;<span>7.1</span></a> shows that over time, LD and GS treatments have more taller trees than the other treatments, with GS having the most. This is true for both redwood and tanoak.</p>
-<p><a href="#fig-data-summary-spp">Figure&nbsp;<span>7.2</span></a> seems to suggest that redwood are taller across all treatments and years, but the GS treatment is the only one that provides a clear advantage to redwood.</p>
-<p><a href="#fig-data-summary-sdi">Figure&nbsp;<span>7.3</span></a> shows that above around 400 SDI, tree heights level off. It also implies a steady decrease in height from 0 to around 400 SDI. The strength of the relationship appears to be increasing over time, particularly for redwood.</p>
+<p><a href="#fig-data-summary-treatments">Figure&nbsp;<span>6.1</span></a> shows that over time, LD and GS treatments have more taller trees than the other treatments, with GS having the most. This is true for both redwood and tanoak.</p>
+<p><a href="#fig-data-summary-spp">Figure&nbsp;<span>6.2</span></a> seems to suggest that redwood are taller across all treatments and years, but the GS treatment is the only one that provides a clear advantage to redwood.</p>
+<p><a href="#fig-data-summary-sdi">Figure&nbsp;<span>6.3</span></a> shows that above around 400 SDI, tree heights level off. It also implies a steady decrease in height from 0 to around 400 SDI. The strength of the relationship appears to be increasing over time, particularly for redwood.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to convert heights from multiple years to long format</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>lengthen_heights <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
@@ -478,24 +486,25 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"HT..?yr_m"</span>),</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"height"</span>,</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_transform =</span> \(x) <span class="fu">as.integer</span>(<span class="fu">str_extract</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengthen_heights</span>() <span class="sc">|&gt;</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(height, <span class="fu">fct_rev</span>(<span class="fu">factor</span>(year)), <span class="at">color =</span> Trtmt)) <span class="sc">+</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Species) <span class="sc">+</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Height (m)"</span>, <span class="at">y =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_okabe_ito</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="fu">c</span>(year, height), <span class="at">.after =</span> Species)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengthen_heights</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(height, <span class="fu">fct_rev</span>(<span class="fu">factor</span>(year)), <span class="at">color =</span> Trtmt)) <span class="sc">+</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Species) <span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Height (m)"</span>, <span class="at">y =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-data-summary-treatments" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="sprouts_import_data_files/figure-html/fig-data-summary-treatments-1.png" class="img-fluid figure-img" width="768"></p>
-<figcaption class="figure-caption">Figure&nbsp;7.1: Height distributions for tanoak and redwood over time for each of four treatments. Treatments GS and LD have higher proportions of taller trees. Years refers to number of years after treatment.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;6.1: Height distributions for tanoak and redwood over time for each of four treatments. Treatments GS and LD have higher proportions of taller trees. Years refers to number of years after treatment.</figcaption>
 </figure>
 </div>
 </div>
@@ -514,12 +523,12 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(year <span class="sc">~</span> ., <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Height (m)"</span>, <span class="at">y =</span> <span class="st">"Treatment"</span>) <span class="sc">+</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_okabe_ito</span>(<span class="at">name =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>, <span class="at">name =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-data-summary-spp" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="sprouts_import_data_files/figure-html/fig-data-summary-spp-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;7.2: Similar to <a href="#fig-data-summary-treatments">Figure&nbsp;<span>7.1</span></a>, but with an emphasis on differences between speceis responses across treatments. Comparisons are made for each year. The GS treatment appears to favor redwood response the most, but all treatments show redwoods are taller than tanoak. Years refers to number of years after treatment.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;6.2: Similar to <a href="#fig-data-summary-treatments">Figure&nbsp;<span>6.1</span></a>, but with an emphasis on differences between speceis responses across treatments. Comparisons are made for each year. The GS treatment appears to favor redwood response the most, but all treatments show redwoods are taller than tanoak. Years refers to number of years after treatment.</figcaption>
 </figure>
 </div>
 </div>
@@ -531,7 +540,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">span =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Species) <span class="sc">+</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_okabe_ito</span>(<span class="st">"color"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
 </div>
@@ -539,7 +548,57 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <div id="fig-data-summary-sdi" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="sprouts_import_data_files/figure-html/fig-data-summary-sdi-1.png" class="img-fluid figure-img" width="816"></p>
-<figcaption class="figure-caption">Figure&nbsp;7.3: SDI vs HT for both species, across measurement years.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;6.3: SDI vs HT for both species, across measurement years.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Lets see what the variability among sites and plots looks like, I’ll focus on year 10 only.</p>
+<p><a href="#fig-data-summary-sites">Figure&nbsp;<span>6.4</span></a> reveals some differences between sites, particularly for redwoods. Waldo North tends to have larger redwoods and Camp 6 has a large proportion of smaller redwoods.</p>
+<p>We can see in <a href="#fig-data-summary-plots">Figure&nbsp;<span>6.5</span></a> that there seems to be differences among plots beyond site differences and treatment differences. We should expect plots to capture a portion of the variance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ggdist'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:ggridges':
+
+    scale_point_color_continuous, scale_point_color_discrete,
+    scale_point_colour_continuous, scale_point_colour_discrete,
+    scale_point_fill_continuous, scale_point_fill_discrete,
+    scale_point_size_continuous</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(HT10yr_m, Site, <span class="at">fill =</span> Species)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_slab</span>(<span class="fu">aes</span>(<span class="at">thickness =</span> <span class="fu">after_stat</span>(pdf<span class="sc">*</span>n)), <span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">scale =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_dotsinterval</span>(<span class="at">side =</span> <span class="st">"bottom"</span>, <span class="at">scale =</span> <span class="fl">0.7</span>, <span class="at">slab_color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-data-summary-sites" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="sprouts_import_data_files/figure-html/fig-data-summary-sites-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;6.4: Distribution of heights at year 10 at each site for two species. Slabs are normalized by sample size to reflect the raw data, plotted as dots below.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>      HT10yr_m,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">interaction</span>(Site, Trtmt, <span class="at">sep =</span> <span class="st">" - "</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> Trtmt</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_slab</span>(<span class="fu">aes</span>(<span class="at">thickness =</span> <span class="fu">after_stat</span>(pdf <span class="sc">*</span> n)), <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">scale =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_dotsinterval</span>(<span class="at">side =</span> <span class="st">"bottom"</span>, <span class="at">scale =</span> <span class="fl">0.7</span>, <span class="at">slab_color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-data-summary-plots" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="sprouts_import_data_files/figure-html/fig-data-summary-plots-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;6.5: Same as for <a href="#fig-data-summary-sites">Figure&nbsp;<span>6.4</span></a>, but for each plot (Site/treatment interaction). Grouped by treatment.</figcaption>
 </figure>
 </div>
 </div>
@@ -550,8 +609,194 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
    └─ Trees
       └─ Observations</code></pre>
 <p>Each Treatment is represented by one site/plot combination. Each site belongs to each treatment and vice versa. I think the terminology here is that Sites and treatments are crossed.</p>
+<section id="data-wrangling" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="data-wrangling"><span class="header-section-number">6.1</span> Data wrangling</h2>
+<p>Currently, <code>Plot</code> is only unique within <code>Site</code> and <code>Tree</code> is only unique within <code>Site</code>, <code>Trtmt</code>, and <code>Species</code>. It will be more convenient if <code>Plot</code> and <code>Tree</code> are globally unique identifiers. This makes the nesting structure implicit, and we can simplify our model syntax.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: Matrix</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'Matrix'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:tidyr':
+
+    expand, pack, unpack</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>implicit_grouping <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Plot =</span> <span class="fu">cur_group_id</span>(), <span class="at">.by =</span> <span class="fu">c</span>(Site, Trtmt)) <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Tree =</span> <span class="fu">row_number</span>())</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> sprouts <span class="sc">|&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">implicit_grouping</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengthen_heights</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="model-1" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="model-1"><span class="header-section-number">6.2</span> Model 1</h2>
+<p>In addition to characterizing redwood growth response, we would also like to accurately describe differences between redwood and tanoak. This is probably best accomplished by including species in the model, and modeling the difference directly.</p>
+<p>because of our multiple grouping variables, model complexity can grow quickly, especially when considering how covariates interact with grouping variables, which lead to random slope models</p>
+<p>I’m also wondering what it means to include a categorical variable as a random slope (on the LHS of the random parts). Michael Clark <a href="https://m-clark.github.io/posts/2020-03-01-random-categorical">explores this scenario</a>, with some simpler data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  height <span class="sc">~</span> <span class="fu">scale</span>(SDIinit) <span class="sc">*</span> <span class="fu">factor</span>(year) <span class="sc">*</span> Species <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Site) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Plot) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Tree),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data = subset(d, Species == "SESE")</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> d</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  height <span class="sc">~</span> <span class="fu">scale</span>(SDIinit) <span class="sc">*</span> <span class="fu">factor</span>(year) <span class="sc">*</span> Species <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Site) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Plot) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Tree),</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data = subset(d, Species == "SESE")</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> d</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  height <span class="sc">~</span> <span class="fu">scale</span>(SDIinit) <span class="sc">*</span> <span class="fu">factor</span>(year) <span class="sc">*</span> Species <span class="sc">+</span> (Species <span class="sc">|</span> Site) <span class="sc">+</span> (Species <span class="sc">|</span> Plot) <span class="sc">+</span> (Species <span class="sc">|</span> Tree),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data = subset(d, Species == "SESE")</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> d</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: height ~ scale(SDIinit) * factor(year) * Species + (1 | Site) +  
+    (1 | Plot) + (1 | Tree)
+   Data: d
+REML criterion at convergence: 6891.711
+Random effects:
+ Groups   Name        Std.Dev.
+ Tree     (Intercept) 0.9316  
+ Plot     (Intercept) 0.5876  
+ Site     (Intercept) 0.0000  
+ Residual             1.0148  
+Number of obs: 2076, groups:  Tree, 692; Plot, 16; Site, 4
+Fixed Effects:
+                              (Intercept)  
+                                   0.6038  
+                           scale(SDIinit)  
+                                  -0.2279  
+                            factor(year)5  
+                                   1.5517  
+                           factor(year)10  
+                                   3.2835  
+                              SpeciesSESE  
+                                   0.7089  
+             scale(SDIinit):factor(year)5  
+                                  -0.3008  
+            scale(SDIinit):factor(year)10  
+                                  -0.6670  
+               scale(SDIinit):SpeciesSESE  
+                                  -0.1028  
+                factor(year)5:SpeciesSESE  
+                                   1.6290  
+               factor(year)10:SpeciesSESE  
+                                   3.2528  
+ scale(SDIinit):factor(year)5:SpeciesSESE  
+                                  -0.3771  
+scale(SDIinit):factor(year)10:SpeciesSESE  
+                                  -0.7222  
+optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 1 lme4 warnings </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>m2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: height ~ scale(SDIinit) * factor(year) * Species + (1 | Site) +  
+    (1 | Plot) + (1 | Tree)
+   Data: d
+REML criterion at convergence: 6891.711
+Random effects:
+ Groups   Name        Std.Dev.
+ Tree     (Intercept) 0.9316  
+ Plot     (Intercept) 0.5876  
+ Site     (Intercept) 0.0000  
+ Residual             1.0148  
+Number of obs: 2076, groups:  Tree, 692; Plot, 16; Site, 4
+Fixed Effects:
+                              (Intercept)  
+                                   0.6038  
+                           scale(SDIinit)  
+                                  -0.2279  
+                            factor(year)5  
+                                   1.5517  
+                           factor(year)10  
+                                   3.2835  
+                              SpeciesSESE  
+                                   0.7089  
+             scale(SDIinit):factor(year)5  
+                                  -0.3008  
+            scale(SDIinit):factor(year)10  
+                                  -0.6670  
+               scale(SDIinit):SpeciesSESE  
+                                  -0.1028  
+                factor(year)5:SpeciesSESE  
+                                   1.6290  
+               factor(year)10:SpeciesSESE  
+                                   3.2528  
+ scale(SDIinit):factor(year)5:SpeciesSESE  
+                                  -0.3771  
+scale(SDIinit):factor(year)10:SpeciesSESE  
+                                  -0.7222  
+optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 1 lme4 warnings </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>m3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: height ~ scale(SDIinit) * factor(year) * Species + (Species |  
+    Site) + (Species | Plot) + (Species | Tree)
+   Data: d
+REML criterion at convergence: 6609.582
+Random effects:
+ Groups   Name        Std.Dev. Corr 
+ Tree     (Intercept) 0.02484       
+          SpeciesSESE 1.22468  0.11 
+ Plot     (Intercept) 0.41121       
+          SpeciesSESE 0.60738  0.41 
+ Site     (Intercept) 0.10515       
+          SpeciesSESE 0.59489  -1.00
+ Residual             1.01481       
+Number of obs: 2076, groups:  Tree, 692; Plot, 16; Site, 4
+Fixed Effects:
+                              (Intercept)  
+                                   0.5933  
+                           scale(SDIinit)  
+                                  -0.2193  
+                            factor(year)5  
+                                   1.5517  
+                           factor(year)10  
+                                   3.2835  
+                              SpeciesSESE  
+                                   0.7254  
+             scale(SDIinit):factor(year)5  
+                                  -0.3008  
+            scale(SDIinit):factor(year)10  
+                                  -0.6670  
+               scale(SDIinit):SpeciesSESE  
+                                  -0.1090  
+                factor(year)5:SpeciesSESE  
+                                   1.6290  
+               factor(year)10:SpeciesSESE  
+                                   3.2528  
+ scale(SDIinit):factor(year)5:SpeciesSESE  
+                                  -0.3771  
+scale(SDIinit):factor(year)10:SpeciesSESE  
+                                  -0.7222  
+optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 1 lme4 warnings </code></pre>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -789,11 +1034,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./work_log.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Work log</span></span>
+      <a href="./hypothesis_test.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./work_log.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Work log</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
