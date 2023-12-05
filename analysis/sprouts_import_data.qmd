@@ -84,7 +84,8 @@ The following figures reveal possible trends in the raw data.
 
 @fig-data-summary-treatments shows that over time, LD and GS treatments have
 more taller trees than the other treatments, with GS having the most. This is
-true for both redwood and tanoak.
+true for both redwood and tanoak. Additionaly, for redwood it appears that HA
+may have taller trees than HD, at least in year 10.
 
 @fig-data-summary-spp seems to suggest that redwood are taller across all
 treatments and years, but the GS treatment is the only one that provides a clear
@@ -94,6 +95,11 @@ advantage to redwood.
 It also implies a steady decrease in height from 0 to around 400 SDI. The
 strength of the relationship appears to be increasing over time, particularly
 for redwood.
+
+Across all treatments, it is also interesting to note that over times, the
+distributions seem to becoming more multi-modal. This makes sense, as
+conditions, in any treatment are not homogeneous, and over time, small,
+within-plot variation (likely due to shade) becomes more apparent.
 
 ```{r}
 #| label: fig-data-summary-treatments
@@ -270,17 +276,14 @@ with some simpler data.
 
 m <- lmer(
   height ~ scale(SDIinit) * factor(year) * Species + (1 | Site) + (1 | Plot) + (1 | Tree),
-  # data = subset(d, Species == "SESE")
   data = d
 )
 m2 <- lmer(
   height ~ scale(SDIinit) * factor(year) * Species + (1 | Site) + (1 | Plot) + (1 | Tree),
-  # data = subset(d, Species == "SESE")
   data = d
 )
 m3 <- lmer(
   height ~ scale(SDIinit) * factor(year) * Species + (Species | Site) + (Species | Plot) + (Species | Tree),
-  # data = subset(d, Species == "SESE")
   data = d
 )
 
