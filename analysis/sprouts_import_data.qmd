@@ -1,5 +1,8 @@
 ---
 title: Data import and description
+format:
+  html:
+    code-fold: true
 ---
 
 <!--
@@ -9,11 +12,23 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 ```{r}
 #| include: false
 
+# Quickly iterate over random color selections and pick the colors I like
+rnd_color_brewer <- function(palette, chosen_order = NULL) {
+  n <- RColorBrewer::brewer.pal.info[palette, "maxcolors"]
+  ord <- sample(1:n)
+  if(!is.null(chosen_order)) ord <- chosen_order
+  colors <- RColorBrewer::brewer.pal(n, palette)[ord]
+  print(ord)
+  colors
+}
+
 ggplot2::theme_update(
   panel.grid.major = ggplot2::element_blank(),
   panel.grid.minor = ggplot2::element_blank()
 )
 ```
+
+## Import
 
 First, we'll load some libraries and our data.
 
@@ -51,8 +66,8 @@ variable_descriptions <- list(
   HT1yr_m = "Sprout height one year after treatment.",
   HT5yr_m = "Same as above, but for year 5",
   HT10yr_m = "Same as above, but for year 10",
-  `HT1-5yr` = "Height growth between years 1 and 5",
-  `HT5-10yr` = "Height growth between years 5 and 10",
+  `HTI1-5yr` = "Height growth between years 1 and 5, (4 growth periods)",
+  `HTI5-10yr` = "Height growth between years 5 and 10 (5 growth periods)",
   DBH10yr_cm = "Diameter at breast height in cm at year 10. Only collected for
   redwood",
   LCBH10yr = "Live crown base height (height to first live branch) at year 10. 
@@ -66,40 +81,72 @@ variable_descriptions <- list(
   HT10rank = "Trees species specific height ranking within plot."
 )
 
-variable_descriptions |> 
-  imap(\(x, y) tibble(Variable = y, Description = gsub("[[:space:]]{2,}", " ", x))) |>
+variable_descriptions |>
+  imap(function(x, y) {
+    tibble(Variable = y, Description = gsub("[[:space:]]{2,}", " ", x))
+  }) |>
   list_rbind(names_to = "Variable") |>
   knitr::kable()
 
 ```
 
+I'm going to change some variable names to make them more ergonomic
+
+```{r}
+
+newnames <- c(
+  site = "Site", plot = "Plot", treat = "Trtmt", tree = "Tree", spp = "Species",
+  ht1 = "HT1yr_m", ht5 = "HT5yr_m", ht10 = "HT10yr_m", ht_inc5 = "HTI1-5yr",
+  ht_inc10 = "HTI5-10yr", dbh10 = "DBH10yr_cm", lcbh10 = "LCBH10yr",
+  sdi_init = "SDIinit", agg = "AggregatedYN", ht_rnk10 = "HT10rank"
+)
+
+tibble(old = newnames, new = names(newnames)) |> knitr::kable()
+
+sprouts <- select(sprouts, all_of(newnames))
+
+treat_order <- c("GS", "LD", "HA", "HD")
+```
+
+## Objectives
+
 Our main objectives are to:
 
-- Test for treatment effects on redwood height and diameter at year 10
+- Test for treatment effects on redwood height and diameter at year 10 and in
+  comparison to other years
 - Explore treatment effect on competition between redwood and tanoak
-- Model the relationship between both of these and harvest intensity (SDIinit)
-- Explore differences in height response over multiple remeasurements
+- Produce a model for sapling height at year 10 as a funtion of harvest
+  intensity (initial SDI)
+- Explore differences in height increment over multiple remeasurements
+
+
+## Visualize data
+
+### Tree heights
 
 The following figures reveal possible trends in the raw data.
 
-@fig-data-summary-treatments shows that over time, LD and GS treatments have
-more taller trees than the other treatments, with GS having the most. This is
-true for both redwood and tanoak. Additionaly, for redwood it appears that HA
-may have taller trees than HD, at least in year 10.
+#### Species/treatment/year
+@fig-data-summary-treatments reveals fine, species specific differences between
+treatments and general trends over time. It shows that over time, LD and GS
+treatments have more taller trees than the other treatments, with GS having the
+most. This is true for both redwood and tanoak. Additionaly, for redwood it
+appears that HA may have taller trees than HD, at least in year 10.
 
-@fig-data-summary-spp seems to suggest that redwood are taller across all
-treatments and years, but the GS treatment is the only one that provides a clear
-advantage to redwood.
+@fig-data-summary-spp shows the same information as before, but is arguably more
+easier to look at. There is a generall increasing trend in heights as follows:
 
-@fig-data-summary-sdi shows that above around 400 SDI, tree heights level off.
-It also implies a steady decrease in height from 0 to around 400 SDI. The
-strength of the relationship appears to be increasing over time, particularly
-for redwood.
+    HD < HA < LD < GS
+
+seems to suggest that redwood are taller across all treatments and years, but
+the GS treatment is the only one that provides a clear advantage to redwood.
 
 Across all treatments, it is also interesting to note that over times, the
-distributions seem to becoming more multi-modal. This makes sense, as
-conditions, in any treatment are not homogeneous, and over time, small,
-within-plot variation (likely due to shade) becomes more apparent.
+height distributions, especially for redwood, seem to becoming more multi-modal
+and more widely distributed. This could be due to site or plot effects, or to
+microsite (within plot) effects, but it is not immediately clear why this
+diverging performance should be so apparent with redwood and not tanoak. 
+
 
 ```{r}
 #| label: fig-data-summary-treatments
@@ -110,24 +157,29 @@ within-plot variation (likely due to shade) becomes more apparent.
 #|   Years refers to number of years after treatment.
 #| message: false
 
-# Function to convert heights from multiple years to long format
-lengthen_heights <- function(data) {
+# Function to convert heights or increments from multiple years to long format
+# to facilitate analysis and plotting of that variable
+lengthen_data <- function(data, var) {
+  pref <- switch(var, ht = "(ht)", ht_inc = "(ht_inc)")
+  suf <- "(\\d+)"
+  str_to_match <- paste0(pref, suf)
   pivot_longer(data,
-    matches("HT..?yr_m"),
-    names_to = "year", values_to = "height",
-    names_transform = \(x) as.integer(str_extract(x, "\\d+"))
+    matches(str_to_match),
+    names_to = c(".value", "year"),
+    names_pattern = str_to_match,
+    names_transform = list(year = as.integer)
   ) |>
-  relocate(c(year, height), .after = Species)
+  relocate(year, matches(paste0(pref, "$")), .after = spp)
 }
 
 sprouts |>
-  lengthen_heights() |>
-  ggplot(aes(height, fct_rev(factor(year)), color = Trtmt)) +
+  lengthen_data("ht") |>
+  ggplot(aes(ht, fct_rev(factor(year)), color = treat)) +
   scale_y_discrete(expand = c(0, 0)) +
   scale_x_continuous(expand = c(0, 0)) +
   coord_cartesian(clip = "off") +
   geom_density_ridges(alpha = .3, size = 1) +
-  facet_wrap(~Species) +
+  facet_wrap(~spp) +
   labs(x = "Height (m)", y = "Year") +
   scale_color_brewer(palette = "Set2")
 
@@ -145,11 +197,11 @@ sprouts |>
 #| message: false
 
 sprouts |>
-  lengthen_heights() |>
+  lengthen_data("ht") |>
   ggplot(aes(
-    x = height,
-    y = factor(Trtmt,levels = c("GS", "LD", "HA", "HD")),
-    color = factor(Species, levels = c("SESE", "LIDE"))
+    x = ht,
+    y = fct_relevel(treat, treat_order),
+    color = factor(spp, levels = c("SESE", "LIDE"))
   )) +
   scale_y_discrete(expand = c(0, 0)) +
   scale_x_continuous(expand = c(0, 0)) +
@@ -161,21 +213,28 @@ sprouts |>
 
 ```
 
+#### Species/year/SDI
+@fig-data-summary-sdi shows that above around 400 SDI, tree heights level off.
+It also implies a steady decrease in height from 0 to around 400 SDI. The
+strength of the relationship appears to be increasing over time, particularly
+for redwood.
+
 ```{r}
 #| label: fig-data-summary-sdi
 #| fig-cap: SDI vs HT for both species, across measurement years.
 #| fig-width: 8.5
 
 sprouts |>
-  lengthen_heights() |>
-  ggplot(aes(SDIinit, height, color = factor(year))) +
+  lengthen_data("ht") |>
+  ggplot(aes(sdi_init, ht, color = factor(year))) +
   geom_point(alpha = 0.5) +
   geom_smooth(span = 1.2) +
-  facet_wrap(~Species) +
+  facet_wrap(~spp) +
   scale_color_brewer(palette = "Set2")
 
 ```
 
+#### Species/site/plots
 Lets see what the variability among sites and plots looks like, I'll focus on
 year 10 only.
 
@@ -185,7 +244,12 @@ proportion of smaller redwoods.
 
 We can see in @fig-data-summary-plots that there seems to be differences among
 plots beyond site differences and treatment differences. We should expect plots
-to capture a portion of the variance.
+to capture a portion of the variance. Most notable is the plot level difference
+between redwood and tanoak. For redwood, the large ammount of within plot
+variability combined with the between plot variability obscures the treatment
+effect. If you squint, there appears to be a similar overall pattern between
+redwood and tanoak repsonse to treatment, but it appears they respond
+differentially to certain plots.
 
 ```{r}
 #| label: fig-data-summary-sites
@@ -193,33 +257,90 @@ to capture a portion of the variance.
 #|   Distribution of heights at year 10 at each site for two species. Slabs are
 #|   normalized by sample size to reflect the raw data, plotted as dots below.
 
-library(ggdist)
+suppressPackageStartupMessages(library(ggdist))
 
 sprouts |>
-  ggplot(aes(HT10yr_m, Site, fill = Species)) +
-  stat_slab(aes(thickness = after_stat(pdf*n)), alpha = 0.6, scale = 0.7) +
+  ggplot(aes(ht10, site, fill = spp)) +
+  stat_slab(aes(thickness = after_stat(pdf * n)), alpha = 0.6, scale = 0.7) +
   stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA) +
-  scale_fill_brewer(palette = "Set2")
+  scale_fill_brewer(palette = "Set2") +
+  labs(x = "year 10 height (m)", y = NULL, fill = "species")
 
 ```
 
 ```{r}
 #| label: fig-data-summary-plots
+#| fig-height: 7
 #| fig-cap: >
 #|   Same as for @fig-data-summary-sites, but for each plot (Site/treatment
 #|   interaction). Grouped by treatment.
 
 sprouts |>
   ggplot(aes(
-      HT10yr_m,
-      interaction(Site, Trtmt, sep = " - "),
-      fill = Trtmt
+    ht10,
+    fct_relevel(treat, treat_order),
+    interaction(site, , sep = " - "),
+    fill = fct_relevel(treat, treat_order),
   )) +
   stat_slab(aes(thickness = after_stat(pdf * n)), alpha = 0.5, scale = 0.7) +
   stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA) +
-  scale_color_brewer(palette = "Set2")
+  scale_color_brewer(palette = "Set2") +
+  facet_wrap(~spp) +
+  theme(legend.position = "bottom") +
+  labs(y = NULL, x = "year 10 height (m)", fill = "treatment")
 
 ```
+
+### Height increments
+
+Height increments contain similar information as heights, but allow us to
+compare directly between years.
+
+@fig-data-summary-ht-inc-year shows that across treatments and species, height
+growth slows down in the second period (years 5-10). This is more true for
+redwood but it starts with more rapid growth than tanoak. In the most crowded
+treatment (HD), redwoods height increment has become slower than tanoaks in the
+second period. Also, in the second period, the high density, aggregated
+treatment appears to have slightly higher (or equal) average growth increment,
+which is not completely expected.
+
+```{r}
+#| label: fig-data-summary-ht-inc-year
+#| fig-height: 7
+#| fig-cap: >
+#|   Variations in annual height growth increment between the first and second
+#|   measurement periods (years 1-5, and 5-10, respectively).
+
+sprouts |>
+  lengthen_data("ht_inc") |>
+  ggplot(
+    aes(
+      ht_inc,
+      fct_relevel(treat, treat_order),
+      fill = factor(year),
+      color = factor(year)
+    )
+  ) +
+  stat_slab(alpha = 0.5) +
+  stat_pointinterval(
+    position = position_dodge(width = 0.4, preserve = "single")
+  ) +
+  facet_wrap(~spp) +
+  theme(legend.position = "bottom") +
+  labs(
+    fill = "Year",
+    color = "Year",
+    y = "Treatment",
+    x = expression(Height~increment~(m~yr^-1))
+  ) +
+  scale_color_manual(
+    values = rnd_color_brewer("Set2", c(1,4)),
+    aesthetics = c("color", "fill")
+  )
+
+```
+
+## Nesting
 
 Our data though are nested, we have:
 
@@ -234,28 +355,28 @@ Each Treatment is represented by one site/plot combination. Each site belongs to
 each treatment and vice versa. I think the terminology here is that Sites and
 treatments are crossed.
 
-## Data wrangling
-
-Currently, `Plot` is only unique within `Site` and `Tree` is only unique within
-`Site`, `Trtmt`, and `Species`. It will be more convenient if `Plot` and `Tree` are
+Currently, `plot` is only unique within `site` and `tree` is only unique within
+`site`, `treat`, and `spp`. It will be more convenient if `plot` and `tree` are
 globally unique identifiers. This makes the nesting structure implicit, and we
 can simplify our model syntax.
 
 ```{r}
+#| output: false
+
 library(lme4)
 
 implicit_grouping <- function(data) {
   data |>
-    mutate(Plot = cur_group_id(), .by = c(Site, Trtmt)) |>
+    mutate(plot = cur_group_id(), .by = c(site, treat)) |>
     mutate(Tree = row_number())
 }
 
 d <- sprouts |>
   implicit_grouping() |>
-  lengthen_heights()
+  lengthen_data("ht")
 ```
 
-## Model 1
+## Modeling
 
 In addition to characterizing redwood growth response, we would also like to
 accurately describe differences between redwood and tanoak. This is probably
@@ -273,17 +394,33 @@ with some simpler data.
 [explores this scenario]: https://m-clark.github.io/posts/2020-03-01-random-categorical
 
 ```{r}
+#| code-fold: false
 
 m <- lmer(
-  height ~ scale(SDIinit) * factor(year) * Species + (1 | Site) + (1 | Plot) + (1 | Tree),
+  ht ~ scale(sdi_init) *
+    factor(year) *
+    spp +
+    (1 | site) +
+    (1 | plot) +
+    (1 | tree),
   data = d
 )
 m2 <- lmer(
-  height ~ scale(SDIinit) * factor(year) * Species + (1 | Site) + (1 | Plot) + (1 | Tree),
+  ht ~ scale(sdi_init) *
+    factor(year) *
+    spp +
+    (1 | site) +
+    (1 | plot) +
+    (1 | tree),
   data = d
 )
 m3 <- lmer(
-  height ~ scale(SDIinit) * factor(year) * Species + (Species | Site) + (Species | Plot) + (Species | Tree),
+  ht ~ scale(sdi_init) *
+    factor(year) *
+    spp +
+    (spp | site) +
+    (spp | plot) +
+    (spp | tree),
   data = d
 )
 

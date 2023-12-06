@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -472,7 +472,7 @@ div.csl-indent {
 <div id="fig-dufflitter" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="fuel_data_exploration_files/figure-html/fig-dufflitter-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.4: Combined duff and litter loading at each station along trancects. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span>4.3</span></a>.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.4: Combined duff and litter loading at each station along trancects. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cwd</span></a>.</figcaption>
 </figure>
 </div>
 </div>
@@ -499,7 +499,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </figure>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;4.5: Vegetation fuel loading for each station along transects, including live and dead fuels attached to live vegetation. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span>4.3</span></a>.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.5: Vegetation fuel loading for each station along transects, including live and dead fuels attached to live vegetation. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cwd</span></a>.</figcaption>
 </figure>
 </div>
 </section>
@@ -514,8 +514,8 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <li>thoushr</li>
 <li>veg</li>
 </ol>
-<p>When using manova to test for difference between groups with multiple response variables, it is important that the response variables are multivariate normally distributed. Unfortunately, it would appear that we have a probelem with normality. The raw data for each loading variable is clearly not normally distributed <a href="#fig-qqplot-naive">Figure&nbsp;<span>4.6</span></a>.</p>
-<div class="cell" data-fig.heigth="8">
+<p>When using manova to test for difference between groups with multiple response variables, it is important that the response variables are multivariate normally distributed. Unfortunately, it would appear that we have a probelem with normality. The raw data for each loading variable is clearly not normally distributed <a href="#fig-qqplot-naive">Figure&nbsp;<span class="quarto-unresolved-ref">fig-qqplot-naive</span></a>.</p>
+<div class="cell" data-fig-heigth="8">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>myqqplot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, var) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> {{ var }})) <span class="sc">+</span></span>
@@ -633,7 +633,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 </div>
 <p>While, this looks somewhat more normal, the zeros end up being a little strange. I applied a separte transformation for each fuel class, but all treatments within a fuel class have the same transformation.</p>
-<p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model">Figure&nbsp;<span>4.8</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
+<p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model">Figure&nbsp;<span class="quarto-unresolved-ref">fig-qqplot-model</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
 <div id="fig-qqplot-model" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))</span>
@@ -680,7 +680,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <figcaption class="figure-caption">Figure&nbsp;4.8: Plot A assessed the multivariate normality of residuals given the model where all loading variabels are a function of the treatment group.</figcaption>
 </figure>
 </div>
-<p>A number of different tests of multivariate normaliy also confirm the lack of evidence for meeting this assumption (<a href="#tbl-norm-test">Table&nbsp;<span>4.2</span></a>).</p>
+<p>A number of different tests of multivariate normaliy also confirm the lack of evidence for meeting this assumption (<a href="#tbl-norm-test">Table&nbsp;<span class="quarto-unresolved-ref">tbl-norm-test</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"mardia"</span>, <span class="st">"hz"</span>, <span class="st">"royston"</span>, <span class="st">"dh"</span>, <span class="st">"energy"</span>) <span class="sc">|&gt;</span></span>
@@ -889,6 +889,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <p>If our data is not normally distributed, then what distribution is it? I’m going to assume what we are interested in the distribution of data within groups (treatments).</p>
 <p>I attemped to model the distribution of our conditional response data (fuel size class by treatment), but it mostly didn’t work.</p>
 <p>Our data is non-negative (contains zeros) continuous (for the most part) and highly variable in terms of skew and kurtosis. The presence of zeros, makes using the Gamma distribution more difficult. One possibility is a hurdle gamma, or Zero-adjusted Gamma.</p>
+<p>The following show where our data lies in terms of kurtosis and skewness compared to other common distributions. It looks somewhat Gamma-ish?</p>
 <div class="page-columns page-full">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(<span class="sc">~</span>class) <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span><span class="fu">split</span>(.x, <span class="sc">~</span>treatment))</span>
@@ -1124,6 +1125,8 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </section>
 <section id="zero-adjusted-gamma" class="level3" data-number="4.3.3">
 <h3 data-number="4.3.3" class="anchored" data-anchor-id="zero-adjusted-gamma"><span class="header-section-number">4.3.3</span> Zero-adjusted Gamma</h3>
+<p>I’ll try using the gamlss package, which fits models “where all the parameters of the assumed distribution for the response can be modelled as additive functions of the explanatory variables.”</p>
+<p>I’m not really sure how it works, but I know if will allow me to fit a model assuming a gamma distribution, while modeling the zeros separately. First I fit a model, then I get the estimated distribution parameters, then I plot the density curve over a histrogram (scaled to density). This looks promising to me.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zero adjusted Gamma distribution fit to histograms</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>plot_zaga <span class="ot">&lt;-</span> <span class="cf">function</span>(i, d) {</span>

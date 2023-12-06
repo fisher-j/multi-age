@@ -407,36 +407,39 @@ highly variable in terms of skew and kurtosis. The presence of zeros, makes
 using the Gamma distribution more difficult. One possibility is a hurdle gamma,
 or  Zero-adjusted Gamma. 
 
+The following show where our data lies in terms of kurtosis and skewness
+compared to other common distributions. It looks somewhat Gamma-ish?
+
 ```{r}
 #| label: fig-skew-kurt
 #| fig-width: 5
 #| fig-height: 4.2
 #| fig-cap: Skewness and kurtosis for fuel classes within treatments.
 #| fig-subcap:
-#|   - Treatment gs, fuel class onehr      
-#|   - Treatment ha, fuel class onehr      
-#|   - Treatment hd, fuel class onehr      
-#|   - Treatment ld, fuel class onehr      
-#|   - Treatment gs, fuel class tenhr      
-#|   - Treatment ha, fuel class tenhr      
-#|   - Treatment hd, fuel class tenhr      
-#|   - Treatment ld, fuel class tenhr      
-#|   - Treatment gs, fuel class hundhr     
-#|   - Treatment ha, fuel class hundhr     
-#|   - Treatment hd, fuel class hundhr     
-#|   - Treatment ld, fuel class hundhr     
-#|   - Treatment gs, fuel class dufflitter 
-#|   - Treatment ha, fuel class dufflitter 
-#|   - Treatment hd, fuel class dufflitter 
-#|   - Treatment ld, fuel class dufflitter 
-#|   - Treatment gs, fuel class thoushr    
-#|   - Treatment ha, fuel class thoushr    
-#|   - Treatment hd, fuel class thoushr    
-#|   - Treatment ld, fuel class thoushr    
-#|   - Treatment gs, fuel class veg        
-#|   - Treatment ha, fuel class veg        
-#|   - Treatment hd, fuel class veg        
-#|   - Treatment ld, fuel class veg        
+#|   - Treatment gs, fuel class onehr
+#|   - Treatment ha, fuel class onehr
+#|   - Treatment hd, fuel class onehr
+#|   - Treatment ld, fuel class onehr
+#|   - Treatment gs, fuel class tenhr
+#|   - Treatment ha, fuel class tenhr
+#|   - Treatment hd, fuel class tenhr
+#|   - Treatment ld, fuel class tenhr
+#|   - Treatment gs, fuel class hundhr
+#|   - Treatment ha, fuel class hundhr
+#|   - Treatment hd, fuel class hundhr
+#|   - Treatment ld, fuel class hundhr
+#|   - Treatment gs, fuel class dufflitter
+#|   - Treatment ha, fuel class dufflitter
+#|   - Treatment hd, fuel class dufflitter
+#|   - Treatment ld, fuel class dufflitter
+#|   - Treatment gs, fuel class thoushr
+#|   - Treatment ha, fuel class thoushr
+#|   - Treatment hd, fuel class thoushr
+#|   - Treatment ld, fuel class thoushr
+#|   - Treatment gs, fuel class veg
+#|   - Treatment ha, fuel class veg
+#|   - Treatment hd, fuel class veg
+#|   - Treatment ld, fuel class veg
 #| layout-ncol: 2
 #| column: page
 
@@ -453,6 +456,15 @@ walk(d, ~ walk(.x, \(x) fitdistrplus::descdist(x$load, boot = 111)))
 ```
 
 ### Zero-adjusted Gamma
+
+I'll try using the gamlss package, which fits models "where all the parameters
+of the assumed distribution for the response can be modelled as additive
+functions of the explanatory variables." 
+
+I'm not really sure how it works, but I know if will allow me to fit a model
+assuming a gamma distribution, while modeling the zeros separately. First I fit
+a model, then I get the estimated distribution parameters, then I plot the
+density curve over a histrogram (scaled to density). This looks promising to me.
 
 ```{r}
 
@@ -594,8 +606,4 @@ already averaged stations within transects for several variable that were
 collected at the station level (two within each transect). What are the
 trade-offs for either averaging at the corner level, or alternatively,
 analyzing our raw station data instead of averaging.
-
-
-
-
 
