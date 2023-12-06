@@ -725,16 +725,15 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sprouts <span class="sc">|&gt;</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    ht10,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fct_relevel</span>(treat, treat_order),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">interaction</span>(site, , <span class="at">sep =</span> <span class="st">" - "</span>),</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">fct_relevel</span>(treat, treat_order),</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_slab</span>(<span class="fu">aes</span>(<span class="at">thickness =</span> <span class="fu">after_stat</span>(pdf <span class="sc">*</span> n)), <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">scale =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_dotsinterval</span>(<span class="at">side =</span> <span class="st">"bottom"</span>, <span class="at">scale =</span> <span class="fl">0.7</span>, <span class="at">slab_color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>spp) <span class="sc">+</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">x =</span> <span class="st">"year 10 height (m)"</span>, <span class="at">fill =</span> <span class="st">"treatment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">interaction</span>(site, <span class="fu">fct_relevel</span>(treat, treat_order), <span class="at">sep =</span> <span class="st">" - "</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">fct_relevel</span>(treat, treat_order),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_slab</span>(<span class="fu">aes</span>(<span class="at">thickness =</span> <span class="fu">after_stat</span>(pdf <span class="sc">*</span> n)), <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">scale =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_dotsinterval</span>(<span class="at">side =</span> <span class="st">"bottom"</span>, <span class="at">scale =</span> <span class="fl">0.7</span>, <span class="at">slab_color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>spp) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">x =</span> <span class="st">"year 10 height (m)"</span>, <span class="at">fill =</span> <span class="st">"treatment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-data-summary-plots" class="quarto-figure quarto-figure-center anchored">
@@ -921,37 +920,72 @@ Fixed Effects:
                                -0.3771                                 -0.7222  
 optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 1 lme4 warnings </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>m3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML ['lmerMod']
 Formula: ht ~ scale(sdi_init) * factor(year) * spp + (spp | site) + (spp |  
     plot) + (spp | tree)
    Data: d
-REML criterion at convergence: 6747.24
+
+REML criterion at convergence: 6747.2
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.1193 -0.4451  0.0031  0.4324  3.5951 
+
 Random effects:
- Groups   Name        Std.Dev. Corr
- tree     (Intercept) 0.0000       
-          sppSESE     1.1784    NaN
- plot     (Intercept) 0.4183       
-          sppSESE     0.6172   0.38
- site     (Intercept) 0.0000       
-          sppSESE     0.6273    NaN
- Residual             1.0873       
+ Groups   Name        Variance Std.Dev. Corr
+ tree     (Intercept) 0.0000   0.0000       
+          sppSESE     1.3887   1.1784    NaN
+ plot     (Intercept) 0.1750   0.4183       
+          sppSESE     0.3809   0.6172   0.38
+ site     (Intercept) 0.0000   0.0000       
+          sppSESE     0.3935   0.6273    NaN
+ Residual             1.1823   1.0873       
 Number of obs: 2076, groups:  tree, 454; plot, 16; site, 4
-Fixed Effects:
-                           (Intercept)                         scale(sdi_init)  
-                                0.5945                                 -0.2195  
-                         factor(year)5                          factor(year)10  
-                                1.5517                                  3.2835  
-                               sppSESE           scale(sdi_init):factor(year)5  
-                                0.7699                                 -0.3008  
-        scale(sdi_init):factor(year)10                 scale(sdi_init):sppSESE  
-                               -0.6670                                 -0.1231  
-                 factor(year)5:sppSESE                  factor(year)10:sppSESE  
-                                1.6290                                  3.2528  
- scale(sdi_init):factor(year)5:sppSESE  scale(sdi_init):factor(year)10:sppSESE  
-                               -0.3771                                 -0.7222  
-optimizer (nloptwrap) convergence code: 0 (OK) ; 0 optimizer warnings; 1 lme4 warnings </code></pre>
+
+Fixed effects:
+                                       Estimate Std. Error t value
+(Intercept)                             0.59454    0.11943   4.978
+scale(sdi_init)                        -0.21946    0.12178  -1.802
+factor(year)5                           1.55167    0.08128  19.089
+factor(year)10                          3.28350    0.08128  40.395
+sppSESE                                 0.76986    0.37033   2.079
+scale(sdi_init):factor(year)5          -0.30080    0.08174  -3.680
+scale(sdi_init):factor(year)10         -0.66704    0.08174  -8.160
+scale(sdi_init):sppSESE                -0.12308    0.18630  -0.661
+factor(year)5:sppSESE                   1.62900    0.11700  13.923
+factor(year)10:sppSESE                  3.25279    0.11700  27.801
+scale(sdi_init):factor(year)5:sppSESE  -0.37713    0.11699  -3.224
+scale(sdi_init):factor(year)10:sppSESE -0.72215    0.11699  -6.173
+
+Correlation of Fixed Effects:
+            (Intr) scl(_) fct()5 fc()10 spSESE sc(_):()5 sc(_):()10 s(_):S
+scal(sd_nt) -0.008                                                        
+factor(yr)5 -0.340  0.006                                                 
+factr(yr)10 -0.340  0.006  0.500                                          
+sppSESE      0.064  0.000  0.110  0.110                                   
+scl(s_):()5  0.006 -0.336 -0.018 -0.009 -0.002                            
+scl(_):()10  0.006 -0.336 -0.009 -0.018 -0.002  0.500                     
+scl(_):SESE  0.001  0.138 -0.004 -0.004 -0.019  0.219     0.219           
+fct()5:SESE  0.236 -0.004 -0.695 -0.347 -0.158  0.012     0.006      0.000
+fc()10:SESE  0.236 -0.004 -0.347 -0.695 -0.158  0.006     0.012      0.000
+s(_):()5:SE -0.004  0.234  0.012  0.006  0.000 -0.699    -0.349     -0.314
+s(_):()10:S -0.004  0.234  0.006  0.012  0.000 -0.349    -0.699     -0.314
+            f()5:S f()10: s(_):()5:
+scal(sd_nt)                        
+factor(yr)5                        
+factr(yr)10                        
+sppSESE                            
+scl(s_):()5                        
+scl(_):()10                        
+scl(_):SESE                        
+fct()5:SESE                        
+fc()10:SESE  0.500                 
+s(_):()5:SE  0.001  0.001          
+s(_):()10:S  0.001  0.001  0.500   
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
 </div>
 

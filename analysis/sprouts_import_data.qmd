@@ -278,8 +278,7 @@ sprouts |>
 sprouts |>
   ggplot(aes(
     ht10,
-    fct_relevel(treat, treat_order),
-    interaction(site, , sep = " - "),
+    interaction(site, fct_relevel(treat, treat_order), sep = " - "),
     fill = fct_relevel(treat, treat_order),
   )) +
   stat_slab(aes(thickness = after_stat(pdf * n)), alpha = 0.5, scale = 0.7) +
@@ -414,6 +413,7 @@ m2 <- lmer(
     (1 | tree),
   data = d
 )
+
 m3 <- lmer(
   ht ~ scale(sdi_init) *
     factor(year) *
@@ -426,7 +426,7 @@ m3 <- lmer(
 
 m
 m2
-m3
+summary(m3)
 
 ```
 
