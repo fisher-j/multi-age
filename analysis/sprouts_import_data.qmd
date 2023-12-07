@@ -373,6 +373,7 @@ implicit_grouping <- function(data) {
 d <- sprouts |>
   implicit_grouping() |>
   lengthen_data("ht")
+
 ```
 
 ## Modeling
@@ -392,18 +393,43 @@ with some simpler data.
 
 [explores this scenario]: https://m-clark.github.io/posts/2020-03-01-random-categorical
 
+In any case, following the pattern of data summaries above, I'll start by
+modeling to detect treatment differences in tree height.
+
+I'll start with the simplest model that I'm willing to look at: a
+treatment/species interaction for only year 10. This model is not that bad, the
+residuals indicate some heteroskedasticity. It has a moderate r-squared (0.55).
+It doesn't account for non-independence due to nesting structure of our data
+though.
+
 ```{r}
 #| code-fold: false
 
-m <- lmer(
-  ht ~ scale(sdi_init) *
-    factor(year) *
-    spp +
-    (1 | site) +
-    (1 | plot) +
-    (1 | tree),
-  data = d
+m1 <- lm(ht ~ treat * spp, data = filter(d, year == 10))
+plot(fitted(m1), resid(m1)); abline(h = 0)
+
+```
+
+How do the other measurement years compare.
+
+
+```{r}
+library(modelsummary)
+
+ms <- lapply(
+  c(1, 5, 10), 
+  \(x) lm(ht ~ treat * spp, data = filter(d, year == x))
 )
+
+modelsummary(ms)
+
+```
+
+
+
+```{r}
+#| code-fold: false
+
 m2 <- lmer(
   ht ~ scale(sdi_init) *
     factor(year) *
@@ -424,8 +450,7 @@ m3 <- lmer(
   data = d
 )
 
-m
-m2
+summary(m2)
 summary(m3)
 
 ```
