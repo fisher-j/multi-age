@@ -28,7 +28,7 @@ ggplot2::theme_update(
 )
 ```
 
-## Import
+## Description
 
 First, we'll load some libraries and our data.
 
@@ -39,10 +39,10 @@ suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
 library(ggridges)
 library(ggokabeito)
 
-sprouts <- readxl::read_excel("../data/Sprouts10yr.xlsx")
+sprouts_fresh <- readxl::read_excel("../data/Sprouts10yr.xlsx")
 
 set.seed(743)
-slice_sample(sprouts, n = 4) |> knitr::kable()
+slice_sample(sprouts_fresh, n = 4) |> knitr::kable()
 ```
 
 The data is in a wide format, variables are as follows:
@@ -90,6 +90,8 @@ variable_descriptions |>
 
 ```
 
+## Wrangle
+
 I'm going to change some variable names to make them more ergonomic
 
 ```{r}
@@ -103,22 +105,93 @@ newnames <- c(
 
 tibble(old = newnames, new = names(newnames)) |> knitr::kable()
 
-sprouts <- select(sprouts, all_of(newnames))
+```
+
+Our data are nested. We have plots within sites, trees within plots, and
+observeations within trees (multiple observations per tree).
+
+```
+Sites
+└─ Plots
+   └─ Trees
+      └─ Observations
+```
+
+Each Treatment is represented by one site/plot combination. Each site belongs to
+each treatment and vice versa. I think the terminology here is that Sites and
+treatments are crossed.
+
+Currently, `plot` (integer) is only unique within `site` and `tree` is only unique within
+`site`, `treat`, and `spp`. It will be more convenient if `plot` and `tree` are
+globally unique identifiers. This makes the nesting structure implicit and we
+can simplify our model syntax.
+
+```{r}
+#| output: false
+
+make_site_plot_unique <- function(data) {
+  data |>
+    mutate(plot = cur_group_id(), .by = c(site, treat)) |>
+    mutate(tree = row_number())
+}
+
+```
+
+I'm also going to order the treatments acording to our expectations about the
+most to least productive. This will affect how they are plotted and reported.
+
+```{r}
 
 treat_order <- c("GS", "LD", "HA", "HD")
+
+set_expected_treatment_order <- function(data) {
+  data |>
+    mutate(treat = fct_relevel(treat, treat_order))
+}
+
+```
+
+And I'll apply all the above steps in one go.
+
+```{r}
+
+sprouts <- sprouts_fresh |>
+  select(all_of(newnames)) |>
+  make_site_plot_unique() |>
+  set_expected_treatment_order()
+
+```
+
+I will need a function to convert a variable in the data from wide to long format.
+
+```{r}
+
+lengthen_data <- function(data, var) {
+  # I need regex for first part to handle ht and ht_inc and
+  pref <- switch(var, ht = "(ht)", ht_inc = "(ht_inc)")
+  # and the year
+  suf <- "(\\d+)"
+  str_to_match <- paste0(pref, suf)
+  pivot_longer(data,
+    matches(str_to_match),
+    names_to = c(".value", "year"),
+    names_pattern = str_to_match,
+    names_transform = list(year = as.integer)
+  ) |>
+  relocate(year, matches(paste0(pref, "$")), .after = spp)
+}
+
 ```
 
 ## Objectives
 
 Our main objectives are to:
 
-- Test for treatment effects on redwood height and diameter at year 10 and in
-  comparison to other years
+- Test for treatment effects on redwood and tanoak height (or height increment)
+  over time, but especially for year 10
 - Explore treatment effect on competition between redwood and tanoak
-- Produce a model for sapling height at year 10 as a funtion of harvest
-  intensity (initial SDI)
-- Explore differences in height increment over multiple remeasurements
-
+- Produce a model for sapling height as a funtion of harvest intensity (initial 
+  SDI) and years since harvest
 
 ## Visualize data
 
@@ -127,19 +200,21 @@ Our main objectives are to:
 The following figures reveal possible trends in the raw data.
 
 #### Species/treatment/year
+
 @fig-data-summary-treatments reveals fine, species specific differences between
 treatments and general trends over time. It shows that over time, LD and GS
 treatments have more taller trees than the other treatments, with GS having the
 most. This is true for both redwood and tanoak. Additionaly, for redwood it
 appears that HA may have taller trees than HD, at least in year 10.
 
-@fig-data-summary-spp shows the same information as before, but is arguably more
-easier to look at. There is a generall increasing trend in heights as follows:
+@fig-data-summary-spp shows the same information as before, but is arguably 
+easier to look at. There is a generall increasing trend in heights with
+treatments as follows:
 
     HD < HA < LD < GS
 
-seems to suggest that redwood are taller across all treatments and years, but
-the GS treatment is the only one that provides a clear advantage to redwood.
+Redwood is consistently taller than tanoak, and the GS treatment confers the
+greatest advantage to redwood.
 
 Across all treatments, it is also interesting to note that over times, the
 height distributions, especially for redwood, seem to becoming more multi-modal
@@ -157,21 +232,6 @@ diverging performance should be so apparent with redwood and not tanoak.
 #|   Years refers to number of years after treatment.
 #| message: false
 
-# Function to convert heights or increments from multiple years to long format
-# to facilitate analysis and plotting of that variable
-lengthen_data <- function(data, var) {
-  pref <- switch(var, ht = "(ht)", ht_inc = "(ht_inc)")
-  suf <- "(\\d+)"
-  str_to_match <- paste0(pref, suf)
-  pivot_longer(data,
-    matches(str_to_match),
-    names_to = c(".value", "year"),
-    names_pattern = str_to_match,
-    names_transform = list(year = as.integer)
-  ) |>
-  relocate(year, matches(paste0(pref, "$")), .after = spp)
-}
-
 sprouts |>
   lengthen_data("ht") |>
   ggplot(aes(ht, fct_rev(factor(year)), color = treat)) +
@@ -182,7 +242,6 @@ sprouts |>
   facet_wrap(~spp) +
   labs(x = "Height (m)", y = "Year") +
   scale_color_brewer(palette = "Set2")
-
 ```
 
 ```{r}
@@ -210,7 +269,6 @@ sprouts |>
   facet_grid(year ~ ., labeller = label_both) +
   labs(x = "Height (m)", y = "Treatment") +
   scale_color_brewer(palette = "Set2", name = "Species")
-
 ```
 
 #### Species/year/SDI
@@ -231,7 +289,6 @@ sprouts |>
   geom_smooth(span = 1.2) +
   facet_wrap(~spp) +
   scale_color_brewer(palette = "Set2")
-
 ```
 
 #### Species/site/plots
@@ -339,45 +396,7 @@ sprouts |>
 
 ```
 
-## Nesting
-
-Our data though are nested, we have:
-
-```
-Sites
-└─ Plots
-   └─ Trees
-      └─ Observations
-```
-
-Each Treatment is represented by one site/plot combination. Each site belongs to
-each treatment and vice versa. I think the terminology here is that Sites and
-treatments are crossed.
-
-Currently, `plot` is only unique within `site` and `tree` is only unique within
-`site`, `treat`, and `spp`. It will be more convenient if `plot` and `tree` are
-globally unique identifiers. This makes the nesting structure implicit, and we
-can simplify our model syntax.
-
-```{r}
-#| output: false
-
-library(lme4)
-
-implicit_grouping <- function(data) {
-  data |>
-    mutate(plot = cur_group_id(), .by = c(site, treat)) |>
-    mutate(Tree = row_number())
-}
-
-d <- sprouts |>
-  implicit_grouping() |>
-  lengthen_data("ht")
-
-```
-
 ## Modeling
-
 In addition to characterizing redwood growth response, we would also like to
 accurately describe differences between redwood and tanoak. This is probably
 best accomplished by including species in the model, and modeling the difference
@@ -404,54 +423,74 @@ though.
 
 ```{r}
 #| code-fold: false
+#| fig-cap: >
+#|   Model predictions for year 10 height, with 95% confidence intervals.
+
+# I'm calling the height data "d"
+d <- sprouts |>
+  lengthen_data("ht")
 
 m1 <- lm(ht ~ treat * spp, data = filter(d, year == 10))
-plot(fitted(m1), resid(m1)); abline(h = 0)
+
+library(marginaleffects)
+
+d1 <- predictions(m1, by = c("treat", "spp"))
+
+filter(d, year == 10) |>
+  ggplot(aes(treat, ht, color = spp, fill = spp)) +
+  facet_grid(~spp, switch = "x") +
+  theme(panel.spacing = unit(0, "lines"),
+        strip.background = element_blank(),
+        strip.text = element_blank(),
+        ) +
+  geom_dots() +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  geom_pointrange(
+    data = d1, 
+    aes(y = estimate, ymin = conf.low, ymax = conf.high),
+    color = "gray50", position = position_nudge(x = -0.07),
+    size = 0.7,
+    linewidth = 1
+  )
 
 ```
 
-How do the other measurement years compare.
+Do we expect height to increase lineraly with year? First, lets look at individual tree's height trajectories.
 
+```{r}
+
+d |> 
+  ggplot(aes(year, ht, color = spp, group = tree)) +
+  geom_line(alpha = 0.6) +
+  facet_wrap(~treat*site) +
+  scale_color_brewer(palette = "Set2")
+
+```
+
+For the most part, it looks like height increases linearly with year. So lets
+fit some models with year as a continuous variable.
 
 ```{r}
 library(modelsummary)
+library(lme4)
 
-ms <- lapply(
-  c(1, 5, 10), 
-  \(x) lm(ht ~ treat * spp, data = filter(d, year == x))
-)
+m2 <- lm(ht ~ treat * spp * year, data = d)
 
-modelsummary(ms)
+m3 <- lm(ht ~ treat * spp + year + treat:year + spp:year, data = d)
 
 ```
-
 
 
 ```{r}
 #| code-fold: false
 
-m2 <- lmer(
-  ht ~ scale(sdi_init) *
-    factor(year) *
-    spp +
-    (1 | site) +
-    (1 | plot) +
-    (1 | tree),
+m4 <- lmer(
+  ht ~ treat * spp * year + (1 | site) + (1 | plot) + (1 | tree),
   data = d
 )
+options(modelsummary_model_labels = "model")
+modelsummary(list(m1, m2, m3, m4), stars = TRUE)
 
-m3 <- lmer(
-  ht ~ scale(sdi_init) *
-    factor(year) *
-    spp +
-    (spp | site) +
-    (spp | plot) +
-    (spp | tree),
-  data = d
-)
-
-summary(m2)
-summary(m3)
 
 ```
 

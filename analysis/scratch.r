@@ -888,3 +888,13 @@ as_draws_df(bf4a$mod[[1]]) |>
     "mean", ~posterior::quantile2(.x, c(0.05, .5, .95)), "rhat", "ess_bulk",
     "ess_tail"
   )
+
+sprouts |>
+  mutate(
+    id = paste(Site, Plot, Trtmt),
+    ht_inc_1 = round((HT5yr_m - HT1yr_m) / 4, 3),
+    ht_inc_2 = round((HT10yr_m - HT5yr_m) / 5, 3),
+    matches = (ht_inc_1 == round(`HTI1-5yr`, 3)) & (ht_inc_2 == round(`HTI5-10yr`, 3)),
+  ) |>
+  select(id, matches("ht"), -HT10rank, matches) |>
+  filter(matches)
