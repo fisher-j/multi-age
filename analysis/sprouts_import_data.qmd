@@ -800,6 +800,12 @@ mht10 <- lmer(
   data = dht
 )
 
+mht11 <- lmer(
+  ht ~ treat + spp + year + treat:spp + year:spp + treat:year +
+    (0 + spp | plot) + (0 + spp | tree),
+  data = dht
+)
+
 # I tried fitting year as a factor, but then could not fit a model that included
 # the 3-way interaction and random slopes for species. The model without the
 # 3-way (and spp random slopes) was close, but about 12 AIC larger.
@@ -807,7 +813,7 @@ mht10 <- lmer(
 modelsummary(list(
   "Model 2" = mht2, "Model 3" = mht3, "Model 4" = mht4, "Model 5" = mht5,
   "Model 6" = mht6, "Model 7" = mht7, "Model 8" = mht8, "Model 9" = mht9,
-  "Model 10" = mht10
+  "Model 10" = mht10, "Model 11" = mht11
 ), stars = TRUE)
 
 ```
