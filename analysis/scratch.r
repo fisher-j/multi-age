@@ -898,3 +898,30 @@ sprouts |>
   ) |>
   select(id, matches("ht"), -HT10rank, matches) |>
   filter(matches)
+
+library(marginaleffects)
+library(patchwork)
+library(lme4)
+
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+
+mod <- lmer(mpg ~ hp + am + (0 + hp | cyl), data = dat)
+
+predictions(mod, newdata = "mean", vcov = "kenward-roger")
+
+
+d
+d$plot <- factor(d$plot)
+d$spp <- factor(d$spp)
+m9 <- lmer(
+  ht ~ treat * spp * year + (0 + spp | plot) + (0 + spp | tree),
+  data = d
+)
+
+predictions(m9, newdata = "mean", vcov = "kenward-roger")
+
+
+
+

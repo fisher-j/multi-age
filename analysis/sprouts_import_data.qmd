@@ -46,6 +46,7 @@ library(multcomp)
 library(multcompView)
 library(tidyverse)
 library(mgcv)
+library(patchwork)
 
 ```
 
@@ -517,40 +518,145 @@ this with a model.
    period.
 
 2. ``r format_model_formula(minc[[2]])``
+
    That slow down has more to do with redwood than tanoak.
 
 3. ``r format_model_formula(minc[[3]])``
+   
    There are overall treatment effect on growth which varies by species (redwood
    is more affected) but there are no more significant interactions with year.
    Our data does not detect significant differences in slow down by treatment or
    species.
+   j
 4. ``r format_model_formula(minc[[4]])``
+
    This includes only additive effects and the effect of year is the same as
    model 1.
+   
 5. ``r format_model_formula(minc[[5]])``
+
    Again, the species by treatment interactions seem to be significant.
+   
 6. ``r format_model_formula(minc[[6]])``
+
    The species year interaction remains important.
+
 7. ``r format_model_formula(minc[[7]])``
+
    Again, the treatment by year interactions do not seem important/estimable.
+
 8. ``r format_model_formula(minc[[8]])``
+
    *Now I introduce random intercepts for plot and tree.* These lead to *much*
    smaller AIC's.
+
 9. ``r format_model_formula(minc[[9]])``
+
    But treatment by year is still (mostly) not significant.
+
 10. ``r format_model_formula(minc[[10]])`` 
+
     Adding a random slope for species by plot results in another big jump in
     AIC, but also reduces confidence in the treatment*species interaction. It
     would seem that the potential differences in species by treatment growth
     rate are obscured by redwoods greater variability across plots.
+
 11. ``r format_model_formula(minc[[11]])`` 
+   
     Removing the treat * species interaction results in a solid AIC boost. 
 
 ```{r}
 #| echo: false
 #| column: body-outset
 
-modelsummary(minc, stars = TRUE)
+# lmer and lm name coefficients differently, leading to duplicates in the
+# table
+rearrange_coef_names <- function(x) {
+  str_replace(x, "^(.*):(treat[HALD]{2})$", "\\2:\\1") |>
+    str_replace(":", " x ")
+}
+
+modelsummary(minc, stars = TRUE, coef_rename = rearrange_coef_names)
+
+```
+
+### Height increment results
+
+The model selected based on AIC lacks a treatment x year interaction. This means
+that there was not enough evidence to suggest that any treatment results in a
+lesser or greater slow down in height growth. Across treatments, the effect of
+year was significant, and this varied significantly by species--redwood's height
+growth rate reduction was about 3 times that of tanoak.
+
+```{r}
+#| label: fig-ht-inc-contrast
+#| fig-cap: >
+#|   Growth period 1 is year 1-5, growth period 2 is year 5-10. Growth
+#|   significantly decreased in the second period for both species.
+
+minc11em <- emmeans(minc[[11]], c("year"), by = c("spp"))
+minc11con <- contrast(minc11em, "consec") |> confint() |> as_tibble()
+minc11cld <- cld(minc11em, Letters = letters) |> as_tibble() |> mutate(.group = str_replace_all(.group, " ", ""))
+
+minc11con |>
+  ggplot(aes(spp, -estimate, color = spp)) +
+  geom_pointrange(
+    aes(ymin = -lower.CL, ymax = -upper.CL),
+    linewidth = 1, size = 1
+    ) +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  labs(
+    x = NULL,
+    y = expression(Height ~ increment ~ reduction ~ (-m %.% yr^-1)),
+    color = "Species"
+  )
+
+```
+
+```{r}
+#| label: tbl-ht-inc-contrast
+#| tbl-cap: >
+#|   Growth period 1 is year 1-5, growth period 2 is year 5-10. Growth
+#|   significantly decreased in the second period for both species.
+
+minc11con |> knitr::kable(digits = 3)
+
+```
+
+```{r}
+#| label: fig-ht-inc
+#| fig-cap: >
+#|   There was a significant difference in height increment between period 1 and
+#|   2 for both species.
+
+minc11cld |>
+  ggplot(aes(year, emmean, fill = spp, color = spp)) +
+  geom_pointrange(
+    aes(ymin = lower.CL, ymax = upper.CL),
+    position = position_nudge(x = -0.15),
+    size = 0.9, linewidth = 1
+  ) +
+  geom_dots(data = dinc, aes(year, ht_inc), alpha = 0.4) +
+  facet_grid(~spp, switch = "x") +
+  theme(
+    panel.spacing = unit(0, "lines"),
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+  ) +
+  geom_text(
+    aes(y = upper.CL, label = .group),
+    # color = "black",
+    position = position_nudge(x = -0.15, y = 0.1)
+  ) +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  labs(
+    x = "Growth period",
+    y = expression(Height ~ increment ~ (m %.% year^-1)),
+    color = "Species",
+    fill = "Species"
+  ) +
+  scale_x_discrete(labels = c("1", "2"))
+
 ```
 
 ### Year 10 only
@@ -582,7 +688,11 @@ species plot effect.
 
 ```{r}
 #| label: fig-year-10-only
-#|
+#| fig-cap: >
+#|   Mean and 95% confidence interval for model `mht104`, displayed with raw
+#|   data. Shared letters between treatments (within species) indicates that
+#|   there is not sufficient evidence to claim the estiamtes come from different
+#|   distributions.
 
 mht104grid <- emmeans(mht104, pairwise ~ treat, by = c("spp"))
 mht104cld <- cld(mht104grid, Letters = letters) |> as_tibble()
@@ -635,8 +745,7 @@ The following models were fit, and are summarized in @tbl-model-summaries.
 7. Same as 6, but attempt to simplify the random effects by forcing them to be
    estimated independently, correlation between species is not estimated.
 8. Re-introduce the 3-way interaction again.
-9. Omit the random effect for site. This is supported by the interpretation of
-   @fig-data-summary-plots.
+9. Omit the random effect for site. This is supported by the interpretation of @fig-data-summary-plots.
 10. Like 9, but try simplified (independent) random effects.
 
 ```{r}
@@ -691,23 +800,14 @@ mht10 <- lmer(
   data = dht
 )
 
-mht11 <- lmer(
-  ht ~ treat + spp + year + treat:spp + year:spp + treat:year +
-    (0 + spp | plot) + (0 + spp | tree),
-  data = dht
-)
-
-# mht12 <- gamm(
-#   ht ~ treat + spp + s(year, k=3),
-#   random = list(plot = ~ spp, tree = ~ spp),
-#   data = mutate(dht, year = as.numeric(year))
-# )
-
+# I tried fitting year as a factor, but then could not fit a model that included
+# the 3-way interaction and random slopes for species. The model without the
+# 3-way (and spp random slopes) was close, but about 12 AIC larger.
 
 modelsummary(list(
   "Model 2" = mht2, "Model 3" = mht3, "Model 4" = mht4, "Model 5" = mht5,
   "Model 6" = mht6, "Model 7" = mht7, "Model 8" = mht8, "Model 9" = mht9,
-  "Model 10" = mht10, "Model 11" = mht11
+  "Model 10" = mht10
 ), stars = TRUE)
 
 ```
@@ -731,8 +831,13 @@ Using model 9, we can now answer the questions we posed in the Objectives
 section.
 
 ```{r}
+#| label: fig-multi-year-growth
+#| fig-height: 7
+#| fig-cap: >
+#|   Average species and treatment specific height as a linear function
+#|   of year. Distributions represent the raw data associated with the estimate
+#|   at that point.
 
-# TODO: add slab to this plot also, it is slow
 mht9emmeans <- emmip(mht9,
   spp ~ year | treat,
   CIs = TRUE,
@@ -746,8 +851,18 @@ mht9emmeans|>
     geom_line() +
     facet_wrap(~ treat) +
     geom_ribbon(aes(ymin = LCL, ymax = UCL, color = NULL), alpha = .2) +
-    scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill"))
+    scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+    theme(legend.position = "bottom") +
+    labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species")
 
+```
+
+```{r}
+#| label: fig-multi-year-at-10
+#| fig-cap: >
+#|   Marginal means at year 10 based on height data collected three times over
+#|   10 years. The same letter within a species indicates that there was not
+#|   enough evidence to differentiate those treatments.
 
 mht9grid <- emmeans(mht9, pairwise ~ treat, by = c("spp"), at = list(year = 10))
 mht9cld <- cld(mht9grid, Letters = letters) |> as_tibble()
@@ -774,12 +889,13 @@ multiple_years_plot <- filter(dht, year == 10) |>
     aes(y = upper.CL, label = .group),
     color = "black",
     position = position_nudge(x = -0.3, y = 0.2)
-  )
+  ) +
+  labs(x = "Treatment", y = "Height (m)", color = "Species", fill = "Species") +
+  theme(legend.position = "bottom")
 
-library(patchwork)
-
-
+multiple_years_plot
 ```
+
 
 ### Multi-year vs. year 10 only
 
@@ -811,6 +927,5 @@ bind_rows(mht104cld, mht9cld, .id = "model") |>
     values = rnd_color_brewer("Set2", c(1,4)),
     aesthetics = c("color", "fill")
   )
-
 
 ```
