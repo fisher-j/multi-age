@@ -34,15 +34,23 @@ ggplot2::theme_update(
 First, we'll load some libraries and our data.
 
 ```{r}
-#| label: import-data
+#| output: false
 
-suppressPackageStartupMessages(library(lme4))
-suppressPackageStartupMessages(library(modelsummary))
-suppressPackageStartupMessages(library(marginaleffects))
-suppressPackageStartupMessages(library(ggdist))
-suppressPackageStartupMessages(library(ggokabeito))
-suppressPackageStartupMessages(library(ggridges))
-suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+library(lme4)
+library(modelsummary)
+library(marginaleffects)
+library(ggdist)
+library(ggridges)
+library(emmeans)
+library(multcomp)
+library(multcompView)
+library(tidyverse)
+library(mgcv)
+
+```
+
+```{r}
+#| echo: false
 
 sprouts_fresh <- readxl::read_excel("../data/Sprouts10yr.xlsx")
 
@@ -156,6 +164,21 @@ set_expected_treatment_order <- function(data) {
 
 ```
 
+For modeling purposes, I will make sure that the data are of the correct type.
+Grouping variables and character data should be factors.
+
+```{r}
+
+# Assuming variable names have already been changed
+set_data_types <- function(data) {
+  data |>
+    mutate(
+      across(c(site, plot, treat, tree, spp), as.factor)
+    )
+}
+
+```
+
 And I'll apply all the above steps in one go.
 
 ```{r}
@@ -163,7 +186,8 @@ And I'll apply all the above steps in one go.
 sprouts <- sprouts_fresh |>
   select(all_of(newnames)) |>
   make_site_plot_unique() |>
-  set_expected_treatment_order()
+  set_expected_treatment_order() |>
+  set_data_types()
 
 ```
 
@@ -190,13 +214,10 @@ lengthen_data <- function(data, var) {
 
 ## Objectives
 
-1. Which treatment(s) have the greatest impact on redwood and tanoak height
-   growth and what is the magnitude of this effect?
-2. Does any treatment promote promote either of these two species
-   preferentially?
-3. What is the treatment/species specific relatinship between age and height
-   growth and if this continues, what will the predicted heights be in another 5
-   years?
+1. For each species/treatment combination, is there a difference in height
+   increment between the first and second periods?
+2. Is there a difference in redwood or tanoak sprout heights at year 10, if so,
+   what is the magnitude of the difference?
 
 ## Visualize data
 
@@ -209,11 +230,11 @@ The following figures reveal possible trends in the raw data.
 @fig-data-summary-treatments reveals fine, species specific differences between
 treatments and general trends over time. It shows that over time, LD and GS
 treatments have more taller trees than the other treatments, with GS having the
-most. This is true for both redwood and tanoak. Additionaly, for redwood it
+most. This is true for both redwood and tanoak. Additionally, for redwood it
 appears that HA may have taller trees than HD, at least in year 10.
 
 @fig-data-summary-spp shows the same information as before, but is arguably 
-easier to look at. There is a generall increasing trend in heights with
+easier to look at. There is a general increasing trend in heights with
 treatments as follows:
 
     HD < HA < LD < GS
@@ -402,109 +423,27 @@ sprouts |>
 ```
 
 ## Modeling
-In addition to characterizing redwood growth response, we would also like to
-accurately describe differences between redwood and tanoak. This is probably
-best accomplished by including species in the model, and modeling the difference
-directly.
 
-because of our multiple grouping variables, model complexity can grow quickly,
-especially when considering how covariates interact with grouping variables,
-which lead to random slope models
+We have nested data where we have multiple observations within trees (over
+time), trees within plots and plots within sites. Any of these levels of nesting
+might result in correlations between observations, which violates the assumption
+of independence for OLS models, but can be accounted for using multi-level
+models.
 
-I'm also wondering what it means to include a categorical variable as a random
-slope (on the LHS of the random parts). Michael Clark [explores this scenario],
-with some simpler data.
+I may want to include a categorical variable (spp) as a random slope (on the LHS
+of the random parts) to allow random effects to be estimated for each species
+separately. Michael Clark [explores this scenario], with some simpler data.
 
 [explores this scenario]: https://m-clark.github.io/posts/2020-03-01-random-categorical
 
-In any case, following the pattern of data summaries above, I'll start by
-modeling to detect treatment differences in tree height.
+My approach will be to start with a simple model and build towards more complex
+models.
 
-### First model
-I'll start with the simplest model that I'm willing to look at: a
-treatment/species interaction for only year 10. This model is not that bad, the
-residuals indicate some heteroskedasticity, but otherwise look randomly
-distributed around zero. It has a moderate r-squared (0.55).
-It doesn't account for non-independence due to nesting structure of our data
-though. @fig-m1-predictions shows the predictions and confidence intervals for
-this model.
-
-```{r}
-#| code-fold: false
-
-# I'm calling the height data "d"
-d <- sprouts |> lengthen_data("ht")
-
-m1 <- lm(ht ~ treat * spp, data = filter(d, year == 10))
-
-```
-
-```{r}
-#| label: fig-m1-predictions
-#| fig-cap: >
-#|   Model predictions for year 10 height, with 95% confidence intervals, for
-#|   model 1.
-
-# These are all the same, they produce predicitons and confidence intervals for
-# each combination of treatments based on the model. 
-# predictions(m1, newdata = datagrid(treat = unique, spp = unique))
-# marginal_means(m1, variables = c("treat", "spp"), cross = TRUE) |> as_tibble()
-
-library(emmeans)
-library(multcomp)
-library(multcompView)
-
-m1grid <- emmeans(m1, pairwise ~ treat, by = c("spp"))
-cld1 <- cld(m1grid, Letters = letters) |> as_tibble()
-
-filter(d, year == 10) |>
-  ggplot(aes(treat, ht, color = spp, fill = spp)) +
-  facet_grid(~spp, switch = "x") +
-  theme(panel.spacing = unit(0, "lines"),
-        strip.background = element_blank(),
-        strip.text = element_blank(),
-        ) +
-  geom_dots() +
-  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
-  geom_pointrange(
-    data = cld1,
-    aes(y = emmean, ymin = lower.CL, ymax = upper.CL),
-    color = "gray50", position = position_nudge(x = -0.07),
-    size = 0.7,
-    linewidth = 1,
-    show.legend = FALSE
-  ) +
-  geom_text(data = cld1, aes(y = upper.CL, label = .group), color = "black", position = position_nudge(x = -0.3, y = 0.2))
-
-
-# filter(d, year == 10) |>
-#   ggplot(aes(treat, ht, color = spp, fill = spp)) +
-#   facet_grid(~spp, switch = "x") +
-#   theme(panel.spacing = unit(0, "lines"),
-#         strip.background = element_blank(),
-#         strip.text = element_blank(),
-#         ) +
-#   geom_dots() +
-#   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
-#   geom_pointrange(
-#     data = d1, 
-#     aes(y = estimate, ymin = conf.low, ymax = conf.high),
-#     color = "gray50", position = position_nudge(x = -0.07),
-#     size = 0.7,
-#     linewidth = 1,
-#     show.legend = FALSE
-#   )
-
-```
-
-### Including multiple years
-
-By including year as a numeric variable, we are assuming a liner relationship
-between year and height. This term (and it's interactions) can than be
-interpreted as a modeled growth increment, and although we only have
-observations at years 1, 5, and 10, other years predictions will be linerally
-interpolated. But to do this, we have to justify modeling height as linear with
-time (at least for the first 10 years of growth).
+### Height increment
+By starting with height increment modeling, I will be able to answer question 1
+in the objectives. This conclusion may be helpful for informing total height
+modeling. I am curious whether height in the first 10 years increases linearly
+with age. Is there a growth slow down in year 5-10 compared to years 1-5?
 
 We saw in @fig-data-summary-ht-inc-year that increment does slow down somewhat
 in the second measurement period (year 5-10), at least for redwoods, but we may
@@ -518,11 +457,12 @@ trajectories.
 #|   Data plot showing trajectory of individual tree heights across the three
 #|   measurements. Height increase appears fairly linear with year.
 
+dht <- lengthen_data(sprouts, "ht")
 
-d |> 
+dht |> 
   ggplot(aes(year, ht, color = spp, group = tree)) +
   geom_line(alpha = 0.6) +
-  facet_wrap(~treat*site) +
+  facet_wrap(~treat * site) +
   scale_color_brewer(palette = "Set2") +
   theme(
     legend.position = "bottom"
@@ -530,8 +470,158 @@ d |>
 
 ```
 
-For the most part, it looks like height increases linearly with year. So lets
-fit some models with year as a continuous variable.
+```{r}
+#| echo: false
+#| output: asis
+
+dinc <- lengthen_data(sprouts, "ht_inc") |> mutate(year = as.factor(year))
+
+minc <- lst(
+  minc1 = lm(ht_inc ~ year, dinc),
+  minc2 = update(minc1, ~ . * spp),
+  minc3 = update(minc2, ~ . * treat),
+  minc4 = update(minc1, ~ . + spp + treat),
+  minc5 = update(minc4, ~ . + spp:treat),
+  minc6 = update(minc5, ~ . + spp:year),
+  minc7 = update(minc6, ~ . + treat:year),
+  minc8 = lmer(ht_inc ~ treat + year + spp + treat:spp + spp:year + (1 | plot) +
+    (1 | tree), dinc),
+  minc9 = update(minc8, ~ . + treat:year),
+  minc10 = update(minc8, ~ . - (1 | plot) + (0 + spp | plot)),
+  minc11 = update(minc10, ~ . - treat:spp),
+)
+
+format_model_formula <- function(mod) {
+  form <- format(formula(mod)) |>
+  paste0(collapse = "") |>
+  str_replace("\\s{2,}", " ")
+  form
+}
+
+label_model_formula <- function(mod, name) {
+  form <- format_model_formula(mod)
+  form <- paste0("`", form, "`")
+  cat(paste(name, form, sep = ": "), "\n\n")
+}
+
+# iwalk(minc, label_model_formula)
+
+```
+
+For the most part, it looks like height increases linearly with year. Lets test
+this with a model.
+
+1. ``r format_model_formula(minc[[1]])``
+
+   Ignoring everything else, there is a 0.08 m / yr slow down in the second
+   period.
+
+2. ``r format_model_formula(minc[[2]])``
+   That slow down has more to do with redwood than tanoak.
+
+3. ``r format_model_formula(minc[[3]])``
+   There are overall treatment effect on growth which varies by species (redwood
+   is more affected) but there are no more significant interactions with year.
+   Our data does not detect significant differences in slow down by treatment or
+   species.
+4. ``r format_model_formula(minc[[4]])``
+   This includes only additive effects and the effect of year is the same as
+   model 1.
+5. ``r format_model_formula(minc[[5]])``
+   Again, the species by treatment interactions seem to be significant.
+6. ``r format_model_formula(minc[[6]])``
+   The species year interaction remains important.
+7. ``r format_model_formula(minc[[7]])``
+   Again, the treatment by year interactions do not seem important/estimable.
+8. ``r format_model_formula(minc[[8]])``
+   *Now I introduce random intercepts for plot and tree.* These lead to *much*
+   smaller AIC's.
+9. ``r format_model_formula(minc[[9]])``
+   But treatment by year is still (mostly) not significant.
+10. ``r format_model_formula(minc[[10]])`` 
+    Adding a random slope for species by plot results in another big jump in
+    AIC, but also reduces confidence in the treatment*species interaction. It
+    would seem that the potential differences in species by treatment growth
+    rate are obscured by redwoods greater variability across plots.
+11. ``r format_model_formula(minc[[11]])`` 
+    Removing the treat * species interaction results in a solid AIC boost. 
+
+```{r}
+#| echo: false
+#| column: body-outset
+
+modelsummary(minc, stars = TRUE)
+```
+
+### Year 10 only
+The simplest model that I'm willing to look at includes a treatment/species
+interaction, and no random effects. It will serve as a baseline for comparison.
+
+
+```{r}
+#| code-fold: false
+
+# I'm calling the height data "d"
+dht10 <- sprouts |> lengthen_data("ht") |> filter(year == 10)
+
+mht101 <- lm(ht ~ treat * spp, data = dht10)
+mht102 <- lmer(ht ~ treat * spp + (1 | plot) + (1 | site), data = dht10)
+mht103 <- lmer(ht ~ treat * spp + (1 | plot), data = dht10)
+mht104 <- lmer(ht ~ treat * spp + (0 + spp | plot), data = dht10)
+
+mht10_list <- lst(mht101, mht102, mht103, mht104)
+modelsummary(mht10_list, stars = TRUE)
+
+```
+The best model according to AIC includes a random intercept for plot and a
+random slope for spp. Because spp is a factor, this effectively estimates a
+species specific intercept, but also takes into account the covariance of the
+species plot effect.
+
+### Year 10 only Results
+
+```{r}
+#| label: fig-year-10-only
+#|
+
+mht104grid <- emmeans(mht104, pairwise ~ treat, by = c("spp"))
+mht104cld <- cld(mht104grid, Letters = letters) |> as_tibble()
+
+year_10_only_plot <- dht10 |>
+  ggplot(aes(treat, ht, color = spp, fill = spp)) +
+  facet_grid(~spp, switch = "x") +
+  theme(panel.spacing = unit(0, "lines"),
+        strip.background = element_blank(),
+        strip.text = element_blank(),
+        ) +
+  geom_dots() +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  geom_pointrange(
+    data = mht104cld,
+    aes(y = emmean, ymin = lower.CL, ymax = upper.CL),
+    color = "gray50", position = position_nudge(x = -0.07),
+    size = 0.7,
+    linewidth = 1,
+    show.legend = FALSE
+  ) +
+  geom_text(
+    data = mht104cld,
+    aes(y = upper.CL, label = .group),
+    color = "black",
+    position = position_nudge(x = -0.3, y = 0.2)
+  )
+
+year_10_only_plot
+
+```
+
+### Including multiple years
+
+By including year as a numeric variable, we are assuming a liner relationship
+between year and height. This term (and it's interactions) can than be
+interpreted as a modeled growth increment, and although we only have
+observations at years 1, 5, and 10, other years predictions will be linearly
+interpolated.
 
 The following models were fit, and are summarized in @tbl-model-summaries.
 
@@ -557,53 +647,67 @@ The following models were fit, and are summarized in @tbl-model-summaries.
 #|   parantheses.
 #| column: body-outset
 
-m2 <- lm(ht ~ treat * spp * year, data = d)
+dht <- lengthen_data(sprouts, "ht")
 
-m3 <- lm(ht ~ treat + spp + year + treat:year + spp:year + treat:spp, data = d)
+mht2 <- lm(ht ~ treat * spp * year, data = dht)
 
-m4 <- lmer(
+mht3 <- lm(ht ~ treat + spp + year + treat:year + spp:year + treat:spp, data = dht)
+
+mht4 <- lmer(
   ht ~ treat * spp * year + (1 | site) + (1 | plot) + (1 | tree),
-  data = d
+  data = dht
 )
 
-m5 <- lmer(
+mht5 <- lmer(
   ht ~ treat * spp * year + (0 + spp | site) + (0 + spp | plot) + 
     (0 + spp | tree),
-  data = d
+  data = dht
 )
 
-m6 <- lmer(
+mht6 <- lmer(
   ht ~ treat + spp + year + treat:spp + year:spp + treat:year +
     (0 + spp | site) + (0 + spp | plot) + (0 + spp | tree),
-  data = d
+  data = dht
 )
 
-m7 <- lmer(
+mht7 <- lmer(
   ht ~ treat + spp + year + treat:spp + year:spp + treat:year + (1 | site:spp) +
     (1 | plot:spp) + (1 | tree:spp),
-  data = d
+  data = dht
 )
 
-m8 <- lmer(
+mht8 <- lmer(
   ht ~ treat * spp * year + (1 | site:spp) + (1 | plot:spp) + (1 | tree:spp),
-  data = d
+  data = dht
 )
 
-m9 <- lmer(
+mht9 <- lmer(
   ht ~ treat * spp * year + (0 + spp | plot) + (0 + spp | tree),
-  data = d
+  data = dht
 )
 
-m10 <- lmer(
+mht10 <- lmer(
   ht ~ treat * spp * year + (1 | plot:spp) + (1 | tree:spp),
-  data = d
+  data = dht
 )
 
-options(modelsummary_model_labels = "model")
+mht11 <- lmer(
+  ht ~ treat + spp + year + treat:spp + year:spp + treat:year +
+    (0 + spp | plot) + (0 + spp | tree),
+  data = dht
+)
+
+# mht12 <- gamm(
+#   ht ~ treat + spp + s(year, k=3),
+#   random = list(plot = ~ spp, tree = ~ spp),
+#   data = mutate(dht, year = as.numeric(year))
+# )
+
+
 modelsummary(list(
-  "Model 2" = m2, "Model 3" = m3, "Model 4" = m4, "Model 5" = m5,
-  "Model 6" = m6, "Model 7" = m7, "Model 8" = m8, "Model 9" = m9,
-  "Model 10" = m10
+  "Model 2" = mht2, "Model 3" = mht3, "Model 4" = mht4, "Model 5" = mht5,
+  "Model 6" = mht6, "Model 7" = mht7, "Model 8" = mht8, "Model 9" = mht9,
+  "Model 10" = mht10, "Model 11" = mht11
 ), stars = TRUE)
 
 ```
@@ -621,33 +725,34 @@ The next best model (AIC) is model 5, which is also the most complex model.
 Model 9 is only slightly better, but is more desireable because of it's reduced
 complexity.
 
-### Interpretation
+### Multi-year results
 
 Using model 9, we can now answer the questions we posed in the Objectives
 section.
 
-For question 1, "Which treatment(s) have the greatest impact on redwood and
-tanoak height growth and what is the magnitude of this effect?" we can visualize
-treatment specific height growth by species.
-
 ```{r}
 
-library(emmeans)
+# TODO: add slab to this plot also, it is slow
+mht9emmeans <- emmip(mht9,
+  spp ~ year | treat,
+  CIs = TRUE,
+  plotit = FALSE,
+  at = list(year = 1:10)
+)
 
-emmip( m9, spp ~ year | treat, CIs = TRUE, plotit = FALSE, at = list(year = 1:10)) %>% 
-  ggplot(aes(year, yvar, color = treat, fill = treat)) +
+mht9emmeans|> 
+  ggplot(aes(year, yvar, color = spp, fill = spp)) +
+    stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
     geom_line() +
-    facet_wrap(~ spp ) +
-    geom_ribbon(aes(ymin = LCL, ymax = UCL, color = NULL), alpha = .2)
+    facet_wrap(~ treat) +
+    geom_ribbon(aes(ymin = LCL, ymax = UCL, color = NULL), alpha = .2) +
+    scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill"))
 
-m9grid <- emmeans(m9, pairwise ~ treat, by = c("spp"), at = list(year = 10))
 
-library(multcomp)
-library(multcompView)
+mht9grid <- emmeans(mht9, pairwise ~ treat, by = c("spp"), at = list(year = 10))
+mht9cld <- cld(mht9grid, Letters = letters) |> as_tibble()
 
-cld9 <- cld(m9grid, Letters = letters) |> as_tibble()
-
-filter(d, year == 10) |>
+multiple_years_plot <- filter(dht, year == 10) |>
   ggplot(aes(treat, ht, color = spp, fill = spp)) +
   facet_grid(~spp, switch = "x") +
   theme(panel.spacing = unit(0, "lines"),
@@ -657,13 +762,55 @@ filter(d, year == 10) |>
   geom_dots() +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   geom_pointrange(
-    data = cld9, 
+    data = mht9cld, 
     aes(y = emmean, ymin = lower.CL, ymax = upper.CL),
     color = "gray50", position = position_nudge(x = -0.07),
     size = 0.7,
     linewidth = 1,
     show.legend = FALSE
   ) +
-  geom_text(data = cld9, aes(y = upper.CL, label = .group), color = "black", position = position_nudge(x = -0.3, y = 0.2))
+  geom_text(
+    data = mht9cld,
+    aes(y = upper.CL, label = .group),
+    color = "black",
+    position = position_nudge(x = -0.3, y = 0.2)
+  )
+
+library(patchwork)
+
+
+```
+
+### Multi-year vs. year 10 only
+
+```{r}
+
+bind_rows(mht104cld, mht9cld, .id = "model") |>
+  mutate(
+    model = case_match(model, "1" ~ "year 10 only", "2" ~ "multi-year"),
+    .group = str_replace_all(.group, " ", "")
+  ) |>
+  ggplot(aes(treat, ht, color = model, fill = model)) +
+  facet_grid(~spp) +
+  geom_pointrange(
+    aes(y = emmean, ymin = lower.CL, ymax = upper.CL),
+    position = position_dodge(width = 0.4),
+    size = 0.7,
+    linewidth = 1
+  ) +
+  geom_dots(
+    data = dht10, color = "gray50", fill = "gray70",
+    position = position_nudge(x = 0.2), scale = 0.7, binwidth = 0.18
+  ) +
+  geom_text(
+    aes(y = upper.CL + 0.6, label = .group, color = model,),
+    position = position_dodge(width = 0.4),
+  ) +
+  theme(legend.position = "bottom") + 
+  scale_color_manual(
+    values = rnd_color_brewer("Set2", c(1,4)),
+    aesthetics = c("color", "fill")
+  )
+
 
 ```
