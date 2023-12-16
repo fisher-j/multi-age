@@ -227,9 +227,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#height-increment" id="toc-height-increment" class="nav-link" data-scroll-target="#height-increment"><span class="header-section-number">6.5.1</span> Height increment</a></li>
   <li><a href="#height-increment-results" id="toc-height-increment-results" class="nav-link" data-scroll-target="#height-increment-results"><span class="header-section-number">6.5.2</span> Height increment results</a></li>
-  <li><a href="#year-10-only" id="toc-year-10-only" class="nav-link" data-scroll-target="#year-10-only"><span class="header-section-number">6.5.3</span> Year 10 only</a></li>
+  <li><a href="#heights---year-10-only" id="toc-heights---year-10-only" class="nav-link" data-scroll-target="#heights---year-10-only"><span class="header-section-number">6.5.3</span> Heights - year 10 only</a></li>
   <li><a href="#year-10-only-results" id="toc-year-10-only-results" class="nav-link" data-scroll-target="#year-10-only-results"><span class="header-section-number">6.5.4</span> Year 10 only Results</a></li>
-  <li><a href="#including-multiple-years" id="toc-including-multiple-years" class="nav-link" data-scroll-target="#including-multiple-years"><span class="header-section-number">6.5.5</span> Including multiple years</a></li>
+  <li><a href="#heights---multiple-years" id="toc-heights---multiple-years" class="nav-link" data-scroll-target="#heights---multiple-years"><span class="header-section-number">6.5.5</span> Heights - multiple years</a></li>
   <li><a href="#multi-year-results" id="toc-multi-year-results" class="nav-link" data-scroll-target="#multi-year-results"><span class="header-section-number">6.5.6</span> Multi-year results</a></li>
   <li><a href="#multi-year-vs.-year-10-only" id="toc-multi-year-vs.-year-10-only" class="nav-link" data-scroll-target="#multi-year-vs.-year-10-only"><span class="header-section-number">6.5.7</span> Multi-year vs.&nbsp;year 10 only</a></li>
   </ul></li>
@@ -1735,8 +1735,8 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 </div>
 </div>
 </section>
-<section id="year-10-only" class="level3" data-number="6.5.3">
-<h3 data-number="6.5.3" class="anchored" data-anchor-id="year-10-only"><span class="header-section-number">6.5.3</span> Year 10 only</h3>
+<section id="heights---year-10-only" class="level3" data-number="6.5.3">
+<h3 data-number="6.5.3" class="anchored" data-anchor-id="heights---year-10-only"><span class="header-section-number">6.5.3</span> Heights - year 10 only</h3>
 <p>The simplest model that I’m willing to look at includes a treatment/species interaction, and no random effects. It will serve as a baseline for comparison.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I'm calling the height data "d"</span></span>
@@ -2049,8 +2049,8 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 </div>
 </div>
 </section>
-<section id="including-multiple-years" class="level3 page-columns page-full" data-number="6.5.5">
-<h3 data-number="6.5.5" class="anchored" data-anchor-id="including-multiple-years"><span class="header-section-number">6.5.5</span> Including multiple years</h3>
+<section id="heights---multiple-years" class="level3 page-columns page-full" data-number="6.5.5">
+<h3 data-number="6.5.5" class="anchored" data-anchor-id="heights---multiple-years"><span class="header-section-number">6.5.5</span> Heights - multiple years</h3>
 <p>By including year as a numeric variable, we are assuming a liner relationship between year and height. This term (and it’s interactions) can than be interpreted as a modeled growth increment, and although we only have observations at years 1, 5, and 10, other years predictions will be linearly interpolated.</p>
 <p>The following models were fit, and are summarized in <a href="#tbl-model-summaries">Table&nbsp;<span>6.3</span></a>.</p>
 <ol start="2" type="1">
@@ -2117,15 +2117,23 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dht</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co"># I tried fitting year as a factor, but then could not fit a model that included</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># the 3-way interaction and random slopes for species. The model without the</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3-way (and spp random slopes) was close, but about 12 AIC larger.</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 2"</span> <span class="ot">=</span> mht2, <span class="st">"Model 3"</span> <span class="ot">=</span> mht3, <span class="st">"Model 4"</span> <span class="ot">=</span> mht4, <span class="st">"Model 5"</span> <span class="ot">=</span> mht5,</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 6"</span> <span class="ot">=</span> mht6, <span class="st">"Model 7"</span> <span class="ot">=</span> mht7, <span class="st">"Model 8"</span> <span class="ot">=</span> mht8, <span class="st">"Model 9"</span> <span class="ot">=</span> mht9,</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 10"</span> <span class="ot">=</span> mht10</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>), <span class="at">stars =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>mht11 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  ht <span class="sc">~</span> treat <span class="sc">+</span> spp <span class="sc">+</span> year <span class="sc">+</span> treat<span class="sc">:</span>spp <span class="sc">+</span> year<span class="sc">:</span>spp <span class="sc">+</span> treat<span class="sc">:</span>year <span class="sc">+</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    (<span class="dv">0</span> <span class="sc">+</span> spp <span class="sc">|</span> plot) <span class="sc">+</span> (<span class="dv">0</span> <span class="sc">+</span> spp <span class="sc">|</span> tree),</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dht</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I tried fitting year as a factor, but then could not fit a model that included</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the 3-way interaction and random slopes for species. The model without the</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 3-way (and spp random slopes) was close, but about 12 AIC larger.</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 2"</span> <span class="ot">=</span> mht2, <span class="st">"Model 3"</span> <span class="ot">=</span> mht3, <span class="st">"Model 4"</span> <span class="ot">=</span> mht4, <span class="st">"Model 5"</span> <span class="ot">=</span> mht5,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 6"</span> <span class="ot">=</span> mht6, <span class="st">"Model 7"</span> <span class="ot">=</span> mht7, <span class="st">"Model 8"</span> <span class="ot">=</span> mht8, <span class="st">"Model 9"</span> <span class="ot">=</span> mht9,</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 10"</span> <span class="ot">=</span> mht10, <span class="st">"Model 11"</span> <span class="ot">=</span> mht11</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>), <span class="at">stars =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display column-body-outset">
 <div id="tbl-model-summaries" class="anchored">
 <table class="table table-sm table-striped small" data-quarto-postprocess="true">
@@ -2142,6 +2150,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;Model 8</th>
 <th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;Model 9</th>
 <th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;Model 10</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;Model 11</th>
 </tr>
 </thead>
 <tbody>
@@ -2156,6 +2165,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">0.546</td>
 <td style="text-align: center;">0.546*</td>
 <td style="text-align: center;">0.546</td>
+<td style="text-align: center;">0.226</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2168,6 +2178,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.428)</td>
 <td style="text-align: center;">(0.260)</td>
 <td style="text-align: center;">(0.428)</td>
+<td style="text-align: center;">(0.255)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatLD</td>
@@ -2180,6 +2191,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.442</td>
 <td style="text-align: center;">−0.441</td>
 <td style="text-align: center;">−0.442</td>
+<td style="text-align: center;">−0.191</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2192,6 +2204,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.599)</td>
 <td style="text-align: center;">(0.371)</td>
 <td style="text-align: center;">(0.609)</td>
+<td style="text-align: center;">(0.360)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatHA</td>
@@ -2204,6 +2217,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.366</td>
 <td style="text-align: center;">−0.367</td>
 <td style="text-align: center;">−0.366</td>
+<td style="text-align: center;">0.040</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2216,6 +2230,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.595)</td>
 <td style="text-align: center;">(0.368)</td>
 <td style="text-align: center;">(0.605)</td>
+<td style="text-align: center;">(0.358)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatHD</td>
@@ -2228,6 +2243,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.345</td>
 <td style="text-align: center;">−0.345</td>
 <td style="text-align: center;">−0.345</td>
+<td style="text-align: center;">0.262</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2240,6 +2256,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.596)</td>
 <td style="text-align: center;">(0.368)</td>
 <td style="text-align: center;">(0.605)</td>
+<td style="text-align: center;">(0.358)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">sppSESE</td>
@@ -2252,6 +2269,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">0.539</td>
 <td style="text-align: center;">0.535</td>
 <td style="text-align: center;">0.539</td>
+<td style="text-align: center;">1.178*</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2264,6 +2282,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.606)</td>
 <td style="text-align: center;">(0.474)</td>
 <td style="text-align: center;">(0.606)</td>
+<td style="text-align: center;">(0.462)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">year</td>
@@ -2276,6 +2295,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">0.471***</td>
 <td style="text-align: center;">0.471***</td>
 <td style="text-align: center;">0.471***</td>
+<td style="text-align: center;">0.531***</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2288,6 +2308,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.017)</td>
 <td style="text-align: center;">(0.017)</td>
 <td style="text-align: center;">(0.017)</td>
+<td style="text-align: center;">(0.013)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatLD × sppSESE</td>
@@ -2300,6 +2321,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.173</td>
 <td style="text-align: center;">−0.175</td>
 <td style="text-align: center;">−0.173</td>
+<td style="text-align: center;">−0.672</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2312,6 +2334,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.849)</td>
 <td style="text-align: center;">(0.679)</td>
 <td style="text-align: center;">(0.862)</td>
+<td style="text-align: center;">(0.653)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatHA × sppSESE</td>
@@ -2324,6 +2347,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.060</td>
 <td style="text-align: center;">−0.055</td>
 <td style="text-align: center;">−0.059</td>
+<td style="text-align: center;">−0.880</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2336,6 +2360,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.843)</td>
 <td style="text-align: center;">(0.672)</td>
 <td style="text-align: center;">(0.857)</td>
+<td style="text-align: center;">(0.647)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatHD × sppSESE</td>
@@ -2348,6 +2373,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.187</td>
 <td style="text-align: center;">−0.186</td>
 <td style="text-align: center;">−0.187</td>
+<td style="text-align: center;">−1.433*</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2360,6 +2386,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.844)</td>
 <td style="text-align: center;">(0.673)</td>
 <td style="text-align: center;">(0.857)</td>
+<td style="text-align: center;">(0.648)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatLD × year</td>
@@ -2372,6 +2399,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.085***</td>
 <td style="text-align: center;">−0.085***</td>
 <td style="text-align: center;">−0.085***</td>
+<td style="text-align: center;">−0.132***</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2384,6 +2412,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.025)</td>
 <td style="text-align: center;">(0.025)</td>
 <td style="text-align: center;">(0.025)</td>
+<td style="text-align: center;">(0.018)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatHA × year</td>
@@ -2396,6 +2425,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.169***</td>
 <td style="text-align: center;">−0.169***</td>
 <td style="text-align: center;">−0.169***</td>
+<td style="text-align: center;">−0.245***</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2408,6 +2438,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.023)</td>
 <td style="text-align: center;">(0.023)</td>
 <td style="text-align: center;">(0.023)</td>
+<td style="text-align: center;">(0.017)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatHD × year</td>
@@ -2420,6 +2451,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.175***</td>
 <td style="text-align: center;">−0.175***</td>
 <td style="text-align: center;">−0.175***</td>
+<td style="text-align: center;">−0.288***</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2432,6 +2464,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.023)</td>
 <td style="text-align: center;">(0.023)</td>
 <td style="text-align: center;">(0.023)</td>
+<td style="text-align: center;">(0.017)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">sppSESE × year</td>
@@ -2444,6 +2477,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">0.481***</td>
 <td style="text-align: center;">0.481***</td>
 <td style="text-align: center;">0.481***</td>
+<td style="text-align: center;">0.360***</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2456,6 +2490,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.024)</td>
 <td style="text-align: center;">(0.024)</td>
 <td style="text-align: center;">(0.024)</td>
+<td style="text-align: center;">(0.012)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatLD × sppSESE × year</td>
@@ -2468,6 +2503,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.093**</td>
 <td style="text-align: center;">−0.093**</td>
 <td style="text-align: center;">−0.093**</td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2480,6 +2516,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.035)</td>
 <td style="text-align: center;">(0.035)</td>
 <td style="text-align: center;">(0.035)</td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatHA × sppSESE × year</td>
@@ -2492,6 +2529,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.155***</td>
 <td style="text-align: center;">−0.155***</td>
 <td style="text-align: center;">−0.155***</td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2504,6 +2542,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.033)</td>
 <td style="text-align: center;">(0.033)</td>
 <td style="text-align: center;">(0.033)</td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">treatHD × sppSESE × year</td>
@@ -2516,6 +2555,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">−0.234***</td>
 <td style="text-align: center;">−0.234***</td>
 <td style="text-align: center;">−0.234***</td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -2528,6 +2568,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">(0.034)</td>
 <td style="text-align: center;">(0.034)</td>
 <td style="text-align: center;">(0.034)</td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">SD (Observations)</td>
@@ -2540,36 +2581,14 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">1.016</td>
 <td style="text-align: center;">1.016</td>
 <td style="text-align: center;">1.016</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">SD (Intercept treespp)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">0.844</td>
-<td style="text-align: center;">0.852</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">0.852</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">SD (Intercept plotspp)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">0.795</td>
-<td style="text-align: center;">0.795</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">0.809</td>
+<td style="text-align: center;">1.031</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">SD (Intercept tree)</td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;">0.925</td>
+<td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
@@ -2588,6 +2607,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;">0.000</td>
 <td style="text-align: center;"></td>
+<td style="text-align: center;">0.000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">SD (sppSESE tree)</td>
@@ -2600,6 +2620,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;">1.227</td>
 <td style="text-align: center;"></td>
+<td style="text-align: center;">1.223</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Cor (sppLIDE~sppSESE tree)</td>
@@ -2612,12 +2633,14 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;">0.284</td>
 <td style="text-align: center;"></td>
+<td style="text-align: center;">0.100</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">SD (Intercept plot)</td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;">0.638</td>
+<td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
@@ -2636,6 +2659,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;">0.474</td>
 <td style="text-align: center;"></td>
+<td style="text-align: center;">0.474</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">SD (sppSESE plot)</td>
@@ -2648,6 +2672,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;">1.037</td>
 <td style="text-align: center;"></td>
+<td style="text-align: center;">1.037</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Cor (sppLIDE~sppSESE plot)</td>
@@ -2660,12 +2685,40 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;">0.570</td>
 <td style="text-align: center;"></td>
+<td style="text-align: center;">0.570</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SD (Intercept plotspp)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.795</td>
+<td style="text-align: center;">0.795</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.809</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SD (Intercept treespp)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.844</td>
+<td style="text-align: center;">0.852</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.852</td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">SD (Intercept site)</td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;">0.000</td>
+<td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
@@ -2684,6 +2737,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">SD (sppSESE site)</td>
@@ -2696,6 +2750,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Cor (sppLIDE~sppSESE site)</td>
@@ -2703,6 +2758,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;">−1.000</td>
+<td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
@@ -2720,9 +2776,11 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center; box-shadow: 0px 1.5px;">0.153</td>
 <td style="text-align: center; box-shadow: 0px 1.5px;"></td>
 <td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Num.Obs.</td>
+<td style="text-align: center;">2076</td>
 <td style="text-align: center;">2076</td>
 <td style="text-align: center;">2076</td>
 <td style="text-align: center;">2076</td>
@@ -2744,11 +2802,13 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">R2 Adj.</td>
 <td style="text-align: center;">0.754</td>
 <td style="text-align: center;">0.752</td>
+<td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
@@ -2768,6 +2828,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">0.734</td>
 <td style="text-align: center;">0.745</td>
 <td style="text-align: center;">0.734</td>
+<td style="text-align: center;">0.743</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">R2 Cond.</td>
@@ -2780,6 +2841,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">0.886</td>
 <td style="text-align: center;">0.885</td>
 <td style="text-align: center;">0.886</td>
+<td style="text-align: center;">0.881</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">AIC</td>
@@ -2792,6 +2854,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">6901.5</td>
 <td style="text-align: center;">6682.9</td>
 <td style="text-align: center;">6899.5</td>
+<td style="text-align: center;">6712.5</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">BIC</td>
@@ -2804,6 +2867,7 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">7014.2</td>
 <td style="text-align: center;">6812.6</td>
 <td style="text-align: center;">7006.6</td>
+<td style="text-align: center;">6825.2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">ICC</td>
@@ -2816,11 +2880,13 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">0.6</td>
 <td style="text-align: center;">0.5</td>
 <td style="text-align: center;">0.6</td>
+<td style="text-align: center;">0.5</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Log.Lik.</td>
 <td style="text-align: center;">−3742.145</td>
 <td style="text-align: center;">−3754.458</td>
+<td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
@@ -2840,10 +2906,12 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <td style="text-align: center;">0.89</td>
 <td style="text-align: center;">0.94</td>
 <td style="text-align: center;">0.89</td>
+<td style="text-align: center;">0.96</td>
 </tr>
 </tbody><tfoot>
 <tr class="odd">
 <td style="text-align: left; padding: 0;"><sup></sup> + p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
+<td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
@@ -2871,22 +2939,22 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>mht9emmeans <span class="ot">&lt;-</span> <span class="fu">emmip</span>(mht9,</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  spp <span class="sc">~</span> year <span class="sc">|</span> treat,</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">CIs =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">plotit =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">at =</span> <span class="fu">list</span>(<span class="at">year =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>mht9emmeans<span class="sc">|&gt;</span> </span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, yvar, <span class="at">color =</span> spp, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_slab</span>(<span class="at">data =</span> dht, <span class="fu">aes</span>(year, ht), <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> treat) <span class="sc">+</span></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> LCL, <span class="at">ymax =</span> UCL, <span class="at">color =</span> <span class="cn">NULL</span>), <span class="at">alpha =</span> .<span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>, <span class="at">aesthetics =</span> <span class="fu">c</span>(<span class="st">"color"</span>, <span class="st">"fill"</span>)) <span class="sc">+</span></span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Height (m)"</span>, <span class="at">color =</span> <span class="st">"Species"</span>, <span class="at">fill =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>mht9emmeans <span class="ot">&lt;-</span> <span class="fu">emmip</span>(mht9,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  spp <span class="sc">~</span> year <span class="sc">|</span> treat,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">CIs =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">plotit =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">at =</span> <span class="fu">list</span>(<span class="at">year =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>mht9emmeans<span class="sc">|&gt;</span> </span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, yvar, <span class="at">color =</span> spp, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_slab</span>(<span class="at">data =</span> dht, <span class="fu">aes</span>(year, ht), <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> treat) <span class="sc">+</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> LCL, <span class="at">ymax =</span> UCL, <span class="at">color =</span> <span class="cn">NULL</span>), <span class="at">alpha =</span> .<span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>, <span class="at">aesthetics =</span> <span class="fu">c</span>(<span class="st">"color"</span>, <span class="st">"fill"</span>)) <span class="sc">+</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Height (m)"</span>, <span class="at">color =</span> <span class="st">"Species"</span>, <span class="at">fill =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-multi-year-growth" class="quarto-figure quarto-figure-center anchored">
@@ -2900,42 +2968,42 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>mht9grid <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mht9, pairwise <span class="sc">~</span> treat, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"spp"</span>), <span class="at">at =</span> <span class="fu">list</span>(<span class="at">year =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>mht9grid <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mht9, pairwise <span class="sc">~</span> treat, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"spp"</span>), <span class="at">at =</span> <span class="fu">list</span>(<span class="at">year =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>mht9cld <span class="ot">&lt;-</span> <span class="fu">cld</span>(mht9grid, <span class="at">Letters =</span> letters) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>multiple_years_plot <span class="ot">&lt;-</span> <span class="fu">filter</span>(dht, year <span class="sc">==</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treat, ht, <span class="at">color =</span> spp, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>spp, <span class="at">switch =</span> <span class="st">"x"</span>) <span class="sc">+</span></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">"lines"</span>),</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">+</span></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dots</span>() <span class="sc">+</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>, <span class="at">aesthetics =</span> <span class="fu">c</span>(<span class="st">"color"</span>, <span class="st">"fill"</span>)) <span class="sc">+</span></span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(</span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> mht9cld, </span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> emmean, <span class="at">ymin =</span> lower.CL, <span class="at">ymax =</span> upper.CL),</span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">0.07</span>),</span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span>,</span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>,</span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">FALSE</span></span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> mht9cld,</span>
-<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> upper.CL, <span class="at">label =</span> .group),</span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,</span>
-<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">0.3</span>, <span class="at">y =</span> <span class="fl">0.2</span>)</span>
-<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="st">"Height (m)"</span>, <span class="at">color =</span> <span class="st">"Species"</span>, <span class="at">fill =</span> <span class="st">"Species"</span>) <span class="sc">+</span></span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
-<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>multiple_years_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>mht9cld <span class="ot">&lt;-</span> <span class="fu">cld</span>(mht9grid, <span class="at">Letters =</span> letters) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>multiple_years_plot <span class="ot">&lt;-</span> <span class="fu">filter</span>(dht, year <span class="sc">==</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treat, ht, <span class="at">color =</span> spp, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>spp, <span class="at">switch =</span> <span class="st">"x"</span>) <span class="sc">+</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">"lines"</span>),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dots</span>() <span class="sc">+</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>, <span class="at">aesthetics =</span> <span class="fu">c</span>(<span class="st">"color"</span>, <span class="st">"fill"</span>)) <span class="sc">+</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> mht9cld, </span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> emmean, <span class="at">ymin =</span> lower.CL, <span class="at">ymax =</span> upper.CL),</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">0.07</span>),</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span>,</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>,</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">FALSE</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> mht9cld,</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> upper.CL, <span class="at">label =</span> .group),</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">0.3</span>, <span class="at">y =</span> <span class="fl">0.2</span>)</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="st">"Height (m)"</span>, <span class="at">color =</span> <span class="st">"Species"</span>, <span class="at">fill =</span> <span class="st">"Species"</span>) <span class="sc">+</span></span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>multiple_years_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-multi-year-at-10" class="quarto-figure quarto-figure-center anchored">
@@ -2952,32 +3020,32 @@ source(knitr::purl("sprouts_import_data.qmd", tempfile()))
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(mht104cld, mht9cld, <span class="at">.id =</span> <span class="st">"model"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="fu">case_match</span>(model, <span class="st">"1"</span> <span class="sc">~</span> <span class="st">"year 10 only"</span>, <span class="st">"2"</span> <span class="sc">~</span> <span class="st">"multi-year"</span>),</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.group =</span> <span class="fu">str_replace_all</span>(.group, <span class="st">" "</span>, <span class="st">""</span>)</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treat, ht, <span class="at">color =</span> model, <span class="at">fill =</span> model)) <span class="sc">+</span></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>spp) <span class="sc">+</span></span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(</span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> emmean, <span class="at">ymin =</span> lower.CL, <span class="at">ymax =</span> upper.CL),</span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.4</span>),</span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span>,</span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dots</span>(</span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dht10, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">fill =</span> <span class="st">"gray70"</span>,</span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="fl">0.2</span>), <span class="at">scale =</span> <span class="fl">0.7</span>, <span class="at">binwidth =</span> <span class="fl">0.18</span></span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> upper.CL <span class="sc">+</span> <span class="fl">0.6</span>, <span class="at">label =</span> .group, <span class="at">color =</span> model,),</span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.4</span>),</span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span> </span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">rnd_color_brewer</span>(<span class="st">"Set2"</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)),</span>
-<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">aesthetics =</span> <span class="fu">c</span>(<span class="st">"color"</span>, <span class="st">"fill"</span>)</span>
-<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(mht104cld, mht9cld, <span class="at">.id =</span> <span class="st">"model"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="fu">case_match</span>(model, <span class="st">"1"</span> <span class="sc">~</span> <span class="st">"year 10 only"</span>, <span class="st">"2"</span> <span class="sc">~</span> <span class="st">"multi-year"</span>),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.group =</span> <span class="fu">str_replace_all</span>(.group, <span class="st">" "</span>, <span class="st">""</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treat, ht, <span class="at">color =</span> model, <span class="at">fill =</span> model)) <span class="sc">+</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>spp) <span class="sc">+</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> emmean, <span class="at">ymin =</span> lower.CL, <span class="at">ymax =</span> upper.CL),</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.4</span>),</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span>,</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dots</span>(</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dht10, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">fill =</span> <span class="st">"gray70"</span>,</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="fl">0.2</span>), <span class="at">scale =</span> <span class="fl">0.7</span>, <span class="at">binwidth =</span> <span class="fl">0.18</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> upper.CL <span class="sc">+</span> <span class="fl">0.6</span>, <span class="at">label =</span> .group, <span class="at">color =</span> model,),</span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.4</span>),</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span> </span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">rnd_color_brewer</span>(<span class="st">"Set2"</span>, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)),</span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">aesthetics =</span> <span class="fu">c</span>(<span class="st">"color"</span>, <span class="st">"fill"</span>)</span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 4</code></pre>
