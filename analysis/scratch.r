@@ -922,6 +922,235 @@ m9 <- lmer(
 
 predictions(m9, newdata = "mean", vcov = "kenward-roger")
 
+# Test residuals with DHARma
+res_sim <- simulateResiduals(mht9, re.form = NA)
+res_sim <- simulateResiduals(mht9, re.form = NULL)
+plot(res_sim)
+plotResiduals(res_sim, form = dht$year)
+plotResiduals(res_sim, form = with(dht, paste(spp, treat)))
+plotResiduals(res_sim, form = dht$treat)
+
+recalculateResiduals(res_sim, group = dht$plot) |> plot()
+recalculateResiduals(res_sim, group = dht$tree) |> plot(quantreg = FALSE)
+
+plot(predict(mht9), resid(mht9, type = "pearson"))
+plot(predict(mht9f), resid(mht9f, type = "pearson"))
+plot(exp(predict(mht9f, re.form = NA)), resid.merMod(mht9f, type = "pearson"))
+abline(h = 0)
+
+# Maybe I should use a gamma model
+
+mht9a <- glmer(
+  ht ~ treat * spp * year + (1 | plot) + (1 | tree),
+  data = mutate(dht, year = scale(year)), family = Gamma(link = log),
+  control = glmerControl(optCtrl = list(maxfun = 1e6))
+)
+
+mht9b <- glmer(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year + (1 | plot) + 
+  (1 | tree),
+  data = mutate(dht, year = scale(year)), family = Gamma(link = log),
+  control = glmerControl(optCtrl = list(maxfun = 1e6))
+)
+
+mht9a_all <- allFit(mht9a)
+summary(mht9a_all)
+
+summary(mht9a)
+
+# What about glmmTMB?
+library(glmmTMB)
+
+mht11 <- glmmTMB(
+  ht ~ treat * spp * year + (1 | plot) + (1 | tree),
+  data = dht, family = Gamma(link = "log")
+)
+
+mht12 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year + (1 | plot) + 
+  (1 | tree),
+  data = dht, family = Gamma(link = "log")
+)
+
+mht13 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year + 
+  (0 + spp | plot) + (0 + spp | tree),
+  data = dht, family = Gamma(link = "log")
+)
+
+mht14 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  data = mutate(dht, year = factor(year)), family = Gamma(link = "log")
+)
+
+mht15 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  dispformula = ~ year,
+  data = mutate(dht, year = factor(year)), family = Gamma(link = "log")
+)
+
+mht16 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  dispformula = ~ year * spp,
+  data = mutate(dht, year = factor(year)),
+  family = Gamma(link = "log")
+)
+
+mht17 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  dispformula = ~ year * spp + treat + treat:spp,
+  data = mutate(dht, year = factor(year)), family = Gamma(link = "log")
+)
+
+mht18 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  data = mutate(dht, year = factor(year)),
+  family = gaussian(link = "log")
+)
+
+AIC(mht11, mht12, mht13, mht14, mht15, mht16, mht17, mht18)
+
+grid <- emmeans(
+  mht18,
+  pairwise ~ treat,
+  by = c("spp"),
+  at = list(year = "10"),
+  type = "response"
+)
+
+grid_cld <- cld(grid, Letters = letters) |> as_tibble()
+
+multiple_years_plot2 <- filter(dht, year == 10) |>
+  ggplot(aes(treat, ht, color = spp, fill = spp)) +
+  facet_grid(~spp, switch = "x") +
+  theme(panel.spacing = unit(0, "lines"),
+        strip.background = element_blank(),
+        strip.text = element_blank(),
+        ) +
+  geom_dots() +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  geom_pointrange(
+    data = grid_cld,
+    aes(y = response, ymin = lower.CL, ymax = upper.CL),
+    color = "gray50", position = position_nudge(x = -0.07),
+    size = 0.7,
+    linewidth = 1,
+    show.legend = FALSE
+  ) +
+  geom_text(
+    data = grid_cld,
+    aes(y = upper.CL, label = .group),
+    color = "black",
+    position = position_nudge(x = -0.3, y = 0.2)
+  ) +
+  labs(x = "Treatment", y = "Height (m)", color = "Species", fill = "Species") +
+  theme(legend.position = "bottom")
+
+multiple_years_plot2
+
+# Test residuals with DHARma
+res_sim <- simulateResiduals(mht9i, re.form = NULL)
+plot(res_sim)
 
 
+res_group <- recalculateResiduals(res_sim, group = with(dht, interaction(spp, treat, year)))
+plot(res_group)
+plotResiduals(res_sim, form = with(dht, interaction(year, spp)))
+plotResiduals(res_sim, form = with(dht, interaction(spp, treat)))
+plotResiduals(res_sim, form = with(dht, interaction(year, treat)))
+plotResiduals(res_sim, form = dht$treat)
+
+testDispersion(res_sim)
+
+
+# compare gamma and 10 year only models
+standard_model_col_names <- c(
+  LCL = "lower.CL",  UCL = "upper.CL",  LCL = "asymp.LCL", UCL = "asymp.UCL",
+  emmean = "response"
+)
+
+list("year 10 only" = mht108cld, "multi-year" = mht9cld) |>
+  map(\(x) rename(x, any_of(standard_model_col_names))) |>
+  bind_rows(.id = "model") |>
+  mutate(
+    .group = str_replace_all(.group, " ", "")
+  ) |>
+  ggplot(aes(treat, ht, color = model, fill = model)) +
+  facet_grid(~spp) +
+  geom_pointrange(
+    aes(y = emmean, ymin = LCL, ymax = UCL),
+    position = position_dodge(width = 0.4),
+    size = 0.7,
+    linewidth = 1
+  ) +
+  geom_dots(
+    data = dht10, color = "gray50", fill = "gray70",
+    position = position_nudge(x = 0.2), scale = 0.7, binwidth = 0.18
+  ) +
+  geom_text(
+    aes(y = UCL + 0.6, label = .group, color = model,),
+    position = position_dodge(width = 0.4),
+  ) +
+  theme(legend.position = "bottom") + 
+  scale_color_manual(
+    values = rnd_color_brewer("Set2", c(1,4)),
+    aesthetics = c("color", "fill")
+  )
+
+# multi-year, observed vs simulated
+for (n in 1:14) { print(
+sprouts |>
+  lengthen_data("ht") |>
+  select(treat, spp, year, observed = ht) |>
+  mutate(predicted = pull(simulate(mht9i, type = "response", re.form = NULL))) |>
+  filter(year == 10) |>
+  pivot_longer(c(observed, predicted), names_to = "type", values_to = "ht") |>
+  ggplot(aes(x = ht, y = treat, color = type, fill = type)) +
+  stat_slab(normalize = "panels", alpha = 0.3) +
+  facet_grid(spp ~ year, labeller = label_both) +
+  labs(x = "Height (m)", y = "Treatment", title = "Multi-year model simulation") +
+  scale_color_manual(
+    values = rnd_color_brewer("Set2", c(1,4)),
+    aesthetics = c("color", "fill")
+  ) +
+  scale_x_continuous(limits = c(0, 25))
+) }
+
+sprouts |>
+  lengthen_data("ht") |>
+  select(treat, spp, year, observed = ht) |>
+  mutate(predicted = predict(mht9i, type = "response", re.form = NULL)) |>
+  filter(year == 10) |>
+  pivot_longer(c(observed, predicted), names_to = "type", values_to = "ht") |>
+  ggplot(aes(x = ht, y = treat, color = type, fill = type)) +
+  stat_slab(normalize = "panels", alpha = 0.3) +
+  facet_grid(spp ~ year, labeller = label_both) +
+  labs(x = "Height (m)", y = "Treatment", title = "Multi-year model simulation") +
+  scale_color_manual(
+    values = rnd_color_brewer("Set2", c(1,4)),
+    aesthetics = c("color", "fill")
+  ) +
+  scale_x_continuous(limits = c(0, 25))
+
+# 10-year, observed vs simulated
+sprouts |>
+  lengthen_data("ht") |>
+  filter(year == 10) |>
+  select(treat, spp, year, observed = ht) |>
+  mutate(predicted = pull(simulate(mht104, re.form = NULL))) |>
+  pivot_longer(c(observed, predicted), names_to = "type", values_to = "ht") |>
+  ggplot(aes(x = ht, y = treat, color = type, fill = type)) +
+  stat_slab(normalize = "panels", alpha = 0.3) +
+  facet_grid(~ spp, labeller = label_both) +
+  # labs(x = "Height (m)", y = "Treatment") +
+  scale_color_manual(
+    values = rnd_color_brewer("Set2", c(1,4)),
+    aesthetics = c("color", "fill")
+  ) +
+  scale_x_continuous(limits = c(-2, 16))
 

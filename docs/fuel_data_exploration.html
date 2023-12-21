@@ -472,7 +472,7 @@ div.csl-indent {
 <div id="fig-dufflitter" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="fuel_data_exploration_files/figure-html/fig-dufflitter-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.4: Combined duff and litter loading at each station along trancects. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span>4.3</span></a>.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.4: Combined duff and litter loading at each station along trancects. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cwd</span></a>.</figcaption>
 </figure>
 </div>
 </div>
@@ -499,7 +499,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </figure>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;4.5: Vegetation fuel loading for each station along transects, including live and dead fuels attached to live vegetation. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span>4.3</span></a>.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.5: Vegetation fuel loading for each station along transects, including live and dead fuels attached to live vegetation. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span class="quarto-unresolved-ref">fig-cwd</span></a>.</figcaption>
 </figure>
 </div>
 </section>
@@ -514,7 +514,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <li>thoushr</li>
 <li>veg</li>
 </ol>
-<p>When using manova to test for difference between groups with multiple response variables, it is important that the response variables are multivariate normally distributed. Unfortunately, it would appear that we have a probelem with normality. The raw data for each loading variable is clearly not normally distributed <a href="#fig-qqplot-naive">Figure&nbsp;<span>4.6</span></a>.</p>
+<p>When using manova to test for difference between groups with multiple response variables, it is important that the response variables are multivariate normally distributed. Unfortunately, it would appear that we have a probelem with normality. The raw data for each loading variable is clearly not normally distributed <a href="#fig-qqplot-naive">Figure&nbsp;<span class="quarto-unresolved-ref">fig-qqplot-naive</span></a>.</p>
 <div class="cell" data-fig-heigth="8">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>myqqplot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, var) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
@@ -633,7 +633,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 </div>
 <p>While, this looks somewhat more normal, the zeros end up being a little strange. I applied a separte transformation for each fuel class, but all treatments within a fuel class have the same transformation.</p>
-<p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model">Figure&nbsp;<span>4.8</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
+<p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model">Figure&nbsp;<span class="quarto-unresolved-ref">fig-qqplot-model</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
 <div id="fig-qqplot-model" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))</span>
@@ -680,7 +680,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <figcaption class="figure-caption">Figure&nbsp;4.8: Plot A assessed the multivariate normality of residuals given the model where all loading variabels are a function of the treatment group.</figcaption>
 </figure>
 </div>
-<p>A number of different tests of multivariate normaliy also confirm the lack of evidence for meeting this assumption (<a href="#tbl-norm-test">Table&nbsp;<span>4.2</span></a>).</p>
+<p>A number of different tests of multivariate normaliy also confirm the lack of evidence for meeting this assumption (<a href="#tbl-norm-test">Table&nbsp;<span class="quarto-unresolved-ref">tbl-norm-test</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"mardia"</span>, <span class="st">"hz"</span>, <span class="st">"royston"</span>, <span class="st">"dh"</span>, <span class="st">"energy"</span>) <span class="sc">|&gt;</span></span>

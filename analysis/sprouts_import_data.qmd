@@ -29,7 +29,7 @@ ggplot2::theme_update(
 
 ```
 
-## Description
+## Getting started
 
 First, we'll load some libraries and our data.
 
@@ -47,6 +47,9 @@ library(multcompView)
 library(tidyverse)
 library(mgcv)
 library(patchwork)
+library(DHARMa)
+library(glmmTMB)
+library(ggeffects)
 
 ```
 
@@ -252,6 +255,7 @@ diverging performance should be so apparent with redwood and not tanoak.
 
 ```{r}
 #| label: fig-data-summary-treatments
+#| fig-height: 8
 #| fig-width: 8
 #| fig-cap: >
 #|   Height distributions for tanoak and redwood over time for each of four
@@ -261,14 +265,16 @@ diverging performance should be so apparent with redwood and not tanoak.
 
 sprouts |>
   lengthen_data("ht") |>
-  ggplot(aes(ht, fct_rev(factor(year)), color = treat)) +
+  ggplot(aes(ht, treat, color = treat, fill = treat)) +
   scale_y_discrete(expand = c(0, 0)) +
   scale_x_continuous(expand = c(0, 0)) +
   coord_cartesian(clip = "off") +
-  geom_density_ridges(alpha = .3, size = 1) +
-  facet_wrap(~spp) +
-  labs(x = "Height (m)", y = "Year") +
-  scale_color_brewer(palette = "Set2")
+  geom_dots(binwidth = unit(0.019, "npc")) +
+  facet_grid(vars(spp), vars(year), scales = "free", labeller = label_both) +
+  labs(x = "Height (m)", y = "Treatment") +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  theme(legend.position = "bottom")
+
 ```
 
 ```{r}
@@ -485,8 +491,11 @@ minc <- lst(
   minc5 = update(minc4, ~ . + spp:treat),
   minc6 = update(minc5, ~ . + spp:year),
   minc7 = update(minc6, ~ . + treat:year),
-  minc8 = lmer(ht_inc ~ treat + year + spp + treat:spp + spp:year + (1 | plot) +
-    (1 | tree), dinc),
+  minc8 = lmer(
+    ht_inc ~ treat + year + spp + treat:spp + spp:year + (1 | plot) +
+      (1 | tree),
+    dinc
+  ),
   minc9 = update(minc8, ~ . + treat:year),
   minc10 = update(minc8, ~ . - (1 | plot) + (0 + spp | plot)),
   minc11 = update(minc10, ~ . - treat:spp),
@@ -576,7 +585,15 @@ rearrange_coef_names <- function(x) {
     str_replace(":", " x ")
 }
 
-modelsummary(minc, stars = TRUE, coef_rename = rearrange_coef_names)
+modelsummary(
+  minc,
+  stars = TRUE,
+  coef_rename = rearrange_coef_names,
+  output = "markdown",
+  metrics = c("AIC", "BIC", "RMSE"),
+  estimator = "ML",
+  gof_omit = "F|Log.Lik"
+)
 
 ```
 
@@ -674,15 +691,50 @@ mht101 <- lm(ht ~ treat * spp, data = dht10)
 mht102 <- lmer(ht ~ treat * spp + (1 | plot) + (1 | site), data = dht10)
 mht103 <- lmer(ht ~ treat * spp + (1 | plot), data = dht10)
 mht104 <- lmer(ht ~ treat * spp + (0 + spp | plot), data = dht10)
+mht105 <- glmmTMB(
+  ht ~ treat * spp + (0 + spp | plot),
+  family = Gamma(link = "log"),
+  data = dht10
+)
+mht106 <- glmmTMB(
+  ht ~ treat * spp + (0 + spp | plot),
+  family = Gamma(link = "log"),
+  data = dht10,
+  dispformula = ~ spp
+)
+mht107 <- glmmTMB(
+  ht ~ treat + spp + (0 + spp | plot),
+  family = Gamma(link = "log"),
+  data = dht10,
+  dispformula = ~ spp
+)
+mht108 <- glmmTMB(
+  ht ~ treat + spp + (0 + spp | plot),
+  family = Gamma(link = "log"),
+  data = dht10,
+  dispformula = ~ spp + treat
+)
 
-mht10_list <- lst(mht101, mht102, mht103, mht104)
-modelsummary(mht10_list, stars = TRUE)
+mht10_list <- lst(
+  mht101, mht102, mht103, mht104, mht105, mht106, mht107, mht108
+)
+
+modelsummary(
+  mht10_list,
+  stars = TRUE,
+  output = "markdown",
+  shape = term:component + statistic ~ model,
+  metrics = c("AIC", "BIC", "RMSE"),
+  estimator = "ML",
+  gof_omit = "F|Log.Lik"
+)
 
 ```
 The best model according to AIC includes a random intercept for plot and a
 random slope for spp. Because spp is a factor, this effectively estimates a
 species specific intercept, but also takes into account the covariance of the
-species plot effect.
+species plot effect. The best model for dispersion included speceis and
+treatment.
 
 ### Year 10 only Results
 
@@ -694,8 +746,11 @@ species plot effect.
 #|   there is not sufficient evidence to claim the estiamtes come from different
 #|   distributions.
 
-mht104grid <- emmeans(mht104, pairwise ~ treat, by = c("spp"))
-mht104cld <- cld(mht104grid, Letters = letters) |> as_tibble()
+mht108grid <- emmeans(mht108, pairwise ~ treat, by = c("spp"), type = "response")
+
+mht108cld <- cld(mht108grid, Letters = letters) |>
+  as_tibble() |>
+  mutate( .group = str_replace_all(.group, " ", ""))
 
 year_10_only_plot <- dht10 |>
   ggplot(aes(treat, ht, color = spp, fill = spp)) +
@@ -707,16 +762,17 @@ year_10_only_plot <- dht10 |>
   geom_dots() +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   geom_pointrange(
-    data = mht104cld,
-    aes(y = emmean, ymin = lower.CL, ymax = upper.CL),
-    color = "gray50", position = position_nudge(x = -0.07),
+    data = mht108cld,
+    aes(y = response, ymin = asymp.LCL, ymax = asymp.UCL),
+    color = "gray50",
+    position = position_nudge(x = -0.07),
     size = 0.7,
     linewidth = 1,
     show.legend = FALSE
   ) +
   geom_text(
-    data = mht104cld,
-    aes(y = upper.CL, label = .group),
+    data = mht108cld,
+    aes(y = asymp.UCL, label = .group),
     color = "black",
     position = position_nudge(x = -0.3, y = 0.2)
   )
@@ -800,40 +856,135 @@ mht10 <- lmer(
   data = dht
 )
 
-mht11 <- lmer(
-  ht ~ treat + spp + year + treat:spp + year:spp + treat:year +
-    (0 + spp | plot) + (0 + spp | tree),
-  data = dht
-)
-
 # I tried fitting year as a factor, but then could not fit a model that included
 # the 3-way interaction and random slopes for species. The model without the
 # 3-way (and spp random slopes) was close, but about 12 AIC larger.
 
-modelsummary(list(
-  "Model 2" = mht2, "Model 3" = mht3, "Model 4" = mht4, "Model 5" = mht5,
-  "Model 6" = mht6, "Model 7" = mht7, "Model 8" = mht8, "Model 9" = mht9,
-  "Model 10" = mht10, "Model 11" = mht11
-), stars = TRUE)
+modelsummary(
+  list(
+    "Model 2" = mht2, "Model 3" = mht3, "Model 4" = mht4, "Model 5" = mht5,
+    "Model 6" = mht6, "Model 7" = mht7, "Model 8" = mht8, "Model 9" = mht9,
+    "Model 10" = mht10
+  ),
+  stars = TRUE,
+  output = "markdown",
+  metrics = c("AIC", "BIC", "RMSE"),
+  estimator = "ML",
+  gof_omit = "F|Log.Lik"
+)
 
 ```
 
-The model with the lowest AIC is model 9. While it does have a singular warning,
-I believe this is because of the zero estimate of tree-level random effect
-variance for tanoak. The data exploration plots above show that compared to
-redwood, tanoak height distributions are much more homogenous. Given the
-similarities is coefficient and standard error estimates between model 9 and
-some of the models that did not give a warning, I don't think that is is a
-problem. I considered removing the species specific tree effect, but this
-resulted in a much lower AIC--the tree variance for redwood is fairly large.
+### Multi-year heights V2
 
-The next best model (AIC) is model 5, which is also the most complex model.
-Model 9 is only slightly better, but is more desireable because of it's reduced
-complexity.
+The problem with all of the above models is (a) a normal distribution is not a
+good fit for the data because it results in negative height predictions for
+small trees (year 1) and (b) variance is not constant. Finally, we are fitting
+year as a linear effect because fitting it as a factor with 3 levels led to
+model convergence problems, but ideally, we would like to allow different
+relationships between height and year, because, as we saw in the previous
+section, height growth is not constant in the first 10 years.
+
+For these reasons it makes sense to try another modeling framework,
+particularly, a gamma distributed model, with a modeled dispersion parameter. It
+allows only positive predictions, can right skewed distributions, and the
+dispersion can be modeled as a function of covariates.
+
+```{r}
+#| code-fold: false
+#| label: tbl-model-summaries-v2
+#| tbl-cap: >
+#|   Summary table for models 2-10, described above. Standard error in
+#|   parantheses.
+#| column: body-outset
+
+mht11 <- glmmTMB(
+  ht ~ treat * spp * year + (1 | plot) + (1 | tree),
+  data = dht, family = Gamma(link = "log")
+)
+
+mht12 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year + (1 | plot) + 
+  (1 | tree),
+  data = dht, family = Gamma(link = "log")
+)
+
+mht13 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year + 
+  (0 + spp | plot) + (0 + spp | tree),
+  data = dht, family = Gamma(link = "log")
+)
+
+mht14 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  data = mutate(dht, year = factor(year)), family = Gamma(link = "log")
+)
+
+mht15 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  dispformula = ~ year,
+  data = mutate(dht, year = factor(year)), family = Gamma(link = "log")
+)
+
+mht16 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  dispformula = ~ year * spp,
+  data = mutate(dht, year = factor(year)),
+  family = Gamma(link = "log")
+)
+
+mht17 <- glmmTMB(
+  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  dispformula = ~ year * spp + treat + treat:spp,
+  data = mutate(dht, year = factor(year)), family = Gamma(link = "log")
+)
+
+mht18 <- glmmTMB(
+  ht ~ treat + spp + year + treat:year + spp:year +
+  (1 | plot) + (1 | tree),
+  dispformula = ~ year * spp + treat + treat:spp,
+  data = mutate(dht, year = factor(year)),
+  family = gaussian(link = "log")
+)
+
+modelsummary(
+  list(
+    "Model 11" = mht11, "Model 12" = mht12, "Model 13" = mht13,
+    "Model 14" = mht14, "Model 15" = mht15, "Model 16" = mht16,
+    "Model 17" = mht17, "Model 18" = mht18
+  ),
+  output = "markdown",
+  shape = term:component + statistic ~ model,
+  metrics = c("AIC", "BIC", "RMSE"),
+  estimator = "ML",
+  gof_omit = "F|Log.Lik",
+  stars = TRUE
+)
+
+```
+
+The model with the lowest AIC is model 18.
+
+### Multi-year model checking
+
+```{r}
+#| label: fig-multi-year-resid
+#| fig-cap: >
+#|   Residual vs fitted plot for the selected multi-year linear regression model
+#|   for heights.
+
+res <- simulateResiduals(mht18)
+plot(res)
+
+```
 
 ### Multi-year results
 
-Using model 9, we can now answer the questions we posed in the Objectives
+Using model 18, we can now answer the questions we posed in the Objectives
 section.
 
 ```{r}
@@ -841,22 +992,36 @@ section.
 #| fig-height: 7
 #| fig-cap: >
 #|   Average species and treatment specific height as a linear function
-#|   of year. Distributions represent the raw data associated with the estimate
-#|   at that point.
+#|   of year. Density distributions represent the raw data associated with the
+#|   estimate at that point. The grey line is the OLS fit for reference.
 
-mht9emmeans <- emmip(mht9,
-  spp ~ year | treat,
-  CIs = TRUE,
-  plotit = FALSE,
-  at = list(year = 1:10)
+mht18emmeans <- emmeans(
+  mht18,
+  c("spp", "treat", "year"),
+  type = "response"
 )
 
-mht9emmeans|> 
-  ggplot(aes(year, yvar, color = spp, fill = spp)) +
+mht18emmeans |>
+  as_tibble() |>
+  mutate(
+    year = as.numeric(levels(year))[year]
+  ) |>
+  ggplot(aes(year, response, color = spp, fill = spp, group = spp)) +
     stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
+    stat_smooth(
+      data = dht,
+      aes(year, ht),
+      method = lm,
+      color = "gray60",
+      se = FALSE,
+      linewidth = 0.7
+    ) +
     geom_line() +
     facet_wrap(~ treat) +
-    geom_ribbon(aes(ymin = LCL, ymax = UCL, color = NULL), alpha = .2) +
+    geom_ribbon(
+      aes(ymin = lower.CL, ymax = upper.CL, color = NULL),
+      alpha = .2
+    ) +
     scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
     theme(legend.position = "bottom") +
     labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species")
@@ -870,8 +1035,19 @@ mht9emmeans|>
 #|   10 years. The same letter within a species indicates that there was not
 #|   enough evidence to differentiate those treatments.
 
-mht9grid <- emmeans(mht9, pairwise ~ treat, by = c("spp"), at = list(year = 10))
-mht9cld <- cld(mht9grid, Letters = letters) |> as_tibble()
+mht18_compare <- emmeans(
+  mht18,
+  spec = "treat",
+  by = c("spp"),
+  at = list(year = "10"),
+  type = "response"
+) |>
+  cld(Letters = letters) |>
+  as_tibble() |>
+  mutate(
+    # year = as.numeric(levels(year))[year],
+    .group = str_replace_all(.group, " ", "")
+  )
 
 multiple_years_plot <- filter(dht, year == 10) |>
   ggplot(aes(treat, ht, color = spp, fill = spp)) +
@@ -883,16 +1059,16 @@ multiple_years_plot <- filter(dht, year == 10) |>
   geom_dots() +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   geom_pointrange(
-    data = mht9cld, 
-    aes(y = emmean, ymin = lower.CL, ymax = upper.CL),
+    aes(y = response, ymin = lower.CL, ymax = upper.CL),
+    data = mht18_compare,
     color = "gray50", position = position_nudge(x = -0.07),
     size = 0.7,
     linewidth = 1,
     show.legend = FALSE
   ) +
   geom_text(
-    data = mht9cld,
     aes(y = upper.CL, label = .group),
+    data = mht18_compare,
     color = "black",
     position = position_nudge(x = -0.3, y = 0.2)
   ) +
@@ -900,22 +1076,25 @@ multiple_years_plot <- filter(dht, year == 10) |>
   theme(legend.position = "bottom")
 
 multiple_years_plot
+
 ```
 
 
 ### Multi-year vs. year 10 only
 
 ```{r}
+standard_model_col_names <- c(
+  LCL = "lower.CL",  UCL = "upper.CL",  LCL = "asymp.LCL", UCL = "asymp.UCL",
+  emmean = "response"
+)
 
-bind_rows(mht104cld, mht9cld, .id = "model") |>
-  mutate(
-    model = case_match(model, "1" ~ "year 10 only", "2" ~ "multi-year"),
-    .group = str_replace_all(.group, " ", "")
-  ) |>
+list("year 10 only" = mht108cld, "multi-year" = mht18_compare) |>
+  map(\(x) rename(x, any_of(standard_model_col_names))) |>
+  bind_rows(.id = "model") |>
   ggplot(aes(treat, ht, color = model, fill = model)) +
   facet_grid(~spp) +
   geom_pointrange(
-    aes(y = emmean, ymin = lower.CL, ymax = upper.CL),
+    aes(y = emmean, ymin = LCL, ymax = UCL),
     position = position_dodge(width = 0.4),
     size = 0.7,
     linewidth = 1
@@ -925,7 +1104,7 @@ bind_rows(mht104cld, mht9cld, .id = "model") |>
     position = position_nudge(x = 0.2), scale = 0.7, binwidth = 0.18
   ) +
   geom_text(
-    aes(y = upper.CL + 0.6, label = .group, color = model,),
+    aes(y = UCL + 0.6, label = .group, color = model,),
     position = position_dodge(width = 0.4),
   ) +
   theme(legend.position = "bottom") + 
