@@ -7,7 +7,7 @@ wrangle_datasheet <- function(file) {
   lines <- readLines(con)
   close(con)
 
-  # Remove BOM <https://stackoverflow.com/a/67906611>
+  # Remove BOM if it exists <https://stackoverflow.com/a/67906611>
   lines[1] <- gsub("\\xef\\xbb\\xbf", "", lines[1], useBytes = TRUE)
 
   # These are the sections I want to extract
@@ -84,6 +84,7 @@ wrangle_datasheet <- function(file) {
   )
 }
 
+# Here I hard code the source directory for the input csvs
 data_dir <- "../data"
 
 # Combine fuels data for each plot

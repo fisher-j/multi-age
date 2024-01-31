@@ -413,7 +413,7 @@ boundary (singular) fit: see help('isSingular')
 boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
 </div>
-<p>Pairwise comparisons with Tukey adjustment for each of 6 multilevel models representing different fuel loading classes reveals that the only evidence for differences in means among treatments is with vegetation between the gs and ha treatments. Another sizeable difference in means is between gs and ha for the onehr fuels (<a href="#fig-multilevel-p-value">Figure&nbsp;<span class="quarto-unresolved-ref">fig-multilevel-p-value</span></a>).</p>
+<p>Pairwise comparisons with Tukey adjustment for each of 6 multilevel models representing different fuel loading classes reveals that the only evidence for differences in means among treatments is with vegetation between the gs and ha treatments. Another sizeable difference in means is between gs and ha for the onehr fuels (<a href="#fig-multilevel-p-value">Figure&nbsp;<span>5.2</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(m1, pairs) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(pairs) <span class="sc">|&gt;</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p.value <span class="sc">&lt;=</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
@@ -750,7 +750,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <div id="fig-mod2-diagnostic" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="hypothesis_test_files/figure-html/fig-mod2-diagnostic-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.4: Same as <a href="#fig-mod1-diagnostic">Figure&nbsp;<span class="quarto-unresolved-ref">fig-mod1-diagnostic</span></a> but variance is modeled as a function fitted values, assuming a linear relationship. Fit with <code>nlme</code>. The (scaled) residuals are more homogenous now.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;5.4: Same as <a href="#fig-mod1-diagnostic">Figure&nbsp;<span>5.3</span></a> but variance is modeled as a function fitted values, assuming a linear relationship. Fit with <code>nlme</code>. The (scaled) residuals are more homogenous now.</figcaption>
 </figure>
 </div>
 </div>
@@ -1077,7 +1077,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-fig.label="gaus-pri-post-sd">
+<div class="cell" data-fig-label="gaus-pri-post-sd">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1305,9 +1305,10 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> brms<span class="sc">::</span><span class="fu">hurdle_gamma</span>(),</span>
 <span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
 <span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_prior =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf4a_"</span>, class)</span>
-<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># backend = "cmdstanr",</span></span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf4a_"</span>, class)</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <details>
@@ -1325,81 +1326,105 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
 <span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf3_"</span>, class)</span>
 <span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>bf4 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d,</span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">priors =</span> <span class="fu">list</span>(</span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_prior</span>(</span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_glue</span>(<span class="st">"normal({mu}, {sigma})"</span>, <span class="at">.envir =</span> <span class="fu">lnp</span>(data<span class="sc">$</span>load)),</span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">nlpar =</span> <span class="st">"a"</span>, <span class="at">coef =</span> <span class="st">"Intercept"</span></span>
-<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"a"</span>, <span class="at">class =</span> <span class="st">"sd"</span>) <span class="sc">+</span></span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentgs"</span>) <span class="sc">+</span></span>
-<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentha"</span>) <span class="sc">+</span></span>
-<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmenthd"</span>) <span class="sc">+</span></span>
-<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentld"</span>)</span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">mod =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">brm</span>(</span>
-<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>    brms<span class="sc">::</span><span class="fu">bf</span>(</span>
-<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>      load <span class="sc">~</span> a <span class="sc">+</span> b,</span>
-<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>      a <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site <span class="sc">/</span> treatment <span class="sc">/</span> corner),</span>
-<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>      b <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment,</span>
-<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">nl =</span> <span class="cn">TRUE</span></span>
-<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>    data,</span>
-<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">warmup =</span> <span class="dv">4000</span>,</span>
-<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">5000</span>,</span>
-<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>),</span>
-<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> brms<span class="sc">::</span><span class="fu">hurdle_gamma</span>(),</span>
-<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
-<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_prior =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf4_"</span>, class)</span>
-<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a>bf5 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d,</span>
-<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">priors =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">set_prior</span>(</span>
-<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_glue</span>(<span class="st">"normal({mu}, {sigma})"</span>, <span class="at">.envir =</span> <span class="fu">lnp</span>(data<span class="sc">$</span>load))</span>
-<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a>  )),</span>
-<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">mod =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">brm</span>(</span>
-<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a>    brms<span class="sc">::</span><span class="fu">bf</span>(load <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Intercept <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site <span class="sc">/</span> treatment <span class="sc">/</span> corner) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> treatment)),</span>
-<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a>    data,</span>
-<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">warmup =</span> <span class="dv">4000</span>,</span>
-<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">5000</span>,</span>
-<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>),</span>
-<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> brms<span class="sc">::</span><span class="fu">hurdle_gamma</span>(),</span>
-<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
-<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf5_"</span>, class)</span>
-<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 3 warnings in `mutate()`.
+The first warning was:
+ℹ In argument: `mod = list(...)`.
+ℹ In row 4.
+Caused by warning:
+! There were 6 divergent transitions after warmup. See
+https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+to find out why this is a problem and how to eliminate them.
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 2 remaining warnings.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>bf4 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d,</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">priors =</span> <span class="fu">list</span>(</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_prior</span>(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_glue</span>(<span class="st">"normal({mu}, {sigma})"</span>, <span class="at">.envir =</span> <span class="fu">lnp</span>(data<span class="sc">$</span>load)),</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">nlpar =</span> <span class="st">"a"</span>, <span class="at">coef =</span> <span class="st">"Intercept"</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"a"</span>, <span class="at">class =</span> <span class="st">"sd"</span>) <span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentgs"</span>) <span class="sc">+</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentha"</span>) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmenthd"</span>) <span class="sc">+</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentld"</span>)</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">mod =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">brm</span>(</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    brms<span class="sc">::</span><span class="fu">bf</span>(</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>      load <span class="sc">~</span> a <span class="sc">+</span> b,</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>      a <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site <span class="sc">/</span> treatment <span class="sc">/</span> corner),</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>      b <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment,</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">nl =</span> <span class="cn">TRUE</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>    data,</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">warmup =</span> <span class="dv">4000</span>,</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">5000</span>,</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>),</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> brms<span class="sc">::</span><span class="fu">hurdle_gamma</span>(),</span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_prior =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf4_"</span>, class)</span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>bf5 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d,</span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">priors =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">set_prior</span>(</span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_glue</span>(<span class="st">"normal({mu}, {sigma})"</span>, <span class="at">.envir =</span> <span class="fu">lnp</span>(data<span class="sc">$</span>load))</span>
+<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a>  )),</span>
+<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">mod =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">brm</span>(</span>
+<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a>    brms<span class="sc">::</span><span class="fu">bf</span>(load <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Intercept <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site <span class="sc">/</span> treatment <span class="sc">/</span> corner) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> treatment)),</span>
+<span id="cb40-39"><a href="#cb40-39" aria-hidden="true" tabindex="-1"></a>    data,</span>
+<span id="cb40-40"><a href="#cb40-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">warmup =</span> <span class="dv">4000</span>,</span>
+<span id="cb40-41"><a href="#cb40-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">5000</span>,</span>
+<span id="cb40-42"><a href="#cb40-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb40-43"><a href="#cb40-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>),</span>
+<span id="cb40-44"><a href="#cb40-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> brms<span class="sc">::</span><span class="fu">hurdle_gamma</span>(),</span>
+<span id="cb40-45"><a href="#cb40-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
+<span id="cb40-46"><a href="#cb40-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf5_"</span>, class)</span>
+<span id="cb40-47"><a href="#cb40-47" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb40-48"><a href="#cb40-48" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 4 warnings in `mutate()`.
+The first warning was:
+ℹ In argument: `mod = list(...)`.
+ℹ In row 4.
+Caused by warning:
+! There were 1 divergent transitions after warmup. See
+https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+to find out why this is a problem and how to eliminate them.
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings.</code></pre>
+</div>
 </div>
 </section>
 <section id="model-summaries" class="level4" data-number="5.2.2.5">
 <h4 data-number="5.2.2.5" class="anchored" data-anchor-id="model-summaries"><span class="header-section-number">5.2.2.5</span> Model summaries</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>my_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(mod) {</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_draws_df</span>(mod) <span class="sc">|&gt;</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="fu">c</span>(<span class="st">"b_"</span>, <span class="st">"sd_"</span>)), shape, hu) <span class="sc">|&gt;</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    posterior<span class="sc">::</span><span class="fu">summarize_draws</span>(</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"mean"</span>, <span class="sc">~</span>posterior<span class="sc">::</span><span class="fu">quantile2</span>(.x, <span class="fu">c</span>(<span class="fl">0.05</span>, .<span class="dv">5</span>, .<span class="dv">95</span>)), <span class="st">"rhat"</span>, <span class="st">"ess_bulk"</span>,</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"ess_tail"</span></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>bf4a <span class="sc">|&gt;</span></span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">list</span>(<span class="fu">my_summary</span>(mod))</span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(summary) <span class="sc">|&gt;</span></span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(summary) <span class="sc">|&gt;</span></span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable =</span> <span class="fu">str_remove_all</span>(variable, <span class="st">"b_._|_a_"</span>)</span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>my_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(mod) {</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_draws_df</span>(mod) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="fu">c</span>(<span class="st">"b_"</span>, <span class="st">"sd_"</span>)), shape, hu) <span class="sc">|&gt;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    posterior<span class="sc">::</span><span class="fu">summarize_draws</span>(</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"mean"</span>, <span class="sc">~</span>posterior<span class="sc">::</span><span class="fu">quantile2</span>(.x, <span class="fu">c</span>(<span class="fl">0.05</span>, .<span class="dv">5</span>, .<span class="dv">95</span>)), <span class="st">"rhat"</span>, <span class="st">"ess_bulk"</span>,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"ess_tail"</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>bf4a <span class="sc">|&gt;</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">list</span>(<span class="fu">my_summary</span>(mod))</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(summary) <span class="sc">|&gt;</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(summary) <span class="sc">|&gt;</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable =</span> <span class="fu">str_remove_all</span>(variable, <span class="st">"b_._|_a_"</span>)</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="tbl-model-summaries" class="anchored">
 <table class="table table-sm table-striped small">
@@ -1432,68 +1457,68 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <tr class="odd">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">Intercept</td>
-<td style="text-align: right;">-0.32</td>
-<td style="text-align: right;">-1.13</td>
-<td style="text-align: right;">-0.31</td>
-<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">-0.34</td>
+<td style="text-align: right;">-1.19</td>
+<td style="text-align: right;">-0.33</td>
+<td style="text-align: right;">0.48</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1579</td>
-<td style="text-align: right;">2281</td>
+<td style="text-align: right;">1588</td>
+<td style="text-align: right;">2253</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">treatmentgs</td>
-<td style="text-align: right;">-0.31</td>
-<td style="text-align: right;">-1.13</td>
-<td style="text-align: right;">-0.31</td>
-<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">-0.28</td>
+<td style="text-align: right;">-1.08</td>
+<td style="text-align: right;">-0.29</td>
+<td style="text-align: right;">0.53</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1613</td>
-<td style="text-align: right;">1992</td>
+<td style="text-align: right;">1618</td>
+<td style="text-align: right;">2393</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">treatmentha</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">-0.41</td>
-<td style="text-align: right;">0.44</td>
-<td style="text-align: right;">1.24</td>
+<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">-0.36</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">1.31</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1603</td>
-<td style="text-align: right;">2087</td>
+<td style="text-align: right;">1583</td>
+<td style="text-align: right;">2457</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">treatmenthd</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;">-0.57</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;">1.07</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">-0.52</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">1.12</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1588</td>
-<td style="text-align: right;">1945</td>
+<td style="text-align: right;">1433</td>
+<td style="text-align: right;">2070</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">treatmentld</td>
-<td style="text-align: right;">-0.13</td>
-<td style="text-align: right;">-0.96</td>
-<td style="text-align: right;">-0.14</td>
-<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">-0.11</td>
+<td style="text-align: right;">-0.93</td>
+<td style="text-align: right;">-0.11</td>
+<td style="text-align: right;">0.70</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1625</td>
-<td style="text-align: right;">2167</td>
+<td style="text-align: right;">1533</td>
+<td style="text-align: right;">2186</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">sd_site_Intercept</td>
-<td style="text-align: right;">0.37</td>
-<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.05</td>
 <td style="text-align: right;">0.31</td>
-<td style="text-align: right;">0.90</td>
+<td style="text-align: right;">0.95</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1171</td>
-<td style="text-align: right;">1686</td>
+<td style="text-align: right;">1482</td>
+<td style="text-align: right;">1516</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">onehr</td>
@@ -1501,32 +1526,32 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.35</td>
 <td style="text-align: right;">0.14</td>
 <td style="text-align: right;">0.34</td>
-<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">0.58</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1042</td>
-<td style="text-align: right;">1240</td>
+<td style="text-align: right;">1012</td>
+<td style="text-align: right;">981</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">sd_site:treatment:corner_Intercept</td>
-<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.12</td>
 <td style="text-align: right;">0.01</td>
 <td style="text-align: right;">0.11</td>
 <td style="text-align: right;">0.28</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1169</td>
-<td style="text-align: right;">1998</td>
+<td style="text-align: right;">1408</td>
+<td style="text-align: right;">1916</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">shape</td>
-<td style="text-align: right;">2.37</td>
+<td style="text-align: right;">2.36</td>
 <td style="text-align: right;">1.89</td>
-<td style="text-align: right;">2.35</td>
-<td style="text-align: right;">2.90</td>
+<td style="text-align: right;">2.34</td>
+<td style="text-align: right;">2.89</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2911</td>
-<td style="text-align: right;">2432</td>
+<td style="text-align: right;">3939</td>
+<td style="text-align: right;">3100</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">onehr</td>
@@ -1536,107 +1561,107 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.01</td>
 <td style="text-align: right;">0.02</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">4988</td>
-<td style="text-align: right;">2128</td>
+<td style="text-align: right;">4336</td>
+<td style="text-align: right;">1966</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">Intercept</td>
+<td style="text-align: right;">1.08</td>
+<td style="text-align: right;">0.29</td>
 <td style="text-align: right;">1.09</td>
-<td style="text-align: right;">0.28</td>
-<td style="text-align: right;">1.10</td>
-<td style="text-align: right;">1.88</td>
+<td style="text-align: right;">1.87</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1251</td>
-<td style="text-align: right;">1705</td>
+<td style="text-align: right;">1526</td>
+<td style="text-align: right;">2078</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">treatmentgs</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">-0.57</td>
-<td style="text-align: right;">0.24</td>
-<td style="text-align: right;">1.08</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">-0.58</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">1.07</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1324</td>
-<td style="text-align: right;">1775</td>
+<td style="text-align: right;">1626</td>
+<td style="text-align: right;">2345</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">treatmentha</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">-0.77</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">0.87</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">-0.80</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.86</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1383</td>
-<td style="text-align: right;">1839</td>
+<td style="text-align: right;">1716</td>
+<td style="text-align: right;">2548</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">treatmenthd</td>
 <td style="text-align: right;">-0.02</td>
-<td style="text-align: right;">-0.86</td>
-<td style="text-align: right;">-0.03</td>
-<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">-0.83</td>
+<td style="text-align: right;">-0.02</td>
+<td style="text-align: right;">0.77</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1356</td>
-<td style="text-align: right;">2047</td>
+<td style="text-align: right;">1609</td>
+<td style="text-align: right;">2487</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">treatmentld</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">-0.73</td>
-<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">-0.69</td>
+<td style="text-align: right;">0.10</td>
 <td style="text-align: right;">0.93</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1351</td>
-<td style="text-align: right;">1885</td>
+<td style="text-align: right;">1701</td>
+<td style="text-align: right;">2237</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">sd_site_Intercept</td>
-<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.24</td>
 <td style="text-align: right;">0.02</td>
 <td style="text-align: right;">0.18</td>
-<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.68</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1433</td>
-<td style="text-align: right;">1921</td>
+<td style="text-align: right;">1510</td>
+<td style="text-align: right;">1912</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">sd_site:treatment_Intercept</td>
 <td style="text-align: right;">0.39</td>
-<td style="text-align: right;">0.18</td>
+<td style="text-align: right;">0.17</td>
 <td style="text-align: right;">0.38</td>
 <td style="text-align: right;">0.65</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1012</td>
-<td style="text-align: right;">1022</td>
+<td style="text-align: right;">832</td>
+<td style="text-align: right;">517</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">sd_site:treatment:corner_Intercept</td>
 <td style="text-align: right;">0.11</td>
 <td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.09</td>
 <td style="text-align: right;">0.26</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1475</td>
-<td style="text-align: right;">1607</td>
+<td style="text-align: right;">1377</td>
+<td style="text-align: right;">1611</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">shape</td>
 <td style="text-align: right;">2.56</td>
-<td style="text-align: right;">2.02</td>
+<td style="text-align: right;">2.03</td>
 <td style="text-align: right;">2.55</td>
 <td style="text-align: right;">3.16</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2892</td>
-<td style="text-align: right;">2390</td>
+<td style="text-align: right;">3358</td>
+<td style="text-align: right;">2267</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
@@ -1646,107 +1671,107 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.06</td>
 <td style="text-align: right;">0.10</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">4985</td>
-<td style="text-align: right;">2464</td>
+<td style="text-align: right;">6083</td>
+<td style="text-align: right;">2559</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">Intercept</td>
-<td style="text-align: right;">2.25</td>
-<td style="text-align: right;">1.42</td>
-<td style="text-align: right;">2.24</td>
-<td style="text-align: right;">3.05</td>
+<td style="text-align: right;">2.27</td>
+<td style="text-align: right;">1.45</td>
+<td style="text-align: right;">2.26</td>
+<td style="text-align: right;">3.09</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1269</td>
-<td style="text-align: right;">1604</td>
+<td style="text-align: right;">1679</td>
+<td style="text-align: right;">2348</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">treatmentgs</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">-0.56</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">1.07</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">-0.58</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">1.05</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1232</td>
-<td style="text-align: right;">2008</td>
+<td style="text-align: right;">1658</td>
+<td style="text-align: right;">2240</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">treatmentha</td>
 <td style="text-align: right;">0.02</td>
-<td style="text-align: right;">-0.77</td>
+<td style="text-align: right;">-0.79</td>
 <td style="text-align: right;">0.02</td>
-<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">0.83</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1272</td>
-<td style="text-align: right;">1943</td>
+<td style="text-align: right;">1643</td>
+<td style="text-align: right;">2320</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">treatmenthd</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">-0.77</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">-0.79</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.83</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1265</td>
-<td style="text-align: right;">1928</td>
+<td style="text-align: right;">1660</td>
+<td style="text-align: right;">2390</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">treatmentld</td>
 <td style="text-align: right;">0.14</td>
-<td style="text-align: right;">-0.65</td>
-<td style="text-align: right;">0.14</td>
-<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-0.67</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.93</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1283</td>
-<td style="text-align: right;">1958</td>
+<td style="text-align: right;">1629</td>
+<td style="text-align: right;">2247</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">sd_site_Intercept</td>
-<td style="text-align: right;">0.30</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">0.24</td>
-<td style="text-align: right;">0.79</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.80</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1390</td>
-<td style="text-align: right;">1726</td>
+<td style="text-align: right;">1657</td>
+<td style="text-align: right;">2194</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">sd_site:treatment_Intercept</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.06</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.47</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1041</td>
-<td style="text-align: right;">1190</td>
+<td style="text-align: right;">1052</td>
+<td style="text-align: right;">1630</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">sd_site:treatment:corner_Intercept</td>
 <td style="text-align: right;">0.15</td>
 <td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.14</td>
 <td style="text-align: right;">0.32</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1168</td>
-<td style="text-align: right;">1580</td>
+<td style="text-align: right;">933</td>
+<td style="text-align: right;">2023</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">shape</td>
 <td style="text-align: right;">2.81</td>
-<td style="text-align: right;">2.18</td>
-<td style="text-align: right;">2.79</td>
-<td style="text-align: right;">3.55</td>
+<td style="text-align: right;">2.19</td>
+<td style="text-align: right;">2.78</td>
+<td style="text-align: right;">3.48</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">3125</td>
-<td style="text-align: right;">2709</td>
+<td style="text-align: right;">3787</td>
+<td style="text-align: right;">3063</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hundhr</td>
@@ -1756,63 +1781,63 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.12</td>
 <td style="text-align: right;">0.17</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">5853</td>
-<td style="text-align: right;">2515</td>
+<td style="text-align: right;">9069</td>
+<td style="text-align: right;">2573</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">Intercept</td>
-<td style="text-align: right;">3.72</td>
+<td style="text-align: right;">3.73</td>
 <td style="text-align: right;">2.99</td>
 <td style="text-align: right;">3.73</td>
-<td style="text-align: right;">4.47</td>
+<td style="text-align: right;">4.50</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1553</td>
-<td style="text-align: right;">1901</td>
+<td style="text-align: right;">983</td>
+<td style="text-align: right;">1494</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">treatmentgs</td>
 <td style="text-align: right;">0.11</td>
-<td style="text-align: right;">-0.62</td>
-<td style="text-align: right;">0.13</td>
-<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">-0.65</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.85</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1532</td>
-<td style="text-align: right;">2141</td>
+<td style="text-align: right;">1167</td>
+<td style="text-align: right;">1949</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">treatmentha</td>
-<td style="text-align: right;">-0.05</td>
-<td style="text-align: right;">-0.77</td>
-<td style="text-align: right;">-0.04</td>
-<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">-0.06</td>
+<td style="text-align: right;">-0.79</td>
+<td style="text-align: right;">-0.06</td>
+<td style="text-align: right;">0.68</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1535</td>
-<td style="text-align: right;">2291</td>
+<td style="text-align: right;">1172</td>
+<td style="text-align: right;">1884</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">treatmenthd</td>
 <td style="text-align: right;">0.24</td>
 <td style="text-align: right;">-0.49</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.98</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1508</td>
-<td style="text-align: right;">2087</td>
+<td style="text-align: right;">1168</td>
+<td style="text-align: right;">1843</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">treatmentld</td>
 <td style="text-align: right;">0.06</td>
-<td style="text-align: right;">-0.66</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">-0.69</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.80</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1538</td>
-<td style="text-align: right;">2153</td>
+<td style="text-align: right;">1185</td>
+<td style="text-align: right;">1968</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dufflitter</td>
@@ -1820,21 +1845,21 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.30</td>
 <td style="text-align: right;">0.07</td>
 <td style="text-align: right;">0.24</td>
-<td style="text-align: right;">0.72</td>
+<td style="text-align: right;">0.76</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1543</td>
-<td style="text-align: right;">1678</td>
+<td style="text-align: right;">1239</td>
+<td style="text-align: right;">933</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">sd_site:treatment_Intercept</td>
-<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.09</td>
 <td style="text-align: right;">0.01</td>
 <td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.23</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1634</td>
-<td style="text-align: right;">1813</td>
+<td style="text-align: right;">1703</td>
+<td style="text-align: right;">2109</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dufflitter</td>
@@ -1842,21 +1867,21 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.10</td>
 <td style="text-align: right;">0.01</td>
 <td style="text-align: right;">0.09</td>
-<td style="text-align: right;">0.22</td>
+<td style="text-align: right;">0.23</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1376</td>
-<td style="text-align: right;">1644</td>
+<td style="text-align: right;">1439</td>
+<td style="text-align: right;">1876</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">shape</td>
-<td style="text-align: right;">3.94</td>
-<td style="text-align: right;">3.16</td>
-<td style="text-align: right;">3.91</td>
-<td style="text-align: right;">4.82</td>
+<td style="text-align: right;">3.93</td>
+<td style="text-align: right;">3.15</td>
+<td style="text-align: right;">3.89</td>
+<td style="text-align: right;">4.85</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">4235</td>
-<td style="text-align: right;">3308</td>
+<td style="text-align: right;">3851</td>
+<td style="text-align: right;">2568</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dufflitter</td>
@@ -1866,63 +1891,63 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.01</td>
 <td style="text-align: right;">0.02</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">4313</td>
-<td style="text-align: right;">1896</td>
+<td style="text-align: right;">5136</td>
+<td style="text-align: right;">1964</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">Intercept</td>
-<td style="text-align: right;">3.62</td>
-<td style="text-align: right;">2.70</td>
-<td style="text-align: right;">3.63</td>
-<td style="text-align: right;">4.51</td>
+<td style="text-align: right;">3.59</td>
+<td style="text-align: right;">2.69</td>
+<td style="text-align: right;">3.59</td>
+<td style="text-align: right;">4.47</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1973</td>
-<td style="text-align: right;">2171</td>
+<td style="text-align: right;">1353</td>
+<td style="text-align: right;">1780</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">treatmentgs</td>
-<td style="text-align: right;">0.33</td>
-<td style="text-align: right;">-0.61</td>
-<td style="text-align: right;">0.34</td>
-<td style="text-align: right;">1.25</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">-0.57</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">1.26</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2220</td>
-<td style="text-align: right;">2403</td>
+<td style="text-align: right;">1734</td>
+<td style="text-align: right;">2208</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">treatmentha</td>
-<td style="text-align: right;">-0.07</td>
-<td style="text-align: right;">-1.00</td>
-<td style="text-align: right;">-0.08</td>
-<td style="text-align: right;">0.87</td>
+<td style="text-align: right;">-0.04</td>
+<td style="text-align: right;">-0.98</td>
+<td style="text-align: right;">-0.04</td>
+<td style="text-align: right;">0.90</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2346</td>
-<td style="text-align: right;">2997</td>
+<td style="text-align: right;">1709</td>
+<td style="text-align: right;">2016</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">treatmenthd</td>
-<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.28</td>
 <td style="text-align: right;">-0.67</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">1.20</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">1.21</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2520</td>
-<td style="text-align: right;">2661</td>
+<td style="text-align: right;">1723</td>
+<td style="text-align: right;">2636</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">treatmentld</td>
+<td style="text-align: right;">-0.08</td>
+<td style="text-align: right;">-1.01</td>
 <td style="text-align: right;">-0.11</td>
-<td style="text-align: right;">-1.03</td>
-<td style="text-align: right;">-0.11</td>
-<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">0.87</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2219</td>
-<td style="text-align: right;">2642</td>
+<td style="text-align: right;">1762</td>
+<td style="text-align: right;">2499</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">thoushr</td>
@@ -1930,43 +1955,43 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.41</td>
 <td style="text-align: right;">0.04</td>
 <td style="text-align: right;">0.34</td>
-<td style="text-align: right;">1.04</td>
+<td style="text-align: right;">1.06</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2147</td>
-<td style="text-align: right;">2423</td>
+<td style="text-align: right;">1836</td>
+<td style="text-align: right;">2255</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">sd_site:treatment_Intercept</td>
+<td style="text-align: right;">0.59</td>
+<td style="text-align: right;">0.23</td>
 <td style="text-align: right;">0.57</td>
-<td style="text-align: right;">0.20</td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.98</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">826</td>
-<td style="text-align: right;">737</td>
+<td style="text-align: right;">1162</td>
+<td style="text-align: right;">1114</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">sd_site:treatment:corner_Intercept</td>
-<td style="text-align: right;">0.39</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.40</td>
-<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.67</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">900</td>
-<td style="text-align: right;">1562</td>
+<td style="text-align: right;">770</td>
+<td style="text-align: right;">1184</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">shape</td>
-<td style="text-align: right;">1.42</td>
-<td style="text-align: right;">1.07</td>
-<td style="text-align: right;">1.40</td>
-<td style="text-align: right;">1.83</td>
+<td style="text-align: right;">1.41</td>
+<td style="text-align: right;">1.06</td>
+<td style="text-align: right;">1.39</td>
+<td style="text-align: right;">1.81</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2304</td>
-<td style="text-align: right;">2895</td>
+<td style="text-align: right;">1787</td>
+<td style="text-align: right;">2794</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">thoushr</td>
@@ -1976,85 +2001,85 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.25</td>
 <td style="text-align: right;">0.32</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">7275</td>
-<td style="text-align: right;">2908</td>
+<td style="text-align: right;">6619</td>
+<td style="text-align: right;">2706</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">Intercept</td>
 <td style="text-align: right;">2.76</td>
-<td style="text-align: right;">1.87</td>
-<td style="text-align: right;">2.75</td>
-<td style="text-align: right;">3.67</td>
+<td style="text-align: right;">1.89</td>
+<td style="text-align: right;">2.76</td>
+<td style="text-align: right;">3.63</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1302</td>
-<td style="text-align: right;">1939</td>
+<td style="text-align: right;">2417</td>
+<td style="text-align: right;">2638</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">treatmentgs</td>
-<td style="text-align: right;">0.52</td>
-<td style="text-align: right;">-0.37</td>
-<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.54</td>
+<td style="text-align: right;">-0.31</td>
+<td style="text-align: right;">0.55</td>
 <td style="text-align: right;">1.39</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1445</td>
-<td style="text-align: right;">2172</td>
+<td style="text-align: right;">2379</td>
+<td style="text-align: right;">2914</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">treatmentha</td>
-<td style="text-align: right;">-0.41</td>
-<td style="text-align: right;">-1.28</td>
-<td style="text-align: right;">-0.41</td>
-<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">-0.39</td>
+<td style="text-align: right;">-1.24</td>
+<td style="text-align: right;">-0.39</td>
+<td style="text-align: right;">0.46</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1560</td>
-<td style="text-align: right;">2223</td>
+<td style="text-align: right;">2506</td>
+<td style="text-align: right;">2967</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">treatmenthd</td>
-<td style="text-align: right;">-0.01</td>
-<td style="text-align: right;">-0.90</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.86</td>
 <td style="text-align: right;">0.00</td>
 <td style="text-align: right;">0.86</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1516</td>
-<td style="text-align: right;">2153</td>
+<td style="text-align: right;">2437</td>
+<td style="text-align: right;">2340</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">treatmentld</td>
 <td style="text-align: right;">0.20</td>
-<td style="text-align: right;">-0.68</td>
+<td style="text-align: right;">-0.66</td>
 <td style="text-align: right;">0.20</td>
-<td style="text-align: right;">1.06</td>
+<td style="text-align: right;">1.07</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1422</td>
-<td style="text-align: right;">2117</td>
+<td style="text-align: right;">2555</td>
+<td style="text-align: right;">2749</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">sd_site_Intercept</td>
-<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.46</td>
 <td style="text-align: right;">0.07</td>
 <td style="text-align: right;">0.40</td>
-<td style="text-align: right;">1.11</td>
+<td style="text-align: right;">1.04</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1248</td>
-<td style="text-align: right;">1128</td>
+<td style="text-align: right;">1847</td>
+<td style="text-align: right;">1776</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">sd_site:treatment_Intercept</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.06</td>
 <td style="text-align: right;">0.37</td>
-<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">0.70</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">640</td>
-<td style="text-align: right;">711</td>
+<td style="text-align: right;">1069</td>
+<td style="text-align: right;">1647</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">veg</td>
@@ -2064,19 +2089,19 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.51</td>
 <td style="text-align: right;">0.73</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">637</td>
-<td style="text-align: right;">787</td>
+<td style="text-align: right;">864</td>
+<td style="text-align: right;">1304</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">shape</td>
-<td style="text-align: right;">1.97</td>
+<td style="text-align: right;">1.96</td>
 <td style="text-align: right;">1.46</td>
 <td style="text-align: right;">1.94</td>
-<td style="text-align: right;">2.56</td>
+<td style="text-align: right;">2.55</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1160</td>
-<td style="text-align: right;">1893</td>
+<td style="text-align: right;">1642</td>
+<td style="text-align: right;">2235</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">veg</td>
@@ -2084,10 +2109,10 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <td style="text-align: right;">0.02</td>
 <td style="text-align: right;">0.00</td>
 <td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.04</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">5969</td>
-<td style="text-align: right;">2096</td>
+<td style="text-align: right;">6436</td>
+<td style="text-align: right;">2333</td>
 </tr>
 </tbody>
 </table>
@@ -2099,12 +2124,12 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <h4 data-number="5.2.2.6" class="anchored" data-anchor-id="prior-check-1"><span class="header-section-number">5.2.2.6</span> Prior check</h4>
 <p>While it was not possible to sample from the prior using the MCMC sampler which was likely due to the extremely long tails implied by our exponentiated, independent priors, another way of describing priors is simply sampling random from random number generators. The results of these random samples are plotted against the posterior distributions for the variables that we set priors for.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pri_post</span>(bf4a<span class="sc">$</span>mod[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"1-hr"</span>)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[2]]) + ggtitle("10-hr")</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[3]]) + ggtitle("100-hr")</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[4]]) + ggtitle("duff &amp; litter")</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[5]]) + ggtitle("1000-hr")</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[6]]) + ggtitle("Vegetation")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pri_post</span>(bf4a<span class="sc">$</span>mod[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"1-hr"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[2]]) + ggtitle("10-hr")</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[3]]) + ggtitle("100-hr")</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[4]]) + ggtitle("duff &amp; litter")</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[5]]) + ggtitle("1000-hr")</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[6]]) + ggtitle("Vegetation")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-gamma-pri-post" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -2135,32 +2160,32 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <section id="expected-value-of-the-posterior-predictive" class="level4" data-number="5.2.2.8">
 <h4 data-number="5.2.2.8" class="anchored" data-anchor-id="expected-value-of-the-posterior-predictive"><span class="header-section-number">5.2.2.8</span> Expected value of the posterior predictive</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get posterior predictions for treatments for models for all fuel classes, </span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ignoring random effects. These are predictions for the expected value across</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># all sites.</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>predict_posterior_expected <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">re_formula =</span> <span class="cn">NA</span>) {</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  newdata <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">expand</span>(data<span class="sc">$</span>data[[<span class="dv">1</span>]], <span class="fu">nesting</span>(treatment))</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">mutate</span>(data,</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred =</span> <span class="fu">list</span>(</span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">epred_draws</span>(mod, newdata, <span class="at">re_formula =</span> re_formula, </span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">value =</span> <span class="st">"pred"</span>)</span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">lims =</span> <span class="fu">list</span>(</span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tibble</span>(<span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">995</span>))</span>
-<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (plot) {</span>
-<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">unnest</span>(pred) <span class="sc">|&gt;</span></span>
-<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(pred, treatment)) <span class="sc">+</span></span>
-<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">stat_halfeye</span>(<span class="at">normalize =</span> <span class="st">"panels"</span>) <span class="sc">+</span></span>
-<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free_x"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
-<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_cartesian_panels</span>(<span class="at">panel_limits =</span> <span class="fu">unnest</span>(<span class="fu">select</span>(data, lims), lims)) <span class="sc">+</span></span>
-<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_discrete</span>(<span class="at">labels =</span> toupper) <span class="sc">+</span></span>
-<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Treatment"</span>)</span>
-<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
-<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(data)</span>
-<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get posterior predictions for treatments for models for all fuel classes, </span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ignoring random effects. These are predictions for the expected value across</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co"># all sites.</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>predict_posterior_expected <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">re_formula =</span> <span class="cn">NA</span>) {</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  newdata <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">expand</span>(data<span class="sc">$</span>data[[<span class="dv">1</span>]], <span class="fu">nesting</span>(treatment))</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">mutate</span>(data,</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred =</span> <span class="fu">list</span>(</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">epred_draws</span>(mod, newdata, <span class="at">re_formula =</span> re_formula, </span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">value =</span> <span class="st">"pred"</span>)</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">lims =</span> <span class="fu">list</span>(</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tibble</span>(<span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">995</span>))</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (plot) {</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">unnest</span>(pred) <span class="sc">|&gt;</span></span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(pred, treatment)) <span class="sc">+</span></span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">stat_halfeye</span>(<span class="at">normalize =</span> <span class="st">"panels"</span>) <span class="sc">+</span></span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free_x"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_cartesian_panels</span>(<span class="at">panel_limits =</span> <span class="fu">unnest</span>(<span class="fu">select</span>(data, lims), lims)) <span class="sc">+</span></span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_discrete</span>(<span class="at">labels =</span> toupper) <span class="sc">+</span></span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Treatment"</span>)</span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(data)</span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stderr">
@@ -2177,14 +2202,14 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 </div>
 <p>These are the expected predictions, or predictions for the mean. It only includes the uncertainty in the mean and not the variance in predictions estimated by the model.</p>
 <p>There is quite a bit of uncertainty about the mean all around, but there is a notable difference in that uncertainty among treatments for the onehr and veg fuel classes.</p>
-<p>Table <a href="#tbl-expected-predictions">Table&nbsp;<span class="quarto-unresolved-ref">tbl-expected-predictions</span></a> shows these data in a tabular format. I’m using the highest density continuous interval because, while its hard to see in <a href="#fig-expected-predictions">Figure&nbsp;<span class="quarto-unresolved-ref">fig-expected-predictions</span></a>, the highest desity region is actually slightly discontinuous.</p>
+<p>Table <a href="#tbl-expected-predictions">Table&nbsp;<span>5.7</span></a> shows these data in a tabular format. I’m using the highest density continuous interval because, while its hard to see in <a href="#fig-expected-predictions">Figure&nbsp;<span>5.11</span></a>, the highest desity region is actually slightly discontinuous.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>expected_predictions <span class="sc">|&gt;</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">list</span>(tidybayes<span class="sc">::</span><span class="fu">mode_hdci</span>(pred))</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> <span class="fu">select</span>(summary) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(summary) <span class="sc">|&gt;</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(treatment, <span class="at">prediction =</span> pred, <span class="at">lower =</span> .lower, <span class="at">upper =</span> .upper) <span class="sc">|&gt;</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>expected_predictions <span class="sc">|&gt;</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">list</span>(tidybayes<span class="sc">::</span><span class="fu">mode_hdci</span>(pred))</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> <span class="fu">select</span>(summary) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(summary) <span class="sc">|&gt;</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(treatment, <span class="at">prediction =</span> pred, <span class="at">lower =</span> .lower, <span class="at">upper =</span> .upper) <span class="sc">|&gt;</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Adding missing grouping variables: `class`
 Adding missing grouping variables: `class`</code></pre>
@@ -2192,7 +2217,7 @@ Adding missing grouping variables: `class`</code></pre>
 <div class="cell-output-display">
 <div id="tbl-expected-predictions" class="anchored">
 <table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.7: Tabular data associated with <a href="#fig-expected-predictions">Figure&nbsp;<span class="quarto-unresolved-ref">fig-expected-predictions</span></a>. Upper and lower pertain to the 95% highest density <em>continuous</em> interval.</caption>
+<caption>Table&nbsp;5.7: Tabular data associated with <a href="#fig-expected-predictions">Figure&nbsp;<span>5.11</span></a>. Upper and lower pertain to the 95% highest density <em>continuous</em> interval.</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">class</th>
@@ -2207,7 +2232,7 @@ Adding missing grouping variables: `class`</code></pre>
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">gs</td>
 <td style="text-align: right;">0.5</td>
-<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.3</td>
 <td style="text-align: right;">0.9</td>
 </tr>
 <tr class="even">
@@ -2221,7 +2246,7 @@ Adding missing grouping variables: `class`</code></pre>
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">hd</td>
 <td style="text-align: right;">0.9</td>
-<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0.5</td>
 <td style="text-align: right;">1.6</td>
 </tr>
 <tr class="even">
@@ -2234,14 +2259,14 @@ Adding missing grouping variables: `class`</code></pre>
 <tr class="odd">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">gs</td>
-<td style="text-align: right;">3.5</td>
-<td style="text-align: right;">1.8</td>
-<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">3.3</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">6.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">ha</td>
-<td style="text-align: right;">2.9</td>
+<td style="text-align: right;">2.8</td>
 <td style="text-align: right;">1.4</td>
 <td style="text-align: right;">4.7</td>
 </tr>
@@ -2250,126 +2275,126 @@ Adding missing grouping variables: `class`</code></pre>
 <td style="text-align: left;">hd</td>
 <td style="text-align: right;">2.6</td>
 <td style="text-align: right;">1.3</td>
-<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">4.3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">ld</td>
 <td style="text-align: right;">3.0</td>
-<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">1.6</td>
 <td style="text-align: right;">4.9</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">gs</td>
 <td style="text-align: right;">10.4</td>
-<td style="text-align: right;">5.5</td>
-<td style="text-align: right;">17.2</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">hundhr</td>
-<td style="text-align: left;">ha</td>
-<td style="text-align: right;">7.9</td>
-<td style="text-align: right;">4.6</td>
-<td style="text-align: right;">13.7</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">hundhr</td>
-<td style="text-align: left;">hd</td>
-<td style="text-align: right;">8.3</td>
-<td style="text-align: right;">4.1</td>
-<td style="text-align: right;">13.1</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">hundhr</td>
-<td style="text-align: left;">ld</td>
-<td style="text-align: right;">9.5</td>
-<td style="text-align: right;">5.0</td>
-<td style="text-align: right;">15.4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">dufflitter</td>
-<td style="text-align: left;">gs</td>
-<td style="text-align: right;">46.4</td>
-<td style="text-align: right;">28.4</td>
-<td style="text-align: right;">67.0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">dufflitter</td>
-<td style="text-align: left;">ha</td>
-<td style="text-align: right;">38.7</td>
-<td style="text-align: right;">24.0</td>
-<td style="text-align: right;">56.1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">dufflitter</td>
-<td style="text-align: left;">hd</td>
-<td style="text-align: right;">52.2</td>
-<td style="text-align: right;">32.0</td>
-<td style="text-align: right;">76.4</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">dufflitter</td>
-<td style="text-align: left;">ld</td>
-<td style="text-align: right;">42.2</td>
-<td style="text-align: right;">28.3</td>
-<td style="text-align: right;">64.3</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">thoushr</td>
-<td style="text-align: left;">gs</td>
-<td style="text-align: right;">33.8</td>
-<td style="text-align: right;">12.6</td>
-<td style="text-align: right;">80.4</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">thoushr</td>
-<td style="text-align: left;">ha</td>
-<td style="text-align: right;">22.8</td>
-<td style="text-align: right;">8.7</td>
-<td style="text-align: right;">55.2</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">thoushr</td>
-<td style="text-align: left;">hd</td>
-<td style="text-align: right;">30.6</td>
-<td style="text-align: right;">12.1</td>
-<td style="text-align: right;">75.8</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">thoushr</td>
-<td style="text-align: left;">ld</td>
-<td style="text-align: right;">23.0</td>
-<td style="text-align: right;">8.1</td>
-<td style="text-align: right;">52.2</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">veg</td>
-<td style="text-align: left;">gs</td>
-<td style="text-align: right;">23.8</td>
-<td style="text-align: right;">9.8</td>
-<td style="text-align: right;">49.3</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">veg</td>
-<td style="text-align: left;">ha</td>
-<td style="text-align: right;">9.1</td>
-<td style="text-align: right;">3.7</td>
-<td style="text-align: right;">19.7</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">veg</td>
-<td style="text-align: left;">hd</td>
-<td style="text-align: right;">14.2</td>
-<td style="text-align: right;">6.0</td>
-<td style="text-align: right;">29.7</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">veg</td>
-<td style="text-align: left;">ld</td>
+<td style="text-align: right;">5.7</td>
 <td style="text-align: right;">17.0</td>
-<td style="text-align: right;">7.4</td>
-<td style="text-align: right;">35.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hundhr</td>
+<td style="text-align: left;">ha</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">4.5</td>
+<td style="text-align: right;">14.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hundhr</td>
+<td style="text-align: left;">hd</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">13.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hundhr</td>
+<td style="text-align: left;">ld</td>
+<td style="text-align: right;">9.8</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">15.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: left;">gs</td>
+<td style="text-align: right;">47.0</td>
+<td style="text-align: right;">27.2</td>
+<td style="text-align: right;">65.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: left;">ha</td>
+<td style="text-align: right;">38.3</td>
+<td style="text-align: right;">24.0</td>
+<td style="text-align: right;">56.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: left;">hd</td>
+<td style="text-align: right;">52.6</td>
+<td style="text-align: right;">32.7</td>
+<td style="text-align: right;">76.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dufflitter</td>
+<td style="text-align: left;">ld</td>
+<td style="text-align: right;">44.5</td>
+<td style="text-align: right;">26.7</td>
+<td style="text-align: right;">63.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">thoushr</td>
+<td style="text-align: left;">gs</td>
+<td style="text-align: right;">34.3</td>
+<td style="text-align: right;">10.9</td>
+<td style="text-align: right;">81.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">thoushr</td>
+<td style="text-align: left;">ha</td>
+<td style="text-align: right;">20.8</td>
+<td style="text-align: right;">7.6</td>
+<td style="text-align: right;">55.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">thoushr</td>
+<td style="text-align: left;">hd</td>
+<td style="text-align: right;">33.8</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">74.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">thoushr</td>
+<td style="text-align: left;">ld</td>
+<td style="text-align: right;">22.2</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">53.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">veg</td>
+<td style="text-align: left;">gs</td>
+<td style="text-align: right;">24.6</td>
+<td style="text-align: right;">10.9</td>
+<td style="text-align: right;">52.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">veg</td>
+<td style="text-align: left;">ha</td>
+<td style="text-align: right;">9.8</td>
+<td style="text-align: right;">3.7</td>
+<td style="text-align: right;">20.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">veg</td>
+<td style="text-align: left;">hd</td>
+<td style="text-align: right;">13.8</td>
+<td style="text-align: right;">6.1</td>
+<td style="text-align: right;">29.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">veg</td>
+<td style="text-align: left;">ld</td>
+<td style="text-align: right;">18.0</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: right;">35.6</td>
 </tr>
 </tbody>
 </table>
@@ -2379,39 +2404,39 @@ Adding missing grouping variables: `class`</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>predict_expected_contrasts <span class="ot">&lt;-</span> <span class="cf">function</span>(data, rope_size, <span class="at">plot =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">re_formula =</span> <span class="cn">NA</span>) {</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Assume treatment levels are the same for all models: they are.</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="ot">&lt;-</span> <span class="fu">expand</span>(data<span class="sc">$</span>data[[<span class="dv">1</span>]], <span class="fu">nesting</span>(treatment))</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">pred =</span> <span class="fu">list</span>(</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>        tidybayes<span class="sc">::</span><span class="fu">epred_draws</span>(mod, newdata, <span class="at">re_formula =</span> <span class="cn">NA</span>, <span class="at">value =</span> <span class="st">"pred"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>        tidybayes<span class="sc">::</span><span class="fu">compare_levels</span>(pred, <span class="at">by =</span> treatment) <span class="sc">|&gt;</span></span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="at">contrast =</span> treatment, pred) </span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>      ),</span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">rope =</span> rope_size <span class="sc">*</span> <span class="fu">sd</span>(data<span class="sc">$</span>load),</span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">lims =</span> <span class="fu">list</span>(</span>
-<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tibble</span>(<span class="at">xmin =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">001</span>), <span class="at">xmax =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">999</span>))</span>
-<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (plot) {</span>
-<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
-<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unnest</span>(<span class="fu">c</span>(pred)) <span class="sc">|&gt;</span></span>
-<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pred, <span class="at">y =</span> contrast)) <span class="sc">+</span></span>
-<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">stat_halfeye</span>(<span class="at">normalize =</span> <span class="st">"panels"</span>) <span class="sc">+</span></span>
-<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> rope))  <span class="sc">+</span></span>
-<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="sc">-</span>rope))  <span class="sc">+</span></span>
-<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free_x"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
-<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_cartesian_panels</span>(</span>
-<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel_limits =</span> <span class="fu">unnest</span>(<span class="fu">select</span>(d, lims), lims)</span>
-<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_discrete</span>(<span class="at">labels =</span> toupper) <span class="sc">+</span></span>
-<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Treatment"</span>)</span>
-<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
-<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(d)</span>
-<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>predict_expected_contrasts <span class="ot">&lt;-</span> <span class="cf">function</span>(data, rope_size, <span class="at">plot =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">re_formula =</span> <span class="cn">NA</span>) {</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Assume treatment levels are the same for all models: they are.</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="ot">&lt;-</span> <span class="fu">expand</span>(data<span class="sc">$</span>data[[<span class="dv">1</span>]], <span class="fu">nesting</span>(treatment))</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">pred =</span> <span class="fu">list</span>(</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>        tidybayes<span class="sc">::</span><span class="fu">epred_draws</span>(mod, newdata, <span class="at">re_formula =</span> <span class="cn">NA</span>, <span class="at">value =</span> <span class="st">"pred"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>        tidybayes<span class="sc">::</span><span class="fu">compare_levels</span>(pred, <span class="at">by =</span> treatment) <span class="sc">|&gt;</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="at">contrast =</span> treatment, pred) </span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">rope =</span> rope_size <span class="sc">*</span> <span class="fu">sd</span>(data<span class="sc">$</span>load),</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">lims =</span> <span class="fu">list</span>(</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tibble</span>(<span class="at">xmin =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">001</span>), <span class="at">xmax =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">999</span>))</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (plot) {</span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unnest</span>(<span class="fu">c</span>(pred)) <span class="sc">|&gt;</span></span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pred, <span class="at">y =</span> contrast)) <span class="sc">+</span></span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">stat_halfeye</span>(<span class="at">normalize =</span> <span class="st">"panels"</span>) <span class="sc">+</span></span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> rope))  <span class="sc">+</span></span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="sc">-</span>rope))  <span class="sc">+</span></span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free_x"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
+<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_cartesian_panels</span>(</span>
+<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel_limits =</span> <span class="fu">unnest</span>(<span class="fu">select</span>(d, lims), lims)</span>
+<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_discrete</span>(<span class="at">labels =</span> toupper) <span class="sc">+</span></span>
+<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Treatment"</span>)</span>
+<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
+<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(d)</span>
+<span id="cb49-33"><a href="#cb49-33" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -2450,290 +2475,290 @@ Adding missing grouping variables: `class`</code></pre>
 <tr class="odd">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">ha - gs</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">1.30</td>
+<td style="text-align: right;">0.55</td>
+<td style="text-align: right;">-0.04</td>
+<td style="text-align: right;">1.22</td>
 <td style="text-align: right;">0.99</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">hd - gs</td>
-<td style="text-align: right;">0.34</td>
-<td style="text-align: right;">-0.09</td>
-<td style="text-align: right;">1.02</td>
-<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">-0.12</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.97</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">hd - ha</td>
-<td style="text-align: right;">-0.12</td>
-<td style="text-align: right;">-1.00</td>
-<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">-0.14</td>
+<td style="text-align: right;">-0.93</td>
+<td style="text-align: right;">0.49</td>
 <td style="text-align: right;">0.72</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">ld - gs</td>
-<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.10</td>
 <td style="text-align: right;">-0.31</td>
-<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">0.52</td>
 <td style="text-align: right;">0.73</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">ld - ha</td>
-<td style="text-align: right;">-0.39</td>
-<td style="text-align: right;">-1.16</td>
-<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">-0.45</td>
+<td style="text-align: right;">-1.19</td>
+<td style="text-align: right;">0.12</td>
 <td style="text-align: right;">0.97</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">onehr</td>
 <td style="text-align: left;">ld - hd</td>
-<td style="text-align: right;">-0.27</td>
-<td style="text-align: right;">-0.90</td>
-<td style="text-align: right;">0.19</td>
-<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">-0.32</td>
+<td style="text-align: right;">-0.94</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">0.90</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">ha - gs</td>
 <td style="text-align: right;">-0.57</td>
 <td style="text-align: right;">-3.07</td>
-<td style="text-align: right;">1.55</td>
-<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">1.56</td>
+<td style="text-align: right;">0.75</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">hd - gs</td>
-<td style="text-align: right;">-0.86</td>
-<td style="text-align: right;">-3.30</td>
-<td style="text-align: right;">1.23</td>
-<td style="text-align: right;">0.81</td>
+<td style="text-align: right;">-0.83</td>
+<td style="text-align: right;">-3.14</td>
+<td style="text-align: right;">1.29</td>
+<td style="text-align: right;">0.82</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">hd - ha</td>
-<td style="text-align: right;">-0.37</td>
-<td style="text-align: right;">-2.27</td>
-<td style="text-align: right;">1.74</td>
-<td style="text-align: right;">0.59</td>
+<td style="text-align: right;">-0.30</td>
+<td style="text-align: right;">-2.34</td>
+<td style="text-align: right;">1.76</td>
+<td style="text-align: right;">0.60</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">ld - gs</td>
-<td style="text-align: right;">-0.47</td>
-<td style="text-align: right;">-2.95</td>
+<td style="text-align: right;">-0.42</td>
+<td style="text-align: right;">-2.89</td>
 <td style="text-align: right;">1.86</td>
 <td style="text-align: right;">0.70</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">ld - ha</td>
-<td style="text-align: right;">0.18</td>
-<td style="text-align: right;">-2.00</td>
-<td style="text-align: right;">2.27</td>
-<td style="text-align: right;">0.55</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">-1.75</td>
+<td style="text-align: right;">2.56</td>
+<td style="text-align: right;">0.57</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: left;">ld - hd</td>
-<td style="text-align: right;">0.23</td>
-<td style="text-align: right;">-1.63</td>
-<td style="text-align: right;">2.32</td>
-<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-1.62</td>
+<td style="text-align: right;">2.46</td>
+<td style="text-align: right;">0.66</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">ha - gs</td>
-<td style="text-align: right;">-1.80</td>
-<td style="text-align: right;">-7.61</td>
-<td style="text-align: right;">3.24</td>
+<td style="text-align: right;">-2.39</td>
+<td style="text-align: right;">-8.19</td>
+<td style="text-align: right;">2.83</td>
 <td style="text-align: right;">0.82</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">hd - gs</td>
-<td style="text-align: right;">-1.83</td>
-<td style="text-align: right;">-7.75</td>
-<td style="text-align: right;">2.59</td>
+<td style="text-align: right;">-2.49</td>
+<td style="text-align: right;">-7.81</td>
+<td style="text-align: right;">3.06</td>
 <td style="text-align: right;">0.83</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">hd - ha</td>
-<td style="text-align: right;">-0.01</td>
-<td style="text-align: right;">-5.09</td>
-<td style="text-align: right;">4.37</td>
-<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">-0.07</td>
+<td style="text-align: right;">-4.57</td>
+<td style="text-align: right;">4.90</td>
+<td style="text-align: right;">0.52</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">ld - gs</td>
-<td style="text-align: right;">-0.91</td>
-<td style="text-align: right;">-7.04</td>
+<td style="text-align: right;">-1.52</td>
+<td style="text-align: right;">-6.90</td>
 <td style="text-align: right;">4.55</td>
-<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.67</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">ld - ha</td>
-<td style="text-align: right;">0.89</td>
-<td style="text-align: right;">-3.55</td>
-<td style="text-align: right;">6.26</td>
-<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">-3.87</td>
+<td style="text-align: right;">6.40</td>
+<td style="text-align: right;">0.68</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: left;">ld - hd</td>
-<td style="text-align: right;">1.05</td>
-<td style="text-align: right;">-3.85</td>
-<td style="text-align: right;">6.35</td>
+<td style="text-align: right;">1.30</td>
+<td style="text-align: right;">-3.82</td>
+<td style="text-align: right;">6.50</td>
 <td style="text-align: right;">0.70</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">ha - gs</td>
-<td style="text-align: right;">-6.71</td>
-<td style="text-align: right;">-21.39</td>
-<td style="text-align: right;">7.10</td>
-<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">-7.05</td>
+<td style="text-align: right;">-21.45</td>
+<td style="text-align: right;">7.28</td>
+<td style="text-align: right;">0.87</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">hd - gs</td>
-<td style="text-align: right;">6.29</td>
-<td style="text-align: right;">-10.83</td>
-<td style="text-align: right;">22.19</td>
+<td style="text-align: right;">5.89</td>
+<td style="text-align: right;">-10.81</td>
+<td style="text-align: right;">22.34</td>
 <td style="text-align: right;">0.80</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">hd - ha</td>
-<td style="text-align: right;">12.54</td>
-<td style="text-align: right;">-1.55</td>
-<td style="text-align: right;">29.50</td>
+<td style="text-align: right;">13.23</td>
+<td style="text-align: right;">-0.19</td>
+<td style="text-align: right;">31.31</td>
 <td style="text-align: right;">0.97</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">ld - gs</td>
-<td style="text-align: right;">-2.12</td>
-<td style="text-align: right;">-17.44</td>
-<td style="text-align: right;">12.04</td>
+<td style="text-align: right;">-1.87</td>
+<td style="text-align: right;">-18.06</td>
+<td style="text-align: right;">11.81</td>
 <td style="text-align: right;">0.63</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">ld - ha</td>
-<td style="text-align: right;">5.30</td>
-<td style="text-align: right;">-8.69</td>
-<td style="text-align: right;">18.54</td>
+<td style="text-align: right;">4.30</td>
+<td style="text-align: right;">-9.04</td>
+<td style="text-align: right;">19.53</td>
 <td style="text-align: right;">0.78</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: left;">ld - hd</td>
-<td style="text-align: right;">-6.91</td>
-<td style="text-align: right;">-23.86</td>
-<td style="text-align: right;">7.31</td>
-<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">-8.64</td>
+<td style="text-align: right;">-26.51</td>
+<td style="text-align: right;">6.29</td>
+<td style="text-align: right;">0.87</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">ha - gs</td>
-<td style="text-align: right;">-11.26</td>
-<td style="text-align: right;">-54.82</td>
-<td style="text-align: right;">21.81</td>
-<td style="text-align: right;">0.79</td>
+<td style="text-align: right;">-9.41</td>
+<td style="text-align: right;">-54.13</td>
+<td style="text-align: right;">25.74</td>
+<td style="text-align: right;">0.78</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">hd - gs</td>
-<td style="text-align: right;">-1.92</td>
-<td style="text-align: right;">-46.60</td>
-<td style="text-align: right;">40.29</td>
-<td style="text-align: right;">0.57</td>
+<td style="text-align: right;">-3.63</td>
+<td style="text-align: right;">-47.38</td>
+<td style="text-align: right;">43.23</td>
+<td style="text-align: right;">0.55</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">hd - ha</td>
-<td style="text-align: right;">5.37</td>
-<td style="text-align: right;">-26.35</td>
-<td style="text-align: right;">48.01</td>
-<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">8.63</td>
+<td style="text-align: right;">-26.65</td>
+<td style="text-align: right;">50.81</td>
+<td style="text-align: right;">0.75</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">ld - gs</td>
-<td style="text-align: right;">-11.58</td>
-<td style="text-align: right;">-54.68</td>
-<td style="text-align: right;">19.50</td>
-<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">-11.63</td>
+<td style="text-align: right;">-54.95</td>
+<td style="text-align: right;">24.31</td>
+<td style="text-align: right;">0.81</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">ld - ha</td>
-<td style="text-align: right;">-0.55</td>
-<td style="text-align: right;">-32.13</td>
-<td style="text-align: right;">27.97</td>
+<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">-30.20</td>
+<td style="text-align: right;">33.06</td>
 <td style="text-align: right;">0.54</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">thoushr</td>
 <td style="text-align: left;">ld - hd</td>
-<td style="text-align: right;">-9.08</td>
-<td style="text-align: right;">-53.36</td>
-<td style="text-align: right;">18.89</td>
+<td style="text-align: right;">-7.83</td>
+<td style="text-align: right;">-49.62</td>
+<td style="text-align: right;">24.43</td>
 <td style="text-align: right;">0.78</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">ha - gs</td>
-<td style="text-align: right;">-13.93</td>
-<td style="text-align: right;">-36.87</td>
-<td style="text-align: right;">-0.75</td>
+<td style="text-align: right;">-13.54</td>
+<td style="text-align: right;">-37.57</td>
+<td style="text-align: right;">0.45</td>
 <td style="text-align: right;">0.99</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">hd - gs</td>
-<td style="text-align: right;">-9.94</td>
-<td style="text-align: right;">-30.76</td>
-<td style="text-align: right;">5.90</td>
+<td style="text-align: right;">-7.41</td>
+<td style="text-align: right;">-31.98</td>
+<td style="text-align: right;">7.70</td>
 <td style="text-align: right;">0.93</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">hd - ha</td>
-<td style="text-align: right;">3.77</td>
-<td style="text-align: right;">-5.20</td>
-<td style="text-align: right;">18.13</td>
+<td style="text-align: right;">3.64</td>
+<td style="text-align: right;">-5.98</td>
+<td style="text-align: right;">17.20</td>
 <td style="text-align: right;">0.86</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">ld - gs</td>
-<td style="text-align: right;">-5.21</td>
-<td style="text-align: right;">-27.92</td>
-<td style="text-align: right;">11.34</td>
+<td style="text-align: right;">-5.93</td>
+<td style="text-align: right;">-29.88</td>
+<td style="text-align: right;">11.59</td>
 <td style="text-align: right;">0.82</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">ld - ha</td>
-<td style="text-align: right;">7.07</td>
-<td style="text-align: right;">-3.94</td>
-<td style="text-align: right;">23.16</td>
+<td style="text-align: right;">7.93</td>
+<td style="text-align: right;">-3.54</td>
+<td style="text-align: right;">24.25</td>
 <td style="text-align: right;">0.94</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">veg</td>
 <td style="text-align: left;">ld - hd</td>
-<td style="text-align: right;">3.25</td>
-<td style="text-align: right;">-11.88</td>
-<td style="text-align: right;">17.88</td>
-<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">3.15</td>
+<td style="text-align: right;">-11.17</td>
+<td style="text-align: right;">19.40</td>
+<td style="text-align: right;">0.72</td>
 </tr>
 </tbody>
 </table>
@@ -2744,13 +2769,13 @@ Adding missing grouping variables: `class`</code></pre>
 <section id="r-squared" class="level4" data-number="5.2.2.9">
 <h4 data-number="5.2.2.9" class="anchored" data-anchor-id="r-squared"><span class="header-section-number">5.2.2.9</span> R squared</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>bf4a <span class="sc">|&gt;</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">R_squared =</span> <span class="fu">list</span>(<span class="fu">as_tibble</span>(<span class="fu">bayes_R2</span>(mod)))</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(R_squared) <span class="sc">|&gt;</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unnest</span>(R_squared) <span class="sc">|&gt;</span></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>bf4a <span class="sc">|&gt;</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">R_squared =</span> <span class="fu">list</span>(<span class="fu">as_tibble</span>(<span class="fu">bayes_R2</span>(mod)))</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(R_squared) <span class="sc">|&gt;</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unnest</span>(R_squared) <span class="sc">|&gt;</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Adding missing grouping variables: `class`</code></pre>
 </div>
@@ -2773,27 +2798,27 @@ Adding missing grouping variables: `class`</code></pre>
 <td style="text-align: right;">0.36</td>
 <td style="text-align: right;">0.08</td>
 <td style="text-align: right;">0.21</td>
-<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.52</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">tenhr</td>
 <td style="text-align: right;">0.24</td>
 <td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.40</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">hundhr</td>
 <td style="text-align: right;">0.18</td>
 <td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.33</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dufflitter</td>
 <td style="text-align: right;">0.19</td>
 <td style="text-align: right;">0.07</td>
-<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.08</td>
 <td style="text-align: right;">0.34</td>
 </tr>
 <tr class="odd">
@@ -2801,11 +2826,11 @@ Adding missing grouping variables: `class`</code></pre>
 <td style="text-align: right;">0.17</td>
 <td style="text-align: right;">0.08</td>
 <td style="text-align: right;">0.06</td>
-<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.36</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">veg</td>
-<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.43</td>
 <td style="text-align: right;">0.10</td>
 <td style="text-align: right;">0.23</td>
 <td style="text-align: right;">0.62</td>
@@ -2822,21 +2847,21 @@ Adding missing grouping variables: `class`</code></pre>
 <h2 data-number="5.3" class="anchored" data-anchor-id="final"><span class="header-section-number">5.3</span> Final</h2>
 <section id="model-formula-and-prior-explanation" class="level3" data-number="5.3.1">
 <h3 data-number="5.3.1" class="anchored" data-anchor-id="model-formula-and-prior-explanation"><span class="header-section-number">5.3.1</span> Model formula and prior explanation</h3>
-<p>The final model is described in <a href="#eq-bf4a">Equation&nbsp;<span class="quarto-unresolved-ref">eq-bf4a</span></a>. The description of the meaning of the priors in the following list should probably be included for explanation.</p>
+<p>The final model is described in <a href="#eq-bf4a">Equation&nbsp;<span>5.1</span></a>. The description of the meaning of the priors in the following list should probably be included for explanation.</p>
 </section>
 <section id="fiting-and-diagnostics" class="level3" data-number="5.3.2">
 <h3 data-number="5.3.2" class="anchored" data-anchor-id="fiting-and-diagnostics"><span class="header-section-number">5.3.2</span> fiting and diagnostics</h3>
 <ul>
 <li>The actual code used to fit the model in <code>brms</code> should be included in an appendix.</li>
-<li><a href="#fig-gamma-pri-post">Figure&nbsp;<span class="quarto-unresolved-ref">fig-gamma-pri-post</span></a> should be included as an example of the connection between our priors and posterior distributions.</li>
-<li>We should summarize rhat and tail ess for all models as shown in <a href="#tbl-model-summaries">Table&nbsp;<span class="quarto-unresolved-ref">tbl-model-summaries</span></a>
+<li><a href="#fig-gamma-pri-post">Figure&nbsp;<span>5.9</span></a> should be included as an example of the connection between our priors and posterior distributions.</li>
+<li>We should summarize rhat and tail ess for all models as shown in <a href="sprouts_import_data.html#tbl-model-summaries">Table&nbsp;<span>6.3</span></a>
 <ul>
 <li>R-hat values were all below 1.005</li>
 <li>Bulk and tail effective sample sizes were generally above 1000, with the exception of plot and corner SD’s for 1000-hr and Live vegetation fuels, which were above 640.</li>
 <li>These should be adequate effective sample sizes for robust inference.</li>
 </ul></li>
-<li><a href="#fig-gamma-pp-check">Figure&nbsp;<span class="quarto-unresolved-ref">fig-gamma-pp-check</span></a> should be included to show model fit</li>
-<li><a href="#tbl-R2">Table&nbsp;<span class="quarto-unresolved-ref">tbl-R2</span></a> gives an interpretation of R-squared for bayesian models for each of our models.</li>
+<li><a href="#fig-gamma-pp-check">Figure&nbsp;<span>5.10</span></a> should be included to show model fit</li>
+<li><a href="#tbl-R2">Table&nbsp;<span>5.9</span></a> gives an interpretation of R-squared for bayesian models for each of our models.</li>
 </ul>
 </section>
 <section id="results" class="level3" data-number="5.3.3">
@@ -2844,7 +2869,7 @@ Adding missing grouping variables: `class`</code></pre>
 <section id="predicted-means" class="level4" data-number="5.3.3.1">
 <h4 data-number="5.3.3.1" class="anchored" data-anchor-id="predicted-means"><span class="header-section-number">5.3.3.1</span> Predicted means</h4>
 <ul>
-<li>The posterior effect of treatment is summarized in <a href="#fig-expected-predictions">Figure&nbsp;<span class="quarto-unresolved-ref">fig-expected-predictions</span></a>.</li>
+<li>The posterior effect of treatment is summarized in <a href="#fig-expected-predictions">Figure&nbsp;<span>5.11</span></a>.</li>
 <li>For 1-hr fuels, treatments HD and HA show patterns of higher loading. This may have to do with more fine fuel inputs from higher retention. This could lead to increased fire behavior, which could be of benefit if attempting to burn under marginal conditions.</li>
 <li>The HD treatment shows the potential for higher loading of duff and litter. This could be due to the same effect as for 1-hr fuels, but the HA treatement does not show a similar trend in this case. This could be explained by a higher probability of sampling near a trees base, where duff and litter load are known to be higher.</li>
 <li>An obvious trend in live vegetation is revealed in the GS treatment, where tree sprouts and brush was able to regenerate without any competition. The potentially reduced live vegetation in the HA treatment is unexpected.</li>
@@ -2853,7 +2878,7 @@ Adding missing grouping variables: `class`</code></pre>
 <section id="predicted-contrasts" class="level4" data-number="5.3.3.2">
 <h4 data-number="5.3.3.2" class="anchored" data-anchor-id="predicted-contrasts"><span class="header-section-number">5.3.3.2</span> Predicted contrasts</h4>
 <ul>
-<li>Pairwise comparison of treatment efffect is sumarized in <a href="#fig-compare-expected">Figure&nbsp;<span class="quarto-unresolved-ref">fig-compare-expected</span></a></li>
+<li>Pairwise comparison of treatment efffect is sumarized in <a href="#fig-compare-expected">Figure&nbsp;<span>5.12</span></a></li>
 <li>Contrasts take into account how expected predictions co-vary and is a better indicato of potential differences between treatments.</li>
 <li>If we take the 95% credible interval as the measure of “significant differences” between treatments, then the HA treatment would be considered to result in greater fuel load than the GS treatment, and the opposite trend would be true for live vegetation: HA is greater than GS.</li>
 <li>The posterior distributions of contrasts reveal more potential differences with somewhat reduced certainty for 1-hr, Duff &amp; litter, and Live vegetation.

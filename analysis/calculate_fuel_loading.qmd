@@ -421,8 +421,8 @@ Vegetation and duff/litter first need to be summarized to the transect level.
 #| code-fold: false
 #| message: false
 
-dufflitter_load <- dufflitter |> 
-  group_by(pick(all_of(transectid))) |> 
+dufflitter_load <- dufflitter |>
+  group_by(pick(all_of(transectid))) |>
   summarize(class = "dufflitter", load = mean(load))
 
 veg_load <- veg |>
@@ -474,7 +474,7 @@ stuart <- tribble(
   "stuart", "veg_woody", 0.04, 2.48,
   "stuart", "thoushr", 2.48, 56.34,
 )
-stuart <- mutate(stuart, across(where(is.numeric), \(x) x * 2.54))
+stuart <- mutate(stuart, across(where(is.numeric), \(x) x * 2.242))
 
 others <- tribble(
   ~source, ~class, ~low, ~high,
@@ -505,9 +505,10 @@ others <- tribble(
 #|   - ""
 #| layout-ncol: 2
 
-fuel_classes <- c("litter", "dufflitter", "onehr",
-"tenhr", "hundhr", "onetenhundhr", "thoushr_s", "thoushr_r", "thoushr",
-    "veg_woody", "veg_herb")
+fuel_classes <- c(
+  "litter", "dufflitter", "onehr", "tenhr", "hundhr", "onetenhundhr",
+  "thoushr_s", "thoushr_r", "thoushr", "veg_woody", "veg_herb"
+)
 
 # This function adds a summary row that sums load values from other rows, this
 # is to be able to compare among multiple sources that report slightly different
@@ -521,6 +522,9 @@ add_combined_classes <- function(data, newclass, classes) {
 }
 
 tl_tab <- total_load |>
+  mutate(class = if_else(
+    str_detect(class, "woody|herb"), paste0("veg_", class), class
+  )) |>
   add_combined_classes("onetenhundhr", c("onehr", "tenhr", "hundhr")) |>
   add_combined_classes("thoushr", c("thoushr_s", "thoushr_r")) |>
   group_by(class, treatment) |>

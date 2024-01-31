@@ -663,8 +663,8 @@ Douglas-Fir: A Case Study from Northern California. -->
 <p>Now we can join results for fine woody debris, coarse woody debris, litter, and duff into a single dataframe.</p>
 <p>Vegetation and duff/litter first need to be summarized to the transect level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dufflitter_load <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span> </span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dufflitter_load <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">class =</span> <span class="st">"dufflitter"</span>, <span class="at">load =</span> <span class="fu">mean</span>(load))</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>veg_load <span class="ot">&lt;-</span> veg <span class="sc">|&gt;</span></span>
@@ -693,23 +693,23 @@ Douglas-Fir: A Case Study from Northern California. -->
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div id="tbl-total-load-1" class="quarto-layout-cell quarto-layout-cell-subref anchored" data-ref-parent="tbl-total-load" style="flex-basis: 50.0%;justify-content: center;">
 
-<div id="lzlkxmpmef" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#lzlkxmpmef table {
+<div id="ckttxgnhel" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ckttxgnhel table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#lzlkxmpmef thead, #lzlkxmpmef tbody, #lzlkxmpmef tfoot, #lzlkxmpmef tr, #lzlkxmpmef td, #lzlkxmpmef th {
+#ckttxgnhel thead, #ckttxgnhel tbody, #ckttxgnhel tfoot, #ckttxgnhel tr, #ckttxgnhel td, #ckttxgnhel th {
   border-style: none;
 }
 
-#lzlkxmpmef p {
+#ckttxgnhel p {
   margin: 0;
   padding: 0;
 }
 
-#lzlkxmpmef .gt_table {
+#ckttxgnhel .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -735,12 +735,12 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-left-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_caption {
+#ckttxgnhel .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#lzlkxmpmef .gt_title {
+#ckttxgnhel .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -752,7 +752,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-bottom-width: 0;
 }
 
-#lzlkxmpmef .gt_subtitle {
+#ckttxgnhel .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -764,7 +764,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-top-width: 0;
 }
 
-#lzlkxmpmef .gt_heading {
+#ckttxgnhel .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -776,13 +776,13 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-right-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_bottom_border {
+#ckttxgnhel .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_col_headings {
+#ckttxgnhel .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -797,7 +797,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-right-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_col_heading {
+#ckttxgnhel .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -817,7 +817,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   overflow-x: hidden;
 }
 
-#lzlkxmpmef .gt_column_spanner_outer {
+#ckttxgnhel .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -829,15 +829,15 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 4px;
 }
 
-#lzlkxmpmef .gt_column_spanner_outer:first-child {
+#ckttxgnhel .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lzlkxmpmef .gt_column_spanner_outer:last-child {
+#ckttxgnhel .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lzlkxmpmef .gt_column_spanner {
+#ckttxgnhel .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -849,11 +849,11 @@ Douglas-Fir: A Case Study from Northern California. -->
   width: 100%;
 }
 
-#lzlkxmpmef .gt_spanner_row {
+#ckttxgnhel .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#lzlkxmpmef .gt_group_heading {
+#ckttxgnhel .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -879,7 +879,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   text-align: left;
 }
 
-#lzlkxmpmef .gt_empty_group_heading {
+#ckttxgnhel .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -894,15 +894,15 @@ Douglas-Fir: A Case Study from Northern California. -->
   vertical-align: middle;
 }
 
-#lzlkxmpmef .gt_from_md > :first-child {
+#ckttxgnhel .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lzlkxmpmef .gt_from_md > :last-child {
+#ckttxgnhel .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lzlkxmpmef .gt_row {
+#ckttxgnhel .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -921,7 +921,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   overflow-x: hidden;
 }
 
-#lzlkxmpmef .gt_stub {
+#ckttxgnhel .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -934,7 +934,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#lzlkxmpmef .gt_stub_row_group {
+#ckttxgnhel .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -948,15 +948,15 @@ Douglas-Fir: A Case Study from Northern California. -->
   vertical-align: top;
 }
 
-#lzlkxmpmef .gt_row_group_first td {
+#ckttxgnhel .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#lzlkxmpmef .gt_row_group_first th {
+#ckttxgnhel .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#lzlkxmpmef .gt_summary_row {
+#ckttxgnhel .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -966,16 +966,16 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#lzlkxmpmef .gt_first_summary_row {
+#ckttxgnhel .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_first_summary_row.thick {
+#ckttxgnhel .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#lzlkxmpmef .gt_last_summary_row {
+#ckttxgnhel .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -985,7 +985,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-bottom-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_grand_summary_row {
+#ckttxgnhel .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -995,7 +995,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#lzlkxmpmef .gt_first_grand_summary_row {
+#ckttxgnhel .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1005,7 +1005,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-top-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_last_grand_summary_row_top {
+#ckttxgnhel .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1015,11 +1015,11 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-bottom-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_striped {
+#ckttxgnhel .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lzlkxmpmef .gt_table_body {
+#ckttxgnhel .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1028,7 +1028,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-bottom-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_footnotes {
+#ckttxgnhel .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1042,7 +1042,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-right-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_footnote {
+#ckttxgnhel .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1051,7 +1051,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#lzlkxmpmef .gt_sourcenotes {
+#ckttxgnhel .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1065,7 +1065,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-right-color: #D3D3D3;
 }
 
-#lzlkxmpmef .gt_sourcenote {
+#ckttxgnhel .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1073,63 +1073,63 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#lzlkxmpmef .gt_left {
+#ckttxgnhel .gt_left {
   text-align: left;
 }
 
-#lzlkxmpmef .gt_center {
+#ckttxgnhel .gt_center {
   text-align: center;
 }
 
-#lzlkxmpmef .gt_right {
+#ckttxgnhel .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lzlkxmpmef .gt_font_normal {
+#ckttxgnhel .gt_font_normal {
   font-weight: normal;
 }
 
-#lzlkxmpmef .gt_font_bold {
+#ckttxgnhel .gt_font_bold {
   font-weight: bold;
 }
 
-#lzlkxmpmef .gt_font_italic {
+#ckttxgnhel .gt_font_italic {
   font-style: italic;
 }
 
-#lzlkxmpmef .gt_super {
+#ckttxgnhel .gt_super {
   font-size: 65%;
 }
 
-#lzlkxmpmef .gt_footnote_marks {
+#ckttxgnhel .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#lzlkxmpmef .gt_asterisk {
+#ckttxgnhel .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#lzlkxmpmef .gt_indent_1 {
+#ckttxgnhel .gt_indent_1 {
   text-indent: 5px;
 }
 
-#lzlkxmpmef .gt_indent_2 {
+#ckttxgnhel .gt_indent_2 {
   text-indent: 10px;
 }
 
-#lzlkxmpmef .gt_indent_3 {
+#ckttxgnhel .gt_indent_3 {
   text-indent: 15px;
 }
 
-#lzlkxmpmef .gt_indent_4 {
+#ckttxgnhel .gt_indent_4 {
   text-indent: 20px;
 }
 
-#lzlkxmpmef .gt_indent_5 {
+#ckttxgnhel .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1159,8 +1159,8 @@ Douglas-Fir: A Case Study from Northern California. -->
 <td headers="dufflitter source_4 low" class="gt_row gt_right">24.0</td>
 <td headers="dufflitter source_4 high" class="gt_row gt_right">24.0</td></tr>
     <tr><td headers="dufflitter source_5 source" class="gt_row gt_left">stuart</td>
-<td headers="dufflitter source_5 low" class="gt_row gt_right">35.0</td>
-<td headers="dufflitter source_5 high" class="gt_row gt_right">83.3</td></tr>
+<td headers="dufflitter source_5 low" class="gt_row gt_right">30.9</td>
+<td headers="dufflitter source_5 high" class="gt_row gt_right">73.6</td></tr>
     <tr class="gt_row_group_first"><td headers="onehr stub_1_6 stub_1" rowspan="3" class="gt_row gt_left gt_stub_row_group">onehr</td>
 <td headers="onehr stub_1_6 source" class="gt_row gt_left">thisstudy</td>
 <td headers="onehr stub_1_6 low" class="gt_row gt_right">0.6</td>
@@ -1169,8 +1169,8 @@ Douglas-Fir: A Case Study from Northern California. -->
 <td headers="onehr source_7 low" class="gt_row gt_right">2.0</td>
 <td headers="onehr source_7 high" class="gt_row gt_right">3.4</td></tr>
     <tr><td headers="onehr source_8 source" class="gt_row gt_left">stuart</td>
-<td headers="onehr source_8 low" class="gt_row gt_right">1.0</td>
-<td headers="onehr source_8 high" class="gt_row gt_right">2.4</td></tr>
+<td headers="onehr source_8 low" class="gt_row gt_right">0.9</td>
+<td headers="onehr source_8 high" class="gt_row gt_right">2.1</td></tr>
     <tr class="gt_row_group_first"><td headers="tenhr stub_1_9 stub_1" rowspan="3" class="gt_row gt_left gt_stub_row_group">tenhr</td>
 <td headers="tenhr stub_1_9 source" class="gt_row gt_left">thisstudy</td>
 <td headers="tenhr stub_1_9 low" class="gt_row gt_right">2.9</td>
@@ -1179,8 +1179,8 @@ Douglas-Fir: A Case Study from Northern California. -->
 <td headers="tenhr source_10 low" class="gt_row gt_right">2.5</td>
 <td headers="tenhr source_10 high" class="gt_row gt_right">6.1</td></tr>
     <tr><td headers="tenhr source_11 source" class="gt_row gt_left">stuart</td>
-<td headers="tenhr source_11 low" class="gt_row gt_right">4.0</td>
-<td headers="tenhr source_11 high" class="gt_row gt_right">7.3</td></tr>
+<td headers="tenhr source_11 low" class="gt_row gt_right">3.5</td>
+<td headers="tenhr source_11 high" class="gt_row gt_right">6.4</td></tr>
     <tr class="gt_row_group_first"><td headers="hundhr stub_1_12 stub_1" rowspan="3" class="gt_row gt_left gt_stub_row_group">hundhr</td>
 <td headers="hundhr stub_1_12 source" class="gt_row gt_left">thisstudy</td>
 <td headers="hundhr stub_1_12 low" class="gt_row gt_right">9.5</td>
@@ -1189,8 +1189,8 @@ Douglas-Fir: A Case Study from Northern California. -->
 <td headers="hundhr source_13 low" class="gt_row gt_right">3.1</td>
 <td headers="hundhr source_13 high" class="gt_row gt_right">7.6</td></tr>
     <tr><td headers="hundhr source_14 source" class="gt_row gt_left">stuart</td>
-<td headers="hundhr source_14 low" class="gt_row gt_right">3.2</td>
-<td headers="hundhr source_14 high" class="gt_row gt_right">8.5</td></tr>
+<td headers="hundhr source_14 low" class="gt_row gt_right">2.8</td>
+<td headers="hundhr source_14 high" class="gt_row gt_right">7.5</td></tr>
     <tr class="gt_row_group_first"><td headers="onetenhundhr stub_1_15 stub_1" rowspan="4" class="gt_row gt_left gt_stub_row_group">onetenhundhr</td>
 <td headers="onetenhundhr stub_1_15 source" class="gt_row gt_left">thisstudy</td>
 <td headers="onetenhundhr stub_1_15 low" class="gt_row gt_right">13.4</td>
@@ -1202,8 +1202,8 @@ Douglas-Fir: A Case Study from Northern California. -->
 <td headers="onetenhundhr source_17 low" class="gt_row gt_right">9.0</td>
 <td headers="onetenhundhr source_17 high" class="gt_row gt_right">15.5</td></tr>
     <tr><td headers="onetenhundhr source_18 source" class="gt_row gt_left">stuart</td>
-<td headers="onetenhundhr source_18 low" class="gt_row gt_right">9.1</td>
-<td headers="onetenhundhr source_18 high" class="gt_row gt_right">15.1</td></tr>
+<td headers="onetenhundhr source_18 low" class="gt_row gt_right">8.0</td>
+<td headers="onetenhundhr source_18 high" class="gt_row gt_right">13.4</td></tr>
   </tbody>
   
   
@@ -1212,23 +1212,23 @@ Douglas-Fir: A Case Study from Northern California. -->
 </div>
 <div id="tbl-total-load-2" class="quarto-layout-cell quarto-layout-cell-subref anchored" data-ref-parent="tbl-total-load" style="flex-basis: 50.0%;justify-content: center;">
 
-<div id="tualptxgjz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tualptxgjz table {
+<div id="cmrrcsteyt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cmrrcsteyt table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tualptxgjz thead, #tualptxgjz tbody, #tualptxgjz tfoot, #tualptxgjz tr, #tualptxgjz td, #tualptxgjz th {
+#cmrrcsteyt thead, #cmrrcsteyt tbody, #cmrrcsteyt tfoot, #cmrrcsteyt tr, #cmrrcsteyt td, #cmrrcsteyt th {
   border-style: none;
 }
 
-#tualptxgjz p {
+#cmrrcsteyt p {
   margin: 0;
   padding: 0;
 }
 
-#tualptxgjz .gt_table {
+#cmrrcsteyt .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1254,12 +1254,12 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-left-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_caption {
+#cmrrcsteyt .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tualptxgjz .gt_title {
+#cmrrcsteyt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1271,7 +1271,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-bottom-width: 0;
 }
 
-#tualptxgjz .gt_subtitle {
+#cmrrcsteyt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1283,7 +1283,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-top-width: 0;
 }
 
-#tualptxgjz .gt_heading {
+#cmrrcsteyt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1295,13 +1295,13 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-right-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_bottom_border {
+#cmrrcsteyt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_col_headings {
+#cmrrcsteyt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1316,7 +1316,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-right-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_col_heading {
+#cmrrcsteyt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1336,7 +1336,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   overflow-x: hidden;
 }
 
-#tualptxgjz .gt_column_spanner_outer {
+#cmrrcsteyt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1348,15 +1348,15 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 4px;
 }
 
-#tualptxgjz .gt_column_spanner_outer:first-child {
+#cmrrcsteyt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tualptxgjz .gt_column_spanner_outer:last-child {
+#cmrrcsteyt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tualptxgjz .gt_column_spanner {
+#cmrrcsteyt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1368,11 +1368,11 @@ Douglas-Fir: A Case Study from Northern California. -->
   width: 100%;
 }
 
-#tualptxgjz .gt_spanner_row {
+#cmrrcsteyt .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tualptxgjz .gt_group_heading {
+#cmrrcsteyt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1398,7 +1398,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   text-align: left;
 }
 
-#tualptxgjz .gt_empty_group_heading {
+#cmrrcsteyt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1413,15 +1413,15 @@ Douglas-Fir: A Case Study from Northern California. -->
   vertical-align: middle;
 }
 
-#tualptxgjz .gt_from_md > :first-child {
+#cmrrcsteyt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tualptxgjz .gt_from_md > :last-child {
+#cmrrcsteyt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tualptxgjz .gt_row {
+#cmrrcsteyt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1440,7 +1440,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   overflow-x: hidden;
 }
 
-#tualptxgjz .gt_stub {
+#cmrrcsteyt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1453,7 +1453,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#tualptxgjz .gt_stub_row_group {
+#cmrrcsteyt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1467,15 +1467,15 @@ Douglas-Fir: A Case Study from Northern California. -->
   vertical-align: top;
 }
 
-#tualptxgjz .gt_row_group_first td {
+#cmrrcsteyt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tualptxgjz .gt_row_group_first th {
+#cmrrcsteyt .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tualptxgjz .gt_summary_row {
+#cmrrcsteyt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1485,16 +1485,16 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#tualptxgjz .gt_first_summary_row {
+#cmrrcsteyt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_first_summary_row.thick {
+#cmrrcsteyt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tualptxgjz .gt_last_summary_row {
+#cmrrcsteyt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1504,7 +1504,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-bottom-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_grand_summary_row {
+#cmrrcsteyt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1514,7 +1514,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#tualptxgjz .gt_first_grand_summary_row {
+#cmrrcsteyt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1524,7 +1524,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-top-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_last_grand_summary_row_top {
+#cmrrcsteyt .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1534,11 +1534,11 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-bottom-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_striped {
+#cmrrcsteyt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tualptxgjz .gt_table_body {
+#cmrrcsteyt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1547,7 +1547,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-bottom-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_footnotes {
+#cmrrcsteyt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1561,7 +1561,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-right-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_footnote {
+#cmrrcsteyt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1570,7 +1570,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#tualptxgjz .gt_sourcenotes {
+#cmrrcsteyt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1584,7 +1584,7 @@ Douglas-Fir: A Case Study from Northern California. -->
   border-right-color: #D3D3D3;
 }
 
-#tualptxgjz .gt_sourcenote {
+#cmrrcsteyt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1592,63 +1592,63 @@ Douglas-Fir: A Case Study from Northern California. -->
   padding-right: 5px;
 }
 
-#tualptxgjz .gt_left {
+#cmrrcsteyt .gt_left {
   text-align: left;
 }
 
-#tualptxgjz .gt_center {
+#cmrrcsteyt .gt_center {
   text-align: center;
 }
 
-#tualptxgjz .gt_right {
+#cmrrcsteyt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tualptxgjz .gt_font_normal {
+#cmrrcsteyt .gt_font_normal {
   font-weight: normal;
 }
 
-#tualptxgjz .gt_font_bold {
+#cmrrcsteyt .gt_font_bold {
   font-weight: bold;
 }
 
-#tualptxgjz .gt_font_italic {
+#cmrrcsteyt .gt_font_italic {
   font-style: italic;
 }
 
-#tualptxgjz .gt_super {
+#cmrrcsteyt .gt_super {
   font-size: 65%;
 }
 
-#tualptxgjz .gt_footnote_marks {
+#cmrrcsteyt .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tualptxgjz .gt_asterisk {
+#cmrrcsteyt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tualptxgjz .gt_indent_1 {
+#cmrrcsteyt .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tualptxgjz .gt_indent_2 {
+#cmrrcsteyt .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tualptxgjz .gt_indent_3 {
+#cmrrcsteyt .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tualptxgjz .gt_indent_4 {
+#cmrrcsteyt .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tualptxgjz .gt_indent_5 {
+#cmrrcsteyt .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1671,8 +1671,8 @@ Douglas-Fir: A Case Study from Northern California. -->
 <td headers="thoushr_s source_2 low" class="gt_row gt_right">4.9</td>
 <td headers="thoushr_s source_2 high" class="gt_row gt_right">76.7</td></tr>
     <tr><td headers="thoushr_s source_3 source" class="gt_row gt_left">stuart</td>
-<td headers="thoushr_s source_3 low" class="gt_row gt_right">5.7</td>
-<td headers="thoushr_s source_3 high" class="gt_row gt_right">133.0</td></tr>
+<td headers="thoushr_s source_3 low" class="gt_row gt_right">5.0</td>
+<td headers="thoushr_s source_3 high" class="gt_row gt_right">117.4</td></tr>
     <tr class="gt_row_group_first"><td headers="thoushr_r stub_1_4 stub_1" rowspan="3" class="gt_row gt_left gt_stub_row_group">thoushr_r</td>
 <td headers="thoushr_r stub_1_4 source" class="gt_row gt_left">thisstudy</td>
 <td headers="thoushr_r stub_1_4 low" class="gt_row gt_right">23.0</td>
@@ -1681,8 +1681,8 @@ Douglas-Fir: A Case Study from Northern California. -->
 <td headers="thoushr_r source_5 low" class="gt_row gt_right">3.1</td>
 <td headers="thoushr_r source_5 high" class="gt_row gt_right">35.2</td></tr>
     <tr><td headers="thoushr_r source_6 source" class="gt_row gt_left">stuart</td>
-<td headers="thoushr_r source_6 low" class="gt_row gt_right">0.6</td>
-<td headers="thoushr_r source_6 high" class="gt_row gt_right">52.9</td></tr>
+<td headers="thoushr_r source_6 low" class="gt_row gt_right">0.5</td>
+<td headers="thoushr_r source_6 high" class="gt_row gt_right">46.7</td></tr>
     <tr class="gt_row_group_first"><td headers="thoushr stub_1_7 stub_1" rowspan="4" class="gt_row gt_left gt_stub_row_group">thoushr</td>
 <td headers="thoushr stub_1_7 source" class="gt_row gt_left">thisstudy</td>
 <td headers="thoushr stub_1_7 low" class="gt_row gt_right">45.1</td>
@@ -1694,19 +1694,19 @@ Douglas-Fir: A Case Study from Northern California. -->
 <td headers="thoushr source_9 low" class="gt_row gt_right">18.3</td>
 <td headers="thoushr source_9 high" class="gt_row gt_right">85.9</td></tr>
     <tr><td headers="thoushr source_10 source" class="gt_row gt_left">stuart</td>
-<td headers="thoushr source_10 low" class="gt_row gt_right">6.3</td>
-<td headers="thoushr source_10 high" class="gt_row gt_right">143.1</td></tr>
-    <tr class="gt_row_group_first"><td headers="veg_woody stub_1_11 stub_1" rowspan="1" class="gt_row gt_left gt_stub_row_group">veg_woody</td>
-<td headers="veg_woody stub_1_11 source" class="gt_row gt_left">stuart</td>
-<td headers="veg_woody stub_1_11 low" class="gt_row gt_right">0.1</td>
-<td headers="veg_woody stub_1_11 high" class="gt_row gt_right">6.3</td></tr>
-    <tr class="gt_row_group_first"><td headers="NA stub_1_12 stub_1" rowspan="2" class="gt_row gt_left gt_stub_row_group">NA</td>
-<td headers="NA stub_1_12 source" class="gt_row gt_left">thisstudy</td>
-<td headers="NA stub_1_12 low" class="gt_row gt_right">0.2</td>
-<td headers="NA stub_1_12 high" class="gt_row gt_right">0.5</td></tr>
-    <tr><td headers="NA source_13 source" class="gt_row gt_left">thisstudy</td>
-<td headers="NA source_13 low" class="gt_row gt_right">12.4</td>
-<td headers="NA source_13 high" class="gt_row gt_right">37.8</td></tr>
+<td headers="thoushr source_10 low" class="gt_row gt_right">5.6</td>
+<td headers="thoushr source_10 high" class="gt_row gt_right">126.3</td></tr>
+    <tr class="gt_row_group_first"><td headers="veg_woody stub_1_11 stub_1" rowspan="2" class="gt_row gt_left gt_stub_row_group">veg_woody</td>
+<td headers="veg_woody stub_1_11 source" class="gt_row gt_left">thisstudy</td>
+<td headers="veg_woody stub_1_11 low" class="gt_row gt_right">12.4</td>
+<td headers="veg_woody stub_1_11 high" class="gt_row gt_right">37.8</td></tr>
+    <tr><td headers="veg_woody source_12 source" class="gt_row gt_left">stuart</td>
+<td headers="veg_woody source_12 low" class="gt_row gt_right">0.1</td>
+<td headers="veg_woody source_12 high" class="gt_row gt_right">5.6</td></tr>
+    <tr class="gt_row_group_first"><td headers="veg_herb stub_1_13 stub_1" rowspan="1" class="gt_row gt_left gt_stub_row_group">veg_herb</td>
+<td headers="veg_herb stub_1_13 source" class="gt_row gt_left">thisstudy</td>
+<td headers="veg_herb stub_1_13 low" class="gt_row gt_right">0.2</td>
+<td headers="veg_herb stub_1_13 high" class="gt_row gt_right">0.5</td></tr>
   </tbody>
   
   

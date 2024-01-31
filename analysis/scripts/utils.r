@@ -8,11 +8,11 @@ load2 <- function(shape = "wide", ...) {
       veg = rowSums(pick(c(woody, herb)), na.rm = TRUE),
       .keep = "unused"
     )
-  if (!missing(...)) tl <- select(tl, ...)  
+  if (!missing(...)) tl <- select(tl, ...)
   if (shape == "long") {
-    tl <- pivot_longer(tl, 
+    tl <- pivot_longer(tl,
       -any_of(c("site", "treatment", "corner", "azi")),
-      names_to = "class", 
+      names_to = "class",
       values_to = "load"
     )
     load_vars <- load_vars[load_vars %in% tl$class]
