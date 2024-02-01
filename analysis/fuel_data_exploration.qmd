@@ -52,7 +52,7 @@ of two observations per transect.) This was done to simplify the analysis.
 #| code-fold: true
 
 # function to access mostly raw data, but with combined veg and thoushr fuels.
-
+# and select the output variables (`...`)
 load2 <- function(shape = "wide", ...) {
   load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
   tl <- pivot_wider(total_load, names_from = class, values_from = load) |>
@@ -61,18 +61,18 @@ load2 <- function(shape = "wide", ...) {
       veg = rowSums(pick(c(woody, herb)), na.rm = TRUE),
       .keep = "unused"
     )
-  if (!missing(...)) tl <- select(tl, ...)  
+  if (!missing(...)) tl <- select(tl, ...)
   if (shape == "long") {
-    tl <- pivot_longer(tl, 
+    tl <- pivot_longer(tl,
       -any_of(c("site", "treatment", "corner", "azi")),
-      names_to = "class", 
+      names_to = "class",
       values_to = "load"
     )
     load_vars <- load_vars[load_vars %in% tl$class]
     tl <- mutate(tl, class = factor(class, levels = load_vars))
   }
   tl
-} 
+}
 
 ```
 
@@ -244,13 +244,15 @@ myqqplot <- function(data, var) {
   )
 }
 
-load2("long", treatment, all_of(load_vars)) |> 
-myqqplot(load)
+load2("long", treatment, all_of(load_vars)) |>
+  myqqplot(load)
 
 ```
 
 ```{r hist-data}
 
+# This code creates a dataframe with nested columns that include the original
+# data and calculated coordinates of a superimposed normal distribution.
 bins <- 16
 hist_dat <- load2("long", treatment, all_of(load_vars)) |>
   drop_na() |>
@@ -283,31 +285,41 @@ hist_dat <- load2("long", treatment, all_of(load_vars)) |>
     })
   )
 
+# # here is the code to plot the above data. I decided not to use this after all,
+# # but it was a lot of work, so I'm keeping it for posterity
+# ggplot(filter(hist_dat, class %in% load_vars[1:3] )) +
+#   geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +
+#   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +
+#   facet_grid(treatment ~ class, scales = "free") +
+#   labs(y = "count", x = "Load Mg/ha")
+#
+# ggplot(filter(hist_dat, class %in% load_vars[4:6] )) +
+#   geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +
+#   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +
+#   facet_grid(treatment ~ class, scales = "free") +
+#   labs(y = "count", x = "Load Mg/ha")
+
 ```
 
 ```{r}
 #| code-fold: true
 #| label: fig-hist
-#| fig-cap: Histotrams for the fuel loading response variables. A normal curve
-#|   with the same mean as sd as the data (and scaled to the same area as that
-#|   covered by the bins) has been superimposed for reference.
+#| fig-cap: Histotrams for the fuel loading response variables.
 #| fig-subcap:
 #|   - ""
 #|   - ""
 
-
-# Break plot into two panels for higher resolution.
-ggplot(filter(hist_dat, class %in% load_vars[1:3] )) +
-geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +
-geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +
-facet_grid(treatment ~ class, scales = "free") +
-labs(y = "count", x = "Load Mg/ha")
-
-ggplot(filter(hist_dat, class %in% load_vars[4:6] )) +
-geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +
-geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +
-facet_grid(treatment ~ class, scales = "free") +
-labs(y = "count", x = "Load Mg/ha")
+walk(list(c(1:3), c(4:6)),
+  function(x) {
+    p <- load2("long") |>
+      filter(class %in% load_vars[x]) |>
+      ggplot(aes(load)) +
+      geom_histogram(bins = 16) +
+      facet_grid(treatment ~ class, scales = "free") +
+      labs(y = "count", x = "Load Mg/ha")
+    print(p)
+  }
+)
 
 ```
 
@@ -318,8 +330,8 @@ I would like to look at the effect of this transformation on the response data.
 ```{r}
 
 boxcox <- function(y, lambda1, lambda2) {
-  if(lambda1 == 0) {
-    ln(y + lambda2)
+  if (lambda1 == 0) {
+    log(y + lambda2)
   } else {
     ((y + lambda2)^lambda1 - 1) / lambda1
   }

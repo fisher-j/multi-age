@@ -274,6 +274,7 @@ sprouts |>
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   theme(legend.position = "bottom")
 
+
 ```
 
 ```{r}
@@ -611,8 +612,12 @@ growth rate reduction was about 3 times that of tanoak.
 #|   significantly decreased in the second period for both species.
 
 minc11em <- emmeans(minc[[11]], c("year"), by = c("spp"))
+
 minc11con <- contrast(minc11em, "consec") |> confint() |> as_tibble()
-minc11cld <- cld(minc11em, Letters = letters) |> as_tibble() |> mutate(.group = str_replace_all(.group, " ", ""))
+
+minc11cld <- cld(minc11em, Letters = letters) |>
+  as_tibble() |>
+  mutate(.group = str_replace_all(.group, " ", ""))
 
 minc11con |>
   ggplot(aes(spp, -estimate, color = spp)) +
@@ -740,7 +745,7 @@ treatment.
 ```{r}
 #| label: fig-year-10-only
 #| fig-cap: >
-#|   Mean and 95% confidence interval for model `mht104`, displayed with raw
+#|   Mean and 95% confidence interval for the selected model, displayed with raw
 #|   data. Shared letters between treatments (within species) indicates that
 #|   there is not sufficient evidence to claim the estiamtes come from different
 #|   distributions.
@@ -802,6 +807,10 @@ The following models were fit, and are summarized in @tbl-model-summaries.
 8. Re-introduce the 3-way interaction again.
 9. Omit the random effect for site. This is supported by the interpretation of @fig-data-summary-plots.
 10. Like 9, but try simplified (independent) random effects.
+
+One problem with this is that I'm comparing AIC for different random effects
+using ML, when I should be using REML. This may be a problem throughout my model
+selection.
 
 ```{r}
 #| code-fold: false
@@ -945,24 +954,32 @@ mht17 <- glmmTMB(
 mht18 <- glmmTMB(
   ht ~ treat + spp + year + treat:year + spp:year +
   (1 | plot) + (1 | tree),
-  dispformula = ~ year * spp + treat + treat:spp,
+  dispformula = ~ year + spp + treat + treat:spp,
   data = mutate(dht, year = factor(year)),
   family = gaussian(link = "log")
 )
 
-modelsummary(
-  list(
+do_model_summary_table <- function(model_list) {
+  modelsummary(
+    model_list,
+    output = "markdown",
+    shape = term:component + statistic ~ model,
+    metrics = c("AIC", "BIC", "RMSE"),
+    estimator = "ML",
+    gof_omit = "F|Log.Lik",
+    stars = TRUE
+  )
+}
+
+do_model_summary_table(list(
     "Model 11" = mht11, "Model 12" = mht12, "Model 13" = mht13,
     "Model 14" = mht14, "Model 15" = mht15, "Model 16" = mht16,
     "Model 17" = mht17, "Model 18" = mht18
-  ),
-  output = "markdown",
-  shape = term:component + statistic ~ model,
-  metrics = c("AIC", "BIC", "RMSE"),
-  estimator = "ML",
-  gof_omit = "F|Log.Lik",
-  stars = TRUE
-)
+))
+
+do_model_summary_table(lst(mht18, mht19))
+
+lst(mht18, mht19)
 
 ```
 

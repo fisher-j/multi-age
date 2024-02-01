@@ -940,6 +940,7 @@ bf4a <- mutate(d,
     family = brms::hurdle_gamma(),
     prior = priors,
     sample_prior = TRUE,
+    # backend = "cmdstanr",
     file = paste0("fits/bf4a_", class)
   ))
 )
