@@ -1,5 +1,5 @@
 ---
-title: Hypothesis testing
+title: Fuel modeling
 ---
 
 ```{=html}
@@ -13,7 +13,7 @@ source(knitr::purl("hypothesis_test.qmd", tempfile()))
 
 suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
 load("./data_long.RData")
-source("./scripts/utils.r")
+source("./scripts/get_fuel_data.r")
 transectid <- c("site", "treatment", "corner", "azi")
 
 theme_update(

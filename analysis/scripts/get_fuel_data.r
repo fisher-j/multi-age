@@ -1,5 +1,5 @@
-# This function gets data in a simplied, wide or long format with any set of
-# selected columns
+# function to access mostly raw data, but with combined veg and thoushr fuels.
+# and select the output variables (`...`)
 load2 <- function(shape = "wide", ...) {
   load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
   tl <- pivot_wider(total_load, names_from = class, values_from = load) |>
@@ -19,4 +19,4 @@ load2 <- function(shape = "wide", ...) {
     tl <- mutate(tl, class = factor(class, levels = load_vars))
   }
   tl
-} 
+}

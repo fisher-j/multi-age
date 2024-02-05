@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -58,6 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -100,7 +101,13 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -109,6 +116,7 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -124,12 +132,12 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_description.html">Fuels</a></li><li class="breadcrumb-item"><a href="./fuel_data_exploration.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_description.html">Fuels</a></li><li class="breadcrumb-item"><a href="./fuel_data_exploration.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -139,7 +147,7 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Redwoood multi-age experiment</a> 
@@ -188,7 +196,7 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hypothesis_test.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fuel modeling</span></span></a>
   </div>
 </li>
       </ul>
@@ -208,18 +216,24 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data import and description</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sprout_data_exploration_modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data exploration &amp; modeling</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./work_log.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -245,7 +259,7 @@ div.csl-indent {
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_description.html">Fuels</a></li><li class="breadcrumb-item"><a href="./fuel_data_exploration.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></h1>
 </div>
@@ -260,7 +274,9 @@ div.csl-indent {
   </div>
   
 
+
 </header>
+
 
 <p>Our main questions regarding fuel loading are:</p>
 <ol type="1">
@@ -284,10 +300,10 @@ div.csl-indent {
 <section id="basic-summary" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="basic-summary"><span class="header-section-number">4.1</span> Basic Summary</h2>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to access mostly raw data, but with combined veg and thoushr fuels.</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and select the output variables (`...`)</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>load2 <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">shape =</span> <span class="st">"wide"</span>, ...) {</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  load_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"onehr"</span>, <span class="st">"tenhr"</span>, <span class="st">"hundhr"</span>, <span class="st">"dufflitter"</span>, <span class="st">"thoushr"</span>, <span class="st">"veg"</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  tl <span class="ot">&lt;-</span> <span class="fu">pivot_wider</span>(total_load, <span class="at">names_from =</span> class, <span class="at">values_from =</span> load) <span class="sc">|&gt;</span></span>
@@ -296,18 +312,18 @@ div.csl-indent {
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">veg =</span> <span class="fu">rowSums</span>(<span class="fu">pick</span>(<span class="fu">c</span>(woody, herb)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">.keep =</span> <span class="st">"unused"</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">missing</span>(...)) tl <span class="ot">&lt;-</span> <span class="fu">select</span>(tl, ...)  </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">missing</span>(...)) tl <span class="ot">&lt;-</span> <span class="fu">select</span>(tl, ...)</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (shape <span class="sc">==</span> <span class="st">"long"</span>) {</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    tl <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(tl, </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    tl <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(tl,</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="sc">-</span><span class="fu">any_of</span>(<span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"corner"</span>, <span class="st">"azi"</span>)),</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_to =</span> <span class="st">"class"</span>, </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_to =</span> <span class="st">"class"</span>,</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">values_to =</span> <span class="st">"load"</span></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    load_vars <span class="ot">&lt;-</span> load_vars[load_vars <span class="sc">%in%</span> tl<span class="sc">$</span>class]</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    tl <span class="ot">&lt;-</span> <span class="fu">mutate</span>(tl, <span class="at">class =</span> <span class="fu">factor</span>(class, <span class="at">levels =</span> load_vars))</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  tl</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>} </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -317,10 +333,14 @@ div.csl-indent {
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-raw-data" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-raw-data-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.1: Two outliers were removed to aide in interpretability–600 and 199 t/ha in ha-thoushr and gs-veg, respectively.</figcaption>
+<div id="fig-raw-data" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-raw-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-raw-data-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-raw-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: Two outliers were removed to aide in interpretability–600 and 199 t/ha in ha-thoushr and gs-veg, respectively.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -344,10 +364,14 @@ div.csl-indent {
 <pre><code>`summarise()` has grouped output by 'class'. You can override using the
 `.groups` argument.</code></pre>
 </div>
+<div id="tbl-raw-data" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-raw-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.1: Average (sd) transect level load (Mg ha<sup>-1</sup>) for six fuel class categories in four different overstory harvest techniques.
+</figcaption>
+<div aria-describedby="tbl-raw-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-raw-data" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;4.1: Average (sd) transect level load (Mg ha<sup>-1</sup>) for six fuel class categories in four different overstory harvest techniques.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">class</th>
@@ -404,6 +428,8 @@ div.csl-indent {
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 </section>
 <section id="outliers" class="level2" data-number="4.2">
@@ -428,79 +454,119 @@ div.csl-indent {
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Data order"</span>, <span class="at">title =</span> title)</span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="fig-fwd" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
+<div class="cell">
+<div id="fig-fwd" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fwd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="fig-fwd-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-fwd-1.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672"></p>
-<figcaption class="figure-caption">(a) One hour fuels</figcaption>
-</figure>
+<div id="fig-fwd-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fwd-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-fwd-1.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672">
 </div>
-</div>
-<div class="cell-output-display">
-<div id="fig-fwd-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-fwd-2.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672"></p>
-<figcaption class="figure-caption">(b) Ten hour fuels</figcaption>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fwd-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) One hour fuels
+</figcaption>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
-<div id="fig-fwd-3" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-fwd-3.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672"></p>
-<figcaption class="figure-caption">(c) Hundred hour fuels</figcaption>
+<div id="fig-fwd-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fwd-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-fwd-2.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fwd-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Ten hour fuels
+</figcaption>
 </figure>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;4.2: Data distribution of loading for fine woody debris classes. Data are sorted by mean loading within each replicate. Jitter has been added to aid in visual interpretation.</figcaption>
+<div class="cell-output-display">
+<div id="fig-fwd-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fwd-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-fwd-3.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fwd-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Hundred hour fuels
+</figcaption>
 </figure>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fwd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2: Data distribution of loading for fine woody debris classes. Data are sorted by mean loading within each replicate. Jitter has been added to aid in visual interpretation.
+</figcaption>
+</figure>
+</div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-cwd" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-cwd-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.3: Sum of coarse woody (&gt;7.64 cm, sound and rotten wood combined) fuel loading for transects. The y-axis is sorted by mean CWD loading for each replicate.</figcaption>
+<div id="fig-cwd" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cwd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-cwd-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cwd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.3: Sum of coarse woody (&gt;7.64 cm, sound and rotten wood combined) fuel loading for transects. The y-axis is sorted by mean CWD loading for each replicate.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-dufflitter" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-dufflitter-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.4: Combined duff and litter loading at each station along trancects. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span>4.3</span></a>.</figcaption>
+<div id="fig-dufflitter" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dufflitter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-dufflitter-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dufflitter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.4: Combined duff and litter loading at each station along trancects. Y-axis is sorted as in <a href="#fig-cwd" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div id="fig-veg" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
+<div class="cell">
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 1 rows containing missing values (`geom_point()`).
 Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </div>
+<div id="fig-veg" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-veg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="fig-veg-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-veg-1.png" class="img-fluid figure-img" data-ref-parent="fig-veg" width="672"></p>
-<figcaption class="figure-caption">(a) Woody vegetation</figcaption>
+<div id="fig-veg-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-veg-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-veg-1.png" class="img-fluid figure-img" data-ref-parent="fig-veg" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-veg-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Woody vegetation
+</figcaption>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
-<div id="fig-veg-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-veg-2.png" class="img-fluid figure-img" data-ref-parent="fig-veg" width="672"></p>
-<figcaption class="figure-caption">(b) herbaceous vegetation</figcaption>
+<div id="fig-veg-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-veg-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-veg-2.png" class="img-fluid figure-img" data-ref-parent="fig-veg" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-veg-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) herbaceous vegetation
+</figcaption>
 </figure>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;4.5: Vegetation fuel loading for each station along transects, including live and dead fuels attached to live vegetation. Y-axis is sorted as in <a href="#fig-cwd">Figure&nbsp;<span>4.3</span></a>.</figcaption>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-veg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.5: Vegetation fuel loading for each station along transects, including live and dead fuels attached to live vegetation. Y-axis is sorted as in <a href="#fig-cwd" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>.
+</figcaption>
 </figure>
+</div>
 </div>
 </section>
 <section id="sec-Normality" class="level2 page-columns page-full" data-number="4.3">
@@ -514,7 +580,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <li>thoushr</li>
 <li>veg</li>
 </ol>
-<p>When using manova to test for difference between groups with multiple response variables, it is important that the response variables are multivariate normally distributed. Unfortunately, it would appear that we have a probelem with normality. The raw data for each loading variable is clearly not normally distributed <a href="#fig-qqplot-naive">Figure&nbsp;<span>4.6</span></a>.</p>
+<p>When using manova to test for difference between groups with multiple response variables, it is important that the response variables are multivariate normally distributed. Unfortunately, it would appear that we have a probelem with normality. The raw data for each loading variable is clearly not normally distributed <a href="#fig-qqplot-naive" class="quarto-xref">Figure&nbsp;<span>4.6</span></a>.</p>
 <div class="cell" data-fig-heigth="8">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>myqqplot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, var) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
@@ -528,93 +594,126 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">myqqplot</span>(load)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">myqqplot</span>(load)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-qqplot-naive" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-qqplot-naive-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.6: Naive qq plot of loading variables. This doesn’t take into the fact that our data is nested. You could say this is based on a simple model where all observations are independent.</figcaption>
+<div id="fig-qqplot-naive" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-naive-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-qqplot-naive-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-naive-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.6: Naive qq plot of loading variables. This doesn’t take into the fact that our data is nested. You could say this is based on a simple model where all observations are independent.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>bins <span class="ot">&lt;-</span> <span class="dv">16</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>hist_dat <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Facet grid each column (class) has same scale, find limits to calculate bin</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># width, limits are either implied by the constructed normal curce, or the raw</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="fu">min</span>(<span class="fu">c</span>(<span class="fu">mean</span>(load) <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(load), load)),</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmax =</span> <span class="fu">max</span>(<span class="fu">c</span>(<span class="fu">mean</span>(load) <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(load), load))</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment, class) <span class="sc">|&gt;</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>(<span class="at">data =</span> load) <span class="sc">|&gt;</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># generate data for a normal curve with mean and sd from observed data to</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cover 3 sd.</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">norm_x =</span> <span class="fu">map</span>(data, <span class="cf">function</span> (d) {</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">seq</span>(</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">from =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load) <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>load), </span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">to =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load) <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>load), </span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">length.out =</span> <span class="dv">100</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    }),</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># scale curve to expected binwidth based on plot layout (same x scale across</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># all fuel classes) multiplied by the number of observations. The histogram</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and normal curve should represent the same total area.</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">norm_y =</span> <span class="fu">map</span>(data, <span class="cf">function</span> (d) {</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      dens <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">unlist</span>(norm_x), <span class="at">mean =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load), <span class="at">sd =</span> <span class="fu">sd</span>(d<span class="sc">$</span>load))</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>      dens <span class="sc">*</span> ((xmax <span class="sc">-</span> xmin) <span class="sc">/</span> bins) <span class="sc">*</span> <span class="fu">nrow</span>(d)</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This code creates a dataframe with nested columns that include the original</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># data and calculated coordinates of a superimposed normal distribution.</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>bins <span class="ot">&lt;-</span> <span class="dv">16</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>hist_dat <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Facet grid each column (class) has same scale, find limits to calculate bin</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># width, limits are either implied by the constructed normal curce, or the raw</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># data</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="fu">min</span>(<span class="fu">c</span>(<span class="fu">mean</span>(load) <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(load), load)),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmax =</span> <span class="fu">max</span>(<span class="fu">c</span>(<span class="fu">mean</span>(load) <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(load), load))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment, class) <span class="sc">|&gt;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>(<span class="at">data =</span> load) <span class="sc">|&gt;</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># generate data for a normal curve with mean and sd from observed data to</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cover 3 sd.</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">norm_x =</span> <span class="fu">map</span>(data, <span class="cf">function</span> (d) {</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">seq</span>(</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">from =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load) <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>load), </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">to =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load) <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>load), </span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">length.out =</span> <span class="dv">100</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    }),</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># scale curve to expected binwidth based on plot layout (same x scale across</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># all fuel classes) multiplied by the number of observations. The histogram</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and normal curve should represent the same total area.</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">norm_y =</span> <span class="fu">map</span>(data, <span class="cf">function</span> (d) {</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>      dens <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">unlist</span>(norm_x), <span class="at">mean =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load), <span class="at">sd =</span> <span class="fu">sd</span>(d<span class="sc">$</span>load))</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>      dens <span class="sc">*</span> ((xmax <span class="sc">-</span> xmin) <span class="sc">/</span> bins) <span class="sc">*</span> <span class="fu">nrow</span>(d)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co"># # here is the code to plot the above data. I decided not to use this after all,</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co"># # but it was a lot of work, so I'm keeping it for posterity</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(filter(hist_dat, class %in% load_vars[1:3] )) +</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co">#   facet_grid(treatment ~ class, scales = "free") +</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(y = "count", x = "Load Mg/ha")</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(filter(hist_dat, class %in% load_vars[4:6] )) +</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a><span class="co">#   facet_grid(treatment ~ class, scales = "free") +</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(y = "count", x = "Load Mg/ha")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="fig-hist" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<details>
+<div class="cell">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Break plot into two panels for higher resolution.</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">filter</span>(hist_dat, class <span class="sc">%in%</span> load_vars[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] )) <span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_histogram</span>(<span class="at">data =</span> \(x) <span class="fu">unnest</span>(x, data), <span class="fu">aes</span>(<span class="at">x =</span> load), <span class="at">bins =</span> bins) <span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="at">data =</span> \(x) <span class="fu">unnest</span>(x, <span class="fu">c</span>(norm_x, norm_y)), <span class="fu">aes</span>(norm_x, norm_y)) <span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_grid</span>(treatment <span class="sc">~</span> class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"count"</span>, <span class="at">x =</span> <span class="st">"Load Mg/ha"</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">filter</span>(hist_dat, class <span class="sc">%in%</span> load_vars[<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>] )) <span class="sc">+</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_histogram</span>(<span class="at">data =</span> \(x) <span class="fu">unnest</span>(x, data), <span class="fu">aes</span>(<span class="at">x =</span> load), <span class="at">bins =</span> bins) <span class="sc">+</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="at">data =</span> \(x) <span class="fu">unnest</span>(x, <span class="fu">c</span>(norm_x, norm_y)), <span class="fu">aes</span>(norm_x, norm_y)) <span class="sc">+</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_grid</span>(treatment <span class="sc">~</span> class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"count"</span>, <span class="at">x =</span> <span class="st">"Load Mg/ha"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>)),</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(class <span class="sc">%in%</span> load_vars[x]) <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(load)) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_grid</span>(treatment <span class="sc">~</span> class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"count"</span>, <span class="at">x =</span> <span class="st">"Load Mg/ha"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div id="fig-hist" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="fig-hist-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-hist-1.png" class="img-fluid figure-img" data-ref-parent="fig-hist" width="672"></p>
-<figcaption class="figure-caption">(a)</figcaption>
+<div id="fig-hist-1" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-hist-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-hist-1.png" id="fig-hist-1" class="img-fluid figure-img" data-ref-parent="fig-hist" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-hist-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a)
+</figcaption>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
-<div id="fig-hist-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-hist-2.png" class="img-fluid figure-img" data-ref-parent="fig-hist" width="672"></p>
-<figcaption class="figure-caption">(b)</figcaption>
+<div id="fig-hist-2" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-hist-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-hist-2.png" id="fig-hist-2" class="img-fluid figure-img" data-ref-parent="fig-hist" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-hist-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b)
+</figcaption>
 </figure>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;4.7: Histotrams for the fuel loading response variables. A normal curve with the same mean as sd as the data (and scaled to the same area as that covered by the bins) has been superimposed for reference.</figcaption>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.7: Histotrams for the fuel loading response variables.
+</figcaption>
 </figure>
+</div>
 </div>
 <section id="sec-box-cox-transformation" class="level3" data-number="4.3.1">
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="sec-box-cox-transformation"><span class="header-section-number">4.3.1</span> Box-Cox transformation</h3>
 <p>I would like to look at the effect of this transformation on the response data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>boxcox <span class="ot">&lt;-</span> <span class="cf">function</span>(y, lambda1, lambda2) {</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(lambda1 <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ln</span>(y <span class="sc">+</span> lambda2)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (lambda1 <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(y <span class="sc">+</span> lambda2)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    ((y <span class="sc">+</span> lambda2)<span class="sc">^</span>lambda1 <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> lambda1</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  }</span>
@@ -629,13 +728,16 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="fu">c</span>(data, load_bc)) <span class="sc">|&gt;</span> <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">myqqplot</span>(load_bc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>While, this looks somewhat more normal, the zeros end up being a little strange. I applied a separte transformation for each fuel class, but all treatments within a fuel class have the same transformation.</p>
-<p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model">Figure&nbsp;<span>4.8</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
-<div id="fig-qqplot-model" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
+<p>For MANOVA we are concered with the within group multivariate normality, the assumption does not appear to be met here either (<a href="#fig-qqplot-model" class="quarto-xref">Figure&nbsp;<span>4.8</span></a>). The code output below indicates the rows with the greatest deviation from normal.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>load_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.matrix</span>(tl[<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">~</span> treatment, <span class="at">data =</span> tl)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>m_dist <span class="ot">&lt;-</span> heplots<span class="sc">::</span><span class="fu">cqplot</span>(load_mod)</span>
@@ -661,26 +763,41 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(treatments, </span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  \(x) heplots<span class="sc">::</span><span class="fu">cqplot</span>(<span class="fu">filter</span>(tl, treatment <span class="sc">==</span> x)[<span class="sc">-</span><span class="dv">1</span>], <span class="at">main =</span> x)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-qqplot-model" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qqplot-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="fig-qqplot-model-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-qqplot-model-1.png" class="img-fluid figure-img" data-ref-parent="fig-qqplot-model" width="672"></p>
-<figcaption class="figure-caption">(a)</figcaption>
+<div id="fig-qqplot-model-1" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-qqplot-model-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-qqplot-model-1.png" id="fig-qqplot-model-1" class="img-fluid figure-img" data-ref-parent="fig-qqplot-model" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-qqplot-model-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a)
+</figcaption>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
-<div id="fig-qqplot-model-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-qqplot-model-2.png" class="img-fluid figure-img" data-ref-parent="fig-qqplot-model" width="672"></p>
-<figcaption class="figure-caption">(b)</figcaption>
+<div id="fig-qqplot-model-2" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-qqplot-model-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-qqplot-model-2.png" id="fig-qqplot-model-2" class="img-fluid figure-img" data-ref-parent="fig-qqplot-model" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-qqplot-model-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b)
+</figcaption>
 </figure>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;4.8: Plot A assessed the multivariate normality of residuals given the model where all loading variabels are a function of the treatment group.</figcaption>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.8: Plot A assessed the multivariate normality of residuals given the model where all loading variabels are a function of the treatment group.
+</figcaption>
 </figure>
 </div>
-<p>A number of different tests of multivariate normaliy also confirm the lack of evidence for meeting this assumption (<a href="#tbl-norm-test">Table&nbsp;<span>4.2</span></a>).</p>
+</div>
+<p>A number of different tests of multivariate normaliy also confirm the lack of evidence for meeting this assumption (<a href="#tbl-norm-test" class="quarto-xref">Table&nbsp;<span>4.2</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"mardia"</span>, <span class="st">"hz"</span>, <span class="st">"royston"</span>, <span class="st">"dh"</span>, <span class="st">"energy"</span>) <span class="sc">|&gt;</span></span>
@@ -696,10 +813,14 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="fu">all_mvn_tests</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, treatment, <span class="fu">all_of</span>(load_vars))) <span class="sc">|&gt;</span></span>
 <span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-norm-test" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-norm-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.2: Several different tests of multivariate normality indicate a lack of evidence to support this assumption.
+</figcaption>
+<div aria-describedby="tbl-norm-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-norm-test" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;4.2: Several different tests of multivariate normality indicate a lack of evidence to support this assumption.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">treatment</th>
@@ -882,6 +1003,8 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 </section>
 <section id="sec-other-distributions" class="level3 page-columns page-full" data-number="4.3.2">
@@ -890,7 +1013,6 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <p>I attemped to model the distribution of our conditional response data (fuel size class by treatment), but it mostly didn’t work.</p>
 <p>Our data is non-negative (contains zeros) continuous (for the most part) and highly variable in terms of skew and kurtosis. The presence of zeros, makes using the Gamma distribution more difficult. One possibility is a hurdle gamma, or Zero-adjusted Gamma.</p>
 <p>The following show where our data lies in terms of kurtosis and skewness compared to other common distributions. It looks somewhat Gamma-ish?</p>
-<div class="page-columns page-full">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span> </span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(<span class="sc">~</span>class) <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span><span class="fu">split</span>(.x, <span class="sc">~</span>treatment))</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -900,227 +1022,326 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># par(mfrow = c(2,2))</span></span>
 <span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(d, <span class="sc">~</span> <span class="fu">walk</span>(.x, \(x) fitdistrplus<span class="sc">::</span><span class="fu">descdist</span>(x<span class="sc">$</span>load, <span class="at">boot =</span> <span class="dv">111</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fig-skew-kurt" class="cell column-page quarto-layout-panel">
-<figure class="figure">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-1.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(a) Treatment gs, fuel class onehr</figcaption>
+<div id="fig-skew-kurt" class="quarto-layout-panel page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-1.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Treatment gs, fuel class onehr
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-2.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(b) Treatment ha, fuel class onehr</figcaption>
-</figure>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-2.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
 </div>
-</div>
-</div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-3" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-3.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(c) Treatment hd, fuel class onehr</figcaption>
-</figure>
-</div>
-</div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-4" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-4.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(d) Treatment ld, fuel class onehr</figcaption>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Treatment ha, fuel class onehr
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-5" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-5.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(e) Treatment gs, fuel class tenhr</figcaption>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-3.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Treatment hd, fuel class onehr
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-6" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-6.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(f) Treatment ha, fuel class tenhr</figcaption>
-</figure>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-4" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-4.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
 </div>
-</div>
-</div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-7" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-7.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(g) Treatment hd, fuel class tenhr</figcaption>
-</figure>
-</div>
-</div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-8" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-8.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(h) Treatment ld, fuel class tenhr</figcaption>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Treatment ld, fuel class onehr
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-9" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-9.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(i) Treatment gs, fuel class hundhr</figcaption>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-5" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-5.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(e) Treatment gs, fuel class tenhr
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-10" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-10.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(j) Treatment ha, fuel class hundhr</figcaption>
-</figure>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-6" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-6.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
 </div>
-</div>
-</div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-11" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-11.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(k) Treatment hd, fuel class hundhr</figcaption>
-</figure>
-</div>
-</div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-12" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-12.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(l) Treatment ld, fuel class hundhr</figcaption>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(f) Treatment ha, fuel class tenhr
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-13" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-13.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(m) Treatment gs, fuel class dufflitter</figcaption>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-7" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-7.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(g) Treatment hd, fuel class tenhr
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-14" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-14.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(n) Treatment ha, fuel class dufflitter</figcaption>
-</figure>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-8" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-8.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
 </div>
-</div>
-</div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-15" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-15.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(o) Treatment hd, fuel class dufflitter</figcaption>
-</figure>
-</div>
-</div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-16" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-16.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(p) Treatment ld, fuel class dufflitter</figcaption>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(h) Treatment ld, fuel class tenhr
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-17" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-17.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(q) Treatment gs, fuel class thoushr</figcaption>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-9" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-9.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(i) Treatment gs, fuel class hundhr
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-18" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-18.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(r) Treatment ha, fuel class thoushr</figcaption>
-</figure>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-10" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-10.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
 </div>
-</div>
-</div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-19" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-19.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(s) Treatment hd, fuel class thoushr</figcaption>
-</figure>
-</div>
-</div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-20" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-20.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(t) Treatment ld, fuel class thoushr</figcaption>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(j) Treatment ha, fuel class hundhr
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-21" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-21.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(u) Treatment gs, fuel class veg</figcaption>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-11" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-11.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(k) Treatment hd, fuel class hundhr
+</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-22" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-22.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(v) Treatment ha, fuel class veg</figcaption>
-</figure>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-12" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-12.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
 </div>
-</div>
-</div>
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-23" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-23.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(w) Treatment hd, fuel class veg</figcaption>
-</figure>
-</div>
-</div>
-<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-skew-kurt-24" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-24.png" class="img-fluid figure-img" data-ref-parent="fig-skew-kurt" width="480"></p>
-<figcaption class="figure-caption">(x) Treatment ld, fuel class veg</figcaption>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(l) Treatment ld, fuel class hundhr
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p></p><figcaption class="figure-caption">Figure&nbsp;4.9: Skewness and kurtosis for fuel classes within treatments.</figcaption><p></p>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-13" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-13.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(m) Treatment gs, fuel class dufflitter
+</figcaption>
 </figure>
 </div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-14" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-14.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(n) Treatment ha, fuel class dufflitter
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-15" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-15.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(o) Treatment hd, fuel class dufflitter
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-16" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-16.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(p) Treatment ld, fuel class dufflitter
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-17" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-17.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(q) Treatment gs, fuel class thoushr
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-18" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-18.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(r) Treatment ha, fuel class thoushr
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-19" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-19.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(s) Treatment hd, fuel class thoushr
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-20" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-20.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(t) Treatment ld, fuel class thoushr
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-21" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-21.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(u) Treatment gs, fuel class veg
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-22" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-22.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(v) Treatment ha, fuel class veg
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row page-columns page-full">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-23" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-23.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(w) Treatment hd, fuel class veg
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-skew-kurt-24" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
+<div aria-describedby="fig-skew-kurt-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-24.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-skew-kurt-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(x) Treatment ld, fuel class veg
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-skew-kurt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.9: Skewness and kurtosis for fuel classes within treatments.
+</figcaption>
+</figure>
 </div>
 </section>
 <section id="zero-adjusted-gamma" class="level3" data-number="4.3.3">
@@ -1148,22 +1369,46 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">map</span>(.x, <span class="st">"load"</span>))</span>
 <span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="fu">iwalk</span>(d2, <span class="sc">~</span><span class="fu">plot_zaga_class</span>(.x, .y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-4.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-5.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-6.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-6-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -1185,7 +1430,11 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="fu">max</span>(n), <span class="fu">dpois</span>(<span class="dv">0</span><span class="sc">:</span><span class="fu">max</span>(n), <span class="fu">mean</span>(n)))</span>
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>That didn’t look so great, so I also tried using a Zero-inflated Poisson distribution, but the model fit an extremely small value for the parameter that controls the probability of zero (referred to here as sigma) and so was effectively the same as the Poisson fit.</p>
@@ -1228,7 +1477,11 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> max_var, <span class="fu">aes</span>(x, y, <span class="at">label =</span> max_var_rat, <span class="at">hjust =</span> <span class="st">"inward"</span>)) <span class="sc">+</span></span>
 <span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -1248,7 +1501,11 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class) <span class="sc">+</span></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="fuel_data_exploration_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -1258,10 +1515,14 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(GGally<span class="sc">::</span><span class="fu">ggpairs</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="fu">all_of</span>(load_vars))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-response-corr" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="fuel_data_exploration_files/figure-html/fig-response-corr-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.10: Correlation among the response variables (fuel classes).</figcaption>
+<div id="fig-response-corr" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-response-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fuel_data_exploration_files/figure-html/fig-response-corr-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-response-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.10: Correlation among the response variables (fuel classes).
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1273,7 +1534,7 @@ Removed 1 rows containing missing values (`geom_point()`).</code></pre>
 <p>There are also question about at what level to summarize/model the data. I’ve already averaged stations within transects for several variable that were collected at the station level (two within each transect). What are the trade-offs for either averaging at the corner level, or alternatively, analyzing our raw station data instead of averaging.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-zuurProtocolDataExploration2010" class="csl-entry" role="listitem">
 Zuur, Alain F., Elena N. Ieno, and Chris S. Elphick. 2010. <span>“A Protocol for Data Exploration to Avoid Common Statistical Problems.”</span> <em>Methods in Ecology and Evolution</em> 1 (1): 3–14. <a href="https://doi.org/10.1111/j.2041-210X.2009.00001.x">https://doi.org/10.1111/j.2041-210X.2009.00001.x</a>.
 </div>
@@ -1360,10 +1621,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1373,8 +1633,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1387,6 +1656,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1430,6 +1818,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1455,6 +1844,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1516,17 +1931,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./calculate_fuel_loading.html" class="pagination-link">
+      <a href="./calculate_fuel_loading.html" class="pagination-link  aria-label=" &lt;span="" fuel="" loading&lt;="" span&gt;"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Calculate fuel loading</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./hypothesis_test.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./hypothesis_test.html" class="pagination-link" aria-label="<span class='chapter-number'>5</span>&nbsp; <span class='chapter-title'>Fuel modeling</span>">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fuel modeling</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

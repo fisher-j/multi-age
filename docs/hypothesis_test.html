@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Redwoood multi-age experiment - 5&nbsp; Hypothesis testing</title>
+<title>Redwoood multi-age experiment - 5&nbsp; Fuel modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,6 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -99,6 +106,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 </head>
 
 <body class="nav-sidebar floating">
@@ -107,12 +141,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_description.html">Fuels</a></li><li class="breadcrumb-item"><a href="./hypothesis_test.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_description.html">Fuels</a></li><li class="breadcrumb-item"><a href="./hypothesis_test.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fuel modeling</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -122,7 +156,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Redwoood multi-age experiment</a> 
@@ -171,7 +205,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hypothesis_test.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fuel modeling</span></span></a>
   </div>
 </li>
       </ul>
@@ -191,18 +225,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data import and description</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sprout_data_exploration_modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data exploration &amp; modeling</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./work_log.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -256,9 +296,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_description.html">Fuels</a></li><li class="breadcrumb-item"><a href="./hypothesis_test.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fuel modeling</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis testing</span></h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fuel modeling</span></h1>
 </div>
 
 
@@ -271,7 +311,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <!-- 
 source(knitr::purl("hypothesis_test.qmd", tempfile()))
@@ -315,10 +357,14 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">$</span>p.value,</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-anovas" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-anovas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.1: Levene tests suggest that variances are unequal across treatments for all fuel loading classes. Welches tests suggest that veg and onehr fuels may have different means among treatments.
+</figcaption>
+<div aria-describedby="tbl-anovas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-anovas" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.1: Levene tests suggest that variances are unequal across treatments for all fuel loading classes. Welches tests suggest that veg and onehr fuels may have different means among treatments.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">class</th>
@@ -368,6 +414,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 <p>We can use the Games Howell test for pairwise comparisons to follow up on the welches test for differences between means when there is unequal variance among groups. These p-values provide evidence that for onehr fuels, the mean value of ha is greater than gs and ld, and the mean value for hd is also greater than gs and ld. Also, for vegetation, gs is greater than ha only. While this test is robust to the assumptions of normality, some of our data is highly skewed. Also, because of the nesting of our data, observations are not independent, so our effective sample size is not what is assumed by this test.</p>
 <div class="cell">
@@ -380,10 +428,14 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">stat_pvalue_manual</span>(gh_test, <span class="at">label =</span> <span class="st">"p.adj"</span>) <span class="sc">+</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-pairwise" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-pairwise-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.1: pair-wise tests using Games-Howell, for unequal variances across groups. This shows many statistically significant differences, but the assumption of independence, which is likely to have a significant effect on our effective sample size.</figcaption>
+<div id="fig-pairwise" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pairwise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-pairwise-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pairwise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.1: pair-wise tests using Games-Howell, for unequal variances across groups. This shows many statistically significant differences, but the assumption of independence, which is likely to have a significant effect on our effective sample size.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -413,7 +465,7 @@ boundary (singular) fit: see help('isSingular')
 boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
 </div>
-<p>Pairwise comparisons with Tukey adjustment for each of 6 multilevel models representing different fuel loading classes reveals that the only evidence for differences in means among treatments is with vegetation between the gs and ha treatments. Another sizeable difference in means is between gs and ha for the onehr fuels (<a href="#fig-multilevel-p-value">Figure&nbsp;<span>5.2</span></a>).</p>
+<p>Pairwise comparisons with Tukey adjustment for each of 6 multilevel models representing different fuel loading classes reveals that the only evidence for differences in means among treatments is with vegetation between the gs and ha treatments. Another sizeable difference in means is between gs and ha for the onehr fuels (<a href="#fig-multilevel-p-value" class="quarto-xref">Figure&nbsp;<span>5.2</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(m1, pairs) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(pairs) <span class="sc">|&gt;</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p.value <span class="sc">&lt;=</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
@@ -421,10 +473,14 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Adding missing grouping variables: `class`</code></pre>
 </div>
+<div id="tbl-multilevel-p-values" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-multilevel-p-values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.2: Pairwise comparisons among treatments with p-values &lt; 0.05 for 6 multilevel models. Only Veg, gs-ha comparison is statistically significant.
+</figcaption>
+<div aria-describedby="tbl-multilevel-p-values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-multilevel-p-values" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.2: Pairwise comparisons among treatments with p-values &lt; 0.05 for 6 multilevel models. Only Veg, gs-ha comparison is statistically significant.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
 <col style="width: 8%">
 <col style="width: 13%">
@@ -465,15 +521,21 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group_map</span>(m1, <span class="sc">~</span> <span class="fu">plot</span>(.x<span class="sc">$</span>emmeans[[<span class="dv">1</span>]], <span class="at">comparisons =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(.x<span class="sc">$</span>class)) <span class="sc">|&gt;</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-multilevel-p-value" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-multilevel-p-value-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.2: 95% confidence intervals and pairwise comparisons of means for 6 mixed models representing different fuel loading classes using package emmeans.</figcaption>
+<div id="fig-multilevel-p-value" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-multilevel-p-value-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-multilevel-p-value-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multilevel-p-value-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.2: 95% confidence intervals and pairwise comparisons of means for 6 mixed models representing different fuel loading classes using package emmeans.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -536,10 +598,14 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>pmod <span class="sc">|&gt;</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-pbtest" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pbtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.3: Liklihood ratio tests and parametric boot strap tests of model significance: whether the model with treatment, fits the data better than the intercept only model (adjusting for nesting structure).
+</figcaption>
+<div aria-describedby="tbl-pbtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-pbtest" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.3: Liklihood ratio tests and parametric boot strap tests of model significance: whether the model with treatment, fits the data better than the intercept only model (adjusting for nesting structure).</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">class</th>
@@ -664,13 +730,15 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 </section>
 <section id="model-checking" class="level3" data-number="5.1.4">
 <h3 data-number="5.1.4" class="anchored" data-anchor-id="model-checking"><span class="header-section-number">5.1.4</span> Model checking</h3>
 <p>Taking a look at residual vs.&nbsp;fitted and qqplots of the model, it looks like our residuals are not normally distributed and there is not constant variance.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># These are functions to plot for each model, residuals vs fitted and normal</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># quantiles. The third function is a wrapper to do both.</span></span>
@@ -720,10 +788,14 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid_qq_plot</span>(mod1) <span class="sc">|&gt;</span> patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(<span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-mod1-diagnostic" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-mod1-diagnostic-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.3: Residual vs fitted and normal quantile-quantile plots for a multi-level model with un-pooled treatment intercepts and partially pooled (random effects) for nested data. Fit using <code>lme4</code> The residuals are not homogenous.</figcaption>
+<div id="fig-mod1-diagnostic" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mod1-diagnostic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-mod1-diagnostic-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mod1-diagnostic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.3: Residual vs fitted and normal quantile-quantile plots for a multi-level model with un-pooled treatment intercepts and partially pooled (random effects) for nested data. Fit using <code>lme4</code> The residuals are not homogenous.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -747,10 +819,14 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(<span class="fu">resid_qq_plot</span>(mod2), <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-mod2-diagnostic" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-mod2-diagnostic-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.4: Same as <a href="#fig-mod1-diagnostic">Figure&nbsp;<span>5.3</span></a> but variance is modeled as a function fitted values, assuming a linear relationship. Fit with <code>nlme</code>. The (scaled) residuals are more homogenous now.</figcaption>
+<div id="fig-mod2-diagnostic" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mod2-diagnostic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-mod2-diagnostic-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mod2-diagnostic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.4: Same as <a href="#fig-mod1-diagnostic" class="quarto-xref">Figure&nbsp;<span>5.3</span></a> but variance is modeled as a function fitted values, assuming a linear relationship. Fit with <code>nlme</code>. The (scaled) residuals are more homogenous now.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -822,10 +898,14 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Adding missing grouping variables: `class`</code></pre>
 </div>
+<div id="tbl-multilivel-aic-compare" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-multilivel-aic-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.4: Comparison of AIC between multilevel models with and without weights to account for heterogeneity of variance. The models with weights have consistently lower AIC, indicating better fit.
+</figcaption>
+<div aria-describedby="tbl-multilivel-aic-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-multilivel-aic-compare" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.4: Comparison of AIC between multilevel models with and without weights to account for heterogeneity of variance. The models with weights have consistently lower AIC, indicating better fit.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">class</th>
@@ -868,6 +948,8 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 <p>This indicates that the model with modeled variance fits the data better than the model without.</p>
 <p>Does this change our conclusions about the effect of the treatment?</p>
@@ -895,10 +977,14 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Adding missing grouping variables: `class`</code></pre>
 </div>
+<div id="tbl-multilevel-p-values2" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-multilevel-p-values2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.5: Pairwise comparisons of treatments (four levels) with p-values &lt; 0.05 for six multilevel models with variance modeled as a linear relationsihp with the fitted value.
+</figcaption>
+<div aria-describedby="tbl-multilevel-p-values2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-multilevel-p-values2" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.5: Pairwise comparisons of treatments (four levels) with p-values &lt; 0.05 for six multilevel models with variance modeled as a linear relationsihp with the fitted value.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
 <col style="width: 9%">
 <col style="width: 13%">
@@ -939,15 +1025,21 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group_map</span>(m2, <span class="sc">~</span> <span class="fu">plot</span>(.x<span class="sc">$</span>emmeans[[<span class="dv">1</span>]], <span class="at">comparisons =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(.x<span class="sc">$</span>class)) <span class="sc">|&gt;</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-multilevel-p-value2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-multilevel-p-value2-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.5: 95% confidence intervals and pairwise comparisons of means for 6 mixed models representing different fuel loading classes using a model with variance modeled as a linear relationsihp with the fitted value.</figcaption>
+<div id="fig-multilevel-p-value2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-multilevel-p-value2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-multilevel-p-value2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multilevel-p-value2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.5: 95% confidence intervals and pairwise comparisons of means for 6 mixed models representing different fuel loading classes using a model with variance modeled as a linear relationsihp with the fitted value.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1014,10 +1106,14 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> class, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
 <span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_hue</span>(<span class="at">name =</span> <span class="st">"prior"</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"intercept"</span>, <span class="st">"sd"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-priors" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-priors-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.6: Normal priors for the intercept are centered at the median and sd of 2.5 times the sd of the data. For the fixed effect treatment, they are centered at zero with the a standard deviation equal to 1.5 sd of the data. Fixed treatments are relative to the first treatment level (GS) which is used as the intercept.</figcaption>
+<div id="fig-priors" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-priors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-priors-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-priors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.6: Normal priors for the intercept are centered at the median and sd of 2.5 times the sd of the data. For the fixed effect treatment, they are centered at zero with the a standard deviation equal to 1.5 sd of the data. Fixed treatments are relative to the first treatment level (GS) which is used as the intercept.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1045,7 +1141,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <section id="prior-check" class="level4" data-number="5.2.1.3">
 <h4 data-number="5.2.1.3" class="anchored" data-anchor-id="prior-check"><span class="header-section-number">5.2.1.3</span> Prior check</h4>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plod density of model priors against posterior to get a sense of the</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># informativeness of the prior. Average over all fixed effects.</span></span>
@@ -1082,7 +1178,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="hypothesis_test_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Sampled prior and posterior distributions for Gaussian model variables that have priors, for one fuel class. These include the sd for the random effects as well as sigma: the model residuals, and the fixed effect of treatment. The plots for the other fuel classes look similar.</figcaption>
+<figcaption>Sampled prior and posterior distributions for Gaussian model variables that have priors, for one fuel class. These include the sd for the random effects as well as sigma: the model residuals, and the fixed effect of treatment. The plots for the other fuel classes look similar.</figcaption>
 </figure>
 </div>
 </div>
@@ -1091,7 +1187,7 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <section id="posterior-predictive-check-gaussian" class="level4" data-number="5.2.1.4">
 <h4 data-number="5.2.1.4" class="anchored" data-anchor-id="posterior-predictive-check-gaussian"><span class="header-section-number">5.2.1.4</span> Posterior Predictive check (Gaussian)</h4>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>posterior_predictive_check <span class="ot">&lt;-</span> <span class="cf">function</span>(models) {</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  models <span class="ot">&lt;-</span> <span class="fu">mutate</span>(models,</span>
@@ -1136,10 +1232,14 @@ boundary (singular) fit: see help('isSingular')</code></pre>
 <pre><code>Adding missing grouping variables: `class`</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-gaus-pp-check" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-gaus-pp-check-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.7: Density of the observed data (y) plotted against 10 random draws from the posterior predictive distribution.</figcaption>
+<div id="fig-gaus-pp-check" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gaus-pp-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-gaus-pp-check-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gaus-pp-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.7: Density of the observed data (y) plotted against 10 random draws from the posterior predictive distribution.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1249,10 +1349,14 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a><span class="fu">coord_cartesian_panels</span>(<span class="at">panel_limits =</span> <span class="fu">unnest</span>(<span class="fu">select</span>(pd, lims), lims)) <span class="sc">+</span></span>
 <span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">exp</span>(<span class="fu">bar</span>(alpha))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-priors2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-priors2-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.8: Normal priors for the grand mean (global intercept) centered at the median and sd of 2.5 times the sd of the data.</figcaption>
+<div id="fig-priors2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-priors2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-priors2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-priors2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.8: Normal priors for the grand mean (global intercept) centered at the median and sd of 2.5 times the sd of the data.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -1311,7 +1415,7 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>bf3 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d,</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">priors =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">set_prior</span>(</span>
@@ -1326,109 +1430,89 @@ W_j &amp;\sim \operatorname{normal}(0, 1) \qquad \text{for } j=1 \dots 64\\
 <span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
 <span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf3_"</span>, class)</span>
 <span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>bf4 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d,</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">priors =</span> <span class="fu">list</span>(</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_prior</span>(</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_glue</span>(<span class="st">"normal({mu}, {sigma})"</span>, <span class="at">.envir =</span> <span class="fu">lnp</span>(data<span class="sc">$</span>load)),</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">nlpar =</span> <span class="st">"a"</span>, <span class="at">coef =</span> <span class="st">"Intercept"</span></span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"a"</span>, <span class="at">class =</span> <span class="st">"sd"</span>) <span class="sc">+</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentgs"</span>) <span class="sc">+</span></span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentha"</span>) <span class="sc">+</span></span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmenthd"</span>) <span class="sc">+</span></span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentld"</span>)</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">mod =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">brm</span>(</span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>    brms<span class="sc">::</span><span class="fu">bf</span>(</span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>      load <span class="sc">~</span> a <span class="sc">+</span> b,</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>      a <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site <span class="sc">/</span> treatment <span class="sc">/</span> corner),</span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>      b <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment,</span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">nl =</span> <span class="cn">TRUE</span></span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>    data,</span>
+<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">warmup =</span> <span class="dv">4000</span>,</span>
+<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">5000</span>,</span>
+<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>),</span>
+<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> brms<span class="sc">::</span><span class="fu">hurdle_gamma</span>(),</span>
+<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
+<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_prior =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf4_"</span>, class)</span>
+<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a>bf5 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d,</span>
+<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">priors =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">set_prior</span>(</span>
+<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_glue</span>(<span class="st">"normal({mu}, {sigma})"</span>, <span class="at">.envir =</span> <span class="fu">lnp</span>(data<span class="sc">$</span>load))</span>
+<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a>  )),</span>
+<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">mod =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">brm</span>(</span>
+<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a>    brms<span class="sc">::</span><span class="fu">bf</span>(load <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Intercept <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site <span class="sc">/</span> treatment <span class="sc">/</span> corner) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> treatment)),</span>
+<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a>    data,</span>
+<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">warmup =</span> <span class="dv">4000</span>,</span>
+<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">5000</span>,</span>
+<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>),</span>
+<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> brms<span class="sc">::</span><span class="fu">hurdle_gamma</span>(),</span>
+<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
+<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf5_"</span>, class)</span>
+<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: There were 3 warnings in `mutate()`.
-The first warning was:
-ℹ In argument: `mod = list(...)`.
-ℹ In row 4.
-Caused by warning:
-! There were 6 divergent transitions after warmup. See
-https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-to find out why this is a problem and how to eliminate them.
-ℹ Run `dplyr::last_dplyr_warnings()` to see the 2 remaining warnings.</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>bf4 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d,</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">priors =</span> <span class="fu">list</span>(</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_prior</span>(</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_glue</span>(<span class="st">"normal({mu}, {sigma})"</span>, <span class="at">.envir =</span> <span class="fu">lnp</span>(data<span class="sc">$</span>load)),</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">nlpar =</span> <span class="st">"a"</span>, <span class="at">coef =</span> <span class="st">"Intercept"</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"a"</span>, <span class="at">class =</span> <span class="st">"sd"</span>) <span class="sc">+</span></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentgs"</span>) <span class="sc">+</span></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentha"</span>) <span class="sc">+</span></span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmenthd"</span>) <span class="sc">+</span></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">set_prior</span>(<span class="st">"student_t(3, 0, 0.35)"</span>, <span class="at">nlpar =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"treatmentld"</span>)</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">mod =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">brm</span>(</span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    brms<span class="sc">::</span><span class="fu">bf</span>(</span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>      load <span class="sc">~</span> a <span class="sc">+</span> b,</span>
-<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>      a <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site <span class="sc">/</span> treatment <span class="sc">/</span> corner),</span>
-<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>      b <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> treatment,</span>
-<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">nl =</span> <span class="cn">TRUE</span></span>
-<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>    data,</span>
-<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">warmup =</span> <span class="dv">4000</span>,</span>
-<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">5000</span>,</span>
-<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>),</span>
-<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> brms<span class="sc">::</span><span class="fu">hurdle_gamma</span>(),</span>
-<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
-<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_prior =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf4_"</span>, class)</span>
-<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>bf5 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(d,</span>
-<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">priors =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">set_prior</span>(</span>
-<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_glue</span>(<span class="st">"normal({mu}, {sigma})"</span>, <span class="at">.envir =</span> <span class="fu">lnp</span>(data<span class="sc">$</span>load))</span>
-<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a>  )),</span>
-<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">mod =</span> <span class="fu">list</span>(brms<span class="sc">::</span><span class="fu">brm</span>(</span>
-<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a>    brms<span class="sc">::</span><span class="fu">bf</span>(load <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Intercept <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site <span class="sc">/</span> treatment <span class="sc">/</span> corner) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> treatment)),</span>
-<span id="cb40-39"><a href="#cb40-39" aria-hidden="true" tabindex="-1"></a>    data,</span>
-<span id="cb40-40"><a href="#cb40-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">warmup =</span> <span class="dv">4000</span>,</span>
-<span id="cb40-41"><a href="#cb40-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">iter =</span> <span class="dv">5000</span>,</span>
-<span id="cb40-42"><a href="#cb40-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb40-43"><a href="#cb40-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">adapt_delta =</span> <span class="fl">0.99</span>),</span>
-<span id="cb40-44"><a href="#cb40-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> brms<span class="sc">::</span><span class="fu">hurdle_gamma</span>(),</span>
-<span id="cb40-45"><a href="#cb40-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> priors,</span>
-<span id="cb40-46"><a href="#cb40-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"fits/bf5_"</span>, class)</span>
-<span id="cb40-47"><a href="#cb40-47" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb40-48"><a href="#cb40-48" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: There were 4 warnings in `mutate()`.
-The first warning was:
-ℹ In argument: `mod = list(...)`.
-ℹ In row 4.
-Caused by warning:
-! There were 1 divergent transitions after warmup. See
-https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-to find out why this is a problem and how to eliminate them.
-ℹ Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings.</code></pre>
-</div>
 </div>
 </section>
 <section id="model-summaries" class="level4" data-number="5.2.2.5">
 <h4 data-number="5.2.2.5" class="anchored" data-anchor-id="model-summaries"><span class="header-section-number">5.2.2.5</span> Model summaries</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>my_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(mod) {</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_draws_df</span>(mod) <span class="sc">|&gt;</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="fu">c</span>(<span class="st">"b_"</span>, <span class="st">"sd_"</span>)), shape, hu) <span class="sc">|&gt;</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    posterior<span class="sc">::</span><span class="fu">summarize_draws</span>(</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"mean"</span>, <span class="sc">~</span>posterior<span class="sc">::</span><span class="fu">quantile2</span>(.x, <span class="fu">c</span>(<span class="fl">0.05</span>, .<span class="dv">5</span>, .<span class="dv">95</span>)), <span class="st">"rhat"</span>, <span class="st">"ess_bulk"</span>,</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"ess_tail"</span></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>bf4a <span class="sc">|&gt;</span></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">list</span>(<span class="fu">my_summary</span>(mod))</span>
-<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(summary) <span class="sc">|&gt;</span></span>
-<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(summary) <span class="sc">|&gt;</span></span>
-<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable =</span> <span class="fu">str_remove_all</span>(variable, <span class="st">"b_._|_a_"</span>)</span>
-<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>my_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(mod) {</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_draws_df</span>(mod) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="fu">c</span>(<span class="st">"b_"</span>, <span class="st">"sd_"</span>)), shape, hu) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    posterior<span class="sc">::</span><span class="fu">summarize_draws</span>(</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"mean"</span>, <span class="sc">~</span>posterior<span class="sc">::</span><span class="fu">quantile2</span>(.x, <span class="fu">c</span>(<span class="fl">0.05</span>, .<span class="dv">5</span>, .<span class="dv">95</span>)), <span class="st">"rhat"</span>, <span class="st">"ess_bulk"</span>,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"ess_tail"</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>bf4a <span class="sc">|&gt;</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">list</span>(<span class="fu">my_summary</span>(mod))</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(summary) <span class="sc">|&gt;</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(summary) <span class="sc">|&gt;</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable =</span> <span class="fu">str_remove_all</span>(variable, <span class="st">"b_._|_a_"</span>)</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-model-summaries" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model-summaries-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.6: Summaries of parameters and dianostics. Rhat is a measure of model convergence, well mixed chains have an Rhat of 1, bulk and tail ESS are measures of effective sample size.
+</figcaption>
+<div aria-describedby="tbl-model-summaries-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-model-summaries" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.6: Summaries of parameters and dianostics. Rhat is a measure of model convergence, well mixed chains have an Rhat of 1, bulk and tail ESS are measures of effective sample size.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
 <col style="width: 11%">
 <col style="width: 38%">
@@ -2118,23 +2202,29 @@ to find out why this is a problem and how to eliminate them.
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 </section>
 <section id="prior-check-1" class="level4" data-number="5.2.2.6">
 <h4 data-number="5.2.2.6" class="anchored" data-anchor-id="prior-check-1"><span class="header-section-number">5.2.2.6</span> Prior check</h4>
 <p>While it was not possible to sample from the prior using the MCMC sampler which was likely due to the extremely long tails implied by our exponentiated, independent priors, another way of describing priors is simply sampling random from random number generators. The results of these random samples are plotted against the posterior distributions for the variables that we set priors for.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pri_post</span>(bf4a<span class="sc">$</span>mod[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"1-hr"</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[2]]) + ggtitle("10-hr")</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[3]]) + ggtitle("100-hr")</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[4]]) + ggtitle("duff &amp; litter")</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[5]]) + ggtitle("1000-hr")</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[6]]) + ggtitle("Vegetation")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pri_post</span>(bf4a<span class="sc">$</span>mod[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"1-hr"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[2]]) + ggtitle("10-hr")</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[3]]) + ggtitle("100-hr")</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[4]]) + ggtitle("duff &amp; litter")</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[5]]) + ggtitle("1000-hr")</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_pri_post(bf4a$mod[[6]]) + ggtitle("Vegetation")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-gamma-pri-post" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-gamma-pri-post-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.9: Posterior and prior distributions for variables we set priors for, for one fuel class model.</figcaption>
+<div id="fig-gamma-pri-post" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gamma-pri-post-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-gamma-pri-post-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamma-pri-post-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.9: Posterior and prior distributions for variables we set priors for, for one fuel class model.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -2147,10 +2237,14 @@ to find out why this is a problem and how to eliminate them.
 <pre><code>Adding missing grouping variables: `class`</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-gamma-pp-check" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-gamma-pp-check-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.10: Density of the observed data (y) plotted against 10 random draws from the posterior predictive distribution.</figcaption>
+<div id="fig-gamma-pp-check" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gamma-pp-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-gamma-pp-check-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamma-pp-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.10: Density of the observed data (y) plotted against 10 random draws from the posterior predictive distribution.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -2160,64 +2254,72 @@ to find out why this is a problem and how to eliminate them.
 <section id="expected-value-of-the-posterior-predictive" class="level4" data-number="5.2.2.8">
 <h4 data-number="5.2.2.8" class="anchored" data-anchor-id="expected-value-of-the-posterior-predictive"><span class="header-section-number">5.2.2.8</span> Expected value of the posterior predictive</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get posterior predictions for treatments for models for all fuel classes, </span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ignoring random effects. These are predictions for the expected value across</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co"># all sites.</span></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>predict_posterior_expected <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">re_formula =</span> <span class="cn">NA</span>) {</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  newdata <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">expand</span>(data<span class="sc">$</span>data[[<span class="dv">1</span>]], <span class="fu">nesting</span>(treatment))</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">mutate</span>(data,</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred =</span> <span class="fu">list</span>(</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">epred_draws</span>(mod, newdata, <span class="at">re_formula =</span> re_formula, </span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">value =</span> <span class="st">"pred"</span>)</span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">lims =</span> <span class="fu">list</span>(</span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tibble</span>(<span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">995</span>))</span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (plot) {</span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">unnest</span>(pred) <span class="sc">|&gt;</span></span>
-<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(pred, treatment)) <span class="sc">+</span></span>
-<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">stat_halfeye</span>(<span class="at">normalize =</span> <span class="st">"panels"</span>) <span class="sc">+</span></span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free_x"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
-<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_cartesian_panels</span>(<span class="at">panel_limits =</span> <span class="fu">unnest</span>(<span class="fu">select</span>(data, lims), lims)) <span class="sc">+</span></span>
-<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_discrete</span>(<span class="at">labels =</span> toupper) <span class="sc">+</span></span>
-<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Treatment"</span>)</span>
-<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
-<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(data)</span>
-<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get posterior predictions for treatments for models for all fuel classes, </span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ignoring random effects. These are predictions for the expected value across</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co"># all sites.</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>predict_posterior_expected <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">re_formula =</span> <span class="cn">NA</span>) {</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  newdata <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">expand</span>(data<span class="sc">$</span>data[[<span class="dv">1</span>]], <span class="fu">nesting</span>(treatment))</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">mutate</span>(data,</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred =</span> <span class="fu">list</span>(</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">epred_draws</span>(mod, newdata, <span class="at">re_formula =</span> re_formula, </span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">value =</span> <span class="st">"pred"</span>)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">lims =</span> <span class="fu">list</span>(</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tibble</span>(<span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">995</span>))</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (plot) {</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">unnest</span>(pred) <span class="sc">|&gt;</span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(pred, treatment)) <span class="sc">+</span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">stat_halfeye</span>(<span class="at">normalize =</span> <span class="st">"panels"</span>) <span class="sc">+</span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free_x"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_cartesian_panels</span>(<span class="at">panel_limits =</span> <span class="fu">unnest</span>(<span class="fu">select</span>(data, lims), lims)) <span class="sc">+</span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_discrete</span>(<span class="at">labels =</span> toupper) <span class="sc">+</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Treatment"</span>)</span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(data)</span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stderr">
 <pre><code>Adding missing grouping variables: `class`</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-expected-predictions" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-expected-predictions-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.11: Posterior expected predictions, with no random effects. This reprsents the expected average conditions across all sites. The point estimate is the mode. Units are mg ha-1. Upper and lower limits are the 95% credible intervals.</figcaption>
+<div id="fig-expected-predictions" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-expected-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-expected-predictions-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-expected-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.11: Posterior expected predictions, with no random effects. This reprsents the expected average conditions across all sites. The point estimate is the mode. Units are mg ha-1. Upper and lower limits are the 95% credible intervals.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>These are the expected predictions, or predictions for the mean. It only includes the uncertainty in the mean and not the variance in predictions estimated by the model.</p>
 <p>There is quite a bit of uncertainty about the mean all around, but there is a notable difference in that uncertainty among treatments for the onehr and veg fuel classes.</p>
-<p>Table <a href="#tbl-expected-predictions">Table&nbsp;<span>5.7</span></a> shows these data in a tabular format. I’m using the highest density continuous interval because, while its hard to see in <a href="#fig-expected-predictions">Figure&nbsp;<span>5.11</span></a>, the highest desity region is actually slightly discontinuous.</p>
+<p>Table <a href="#tbl-expected-predictions" class="quarto-xref">Table&nbsp;<span>5.7</span></a> shows these data in a tabular format. I’m using the highest density continuous interval because, while its hard to see in <a href="#fig-expected-predictions" class="quarto-xref">Figure&nbsp;<span>5.11</span></a>, the highest desity region is actually slightly discontinuous.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>expected_predictions <span class="sc">|&gt;</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">list</span>(tidybayes<span class="sc">::</span><span class="fu">mode_hdci</span>(pred))</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> <span class="fu">select</span>(summary) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(summary) <span class="sc">|&gt;</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(treatment, <span class="at">prediction =</span> pred, <span class="at">lower =</span> .lower, <span class="at">upper =</span> .upper) <span class="sc">|&gt;</span></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>expected_predictions <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">list</span>(tidybayes<span class="sc">::</span><span class="fu">mode_hdci</span>(pred))</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> <span class="fu">select</span>(summary) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(summary) <span class="sc">|&gt;</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(treatment, <span class="at">prediction =</span> pred, <span class="at">lower =</span> .lower, <span class="at">upper =</span> .upper) <span class="sc">|&gt;</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Adding missing grouping variables: `class`
 Adding missing grouping variables: `class`</code></pre>
 </div>
+<div id="tbl-expected-predictions" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-expected-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.7: Tabular data associated with <a href="#fig-expected-predictions" class="quarto-xref">Figure&nbsp;<span>5.11</span></a>. Upper and lower pertain to the 95% highest density <em>continuous</em> interval.
+</figcaption>
+<div aria-describedby="tbl-expected-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-expected-predictions" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.7: Tabular data associated with <a href="#fig-expected-predictions">Figure&nbsp;<span>5.11</span></a>. Upper and lower pertain to the 95% highest density <em>continuous</em> interval.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">class</th>
@@ -2400,43 +2502,45 @@ Adding missing grouping variables: `class`</code></pre>
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>predict_expected_contrasts <span class="ot">&lt;-</span> <span class="cf">function</span>(data, rope_size, <span class="at">plot =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">re_formula =</span> <span class="cn">NA</span>) {</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Assume treatment levels are the same for all models: they are.</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="ot">&lt;-</span> <span class="fu">expand</span>(data<span class="sc">$</span>data[[<span class="dv">1</span>]], <span class="fu">nesting</span>(treatment))</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">pred =</span> <span class="fu">list</span>(</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>        tidybayes<span class="sc">::</span><span class="fu">epred_draws</span>(mod, newdata, <span class="at">re_formula =</span> <span class="cn">NA</span>, <span class="at">value =</span> <span class="st">"pred"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>        tidybayes<span class="sc">::</span><span class="fu">compare_levels</span>(pred, <span class="at">by =</span> treatment) <span class="sc">|&gt;</span></span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="at">contrast =</span> treatment, pred) </span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>      ),</span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">rope =</span> rope_size <span class="sc">*</span> <span class="fu">sd</span>(data<span class="sc">$</span>load),</span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">lims =</span> <span class="fu">list</span>(</span>
-<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tibble</span>(<span class="at">xmin =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">001</span>), <span class="at">xmax =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">999</span>))</span>
-<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (plot) {</span>
-<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
-<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unnest</span>(<span class="fu">c</span>(pred)) <span class="sc">|&gt;</span></span>
-<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pred, <span class="at">y =</span> contrast)) <span class="sc">+</span></span>
-<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">stat_halfeye</span>(<span class="at">normalize =</span> <span class="st">"panels"</span>) <span class="sc">+</span></span>
-<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> rope))  <span class="sc">+</span></span>
-<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="sc">-</span>rope))  <span class="sc">+</span></span>
-<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free_x"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
-<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_cartesian_panels</span>(</span>
-<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel_limits =</span> <span class="fu">unnest</span>(<span class="fu">select</span>(d, lims), lims)</span>
-<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_discrete</span>(<span class="at">labels =</span> toupper) <span class="sc">+</span></span>
-<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Treatment"</span>)</span>
-<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
-<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(d)</span>
-<span id="cb49-33"><a href="#cb49-33" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>predict_expected_contrasts <span class="ot">&lt;-</span> <span class="cf">function</span>(data, rope_size, <span class="at">plot =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">re_formula =</span> <span class="cn">NA</span>) {</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Assume treatment levels are the same for all models: they are.</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="ot">&lt;-</span> <span class="fu">expand</span>(data<span class="sc">$</span>data[[<span class="dv">1</span>]], <span class="fu">nesting</span>(treatment))</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">pred =</span> <span class="fu">list</span>(</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>        tidybayes<span class="sc">::</span><span class="fu">epred_draws</span>(mod, newdata, <span class="at">re_formula =</span> <span class="cn">NA</span>, <span class="at">value =</span> <span class="st">"pred"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>        tidybayes<span class="sc">::</span><span class="fu">compare_levels</span>(pred, <span class="at">by =</span> treatment) <span class="sc">|&gt;</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="at">contrast =</span> treatment, pred) </span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">rope =</span> rope_size <span class="sc">*</span> <span class="fu">sd</span>(data<span class="sc">$</span>load),</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">lims =</span> <span class="fu">list</span>(</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tibble</span>(<span class="at">xmin =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">001</span>), <span class="at">xmax =</span> <span class="fu">quantile</span>(pred<span class="sc">$</span>pred, .<span class="dv">999</span>))</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (plot) {</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unnest</span>(<span class="fu">c</span>(pred)) <span class="sc">|&gt;</span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pred, <span class="at">y =</span> contrast)) <span class="sc">+</span></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>      tidybayes<span class="sc">::</span><span class="fu">stat_halfeye</span>(<span class="at">normalize =</span> <span class="st">"panels"</span>) <span class="sc">+</span></span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> rope))  <span class="sc">+</span></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="sc">-</span>rope))  <span class="sc">+</span></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free_x"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_cartesian_panels</span>(</span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel_limits =</span> <span class="fu">unnest</span>(<span class="fu">select</span>(d, lims), lims)</span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_discrete</span>(<span class="at">labels =</span> toupper) <span class="sc">+</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Treatment"</span>)</span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(d)</span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -2444,10 +2548,14 @@ Adding missing grouping variables: `class`</code></pre>
 <pre><code>Adding missing grouping variables: `class`</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-compare-expected" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hypothesis_test_files/figure-html/fig-compare-expected-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.12: Differences between expected values for each treatment, with 95% continuous interval shown.</figcaption>
+<div id="fig-compare-expected" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-compare-expected-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hypothesis_test_files/figure-html/fig-compare-expected-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-compare-expected-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.12: Differences between expected values for each treatment, with 95% continuous interval shown.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -2457,10 +2565,14 @@ Adding missing grouping variables: `class`</code></pre>
 <pre><code>Adding missing grouping variables: `class`
 Adding missing grouping variables: `class`</code></pre>
 </div>
+<div id="tbl-expected-contrasts" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-expected-contrasts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.8: Posterior expected predictions of pairwise differences in means, with no random effects. This reprsents the expected average conditions across all sites. Units are Mg ha-1. The point estimate is the mode. Upper and lower limits are the 95% credible intervals. Prob is the probability that the predicted difference matches the sign of its median–the probability that it is not zero.
+</figcaption>
+<div aria-describedby="tbl-expected-contrasts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-expected-contrasts" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.8: Posterior expected predictions of pairwise differences in means, with no random effects. This reprsents the expected average conditions across all sites. Units are Mg ha-1. The point estimate is the mode. Upper and lower limits are the 95% credible intervals. Prob is the probability that the predicted difference matches the sign of its median–the probability that it is not zero.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">class</th>
@@ -2764,25 +2876,31 @@ Adding missing grouping variables: `class`</code></pre>
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 </section>
 <section id="r-squared" class="level4" data-number="5.2.2.9">
 <h4 data-number="5.2.2.9" class="anchored" data-anchor-id="r-squared"><span class="header-section-number">5.2.2.9</span> R squared</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>bf4a <span class="sc">|&gt;</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">R_squared =</span> <span class="fu">list</span>(<span class="fu">as_tibble</span>(<span class="fu">bayes_R2</span>(mod)))</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(R_squared) <span class="sc">|&gt;</span></span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unnest</span>(R_squared) <span class="sc">|&gt;</span></span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>bf4a <span class="sc">|&gt;</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">R_squared =</span> <span class="fu">list</span>(<span class="fu">as_tibble</span>(<span class="fu">bayes_R2</span>(mod)))</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(R_squared) <span class="sc">|&gt;</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unnest</span>(R_squared) <span class="sc">|&gt;</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Adding missing grouping variables: `class`</code></pre>
 </div>
+<div id="tbl-R2" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-R2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.9: This version of R2 is recommended by Gelman et al.&nbsp;(2019). It is defined as the variance in predictions divided by the variance in predictions plus the expected variance of the errors.
+</figcaption>
+<div aria-describedby="tbl-R2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-R2" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;5.9: This version of R2 is recommended by Gelman et al. (2019). It is defined as the variance in predictions divided by the variance in predictions plus the expected variance of the errors.</caption>
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">class</th>
@@ -2839,6 +2957,8 @@ Adding missing grouping variables: `class`</code></pre>
 </table>
 </div>
 </div>
+</figure>
+</div>
 </div>
 </section>
 </section>
@@ -2847,21 +2967,21 @@ Adding missing grouping variables: `class`</code></pre>
 <h2 data-number="5.3" class="anchored" data-anchor-id="final"><span class="header-section-number">5.3</span> Final</h2>
 <section id="model-formula-and-prior-explanation" class="level3" data-number="5.3.1">
 <h3 data-number="5.3.1" class="anchored" data-anchor-id="model-formula-and-prior-explanation"><span class="header-section-number">5.3.1</span> Model formula and prior explanation</h3>
-<p>The final model is described in <a href="#eq-bf4a">Equation&nbsp;<span>5.1</span></a>. The description of the meaning of the priors in the following list should probably be included for explanation.</p>
+<p>The final model is described in <a href="#eq-bf4a" class="quarto-xref">Equation&nbsp;<span>5.1</span></a>. The description of the meaning of the priors in the following list should probably be included for explanation.</p>
 </section>
 <section id="fiting-and-diagnostics" class="level3" data-number="5.3.2">
 <h3 data-number="5.3.2" class="anchored" data-anchor-id="fiting-and-diagnostics"><span class="header-section-number">5.3.2</span> fiting and diagnostics</h3>
 <ul>
 <li>The actual code used to fit the model in <code>brms</code> should be included in an appendix.</li>
-<li><a href="#fig-gamma-pri-post">Figure&nbsp;<span>5.9</span></a> should be included as an example of the connection between our priors and posterior distributions.</li>
-<li>We should summarize rhat and tail ess for all models as shown in <a href="sprouts_import_data.html#tbl-model-summaries">Table&nbsp;<span>6.3</span></a>
+<li><a href="#fig-gamma-pri-post" class="quarto-xref">Figure&nbsp;<span>5.9</span></a> should be included as an example of the connection between our priors and posterior distributions.</li>
+<li>We should summarize rhat and tail ess for all models as shown in <a href="sprout_data_exploration_modeling.html#tbl-model-summaries" class="quarto-xref">Table&nbsp;<span>7.2</span></a>
 <ul>
 <li>R-hat values were all below 1.005</li>
 <li>Bulk and tail effective sample sizes were generally above 1000, with the exception of plot and corner SD’s for 1000-hr and Live vegetation fuels, which were above 640.</li>
 <li>These should be adequate effective sample sizes for robust inference.</li>
 </ul></li>
-<li><a href="#fig-gamma-pp-check">Figure&nbsp;<span>5.10</span></a> should be included to show model fit</li>
-<li><a href="#tbl-R2">Table&nbsp;<span>5.9</span></a> gives an interpretation of R-squared for bayesian models for each of our models.</li>
+<li><a href="#fig-gamma-pp-check" class="quarto-xref">Figure&nbsp;<span>5.10</span></a> should be included to show model fit</li>
+<li><a href="#tbl-R2" class="quarto-xref">Table&nbsp;<span>5.9</span></a> gives an interpretation of R-squared for bayesian models for each of our models.</li>
 </ul>
 </section>
 <section id="results" class="level3" data-number="5.3.3">
@@ -2869,7 +2989,7 @@ Adding missing grouping variables: `class`</code></pre>
 <section id="predicted-means" class="level4" data-number="5.3.3.1">
 <h4 data-number="5.3.3.1" class="anchored" data-anchor-id="predicted-means"><span class="header-section-number">5.3.3.1</span> Predicted means</h4>
 <ul>
-<li>The posterior effect of treatment is summarized in <a href="#fig-expected-predictions">Figure&nbsp;<span>5.11</span></a>.</li>
+<li>The posterior effect of treatment is summarized in <a href="#fig-expected-predictions" class="quarto-xref">Figure&nbsp;<span>5.11</span></a>.</li>
 <li>For 1-hr fuels, treatments HD and HA show patterns of higher loading. This may have to do with more fine fuel inputs from higher retention. This could lead to increased fire behavior, which could be of benefit if attempting to burn under marginal conditions.</li>
 <li>The HD treatment shows the potential for higher loading of duff and litter. This could be due to the same effect as for 1-hr fuels, but the HA treatement does not show a similar trend in this case. This could be explained by a higher probability of sampling near a trees base, where duff and litter load are known to be higher.</li>
 <li>An obvious trend in live vegetation is revealed in the GS treatment, where tree sprouts and brush was able to regenerate without any competition. The potentially reduced live vegetation in the HA treatment is unexpected.</li>
@@ -2878,7 +2998,7 @@ Adding missing grouping variables: `class`</code></pre>
 <section id="predicted-contrasts" class="level4" data-number="5.3.3.2">
 <h4 data-number="5.3.3.2" class="anchored" data-anchor-id="predicted-contrasts"><span class="header-section-number">5.3.3.2</span> Predicted contrasts</h4>
 <ul>
-<li>Pairwise comparison of treatment efffect is sumarized in <a href="#fig-compare-expected">Figure&nbsp;<span>5.12</span></a></li>
+<li>Pairwise comparison of treatment efffect is sumarized in <a href="#fig-compare-expected" class="quarto-xref">Figure&nbsp;<span>5.12</span></a></li>
 <li>Contrasts take into account how expected predictions co-vary and is a better indicato of potential differences between treatments.</li>
 <li>If we take the 95% credible interval as the measure of “significant differences” between treatments, then the HA treatment would be considered to result in greater fuel load than the GS treatment, and the opposite trend would be true for live vegetation: HA is greater than GS.</li>
 <li>The posterior distributions of contrasts reveal more potential differences with somewhat reduced certainty for 1-hr, Duff &amp; litter, and Live vegetation.
@@ -2996,10 +3116,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -3009,8 +3128,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -3023,6 +3151,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -3066,6 +3313,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -3091,6 +3339,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -3152,17 +3426,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./fuel_data_exploration.html" class="pagination-link">
+      <a href="./fuel_data_exploration.html" class="pagination-link  aria-label=" &lt;span="" data="" exploration&lt;="" span&gt;"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./sprouts_import_data.html" class="pagination-link">
+      <a href="./sprouts_import_data.html" class="pagination-link" aria-label="<span class='chapter-number'>6</span>&nbsp; <span class='chapter-title'>Data import and description</span>">
         <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data import and description</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 
