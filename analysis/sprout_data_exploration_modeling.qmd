@@ -551,9 +551,15 @@ mht108 <- glmmTMB(
   data = dht10,
   dispformula = ~ spp + treat
 )
+mht109 <- glmmTMB(
+  ht ~ treat + spp + (0 + spp | plot),
+  family = gaussian(link = "log"),
+  data = dht10,
+  dispformula = ~ spp + treat
+)
 
 mht10_list <- lst(
-  mht101, mht102, mht103, mht104, mht105, mht106, mht107, mht108
+  mht101, mht102, mht103, mht104, mht105, mht106, mht107, mht108, mht109
 )
 
 modelsummary(
@@ -573,6 +579,12 @@ species specific intercept, but also takes into account the covariance of the
 species plot effect. The best model for dispersion included speceis and
 treatment.
 
+```r
+
+ht10_sel <- mht109
+
+```
+
 ### Year 10 only Results
 
 ```{r}
@@ -583,9 +595,12 @@ treatment.
 #|   there is not sufficient evidence to claim the estiamtes come from different
 #|   distributions.
 
-mht108grid <- emmeans(mht108, pairwise ~ treat, by = c("spp"), type = "response")
-
-mht108cld <- cld(mht108grid, Letters = letters) |>
+ht10_cld <- emmeans(mht108,
+  pairwise ~ treat,
+  by = c("spp"),
+  type = "response"
+) |>
+  cld(Letters = letters) |>
   as_tibble() |>
   mutate( .group = str_replace_all(.group, " ", ""))
 
@@ -599,7 +614,7 @@ year_10_only_plot <- dht10 |>
   geom_dots() +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   geom_pointrange(
-    data = mht108cld,
+    data = ht10_cld,
     aes(y = response, ymin = asymp.LCL, ymax = asymp.UCL),
     color = "gray50",
     position = position_nudge(x = -0.07),
@@ -608,7 +623,7 @@ year_10_only_plot <- dht10 |>
     show.legend = FALSE
   ) +
   geom_text(
-    data = mht108cld,
+    data = ht10_cld,
     aes(y = asymp.UCL, label = .group),
     color = "black",
     position = position_nudge(x = -0.3, y = 0.2)
@@ -935,7 +950,7 @@ standard_model_col_names <- c(
   emmean = "response"
 )
 
-list("year 10 only" = mht108cld, "multi-year" = mht18_compare) |>
+list("year 10 only" = ht10_cld, "multi-year" = mht18_compare) |>
   map(\(x) rename(x, any_of(standard_model_col_names))) |>
   bind_rows(.id = "model") |>
   ggplot(aes(treat, ht, color = model, fill = model)) +
@@ -962,15 +977,23 @@ list("year 10 only" = mht108cld, "multi-year" = mht18_compare) |>
 
 ```
 
+This plot attempts to demonstrate the model fit by showing observed and
+predictied height distributions for our observed dataset.
+
 ```{r}
+#| label: fig-height-pred-fit
+#| fig-cap: >
+#|   Oberved and predicted height distribution of our observed dataset.
+#|   Predictions were made using all random effects.
 
 sprouts |>
   lengthen_data("ht") |>
   mutate(
-    pred = predict(mht18,
+    Predicted = predict(mht18,
       lst(site, plot, tree, treat, spp, year),
       type = "response"
-    )
+    ),
+    Observed = ht
   ) |>
   pivot_longer(c(Observed, Predicted)) |>
   ggplot(aes(value, treat, color = name, fill = name)) +
