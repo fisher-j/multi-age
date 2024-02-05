@@ -972,15 +972,29 @@ sprouts |>
       type = "response"
     )
   ) |>
-  ggplot(aes(ht, treat, color = treat, fill = treat)) +
-  scale_y_discrete(expand = c(0, 0)) +
-  scale_x_continuous(expand = c(0, 0)) +
-  coord_cartesian(clip = "off") +
-  stat_dots(aes(x = pred), binwidth = unit(0.019, "npc"), color = "gray50", fill = "grey40") +
-  stat_dots(binwidth = unit(0.019, "npc")) +
+  pivot_longer(c(Observed, Predicted)) |>
+  ggplot(aes(value, treat, color = name, fill = name)) +
+  stat_slab(alpha = 0.4, normalize = "xy") +
   facet_grid(vars(spp), vars(year), scales = "free", labeller = label_both) +
   labs(x = "Height (m)", y = "Treatment") +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom", legend.title = element_blank())
 
+sprouts |>
+  lengthen_data("ht") |>
+  filter(year == "10") |>
+  mutate(
+    Predicted = predict(mht108,
+      lst(site, plot, tree, treat, spp, year),
+      type = "response"
+    ),
+    Observed = ht
+  ) |>
+  pivot_longer(c(Observed, Predicted)) |>
+  ggplot(aes(value, treat, color = name, fill = name)) +
+  stat_slab(alpha = 0.4, normalize = "xy") +
+  facet_grid(vars(spp), scales = "free", labeller = label_both) +
+  labs(x = "Height (m)", y = "Treatment") +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  theme(legend.position = "bottom", legend.title = element_blank())
 ```
