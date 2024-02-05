@@ -1,5 +1,8 @@
 
 # 2024-02-05 
+ - add ht109 model: gausian family
+ - compare distribution of predicted values to observed
+ - automate work log from git log
  - create site map and add data
  - add regen data
  - refactor chapters

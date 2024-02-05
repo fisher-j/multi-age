@@ -579,7 +579,7 @@ species specific intercept, but also takes into account the covariance of the
 species plot effect. The best model for dispersion included speceis and
 treatment.
 
-```r
+```{r}
 
 ht10_sel <- mht109
 
@@ -595,13 +595,14 @@ ht10_sel <- mht109
 #|   there is not sufficient evidence to claim the estiamtes come from different
 #|   distributions.
 
-ht10_cld <- emmeans(mht108,
+ht10_cld <- emmeans(ht10_sel,
   pairwise ~ treat,
   by = c("spp"),
   type = "response"
 ) |>
   cld(Letters = letters) |>
   as_tibble() |>
+  rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL"))) |>
   mutate( .group = str_replace_all(.group, " ", ""))
 
 year_10_only_plot <- dht10 |>
@@ -615,7 +616,7 @@ year_10_only_plot <- dht10 |>
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   geom_pointrange(
     data = ht10_cld,
-    aes(y = response, ymin = asymp.LCL, ymax = asymp.UCL),
+    aes(y = response, ymin = lower.CL, ymax = upper.CL),
     color = "gray50",
     position = position_nudge(x = -0.07),
     size = 0.7,
@@ -624,7 +625,7 @@ year_10_only_plot <- dht10 |>
   ) +
   geom_text(
     data = ht10_cld,
-    aes(y = asymp.UCL, label = .group),
+    aes(y = upper.CL, label = .group),
     color = "black",
     position = position_nudge(x = -0.3, y = 0.2)
   )
@@ -981,9 +982,10 @@ This plot attempts to demonstrate the model fit by showing observed and
 predictied height distributions for our observed dataset.
 
 ```{r}
-#| label: fig-height-pred-fit
+#| label: fig-height-pred-fit-all-years
 #| fig-cap: >
-#|   Oberved and predicted height distribution of our observed dataset.
+#|   Oberved and predicted height distribution of our observed dataset using the
+#|   final, chosen, multi-year model.
 #|   Predictions were made using all random effects.
 
 sprouts |>
@@ -1003,11 +1005,21 @@ sprouts |>
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   theme(legend.position = "bottom", legend.title = element_blank())
 
+```
+
+```{r}
+
+#| label: fig-height-pred-fit-10-only
+#| fig-cap: >
+#|   Oberved and predicted height distribution of our observed dataset using the
+#|   selected year-10-only model.
+#|   Predictions were made using all random effects.
+
 sprouts |>
   lengthen_data("ht") |>
   filter(year == "10") |>
   mutate(
-    Predicted = predict(mht108,
+    Predicted = predict(ht10_sel,
       lst(site, plot, tree, treat, spp, year),
       type = "response"
     ),
@@ -1020,4 +1032,5 @@ sprouts |>
   labs(x = "Height (m)", y = "Treatment") +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   theme(legend.position = "bottom", legend.title = element_blank())
+
 ```
