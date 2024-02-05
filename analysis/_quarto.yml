@@ -2,6 +2,7 @@ project:
   type: book
   output-dir: ../docs
   execute-dir: project
+  pre-render: cmd.exe /c "scripts\make_git_log.bat"
 execute:
   freeze: auto
 format:
