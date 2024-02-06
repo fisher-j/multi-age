@@ -1,0 +1,75 @@
+---
+title: Import and wrangle regeneration data
+format:
+  html:
+    code-fold: true
+---
+
+Load those libraries
+
+```{r}
+#| output: false
+
+library(tidyverse)
+library(readxl)
+```
+
+Load those data
+
+```{r}
+regen_import <- local({
+  col_names <- c(
+    "site", "treat", "plot", "spp", "dbh_lt1", "dbh_lt2", "lcbh_gte2",
+    paste0("dbh", 1:28)
+  )
+  read_excel("../data/Regen10yr.xlsx", skip = 2, col_names = col_names)
+})
+```
+
+Data is in an "unlimited-wide" format, and of a few different types. There are
+counts for diameter classes (0-1 inch and 1 - 2 inch), and actual diameters for
+all trees over 2 inches.
+
+I'll make the simplying assumption that individuals in the 0-1 and 1-2 inch size
+classes are on average at their midpoint in diameter. So each individual is 0.5
+and 1.5 inches DBH for the first and second size classes, respectively.
+
+I'll put live crown base heights in a separate table and get one long list of
+each regenerating stem.
+
+```{r}
+
+regen_lcbh <- select(regen_import, site, treat, plot, spp, lcbh_gte2)
+
+regen <- local({
+  regen_lt2 <- select(regen_import, site, treat, plot, spp, dbh_lt1, dbh_lt2)
+  regen_gt2 <- select(regen_import, site, treat, plot, spp, matches("dbh\\d"))
+
+  regen_gt2_long <- regen_gt2 |>
+    pivot_longer(matches("^dbh\\d+$"), values_to = "dbh", names_to = NULL) |>
+    filter(!is.na(dbh))
+
+  regen_lt2_long <- regen_lt2 |>
+    pivot_longer(
+      matches("^dbh_"),
+      names_to = "dbh",
+      names_pattern = ".*_(lt1|lt2)",
+      values_to = "count",
+      names_transform = \(x) case_match(x, "lt1" ~ 0.5, "lt2" ~ 1.5)
+    ) |>
+    uncount(count)
+
+  bind_rows(regen_lt2_long, regen_gt2_long) |>
+    arrange(site, treat, plot, spp, dbh)
+})
+
+```
+
+Save this data for summary, visualization, and potentially, modeling.
+
+```{r}
+
+save(regen, regen_lcbh, file = "regen_wrangled.RData")
+
+```
+
