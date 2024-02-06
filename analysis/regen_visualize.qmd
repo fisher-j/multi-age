@@ -2,4 +2,49 @@
 title: Reneration data summary
 ---
 
+```{r}
+#| output: false
+
+library(tidyverse)
+library(ggdist)
+
+load("regen_wrangled.RData")
+```
+
+## Objectives
+
+- Determine if there are significant differences in species composition, or size
+  class distirbution between treatments
+
+This objective is somewhat vaugue because I am not familiar with the statistical
+techniques used for the weighted (diameter), multi-variate (species)
+distribution data that we have.
+
+For starters, I will look at summaries of size class distributions by species. I
+will report densities in terms of trees per hectare (tph). Our plots were fixed
+area, 4-m-radius plots, or 50.265 m^2^. Each stem represents 198.946 stems/ha.
+Or if we sum at the plot level (4 veg plots), then 49.736 stems/ha, or 12.434
+stems/ha at the treatment level (16 veg plots).
+
+```{r}
+summary(regen)
+
+hist(regen$dbh)
+
+filter(regen, dbh > 2) |> pull() |> hist()
+
+regen |>
+  mutate(
+    bin = cut(dbh, 10)
+  ) |>
+  ggplot(aes(bin)) +
+  geom_histogram(aes(stat = "count"))
+
+regen |>
+  filter(str_detect(spp, "NETTLE")) |>
+  ggplot(aes(dbh, fill = spp, color = spp)) +
+  geom_histogram()
+
+```
+
 
