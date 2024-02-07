@@ -5,7 +5,6 @@ title: Calculate fuel loading
 ```{r}
 #| warning: false
 library(tidyverse, warn.conflicts = FALSE)
-source("./scripts/process_datasheets.r")
 ```
 
 We used the line intercept method for tallying fine and coarse woody debris
@@ -161,11 +160,19 @@ lit_particle_params |> knitr::kable()
 
 ```
 
+## Load data from datasheets {#sec-load-fuel-data}
+
+Data in quasi-csv format, described in @sec-data-entry. I'm ommitting the medium
+density dispersed plot (MD), which only exists at one site.
+
 ```{r}
-#| echo: false
-#| message: false
+#| echo: true
+#| message: true
+
 # load data and ensure unique transects
+source("./scripts/process_datasheets.r")
 source("./scripts/test_funs.r")
+
 d <- combine_fuels_datasheets("../data") |>
   map(\(x) filter(x, treatment != "md"))
 warn_duplicates(d$transects, site, treatment, corner, azi)

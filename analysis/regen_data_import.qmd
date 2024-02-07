@@ -12,21 +12,58 @@ Load those libraries
 
 library(tidyverse)
 library(readxl)
+
+
 ```
 
-Load those data
+Load those data, new names.
 
 ```{r}
-regen_import <- local({
+
+regen_0 <- local({
   col_names <- c(
     "site", "treat", "plot", "spp", "dbh_lt1", "dbh_lt2", "lcbh_gte2",
     paste0("dbh", 1:28)
   )
   read_excel("../data/Regen10yr.xlsx", skip = 2, col_names = col_names)
 })
+
 ```
 
-Data is in an "unlimited-wide" format, and of a few different types. There are
+## Clean labels
+
+First, I'll take a look at the character type columns. 
+
+```{r}
+
+select(regen_0, where(is.character)) |>
+  map(unique)
+
+```
+
+I'll take the following steps to clean up this data:
+
+- I'll make them all lowercase for convenience.
+- The decision was made earlier to omit the plot HD - 2A, AKA "MD"
+  (@sec-load-fuel-data).
+- Remove observations of "CA NETTLE"
+- Change "QUMU ..." to "GC"
+
+```{r}
+
+regen_1 <- regen_0 |>
+  mutate(across(where(is.character), tolower)) |>
+  mutate(spp = if_else(str_detect(spp, "qumu"), "gc", spp)) |>
+  filter(treat != "hd -2a", spp != "ca nettle") |>
+  mutate(treat = str_extract(treat, "gs|ld|ha|hd"))
+   
+```
+
+This resulted in the removal of `r nrow(regen_0) - nrow(regen_1)` rows.
+
+## Stretch data
+
+Next, data is in an "unlimited-wide" format, and of a few different types. There are
 counts for diameter classes (0-1 inch and 1 - 2 inch), and actual diameters for
 all trees over 2 inches.
 
@@ -64,6 +101,7 @@ regen <- local({
 })
 
 ```
+
 
 Save this data for summary, visualization, and potentially, modeling.
 
