@@ -253,10 +253,33 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Regeneration</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regen_data_import.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Import and wrangle regeneration data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regen_visualize.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Reneration data summary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./work_log.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Work log</span></span></a>
   </div>
 </li>
     </ul>
@@ -269,13 +292,14 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#fine-woody-debris" id="toc-fine-woody-debris" class="nav-link active" data-scroll-target="#fine-woody-debris"><span class="header-section-number">3.1</span> Fine woody debris</a></li>
-  <li><a href="#coarse-woody-debris" id="toc-coarse-woody-debris" class="nav-link" data-scroll-target="#coarse-woody-debris"><span class="header-section-number">3.2</span> Coarse woody debris</a></li>
-  <li><a href="#duff-and-litter" id="toc-duff-and-litter" class="nav-link" data-scroll-target="#duff-and-litter"><span class="header-section-number">3.3</span> Duff and litter</a></li>
-  <li><a href="#vegetation" id="toc-vegetation" class="nav-link" data-scroll-target="#vegetation"><span class="header-section-number">3.4</span> Vegetation</a></li>
-  <li><a href="#sec-total-load" id="toc-sec-total-load" class="nav-link" data-scroll-target="#sec-total-load"><span class="header-section-number">3.5</span> Total load</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.6</span> Summary</a></li>
-  <li><a href="#save-data" id="toc-save-data" class="nav-link" data-scroll-target="#save-data"><span class="header-section-number">3.7</span> Save data</a></li>
+  <li><a href="#sec-load-fuel-data" id="toc-sec-load-fuel-data" class="nav-link active" data-scroll-target="#sec-load-fuel-data"><span class="header-section-number">3.1</span> Load data from datasheets</a></li>
+  <li><a href="#fine-woody-debris" id="toc-fine-woody-debris" class="nav-link" data-scroll-target="#fine-woody-debris"><span class="header-section-number">3.2</span> Fine woody debris</a></li>
+  <li><a href="#coarse-woody-debris" id="toc-coarse-woody-debris" class="nav-link" data-scroll-target="#coarse-woody-debris"><span class="header-section-number">3.3</span> Coarse woody debris</a></li>
+  <li><a href="#duff-and-litter" id="toc-duff-and-litter" class="nav-link" data-scroll-target="#duff-and-litter"><span class="header-section-number">3.4</span> Duff and litter</a></li>
+  <li><a href="#vegetation" id="toc-vegetation" class="nav-link" data-scroll-target="#vegetation"><span class="header-section-number">3.5</span> Vegetation</a></li>
+  <li><a href="#sec-total-load" id="toc-sec-total-load" class="nav-link" data-scroll-target="#sec-total-load"><span class="header-section-number">3.6</span> Total load</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.7</span> Summary</a></li>
+  <li><a href="#save-data" id="toc-save-data" class="nav-link" data-scroll-target="#save-data"><span class="header-section-number">3.8</span> Save data</a></li>
   </ul>
 </nav>
     </div>
@@ -302,8 +326,7 @@ window.Quarto = {
 
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/process_datasheets.r"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We used the line intercept method for tallying fine and coarse woody debris <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982 brownHandbookInventoryingDowned1974">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>; <a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">Brown 1974</a>)</span>. In essence, with this technique we are recording the diameters of all dead, downed woody pieces that cross an imaginary sampling plane of a specified length and height. These diameters are convered to crossectional areas which can then be extended to a volume by multiplying by a width. Finally, volume can be converted to mass using specific gravity. This method requires the assumptions that a particle is (1) cylidrical, (2) horizontal, and (3) perpendicular to the sampling plane. While (1) may be a reasonable assumption for many woody particles, 2 and 3 are less likely. For 2, we use a factor which allows us to trade out this assumption, for the assumption that pieces are randomly oriented in the horizontal plane. For 3, we use a correction factor (<span class="math inline">\(\sec \theta\)</span>) based estimates of average paticle inclination (<span class="math inline">\(\theta\)</span>).</p>
 <p>In practice, the diameter of each piece is not measured, but tallied by size class (up to a certain size, after which it is prudent to measure individual pieces). We used the common time-lag size classes &lt; 0.635 cm; 0.635 - 2.54 cm; and 2.54 - 7.62 cm. All pieces larger than 7.62 cm were measured to the nearest cm. This requires estimating an average diameter (quadratic mean diameter is used) for pieces in each category which can be done using emperical data gathered from specific forest types <span class="citation" data-cites="brownHandbookInventoryingDowned1974">(<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">Brown 1974</a>)</span>, or estimated from the sampling distribution of the tallies themselves <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>)</span>. Here we will use the former, with values found in the literature.</p>
@@ -396,7 +419,7 @@ window.Quarto = {
 <span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>A study of Sierra Nevada conifers found these values to vary by species, and estimates of fuel loading ranged from 40% less to 8% more than when using those suggested by <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. A study of young, treated redwood and Douglas-fir stands <span class="citation" data-cites="glebockiFuelLoadingMoisture2015">(<a href="#ref-glebockiFuelLoadingMoisture2015" role="doc-biblioref">Glebocki 2015</a>)</span> found similar values for G to those of <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>, and values for a much closer to those of <span class="citation" data-cites="vanwagtendonkPhysicalPropertiesWoody1996">J. W. Van Wagtendonk, Benedict, and Sydoriak (<a href="#ref-vanwagtendonkPhysicalPropertiesWoody1996" role="doc-biblioref">1996</a>)</span> (<a href="#tbl-params" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-params</span></a>). Note that the 1’s for thousand hr fuel diameters reflect that the diameters, not counts were measured in the field.</p>
+<p>A study of Sierra Nevada conifers found these values to vary by species, and estimates of fuel loading ranged from 40% less to 8% more than when using those suggested by <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. A study of young, treated redwood and Douglas-fir stands <span class="citation" data-cites="glebockiFuelLoadingMoisture2015">(<a href="#ref-glebockiFuelLoadingMoisture2015" role="doc-biblioref">Glebocki 2015</a>)</span> found similar values for G to those of <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>, and values for a much closer to those of <span class="citation" data-cites="vanwagtendonkPhysicalPropertiesWoody1996">J. W. Van Wagtendonk, Benedict, and Sydoriak (<a href="#ref-vanwagtendonkPhysicalPropertiesWoody1996" role="doc-biblioref">1996</a>)</span> (<a href="#tbl-params" class="quarto-xref">Table&nbsp;<span>3.1</span></a>). Note that the 1’s for thousand hr fuel diameters reflect that the diameters, not counts were measured in the field.</p>
 <div class="cell">
 <div id="tbl-params" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -506,75 +529,107 @@ Table&nbsp;3.1: Physical properties of woody fuel particles used for calculating
 </figure>
 </div>
 </div>
-<section id="fine-woody-debris" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="fine-woody-debris"><span class="header-section-number">3.1</span> Fine woody debris</h2>
+<section id="sec-load-fuel-data" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="sec-load-fuel-data"><span class="header-section-number">3.1</span> Load data from datasheets</h2>
+<p>Data in quasi-csv format, described in <a href="data_description.html#sec-data-entry" class="quarto-xref"><span>Section 2.1.1</span></a>. I’m ommitting the medium density dispersed plot (MD), which only exists at one site.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data and ensure unique transects</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/process_datasheets.r"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/test_funs.r"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">combine_fuels_datasheets</span>(<span class="st">"../data"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) <span class="fu">filter</span>(x, treatment <span class="sc">!=</span> <span class="st">"md"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">warn_duplicates</span>(d<span class="sc">$</span>transects, site, treatment, corner, azi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="fine-woody-debris" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="fine-woody-debris"><span class="header-section-number">3.2</span> Fine woody debris</h2>
 <p>The above information will allow us to calculate fuel loading for fine and coarse woody debris. First we’ll load our data and get the FWD (and the fuel particle parameters) in a long format for easier calculations.</p>
 <p>Two transects are missing slope. I’m giving them a slope of 0 for now.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use this to reduce the amount of typing when referring to transects</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>transectid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"corner"</span>, <span class="st">"azi"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>fwd <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">slope =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(slope), <span class="dv">0</span>, slope)) <span class="sc">|&gt;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(d<span class="sc">$</span>plots, site, treatment, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># move onehr, tenhr, etc to new column and create new columns for transect</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># length and particle counts</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"count|len"</span>),</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">get_particle_params</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> <span class="fu">simple_load</span>(</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">sum_d2 =</span> count <span class="sc">*</span> d2,</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">l =</span> length,</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent_slope =</span> slope,</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">G =</span> G,</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">a =</span> a</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(G, a))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use this to reduce the amount of typing when referring to transects</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>transectid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"corner"</span>, <span class="st">"azi"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>fwd <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">slope =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(slope), <span class="dv">0</span>, slope)) <span class="sc">|&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(d<span class="sc">$</span>plots, site, treatment, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># move onehr, tenhr, etc to new column and create new columns for transect</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># length and particle counts</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"count|len"</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">get_particle_params</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> <span class="fu">simple_load</span>(</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">sum_d2 =</span> count <span class="sc">*</span> d2,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">l =</span> length,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent_slope =</span> slope,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">G =</span> G,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">a =</span> a</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(G, a))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
-<section id="coarse-woody-debris" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="coarse-woody-debris"><span class="header-section-number">3.2</span> Coarse woody debris</h2>
+<section id="coarse-woody-debris" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="coarse-woody-debris"><span class="header-section-number">3.3</span> Coarse woody debris</h2>
 <p>Coarse woody debris is already in a long format so we don’t need to pivot longer, but we will summarize the data for each transect by getting the sum of squared diameters. This differs from the fine woody data because we have actual diameters instead of counts, each diameter corresponds to a single observation.</p>
 <p>We only have parameters for “sound” and “rotten” particles, so anything over decay class 3 will be considered “rotten”. Finally, we need to join in transect slopes, and transect lengths.</p>
 <p>I’m setting a couple of missing slope to zero.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cwd <span class="ot">&lt;-</span> d<span class="sc">$</span>coarse_woody <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">if_else</span>(decay <span class="sc">&gt;</span> <span class="dv">3</span>, <span class="st">"thoushr_r"</span>, <span class="st">"thoushr_s"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, treatment, corner, azi, class) <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># named count to match fwd table, but these are actually summed d^2</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sum_d2 =</span> <span class="fu">sum</span>(dia<span class="sc">^</span><span class="dv">2</span>),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">n</span>(),</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">med_d =</span> <span class="fu">median</span>(dia),</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d<span class="sc">$</span>transects[<span class="fu">c</span>(transectid, <span class="st">"slope"</span>)]) <span class="sc">|&gt;</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">slope =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(slope), <span class="dv">0</span>, slope)) <span class="sc">|&gt;</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d<span class="sc">$</span>plots[<span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"thoushr_length"</span>)]) <span class="sc">|&gt;</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">get_particle_params</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> <span class="fu">simple_load</span>(</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">sum_d2 =</span> sum_d2,</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">l =</span> thoushr_length,</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">percent_slope =</span> slope,</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">G =</span> G,</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">a =</span> a</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(G, a, d2), <span class="at">length =</span> thoushr_length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cwd <span class="ot">&lt;-</span> d<span class="sc">$</span>coarse_woody <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">if_else</span>(decay <span class="sc">&gt;</span> <span class="dv">3</span>, <span class="st">"thoushr_r"</span>, <span class="st">"thoushr_s"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, treatment, corner, azi, class) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># named count to match fwd table, but these are actually summed d^2</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sum_d2 =</span> <span class="fu">sum</span>(dia<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">n</span>(),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">med_d =</span> <span class="fu">median</span>(dia),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d<span class="sc">$</span>transects[<span class="fu">c</span>(transectid, <span class="st">"slope"</span>)]) <span class="sc">|&gt;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">slope =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(slope), <span class="dv">0</span>, slope)) <span class="sc">|&gt;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d<span class="sc">$</span>plots[<span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"thoushr_length"</span>)]) <span class="sc">|&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">get_particle_params</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> <span class="fu">simple_load</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">sum_d2 =</span> sum_d2,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">l =</span> thoushr_length,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">percent_slope =</span> slope,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">G =</span> G,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">a =</span> a</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(G, a, d2), <span class="at">length =</span> thoushr_length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="duff-and-litter" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="duff-and-litter"><span class="header-section-number">3.3</span> Duff and litter</h2>
+<section id="duff-and-litter" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="duff-and-litter"><span class="header-section-number">3.4</span> Duff and litter</h2>
 <p>We measured total duff/litter depth, and then estimated a percent of this depth that would be classified as litter. Litter is any leaf material not classified as a 1-hr fuel, that has not yet begun to break down. Particles that were very dark in color and that were broken into smaller pieces than when they had originally fallen were classified as duff.</p>
 <p>Duff and litter were measured at two locations along each transect, for a total of 16 measurements per plot.</p>
 <p>To convert these depths to load values we use a depth to load equation. <span class="citation" data-cites="finneyFuelLoadingBulk1993">Finney and Martin (<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">1993</a>)</span> found a wide variability in the bulk densities of samples, suggesting that simply using the average bulk density should be sufficient, as opposed to calculating bulk densities based on strata depth or differentiating between duff and litter.</p>
@@ -642,17 +697,17 @@ Table&nbsp;3.2: Average depth to load multiplier from different sources in the l
 </figure>
 </div>
 </div>
-<p>On average, we have about 50% litter and a depth of about 6.2 cm. If we use the mean of the first 3 rows in <a href="#tbl-load" class="quarto-xref">Table&nbsp;<span class="quarto-unresolved-ref">tbl-load</span></a>, an average depth to load multiplier for redwood forests (with 50% litter) is 7.73 Mg ha<sup>-1</sup> cm<sup>-1</sup>.</p>
+<p>On average, we have about 50% litter and a depth of about 6.2 cm. If we use the mean of the first 3 rows in <a href="#tbl-load" class="quarto-xref">Table&nbsp;<span>3.2</span></a>, an average depth to load multiplier for redwood forests (with 50% litter) is 7.73 Mg ha<sup>-1</sup> cm<sup>-1</sup>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="sc">|&gt;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_pct_litter =</span> <span class="fu">mean</span>(</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      litter_depth <span class="sc">/</span> (duff_depth <span class="sc">+</span> litter_depth), </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_total_depth =</span> <span class="fu">mean</span>(duff_depth <span class="sc">+</span> litter_depth),</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_pct_litter =</span> <span class="fu">mean</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      litter_depth <span class="sc">/</span> (duff_depth <span class="sc">+</span> litter_depth), </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_total_depth =</span> <span class="fu">mean</span>(duff_depth <span class="sc">+</span> litter_depth),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
   treatment avg_pct_litter avg_total_depth
@@ -662,10 +717,10 @@ Table&nbsp;3.2: Average depth to load multiplier from different sources in the l
 3 hd                 0.395            7.11
 4 ld                 0.453            5.80</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> (duff_depth <span class="sc">+</span> litter_depth) <span class="sc">*</span> <span class="fl">7.73</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> (duff_depth <span class="sc">+</span> litter_depth) <span class="sc">*</span> <span class="fl">7.73</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- todo: Ask Pascal/Jeff about these numbers
 
@@ -677,60 +732,60 @@ Krieger, R. M., Wall, B. E., et al. (2020), Chronosequence of Fuel Loading and
 Fuel Depth Following Forest Rehabilitation Frill Treatment of Tanoak to Release
 Douglas-Fir: A Case Study from Northern California. -->
 </section>
-<section id="vegetation" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="vegetation"><span class="header-section-number">3.4</span> Vegetation</h2>
+<section id="vegetation" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="vegetation"><span class="header-section-number">3.5</span> Vegetation</h2>
 <p>We based our data collection on the Firemon protocol, which determines vegetative fuel loading by multiplying estimated percent cover by height by a constant bulk densities of 8 and 18 t/ha/m for herbaceous and shrub components, respectively.</p>
 <p>Here I want to standardize the data so that heights are all zero (instead of NA), if percent cover for live and dead were both zero. Also, I want total percent cover, with total proportion dead.</p>
 <p>Theoretically, with the Firemon protocol, total percent cover could be greater than 100, because live and dead percent covers are assessed separately. In practice, sum of live and dead cover was over 100 percent.</p>
 <!-- TODO: find better sources of shrub bulk density. -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>veg_match <span class="ot">&lt;-</span> <span class="st">"woody|herb|avg_w_ht|avg_h_ht|species"</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>veg <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(veg_match)) <span class="sc">|&gt;</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">c</span>(<span class="fu">any_of</span>(transectid), slope),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"station"</span>),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(</span><span class="sc">\\</span><span class="st">w+)([12])"</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_ht =</span> <span class="fu">if_else</span>(live_woody <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_woody <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_w_ht),</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_ht =</span> <span class="fu">if_else</span>(live_herb <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_herb <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_h_ht),</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_load =</span> ((live_woody <span class="sc">+</span> dead_woody) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> woody_ht <span class="sc">*</span> <span class="dv">18</span>,</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_p_dead =</span> <span class="fu">if_else</span>(</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>      woody_load <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_woody <span class="sc">/</span> (live_woody <span class="sc">+</span> dead_woody)</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_load =</span> ((live_herb <span class="sc">+</span> dead_herb) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> herb_ht <span class="sc">*</span> <span class="dv">8</span>,</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_p_dead =</span> <span class="fu">if_else</span>(</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>      herb_load <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_herb <span class="sc">/</span> (live_herb <span class="sc">+</span> dead_herb)</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">matches</span>(<span class="st">"live_|dead_|avg_"</span>), woody_ht, herb_ht) <span class="sc">|&gt;</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"woody|herb"</span>),</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(woody|herb)_(.*)"</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>veg_match <span class="ot">&lt;-</span> <span class="st">"woody|herb|avg_w_ht|avg_h_ht|species"</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>veg <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(veg_match)) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">c</span>(<span class="fu">any_of</span>(transectid), slope),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"station"</span>),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(</span><span class="sc">\\</span><span class="st">w+)([12])"</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_ht =</span> <span class="fu">if_else</span>(live_woody <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_woody <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_w_ht),</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_ht =</span> <span class="fu">if_else</span>(live_herb <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_herb <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_h_ht),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_load =</span> ((live_woody <span class="sc">+</span> dead_woody) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> woody_ht <span class="sc">*</span> <span class="dv">18</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_p_dead =</span> <span class="fu">if_else</span>(</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>      woody_load <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_woody <span class="sc">/</span> (live_woody <span class="sc">+</span> dead_woody)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_load =</span> ((live_herb <span class="sc">+</span> dead_herb) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> herb_ht <span class="sc">*</span> <span class="dv">8</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_p_dead =</span> <span class="fu">if_else</span>(</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>      herb_load <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_herb <span class="sc">/</span> (live_herb <span class="sc">+</span> dead_herb)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">matches</span>(<span class="st">"live_|dead_|avg_"</span>), woody_ht, herb_ht) <span class="sc">|&gt;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"woody|herb"</span>),</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(woody|herb)_(.*)"</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="sec-total-load" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="sec-total-load"><span class="header-section-number">3.5</span> Total load</h2>
+<section id="sec-total-load" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-total-load"><span class="header-section-number">3.6</span> Total load</h2>
 <p>Now we can join results for fine woody debris, coarse woody debris, litter, and duff into a single dataframe.</p>
 <p>Vegetation and duff/litter first need to be summarized to the transect level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dufflitter_load <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">class =</span> <span class="st">"dufflitter"</span>, <span class="at">load =</span> <span class="fu">mean</span>(load))</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>veg_load <span class="ot">&lt;-</span> veg <span class="sc">|&gt;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid)), class) <span class="sc">|&gt;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">load =</span> <span class="fu">mean</span>(load))</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>fwd_load <span class="ot">&lt;-</span> fwd <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), class, load)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>cwd_load <span class="ot">&lt;-</span> cwd <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), class, load)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>total_load <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dufflitter_load, veg_load, fwd_load, cwd_load)<span class="sc">|&gt;</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dufflitter_load <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">class =</span> <span class="st">"dufflitter"</span>, <span class="at">load =</span> <span class="fu">mean</span>(load))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>veg_load <span class="ot">&lt;-</span> veg <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid)), class) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">load =</span> <span class="fu">mean</span>(load))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>fwd_load <span class="ot">&lt;-</span> fwd <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), class, load)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>cwd_load <span class="ot">&lt;-</span> cwd <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), class, load)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>total_load <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dufflitter_load, veg_load, fwd_load, cwd_load)<span class="sc">|&gt;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>John Stuart measured old-growth forest fuels in in Bull Creek Drainage of Humboldt Redwood State Park, approximately 30 km inland from the coast. Overstory BA was about 66 m<sup>2</sup>ha<sup>-1</sup>. Plots were classifed based on their overstory/understory species as one of:</p>
 <ul>
@@ -749,23 +804,23 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
 <div aria-describedby="tbl-total-load-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-total-load" style="flex-basis: 50.0%;justify-content: center;">
-<div id="vpeyrtedgm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vpeyrtedgm table {
+<div id="vgwdplqtjv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vgwdplqtjv table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#vpeyrtedgm thead, #vpeyrtedgm tbody, #vpeyrtedgm tfoot, #vpeyrtedgm tr, #vpeyrtedgm td, #vpeyrtedgm th {
+#vgwdplqtjv thead, #vgwdplqtjv tbody, #vgwdplqtjv tfoot, #vgwdplqtjv tr, #vgwdplqtjv td, #vgwdplqtjv th {
   border-style: none;
 }
 
-#vpeyrtedgm p {
+#vgwdplqtjv p {
   margin: 0;
   padding: 0;
 }
 
-#vpeyrtedgm .gt_table {
+#vgwdplqtjv .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -791,12 +846,12 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-left-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_caption {
+#vgwdplqtjv .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#vpeyrtedgm .gt_title {
+#vgwdplqtjv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -808,7 +863,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-bottom-width: 0;
 }
 
-#vpeyrtedgm .gt_subtitle {
+#vgwdplqtjv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -820,7 +875,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-top-width: 0;
 }
 
-#vpeyrtedgm .gt_heading {
+#vgwdplqtjv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -832,13 +887,13 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-right-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_bottom_border {
+#vgwdplqtjv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_col_headings {
+#vgwdplqtjv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -853,7 +908,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-right-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_col_heading {
+#vgwdplqtjv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -873,7 +928,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   overflow-x: hidden;
 }
 
-#vpeyrtedgm .gt_column_spanner_outer {
+#vgwdplqtjv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -885,15 +940,15 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 4px;
 }
 
-#vpeyrtedgm .gt_column_spanner_outer:first-child {
+#vgwdplqtjv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vpeyrtedgm .gt_column_spanner_outer:last-child {
+#vgwdplqtjv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vpeyrtedgm .gt_column_spanner {
+#vgwdplqtjv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -905,11 +960,11 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   width: 100%;
 }
 
-#vpeyrtedgm .gt_spanner_row {
+#vgwdplqtjv .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#vpeyrtedgm .gt_group_heading {
+#vgwdplqtjv .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -935,7 +990,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   text-align: left;
 }
 
-#vpeyrtedgm .gt_empty_group_heading {
+#vgwdplqtjv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -950,15 +1005,15 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   vertical-align: middle;
 }
 
-#vpeyrtedgm .gt_from_md > :first-child {
+#vgwdplqtjv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#vpeyrtedgm .gt_from_md > :last-child {
+#vgwdplqtjv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#vpeyrtedgm .gt_row {
+#vgwdplqtjv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -977,7 +1032,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   overflow-x: hidden;
 }
 
-#vpeyrtedgm .gt_stub {
+#vgwdplqtjv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -990,7 +1045,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#vpeyrtedgm .gt_stub_row_group {
+#vgwdplqtjv .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1004,15 +1059,15 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   vertical-align: top;
 }
 
-#vpeyrtedgm .gt_row_group_first td {
+#vgwdplqtjv .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#vpeyrtedgm .gt_row_group_first th {
+#vgwdplqtjv .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#vpeyrtedgm .gt_summary_row {
+#vgwdplqtjv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1022,16 +1077,16 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#vpeyrtedgm .gt_first_summary_row {
+#vgwdplqtjv .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_first_summary_row.thick {
+#vgwdplqtjv .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#vpeyrtedgm .gt_last_summary_row {
+#vgwdplqtjv .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1041,7 +1096,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-bottom-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_grand_summary_row {
+#vgwdplqtjv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1051,7 +1106,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#vpeyrtedgm .gt_first_grand_summary_row {
+#vgwdplqtjv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1061,7 +1116,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-top-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_last_grand_summary_row_top {
+#vgwdplqtjv .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1071,11 +1126,11 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-bottom-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_striped {
+#vgwdplqtjv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vpeyrtedgm .gt_table_body {
+#vgwdplqtjv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1084,7 +1139,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-bottom-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_footnotes {
+#vgwdplqtjv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1098,7 +1153,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-right-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_footnote {
+#vgwdplqtjv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1107,7 +1162,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#vpeyrtedgm .gt_sourcenotes {
+#vgwdplqtjv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1121,7 +1176,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-right-color: #D3D3D3;
 }
 
-#vpeyrtedgm .gt_sourcenote {
+#vgwdplqtjv .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1129,68 +1184,68 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#vpeyrtedgm .gt_left {
+#vgwdplqtjv .gt_left {
   text-align: left;
 }
 
-#vpeyrtedgm .gt_center {
+#vgwdplqtjv .gt_center {
   text-align: center;
 }
 
-#vpeyrtedgm .gt_right {
+#vgwdplqtjv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vpeyrtedgm .gt_font_normal {
+#vgwdplqtjv .gt_font_normal {
   font-weight: normal;
 }
 
-#vpeyrtedgm .gt_font_bold {
+#vgwdplqtjv .gt_font_bold {
   font-weight: bold;
 }
 
-#vpeyrtedgm .gt_font_italic {
+#vgwdplqtjv .gt_font_italic {
   font-style: italic;
 }
 
-#vpeyrtedgm .gt_super {
+#vgwdplqtjv .gt_super {
   font-size: 65%;
 }
 
-#vpeyrtedgm .gt_footnote_marks {
+#vgwdplqtjv .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#vpeyrtedgm .gt_asterisk {
+#vgwdplqtjv .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#vpeyrtedgm .gt_indent_1 {
+#vgwdplqtjv .gt_indent_1 {
   text-indent: 5px;
 }
 
-#vpeyrtedgm .gt_indent_2 {
+#vgwdplqtjv .gt_indent_2 {
   text-indent: 10px;
 }
 
-#vpeyrtedgm .gt_indent_3 {
+#vgwdplqtjv .gt_indent_3 {
   text-indent: 15px;
 }
 
-#vpeyrtedgm .gt_indent_4 {
+#vgwdplqtjv .gt_indent_4 {
   text-indent: 20px;
 }
 
-#vpeyrtedgm .gt_indent_5 {
+#vgwdplqtjv .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
 
-<div id="tbl-total-load-1" class="gt_table do-not-create-environment quarto-float anchored" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<div id="tbl-total-load-1" class="gt_table do-not-create-environment quarto-float anchored" data-quarto-postprocess="true" data-quarto-bootstrap="false" data-quarto-disable-processing="false">
 <figure class="quarto-float quarto-subfloat-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-total-load-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a)
@@ -1311,23 +1366,23 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-total-load" style="flex-basis: 50.0%;justify-content: center;">
-<div id="aqtfpbvloy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#aqtfpbvloy table {
+<div id="ahsoxaafmj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ahsoxaafmj table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#aqtfpbvloy thead, #aqtfpbvloy tbody, #aqtfpbvloy tfoot, #aqtfpbvloy tr, #aqtfpbvloy td, #aqtfpbvloy th {
+#ahsoxaafmj thead, #ahsoxaafmj tbody, #ahsoxaafmj tfoot, #ahsoxaafmj tr, #ahsoxaafmj td, #ahsoxaafmj th {
   border-style: none;
 }
 
-#aqtfpbvloy p {
+#ahsoxaafmj p {
   margin: 0;
   padding: 0;
 }
 
-#aqtfpbvloy .gt_table {
+#ahsoxaafmj .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1353,12 +1408,12 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-left-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_caption {
+#ahsoxaafmj .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#aqtfpbvloy .gt_title {
+#ahsoxaafmj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1370,7 +1425,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-bottom-width: 0;
 }
 
-#aqtfpbvloy .gt_subtitle {
+#ahsoxaafmj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1382,7 +1437,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-top-width: 0;
 }
 
-#aqtfpbvloy .gt_heading {
+#ahsoxaafmj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1394,13 +1449,13 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-right-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_bottom_border {
+#ahsoxaafmj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_col_headings {
+#ahsoxaafmj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1415,7 +1470,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-right-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_col_heading {
+#ahsoxaafmj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1435,7 +1490,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   overflow-x: hidden;
 }
 
-#aqtfpbvloy .gt_column_spanner_outer {
+#ahsoxaafmj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1447,15 +1502,15 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 4px;
 }
 
-#aqtfpbvloy .gt_column_spanner_outer:first-child {
+#ahsoxaafmj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#aqtfpbvloy .gt_column_spanner_outer:last-child {
+#ahsoxaafmj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#aqtfpbvloy .gt_column_spanner {
+#ahsoxaafmj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1467,11 +1522,11 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   width: 100%;
 }
 
-#aqtfpbvloy .gt_spanner_row {
+#ahsoxaafmj .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#aqtfpbvloy .gt_group_heading {
+#ahsoxaafmj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1497,7 +1552,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   text-align: left;
 }
 
-#aqtfpbvloy .gt_empty_group_heading {
+#ahsoxaafmj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1512,15 +1567,15 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   vertical-align: middle;
 }
 
-#aqtfpbvloy .gt_from_md > :first-child {
+#ahsoxaafmj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#aqtfpbvloy .gt_from_md > :last-child {
+#ahsoxaafmj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#aqtfpbvloy .gt_row {
+#ahsoxaafmj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1539,7 +1594,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   overflow-x: hidden;
 }
 
-#aqtfpbvloy .gt_stub {
+#ahsoxaafmj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1552,7 +1607,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#aqtfpbvloy .gt_stub_row_group {
+#ahsoxaafmj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1566,15 +1621,15 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   vertical-align: top;
 }
 
-#aqtfpbvloy .gt_row_group_first td {
+#ahsoxaafmj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#aqtfpbvloy .gt_row_group_first th {
+#ahsoxaafmj .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#aqtfpbvloy .gt_summary_row {
+#ahsoxaafmj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1584,16 +1639,16 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#aqtfpbvloy .gt_first_summary_row {
+#ahsoxaafmj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_first_summary_row.thick {
+#ahsoxaafmj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#aqtfpbvloy .gt_last_summary_row {
+#ahsoxaafmj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1603,7 +1658,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-bottom-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_grand_summary_row {
+#ahsoxaafmj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1613,7 +1668,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#aqtfpbvloy .gt_first_grand_summary_row {
+#ahsoxaafmj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1623,7 +1678,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-top-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_last_grand_summary_row_top {
+#ahsoxaafmj .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1633,11 +1688,11 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-bottom-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_striped {
+#ahsoxaafmj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#aqtfpbvloy .gt_table_body {
+#ahsoxaafmj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1646,7 +1701,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-bottom-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_footnotes {
+#ahsoxaafmj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1660,7 +1715,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-right-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_footnote {
+#ahsoxaafmj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1669,7 +1724,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#aqtfpbvloy .gt_sourcenotes {
+#ahsoxaafmj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1683,7 +1738,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   border-right-color: #D3D3D3;
 }
 
-#aqtfpbvloy .gt_sourcenote {
+#ahsoxaafmj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1691,68 +1746,68 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
   padding-right: 5px;
 }
 
-#aqtfpbvloy .gt_left {
+#ahsoxaafmj .gt_left {
   text-align: left;
 }
 
-#aqtfpbvloy .gt_center {
+#ahsoxaafmj .gt_center {
   text-align: center;
 }
 
-#aqtfpbvloy .gt_right {
+#ahsoxaafmj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#aqtfpbvloy .gt_font_normal {
+#ahsoxaafmj .gt_font_normal {
   font-weight: normal;
 }
 
-#aqtfpbvloy .gt_font_bold {
+#ahsoxaafmj .gt_font_bold {
   font-weight: bold;
 }
 
-#aqtfpbvloy .gt_font_italic {
+#ahsoxaafmj .gt_font_italic {
   font-style: italic;
 }
 
-#aqtfpbvloy .gt_super {
+#ahsoxaafmj .gt_super {
   font-size: 65%;
 }
 
-#aqtfpbvloy .gt_footnote_marks {
+#ahsoxaafmj .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#aqtfpbvloy .gt_asterisk {
+#ahsoxaafmj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#aqtfpbvloy .gt_indent_1 {
+#ahsoxaafmj .gt_indent_1 {
   text-indent: 5px;
 }
 
-#aqtfpbvloy .gt_indent_2 {
+#ahsoxaafmj .gt_indent_2 {
   text-indent: 10px;
 }
 
-#aqtfpbvloy .gt_indent_3 {
+#ahsoxaafmj .gt_indent_3 {
   text-indent: 15px;
 }
 
-#aqtfpbvloy .gt_indent_4 {
+#ahsoxaafmj .gt_indent_4 {
   text-indent: 20px;
 }
 
-#aqtfpbvloy .gt_indent_5 {
+#ahsoxaafmj .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
 
-<div id="tbl-total-load-2" class="gt_table do-not-create-environment quarto-float anchored" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<div id="tbl-total-load-2" class="gt_table do-not-create-environment quarto-float anchored" data-quarto-postprocess="true" data-quarto-bootstrap="false" data-quarto-disable-processing="false">
 <figure class="quarto-float quarto-subfloat-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-total-load-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b)
@@ -1851,8 +1906,8 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
 </figure>
 </div>
 </section>
-<section id="summary" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.6</span> Summary</h2>
+<section id="summary" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.7</span> Summary</h2>
 <p>Our combined duff-litter depths were comparable to other studies, resulting in comparable loading for litter and duff.</p>
 <p>Onehr fuels were lower than then other redwood study and that found in Douglas-fir/tanoak forests, which is somewhat supprising.</p>
 <p>Hundhr fuels were higher in our stands. This makes sense given the logging.</p>
@@ -1860,8 +1915,8 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
 <p>Thoushr fuels are notoriously variable. Those on our sites were more consistent and within the middle of the range of other reported values.</p>
 <p>Woody vegetation was much higher than in the one other reported study. That study was in old-growth redwoods. Our values include tree sprout vegetation, which can be several times taller than evergreen huckleberry and much bushier than understory tanoak saplings. Stuart did mention the presence of “nearly inpenetrable [evergreen huckleberry] thickets.” <span class="citation" data-cites="stuartRedwoodFireEcology1985">Stuart (<a href="#ref-stuartRedwoodFireEcology1985" role="doc-biblioref">1985</a>)</span> found good correlation of live fuels (which included leaves and “twigs”) with basal diamter for both huckleberry and tanoak saplings. The simple scaling factor and/or the occular estimates we used may be biased.</p>
 </section>
-<section id="save-data" class="level2" data-number="3.7">
-<h2 data-number="3.7" class="anchored" data-anchor-id="save-data"><span class="header-section-number">3.7</span> Save data</h2>
+<section id="save-data" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="save-data"><span class="header-section-number">3.8</span> Save data</h2>
 <p>I’ll Save this data so it can be used in subsequent analysis.</p>
 <ul>
 <li>dufflitter, fwd, cwd, and veg, represent mostly raw data in a long format
@@ -1871,7 +1926,7 @@ Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
 <li>total_load is the summarized loading for all classes by transect.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(dufflitter, fwd, cwd, veg, total_load, <span class="at">file =</span> <span class="st">"data_long.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(dufflitter, fwd, cwd, veg, total_load, <span class="at">file =</span> <span class="st">"data_long.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

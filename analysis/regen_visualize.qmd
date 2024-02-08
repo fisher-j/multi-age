@@ -7,6 +7,7 @@ title: Reneration data summary
 
 library(tidyverse)
 library(ggdist)
+library(patchwork)
 
 load("regen_wrangled.RData")
 ```
@@ -22,28 +23,59 @@ distribution data that we have.
 
 For starters, I will look at summaries of size class distributions by species. I
 will report densities in terms of trees per hectare (tph). Our plots were fixed
-area, 4-m-radius plots, or 50.265 m^2^. Each stem represents 198.946 stems/ha.
-Or if we sum at the plot level (4 veg plots), then 49.736 stems/ha, or 12.434
-stems/ha at the treatment level (16 veg plots).
+area, 4-m-radius plots, or 50.27 m^2^. Each stem in a veg. plot represents
+198.94 stems/ha. As shown in @fig-sampling-design, there are:
+
+- 64 veg. plots in the experiment
+- 16 in a treatment
+- 4 in a macro plot
 
 ```{r}
-summary(regen)
+tph <- c(all = 1/64, treat = 1/16, plot = 1/4, corner = 1) * (10000 / (16 * pi))
+tph["all"]
 
-hist(regen$dbh)
+p <- regen |>
+  ggplot(aes(dbh, fill = spp)) +
+  stat_bin(aes(y = after_stat(count) * tph["all"]), bins = 10) +
+  facet_wrap(vars(treat)) +
+  labs(y = expr(trees%.%ha^-1))
+p
 
-filter(regen, dbh > 2) |> pull() |> hist()
+```
 
-regen |>
-  mutate(
-    bin = cut(dbh, 10)
-  ) |>
-  ggplot(aes(bin)) +
-  geom_histogram(aes(stat = "count"))
+It might make more sense to look at regen smaller than 2 inches separately.
 
-regen |>
-  filter(str_detect(spp, "NETTLE")) |>
-  ggplot(aes(dbh, fill = spp, color = spp)) +
-  geom_histogram()
+```{r}
+
+raw_hist2 <- function(size = c("small", "large")) {
+  if (size == "small") {
+    dia <- quo(dbh <= 1.5)
+    hist <- stat_bin(aes(y = after_stat(count) * tph["treat"]), breaks = 0:2)
+    pos <- c(x = 1, y = 6600)
+  } else {
+    dia <- quo(dbh >= 2)
+    hist <- stat_bin(aes(y = after_stat(count) * tph["treat"]), bins = 10)
+    pos <- c(x = 12.5, y = 600)
+  }
+  treatment_totals <- summarize(
+    filter(regen, eval(dia)),
+    .by = treat,
+    n = paste("Total: ", round(n() * tph["treat"])),
+  )
+  regen |>
+    filter(eval(dia)) |>
+    mutate(.by = treat, n = paste("Total: ", round(n() * tph["treat"]))) |>
+    ggplot(aes(dbh, fill = spp)) +
+    facet_wrap(vars(treat)) +
+    hist +
+    geom_text(
+      data = treatment_totals,
+      aes(y = pos["y"], x = pos["x"], label = n, fill = NULL)
+    ) +
+    labs(y = expression(trees %.% ha^-1))
+}
+
+raw_hist2("small") + raw_hist2("large") & theme(legend.position = "bottom")
 
 ```
 

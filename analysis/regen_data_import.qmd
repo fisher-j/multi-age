@@ -76,11 +76,11 @@ each regenerating stem.
 
 ```{r}
 
-regen_lcbh <- select(regen_import, site, treat, plot, spp, lcbh_gte2)
+regen_lcbh <- select(regen_1, site, treat, plot, spp, lcbh_gte2)
 
-regen <- local({
-  regen_lt2 <- select(regen_import, site, treat, plot, spp, dbh_lt1, dbh_lt2)
-  regen_gt2 <- select(regen_import, site, treat, plot, spp, matches("dbh\\d"))
+regen_2 <- local({
+  regen_lt2 <- select(regen_1, site, treat, plot, spp, dbh_lt1, dbh_lt2)
+  regen_gt2 <- select(regen_1, site, treat, plot, spp, matches("dbh\\d"))
 
   regen_gt2_long <- regen_gt2 |>
     pivot_longer(matches("^dbh\\d+$"), values_to = "dbh", names_to = NULL) |>
@@ -102,10 +102,11 @@ regen <- local({
 
 ```
 
-
 Save this data for summary, visualization, and potentially, modeling.
 
 ```{r}
+
+regen <- regen_2
 
 save(regen, regen_lcbh, file = "regen_wrangled.RData")
 
