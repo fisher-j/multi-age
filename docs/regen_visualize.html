@@ -288,6 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>16 in a treatment</li>
 <li>4 in a macro plot</li>
 </ul>
+<p>This plot is a little difficult to interpret beccause of the large difference in counts from the smallest to largest stems. It might make more sense to look at regen smaller than 2 inches separately.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tph <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">all =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">64</span>, <span class="at">treat =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">16</span>, <span class="at">plot =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>, <span class="at">corner =</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">10000</span> <span class="sc">/</span> (<span class="dv">16</span> <span class="sc">*</span> pi))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tph[<span class="st">"all"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -302,48 +303,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">expr</span>(trees<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-raw-hist-regen-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-raw-hist-regen-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="regen_visualize_files/figure-html/fig-raw-hist-regen-1-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-raw-hist-regen-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.1: Histogram of regen by species and size class for each treatment.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>It might make more sense to look at regen smaller than 2 inches separately.</p>
+<p>Splitting the analysis at 2-inch-diameter stems shows an clear trend in treatments from most to least light.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>raw_hist2 <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">size =</span> <span class="fu">c</span>(<span class="st">"small"</span>, <span class="st">"large"</span>)) {</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (size <span class="sc">==</span> <span class="st">"small"</span>) {</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    dia <span class="ot">&lt;-</span> <span class="fu">quo</span>(dbh <span class="sc">&lt;=</span> <span class="fl">1.5</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    hist <span class="ot">&lt;-</span> <span class="fu">stat_bin</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(count) <span class="sc">*</span> tph[<span class="st">"treat"</span>]), <span class="at">breaks =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    pos <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">6600</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    dia <span class="ot">&lt;-</span> <span class="fu">quo</span>(dbh <span class="sc">&gt;=</span> <span class="dv">2</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    hist <span class="ot">&lt;-</span> <span class="fu">stat_bin</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(count) <span class="sc">*</span> tph[<span class="st">"treat"</span>]), <span class="at">bins =</span> <span class="dv">10</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    pos <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="fl">12.5</span>, <span class="at">y =</span> <span class="dv">600</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  treatment_totals <span class="ot">&lt;-</span> <span class="fu">summarize</span>(</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(regen, <span class="fu">eval</span>(dia)),</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> treat,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">paste</span>(<span class="st">"Total: "</span>, <span class="fu">round</span>(<span class="fu">n</span>() <span class="sc">*</span> tph[<span class="st">"treat"</span>])),</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  regen <span class="sc">|&gt;</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">eval</span>(dia)) <span class="sc">|&gt;</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">.by =</span> treat, <span class="at">n =</span> <span class="fu">paste</span>(<span class="st">"Total: "</span>, <span class="fu">round</span>(<span class="fu">n</span>() <span class="sc">*</span> tph[<span class="st">"treat"</span>]))) <span class="sc">|&gt;</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(dbh, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treat)) <span class="sc">+</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    hist <span class="sc">+</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> treatment_totals,</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">y =</span> pos[<span class="st">"y"</span>], <span class="at">x =</span> pos[<span class="st">"x"</span>], <span class="at">label =</span> n, <span class="at">fill =</span> <span class="cn">NULL</span>)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">expression</span>(trees <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>))</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="fu">raw_hist2</span>(<span class="st">"small"</span>) <span class="sc">+</span> <span class="fu">raw_hist2</span>(<span class="st">"large"</span>) <span class="sc">&amp;</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>raw_hist2 <span class="ot">&lt;-</span> <span class="cf">function</span>(group, bin_breaks, scale_breaks, text_pos) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  treat_total_labels <span class="ot">&lt;-</span> <span class="fu">summarize</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(regen, {{ group }}),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> treat,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">paste</span>(<span class="st">"Total: "</span>, <span class="fu">round</span>(<span class="fu">n</span>() <span class="sc">*</span> tph[<span class="st">"treat"</span>])),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  regen <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>({{ group }}) <span class="sc">|&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">.by =</span> treat, <span class="at">n =</span> <span class="fu">paste</span>(<span class="st">"Total: "</span>, <span class="fu">round</span>(<span class="fu">n</span>() <span class="sc">*</span> tph[<span class="st">"treat"</span>]))) <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(dbh, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treat), <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_bin</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(count) <span class="sc">*</span> tph[<span class="st">"treat"</span>]), <span class="at">breaks =</span> bin_breaks) <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> treat_total_labels,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> text_pos[<span class="dv">1</span>], <span class="at">y =</span> text_pos[<span class="dv">2</span>], <span class="at">label =</span> n, <span class="at">fill =</span> <span class="cn">NULL</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">expression</span>(trees <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scale_breaks)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">raw_hist2</span>(dbh <span class="sc">&lt;</span> <span class="dv">2</span>, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">1.5</span>), <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">6600</span>)) <span class="sc">/</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">raw_hist2</span>(dbh <span class="sc">&gt;=</span> <span class="dv">2</span>, <span class="fu">seq</span>(<span class="dv">2</span>, <span class="dv">20</span>, <span class="dv">2</span>), <span class="fu">seq</span>(<span class="dv">3</span>, <span class="dv">19</span>, <span class="dv">4</span>), <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">600</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-raw-hist-regen-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-raw-hist-regen-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="regen_visualize_files/figure-html/fig-raw-hist-regen-2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-raw-hist-regen-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.2: Histograms of regen by species and size class. On top are stems less than 2 inches in diameter, and stems greater than 2-inches are on the bottom.
+</figcaption>
 </figure>
 </div>
 </div>

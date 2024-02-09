@@ -1,5 +1,11 @@
 
+## 2024-02-08 
+ - create b/w compatible site map
+ - Second view of regen data
+
 ## 2024-02-07 
+ - replace some 0's with blanks
+ - first view of regen data
  - Add some data cleaning steps
 
 ## 2024-02-06 
