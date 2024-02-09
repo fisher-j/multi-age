@@ -97,7 +97,8 @@ regen_2 <- local({
     uncount(count)
 
   bind_rows(regen_lt2_long, regen_gt2_long) |>
-    arrange(site, treat, plot, spp, dbh)
+    arrange(site, treat, plot, spp, dbh) |>
+    mutate(treat = factor(treat, c("gs", "ld", "ha", "hd")))
 })
 
 ```

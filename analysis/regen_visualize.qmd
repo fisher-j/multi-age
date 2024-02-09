@@ -30,7 +30,16 @@ area, 4-m-radius plots, or 50.27 m^2^. Each stem in a veg. plot represents
 - 16 in a treatment
 - 4 in a macro plot
 
+
+This plot is a little difficult to interpret beccause of the large difference in
+counts from the smallest to largest stems. It might make more sense to look at
+regen smaller than 2 inches separately.
+
 ```{r}
+#| label: fig-raw-hist-regen
+#| fig-cap: >
+#|   Histogram of regen by species and size class for each treatment.
+
 tph <- c(all = 1/64, treat = 1/16, plot = 1/4, corner = 1) * (10000 / (16 * pi))
 tph["all"]
 
@@ -43,39 +52,37 @@ p
 
 ```
 
-It might make more sense to look at regen smaller than 2 inches separately.
+Splitting the analysis at 2-inch-diameter stems shows an clear trend in
+treatments from most to least light.
 
 ```{r}
+#| label: fig-raw-hist-regen
+#| fig-cap: >
+#|   Histograms of regen by species and size class. On top are stems less than 2
+#|   inches in diameter, and stems greater than 2-inches are on the bottom.
 
-raw_hist2 <- function(size = c("small", "large")) {
-  if (size == "small") {
-    dia <- quo(dbh <= 1.5)
-    hist <- stat_bin(aes(y = after_stat(count) * tph["treat"]), breaks = 0:2)
-    pos <- c(x = 1, y = 6600)
-  } else {
-    dia <- quo(dbh >= 2)
-    hist <- stat_bin(aes(y = after_stat(count) * tph["treat"]), bins = 10)
-    pos <- c(x = 12.5, y = 600)
-  }
-  treatment_totals <- summarize(
-    filter(regen, eval(dia)),
+raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
+  treat_total_labels <- summarize(
+    filter(regen, {{ group }}),
     .by = treat,
     n = paste("Total: ", round(n() * tph["treat"])),
   )
   regen |>
-    filter(eval(dia)) |>
+    filter({{ group }}) |>
     mutate(.by = treat, n = paste("Total: ", round(n() * tph["treat"]))) |>
     ggplot(aes(dbh, fill = spp)) +
-    facet_wrap(vars(treat)) +
-    hist +
+    facet_wrap(vars(treat), nrow = 1) +
+    stat_bin(aes(y = after_stat(count) * tph["treat"]), breaks = bin_breaks) +
     geom_text(
-      data = treatment_totals,
-      aes(y = pos["y"], x = pos["x"], label = n, fill = NULL)
+      data = treat_total_labels,
+      aes(x = text_pos[1], y = text_pos[2], label = n, fill = NULL)
     ) +
-    labs(y = expression(trees %.% ha^-1))
+    labs(y = expression(trees %.% ha^-1)) +
+    scale_x_continuous(breaks = scale_breaks)
 }
 
-raw_hist2("small") + raw_hist2("large") & theme(legend.position = "bottom")
+raw_hist2(dbh < 2, seq(0, 2, 1), c(0.5, 1.5), c(x = 1, y = 6600)) /
+raw_hist2(dbh >= 2, seq(2, 20, 2), seq(3, 19, 4), c(11, 600))
 
 ```
 
