@@ -1,4 +1,8 @@
 
+## 2024-02-14 
+ - explore basal area
+ - refactor for thesis
+
 ## 2024-02-08 
  - create b/w compatible site map
  - Second view of regen data

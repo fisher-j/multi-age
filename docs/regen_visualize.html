@@ -311,14 +311,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This plot is a little difficult to interpret beccause of the large difference in counts from the smallest to largest stems. It might make more sense to look at regen smaller than 5 cm separately.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># expansion factors at different aggregation levels</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tph <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">all =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">64</span>, <span class="at">treat =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">16</span>, <span class="at">plot =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>, <span class="at">corner =</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">10000</span> <span class="sc">/</span> (<span class="dv">16</span> <span class="sc">*</span> pi))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> regen <span class="sc">|&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(dbh, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_bin</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(count) <span class="sc">*</span> tph[<span class="st">"all"</span>]), <span class="at">bins =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treat)) <span class="sc">+</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">expr</span>(trees<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>per_ha <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">all =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">64</span>, <span class="at">treat =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">16</span>, <span class="at">plot =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>, <span class="at">corner =</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">10000</span> <span class="sc">/</span> (<span class="dv">16</span> <span class="sc">*</span> pi)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> regen <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(dbh, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_bin</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(count) <span class="sc">*</span> per_ha[<span class="st">"treat"</span>]), <span class="at">bins =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treat), <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">expr</span>(trees<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-raw-hist-regen-1" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -332,30 +334,37 @@ Figure&nbsp;9.1: Histogram of regen by species and size class for each treatment
 </div>
 </div>
 </div>
-<p>Splitting the analysis at 2-inch-diameter stems shows an clear trend in treatments from most to least light.</p>
+<p>Splitting the analysis at 5-cm-diameter stems shows a clear trend in treatments from most to least available light. Over this gradient, the number of 1.3-cm stems increases, and the 3.8-cm stems decrease, almost proportionally — and most of this is due to tanoak. For &gt;= 5-cm stems, the effect is a fairly homogenous decrease in the number of stems. There are few tanoak, Douglas-fir are only in the brightest areas. Mostly redwood (number of stems) shows a strong correlation with available light.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>raw_hist2 <span class="ot">&lt;-</span> <span class="cf">function</span>(group, bin_breaks, scale_breaks, text_pos) {</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  generate_facet_totals <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(data,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">.by =</span> treat,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">n =</span> <span class="fu">paste</span>(<span class="st">"Total: "</span>, <span class="fu">round</span>(<span class="fu">n</span>() <span class="sc">*</span> tph[<span class="st">"treat"</span>])),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">n =</span> <span class="fu">paste</span>(<span class="st">"Total: "</span>, <span class="fu">round</span>(<span class="fu">n</span>() <span class="sc">*</span> per_ha[<span class="st">"treat"</span>])),</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  regen <span class="sc">|&gt;</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>({{ group }}) <span class="sc">|&gt;</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(dbh, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_bin</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(count) <span class="sc">*</span> tph[<span class="st">"treat"</span>]), <span class="at">breaks =</span> bin_breaks) <span class="sc">+</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_bin</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(count) <span class="sc">*</span> per_ha[<span class="st">"treat"</span>]), <span class="at">breaks =</span> bin_breaks) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    ggpp<span class="sc">::</span><span class="fu">geom_text_npc</span>(</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> generate_facet_totals,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> text_pos[<span class="dv">1</span>], <span class="at">y =</span> text_pos[<span class="dv">2</span>], <span class="at">label =</span> n, <span class="at">fill =</span> <span class="cn">NULL</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">npcx =</span> <span class="st">"center"</span>, <span class="at">npcy =</span> <span class="st">"top"</span>, <span class="at">label =</span> n, <span class="at">fill =</span> <span class="cn">NULL</span>)</span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treat), <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">expression</span>(trees <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scale_breaks)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">raw_hist2</span>(dbh <span class="sc">&lt;</span> <span class="dv">5</span>, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="fl">2.5</span>), <span class="fu">c</span>(<span class="fl">1.25</span>, <span class="fl">3.75</span>), <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">6600</span>)) <span class="sc">/</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="fu">raw_hist2</span>(dbh <span class="sc">&gt;=</span> <span class="dv">5</span>, <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">4</span>), <span class="fu">seq</span>(<span class="dv">7</span>, <span class="dv">47</span>, <span class="dv">8</span>), <span class="fu">c</span>(<span class="dv">27</span>, <span class="dv">600</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scale_breaks) <span class="sc">+</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.2</span>)))</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="fu">raw_hist2</span>(dbh <span class="sc">&lt;</span> <span class="dv">5</span>, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="fl">2.5</span>), <span class="fu">c</span>(<span class="fl">1.25</span>, <span class="fl">3.75</span>), <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">6600</span>)) <span class="sc">/</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="fu">raw_hist2</span>(dbh <span class="sc">&gt;=</span> <span class="dv">5</span>, <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">4</span>), <span class="fu">seq</span>(<span class="dv">7</span>, <span class="dv">47</span>, <span class="dv">8</span>), <span class="fu">c</span>(<span class="dv">27</span>, <span class="dv">600</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 methods overwritten by 'ggpp':
+  method                  from   
+  heightDetails.titleGrob ggplot2
+  widthDetails.titleGrob  ggplot2</code></pre>
+</div>
 <div class="cell-output-display">
 <div id="fig-raw-hist-regen-2" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -369,15 +378,32 @@ Figure&nbsp;9.2: Histograms of regen by species and size class. On top are stems
 </div>
 </div>
 </div>
-<p>This figure shows some definite trends as we go from higher to lower light. Over this gradient, the number of 0.5-inch stems increases, and the 1.5-inch stems decrease, almost proportionall — and most of this is due to tanoak. For &gt;= 2-inch stems, the effect is a fairly homogenous decrease in the number of stems. There are few tanoak, Douglas-fir are only in the brightest areas. Mostly redwood (number of stems) shows a strong correlation with available light.</p>
 <p>This is interesting, but I wonder what this would look like in terms of basal area, which is more biologically relevant than number of stems.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> regen <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(dbh, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_bin</span>(<span class="fu">aes</span>(<span class="at">weight =</span> tph[<span class="st">"treat"</span>] <span class="sc">*</span> <span class="fl">0.0001</span> <span class="sc">*</span> pi <span class="sc">*</span> (dbh <span class="sc">/</span> <span class="dv">2</span>)<span class="sc">^</span><span class="dv">2</span>), <span class="at">bins =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treat), <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">expr</span>(trees<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The metric foresters constant: diameter in cm to area of a circle in square</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># meters</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>for_const <span class="ot">&lt;-</span> <span class="cf">function</span>(dbh) {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  pi <span class="sc">*</span> dbh<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="dv">4</span> <span class="sc">*</span> <span class="dv">10000</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">local</span>({</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  facet_total_label <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(data,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">.by =</span> treat,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">ba_ha =</span> <span class="fu">round</span>(<span class="fu">sum</span>(per_ha[<span class="st">"treat"</span>] <span class="sc">*</span> <span class="fu">for_const</span>(dbh)), <span class="dv">1</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  regen <span class="sc">|&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(dbh, <span class="at">fill =</span> spp)) <span class="sc">+</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_bin</span>(<span class="fu">aes</span>(<span class="at">weight =</span> per_ha[<span class="st">"treat"</span>] <span class="sc">*</span> <span class="fu">for_const</span>(dbh)), <span class="at">bins =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    ggpp<span class="sc">::</span><span class="fu">geom_text_npc</span>(</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> facet_total_label,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">npcx =</span> <span class="st">"center"</span>, <span class="at">npcy =</span> <span class="st">"top"</span>, <span class="at">label =</span> ba_ha, <span class="at">fill =</span> <span class="cn">NULL</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treat), <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">expr</span>(m<span class="sc">^</span><span class="dv">2</span> <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.2</span>)))</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

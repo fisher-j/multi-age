@@ -441,7 +441,7 @@
     "href": "regen_visualize.html",
     "title": "9  Reneration data summary",
     "section": "",
-    "text": "9.1 Objectives\nThis objective is somewhat vaugue because I am not familiar with the statistical techniques used for the weighted (diameter), multi-variate (species) distribution data that we have.\nFor starters, I will look at summaries of size class distributions by species. I will report densities in terms of trees per hectare (tph). Our plots were fixed area, 4-m-radius plots, or 50.27 m2. Each stem in a veg. plot represents 198.94 stems/ha. As shown in Figure 1.2, there are:\nThis plot is a little difficult to interpret beccause of the large difference in counts from the smallest to largest stems. It might make more sense to look at regen smaller than 5 cm separately.\n# expansion factors at different aggregation levels\ntph &lt;- c(all = 1/64, treat = 1/16, plot = 1/4, corner = 1) * (10000 / (16 * pi))\n\np &lt;- regen |&gt;\n  ggplot(aes(dbh, fill = spp)) +\n  stat_bin(aes(y = after_stat(count) * tph[\"all\"]), bins = 10) +\n  facet_wrap(vars(treat)) +\n  labs(y = expr(trees%.%ha^-1))\np\n\n\n\n\n\n\n\nFigure 9.1: Histogram of regen by species and size class for each treatment.\nSplitting the analysis at 2-inch-diameter stems shows an clear trend in treatments from most to least light.\nraw_hist2 &lt;- function(group, bin_breaks, scale_breaks, text_pos) {\n  generate_facet_totals &lt;- function(data) {\n    summarize(data,\n      .by = treat,\n      n = paste(\"Total: \", round(n() * tph[\"treat\"])),\n    )\n  }\n  regen |&gt;\n    filter({{ group }}) |&gt;\n    ggplot(aes(dbh, fill = spp)) +\n    stat_bin(aes(y = after_stat(count) * tph[\"treat\"]), breaks = bin_breaks) +\n    geom_text(\n      data = generate_facet_totals,\n      aes(x = text_pos[1], y = text_pos[2], label = n, fill = NULL)\n    ) +\n    facet_wrap(vars(treat), nrow = 1) +\n    labs(y = expression(trees %.% ha^-1)) +\n    scale_x_continuous(breaks = scale_breaks)\n}\n\nraw_hist2(dbh &lt; 5, seq(0, 5, 2.5), c(1.25, 3.75), c(2.5, 6600)) /\nraw_hist2(dbh &gt;= 5, seq(5, 50, 4), seq(7, 47, 8), c(27, 600))\n\n\n\n\n\n\n\nFigure 9.2: Histograms of regen by species and size class. On top are stems less than five centimeters in diameter, and stems greater than five centimeters are on the bottom.\nThis figure shows some definite trends as we go from higher to lower light. Over this gradient, the number of 0.5-inch stems increases, and the 1.5-inch stems decrease, almost proportionall — and most of this is due to tanoak. For &gt;= 2-inch stems, the effect is a fairly homogenous decrease in the number of stems. There are few tanoak, Douglas-fir are only in the brightest areas. Mostly redwood (number of stems) shows a strong correlation with available light.\nThis is interesting, but I wonder what this would look like in terms of basal area, which is more biologically relevant than number of stems.\np &lt;- regen |&gt;\n  ggplot(aes(dbh, fill = spp)) +\n  stat_bin(aes(weight = tph[\"treat\"] * 0.0001 * pi * (dbh / 2)^2), bins = 10) +\n  facet_wrap(vars(treat), nrow = 1) +\n  labs(y = expr(trees%.%ha^-1))\np",
+    "text": "9.1 Objectives\nThis objective is somewhat vaugue because I am not familiar with the statistical techniques used for the weighted (diameter), multi-variate (species) distribution data that we have.\nFor starters, I will look at summaries of size class distributions by species. I will report densities in terms of trees per hectare (tph). Our plots were fixed area, 4-m-radius plots, or 50.27 m2. Each stem in a veg. plot represents 198.94 stems/ha. As shown in Figure 1.2, there are:\nThis plot is a little difficult to interpret beccause of the large difference in counts from the smallest to largest stems. It might make more sense to look at regen smaller than 5 cm separately.\n# expansion factors at different aggregation levels\nper_ha &lt;- c(\n  all = 1/64, treat = 1/16, plot = 1/4, corner = 1) * (10000 / (16 * pi)\n)\n\np &lt;- regen |&gt;\n  ggplot(aes(dbh, fill = spp)) +\n  stat_bin(aes(y = after_stat(count) * per_ha[\"treat\"]), bins = 10) +\n  facet_wrap(vars(treat), nrow = 1) +\n  labs(y = expr(trees%.%ha^-1))\np\n\n\n\n\n\n\n\nFigure 9.1: Histogram of regen by species and size class for each treatment.\nSplitting the analysis at 5-cm-diameter stems shows a clear trend in treatments from most to least available light. Over this gradient, the number of 1.3-cm stems increases, and the 3.8-cm stems decrease, almost proportionally — and most of this is due to tanoak. For &gt;= 5-cm stems, the effect is a fairly homogenous decrease in the number of stems. There are few tanoak, Douglas-fir are only in the brightest areas. Mostly redwood (number of stems) shows a strong correlation with available light.\nraw_hist2 &lt;- function(group, bin_breaks, scale_breaks, text_pos) {\n  generate_facet_totals &lt;- function(data) {\n    summarize(data,\n      .by = treat,\n      n = paste(\"Total: \", round(n() * per_ha[\"treat\"])),\n    )\n  }\n  regen |&gt;\n    filter({{ group }}) |&gt;\n    ggplot(aes(dbh, fill = spp)) +\n    stat_bin(aes(y = after_stat(count) * per_ha[\"treat\"]), breaks = bin_breaks) +\n    ggpp::geom_text_npc(\n      data = generate_facet_totals,\n      aes(npcx = \"center\", npcy = \"top\", label = n, fill = NULL)\n    ) +\n    facet_wrap(vars(treat), nrow = 1) +\n    labs(y = expression(trees %.% ha^-1)) +\n    scale_x_continuous(breaks = scale_breaks) +\n    scale_y_continuous(expand = expansion(c(0.05, 0.2)))\n}\n\nraw_hist2(dbh &lt; 5, seq(0, 5, 2.5), c(1.25, 3.75), c(2.5, 6600)) /\nraw_hist2(dbh &gt;= 5, seq(5, 50, 4), seq(7, 47, 8), c(27, 600))\n\nRegistered S3 methods overwritten by 'ggpp':\n  method                  from   \n  heightDetails.titleGrob ggplot2\n  widthDetails.titleGrob  ggplot2\n\n\n\n\n\n\n\n\nFigure 9.2: Histograms of regen by species and size class. On top are stems less than five centimeters in diameter, and stems greater than five centimeters are on the bottom.\nThis is interesting, but I wonder what this would look like in terms of basal area, which is more biologically relevant than number of stems.\n# The metric foresters constant: diameter in cm to area of a circle in square\n# meters\nfor_const &lt;- function(dbh) {\n  pi * dbh^2 / (4 * 10000)\n}\n\nlocal({\n  facet_total_label &lt;- function(data) {\n    summarize(data,\n      .by = treat,\n      ba_ha = round(sum(per_ha[\"treat\"] * for_const(dbh)), 1)\n    )\n  }\n  regen |&gt;\n    ggplot(aes(dbh, fill = spp)) +\n    stat_bin(aes(weight = per_ha[\"treat\"] * for_const(dbh)), bins = 10) +\n    ggpp::geom_text_npc(\n      data = facet_total_label,\n      mapping = aes(npcx = \"center\", npcy = \"top\", label = ba_ha, fill = NULL)\n    ) +\n    facet_wrap(vars(treat), nrow = 1) +\n    labs(y = expr(m^2 %.% ha^-1)) +\n    scale_y_continuous(expand = expansion(c(0.05, 0.2)))\n})",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Reneration data summary</span>"
@@ -463,7 +463,7 @@
     "href": "work_log.html",
     "title": "Work log",
     "section": "",
-    "text": "2024-02-08",
+    "text": "2024-02-14",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -474,7 +474,7 @@
     "href": "work_log.html#section",
     "title": "Work log",
     "section": "",
-    "text": "create b/w compatible site map\nSecond view of regen data",
+    "text": "explore basal area\nrefactor for thesis",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -484,8 +484,8 @@
     "objectID": "work_log.html#section-1",
     "href": "work_log.html#section-1",
     "title": "Work log",
-    "section": "2024-02-07",
-    "text": "2024-02-07\n\nreplace some 0’s with blanks\nfirst view of regen data\nAdd some data cleaning steps",
+    "section": "2024-02-08",
+    "text": "2024-02-08\n\ncreate b/w compatible site map\nSecond view of regen data",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -495,8 +495,8 @@
     "objectID": "work_log.html#section-2",
     "href": "work_log.html#section-2",
     "title": "Work log",
-    "section": "2024-02-06",
-    "text": "2024-02-06\n\nstart data exploration\nwrangle regen data\nremove unecessary files",
+    "section": "2024-02-07",
+    "text": "2024-02-07\n\nreplace some 0’s with blanks\nfirst view of regen data\nAdd some data cleaning steps",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -506,8 +506,8 @@
     "objectID": "work_log.html#section-3",
     "href": "work_log.html#section-3",
     "title": "Work log",
-    "section": "2024-02-05",
-    "text": "2024-02-05\n\ncompare predictions between year-10 and all-years models\nadd ht109 model: gausian family\ncompare distribution of predicted values to observed\nautomate work log from git log\ncreate site map and add data\nadd regen data\nrefactor chapters",
+    "section": "2024-02-06",
+    "text": "2024-02-06\n\nstart data exploration\nwrangle regen data\nremove unecessary files",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -517,8 +517,8 @@
     "objectID": "work_log.html#section-4",
     "href": "work_log.html#section-4",
     "title": "Work log",
-    "section": "2024-02-01",
-    "text": "2024-02-01\n\nrandom changes, don’t use normal overlay in fuel data exploration",
+    "section": "2024-02-05",
+    "text": "2024-02-05\n\ncompare predictions between year-10 and all-years models\nadd ht109 model: gausian family\ncompare distribution of predicted values to observed\nautomate work log from git log\ncreate site map and add data\nadd regen data\nrefactor chapters",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -528,8 +528,8 @@
     "objectID": "work_log.html#section-5",
     "href": "work_log.html#section-5",
     "title": "Work log",
-    "section": "2024-01-31",
-    "text": "2024-01-31\n\nre-render\nMinor fix, add transect photos",
+    "section": "2024-02-01",
+    "text": "2024-02-01\n\nrandom changes, don’t use normal overlay in fuel data exploration",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -539,8 +539,8 @@
     "objectID": "work_log.html#section-6",
     "href": "work_log.html#section-6",
     "title": "Work log",
-    "section": "2023-12-20",
-    "text": "2023-12-20\n\nglmm for multi-year and 10 year",
+    "section": "2024-01-31",
+    "text": "2024-01-31\n\nre-render\nMinor fix, add transect photos",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -550,8 +550,8 @@
     "objectID": "work_log.html#section-7",
     "href": "work_log.html#section-7",
     "title": "Work log",
-    "section": "2023-12-15",
-    "text": "2023-12-15\n\nbuild webpage\nadded model 11\nrefined year 10 only, integrate with multi-year\ncreate 10-year model and compare",
+    "section": "2023-12-20",
+    "text": "2023-12-20\n\nglmm for multi-year and 10 year",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -561,8 +561,8 @@
     "objectID": "work_log.html#section-8",
     "href": "work_log.html#section-8",
     "title": "Work log",
-    "section": "2023-12-13",
-    "text": "2023-12-13\n\nlots",
+    "section": "2023-12-15",
+    "text": "2023-12-15\n\nbuild webpage\nadded model 11\nrefined year 10 only, integrate with multi-year\ncreate 10-year model and compare",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -572,8 +572,8 @@
     "objectID": "work_log.html#section-9",
     "href": "work_log.html#section-9",
     "title": "Work log",
-    "section": "2023-12-07",
-    "text": "2023-12-07\n\nrefining initial models, visualizing output",
+    "section": "2023-12-13",
+    "text": "2023-12-13\n\nlots",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -583,8 +583,8 @@
     "objectID": "work_log.html#section-10",
     "href": "work_log.html#section-10",
     "title": "Work log",
-    "section": "2023-12-06",
-    "text": "2023-12-06\n\nAdd some basic models\nfixed height by plot graph\nWrapping up summary, moving on to modeling",
+    "section": "2023-12-07",
+    "text": "2023-12-07\n\nrefining initial models, visualizing output",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -594,8 +594,8 @@
     "objectID": "work_log.html#section-11",
     "href": "work_log.html#section-11",
     "title": "Work log",
-    "section": "2023-12-04",
-    "text": "2023-12-04\n\nStarting to look at project again",
+    "section": "2023-12-06",
+    "text": "2023-12-06\n\nAdd some basic models\nfixed height by plot graph\nWrapping up summary, moving on to modeling",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -605,8 +605,8 @@
     "objectID": "work_log.html#section-12",
     "href": "work_log.html#section-12",
     "title": "Work log",
-    "section": "2023-08-25",
-    "text": "2023-08-25\n\nBegin lme4 modeling\nrecalculate grouping variables\nVisualizations of data Site and Plot variability",
+    "section": "2023-12-04",
+    "text": "2023-12-04\n\nStarting to look at project again",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -616,8 +616,8 @@
     "objectID": "work_log.html#section-13",
     "href": "work_log.html#section-13",
     "title": "Work log",
-    "section": "2023-08-24",
-    "text": "2023-08-24\n\nminor edit\nminor figure adjustment\ndraw sampling design\nmisc\nnesting description\nHeight vs SDI and Year fig",
+    "section": "2023-08-25",
+    "text": "2023-08-25\n\nBegin lme4 modeling\nrecalculate grouping variables\nVisualizations of data Site and Plot variability",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -627,8 +627,8 @@
     "objectID": "work_log.html#section-14",
     "href": "work_log.html#section-14",
     "title": "Work log",
-    "section": "2023-08-22",
-    "text": "2023-08-22\n\nvariable descriptions\nspecies ht compare fig\nstarted sprouts",
+    "section": "2023-08-24",
+    "text": "2023-08-24\n\nminor edit\nminor figure adjustment\ndraw sampling design\nmisc\nnesting description\nHeight vs SDI and Year fig",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -638,8 +638,8 @@
     "objectID": "work_log.html#section-15",
     "href": "work_log.html#section-15",
     "title": "Work log",
-    "section": "2023-08-21",
-    "text": "2023-08-21\n\nthoughts on future development",
+    "section": "2023-08-22",
+    "text": "2023-08-22\n\nvariable descriptions\nspecies ht compare fig\nstarted sprouts",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -649,8 +649,8 @@
     "objectID": "work_log.html#section-16",
     "href": "work_log.html#section-16",
     "title": "Work log",
-    "section": "2023-08-19",
-    "text": "2023-08-19\n\nsome files that didn’t get committed",
+    "section": "2023-08-21",
+    "text": "2023-08-21\n\nthoughts on future development",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -660,8 +660,8 @@
     "objectID": "work_log.html#section-17",
     "href": "work_log.html#section-17",
     "title": "Work log",
-    "section": "2023-08-18",
-    "text": "2023-08-18\n\nfinal section: R2, ESS, interpretation, refined figures",
+    "section": "2023-08-19",
+    "text": "2023-08-19\n\nsome files that didn’t get committed",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -671,8 +671,8 @@
     "objectID": "work_log.html#section-18",
     "href": "work_log.html#section-18",
     "title": "Work log",
-    "section": "2023-08-15",
-    "text": "2023-08-15\n\nadded model, interpretation, figure refinement",
+    "section": "2023-08-18",
+    "text": "2023-08-18\n\nfinal section: R2, ESS, interpretation, refined figures",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -682,8 +682,8 @@
     "objectID": "work_log.html#section-19",
     "href": "work_log.html#section-19",
     "title": "Work log",
-    "section": "2023-08-11",
-    "text": "2023-08-11\n\nrefined priors",
+    "section": "2023-08-15",
+    "text": "2023-08-15\n\nadded model, interpretation, figure refinement",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -693,8 +693,8 @@
     "objectID": "work_log.html#section-20",
     "href": "work_log.html#section-20",
     "title": "Work log",
-    "section": "2023-08-08",
-    "text": "2023-08-08\n\nA bunch of changes again.",
+    "section": "2023-08-11",
+    "text": "2023-08-11\n\nrefined priors",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -704,8 +704,8 @@
     "objectID": "work_log.html#section-21",
     "href": "work_log.html#section-21",
     "title": "Work log",
-    "section": "2023-07-27",
-    "text": "2023-07-27\n\ngammma model",
+    "section": "2023-08-08",
+    "text": "2023-08-08\n\nA bunch of changes again.",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -715,8 +715,8 @@
     "objectID": "work_log.html#section-22",
     "href": "work_log.html#section-22",
     "title": "Work log",
-    "section": "2023-07-18",
-    "text": "2023-07-18\n\nbayesian analysis",
+    "section": "2023-07-27",
+    "text": "2023-07-27\n\ngammma model",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -726,8 +726,8 @@
     "objectID": "work_log.html#section-23",
     "href": "work_log.html#section-23",
     "title": "Work log",
-    "section": "2023-07-07",
-    "text": "2023-07-07\n\nhypothesis test, bootsrap, heterogeneity",
+    "section": "2023-07-18",
+    "text": "2023-07-18\n\nbayesian analysis",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -737,8 +737,8 @@
     "objectID": "work_log.html#section-24",
     "href": "work_log.html#section-24",
     "title": "Work log",
-    "section": "2023-07-03",
-    "text": "2023-07-03\n\nmulti-level model",
+    "section": "2023-07-07",
+    "text": "2023-07-07\n\nhypothesis test, bootsrap, heterogeneity",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -748,8 +748,8 @@
     "objectID": "work_log.html#section-25",
     "href": "work_log.html#section-25",
     "title": "Work log",
-    "section": "2023-06-30",
-    "text": "2023-06-30\n\nexplore more distributions",
+    "section": "2023-07-03",
+    "text": "2023-07-03\n\nmulti-level model",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -759,8 +759,8 @@
     "objectID": "work_log.html#section-26",
     "href": "work_log.html#section-26",
     "title": "Work log",
-    "section": "2023-06-29",
-    "text": "2023-06-29\n\nexplore other distributions, zeros",
+    "section": "2023-06-30",
+    "text": "2023-06-30\n\nexplore more distributions",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -770,8 +770,8 @@
     "objectID": "work_log.html#section-27",
     "href": "work_log.html#section-27",
     "title": "Work log",
-    "section": "2023-06-28",
-    "text": "2023-06-28\n\nadded histograms + normal curves",
+    "section": "2023-06-29",
+    "text": "2023-06-29\n\nexplore other distributions, zeros",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -781,8 +781,8 @@
     "objectID": "work_log.html#section-28",
     "href": "work_log.html#section-28",
     "title": "Work log",
-    "section": "2023-06-27",
-    "text": "2023-06-27\n\nforgot these files\ntest normality",
+    "section": "2023-06-28",
+    "text": "2023-06-28\n\nadded histograms + normal curves",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -792,8 +792,8 @@
     "objectID": "work_log.html#section-29",
     "href": "work_log.html#section-29",
     "title": "Work log",
-    "section": "2023-06-20",
-    "text": "2023-06-20\n\nadded captions\nlook at outliers in fuel data",
+    "section": "2023-06-27",
+    "text": "2023-06-27\n\nforgot these files\ntest normality",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -803,8 +803,8 @@
     "objectID": "work_log.html#section-30",
     "href": "work_log.html#section-30",
     "title": "Work log",
-    "section": "2023-06-16",
-    "text": "2023-06-16\n\ninterpret fuel load summary",
+    "section": "2023-06-20",
+    "text": "2023-06-20\n\nadded captions\nlook at outliers in fuel data",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -814,8 +814,8 @@
     "objectID": "work_log.html#section-31",
     "href": "work_log.html#section-31",
     "title": "Work log",
-    "section": "2023-06-15",
-    "text": "2023-06-15\n\nclean up code blocks\nMerge branch ‘main’ of https://github.com/fisher-j/multi-age\nImprove presentation of fuel loading from literature",
+    "section": "2023-06-16",
+    "text": "2023-06-16\n\ninterpret fuel load summary",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -825,8 +825,8 @@
     "objectID": "work_log.html#section-32",
     "href": "work_log.html#section-32",
     "title": "Work log",
-    "section": "2023-06-14",
-    "text": "2023-06-14\n\nminor website change\nsummarize total fuel loading",
+    "section": "2023-06-15",
+    "text": "2023-06-15\n\nclean up code blocks\nMerge branch ‘main’ of https://github.com/fisher-j/multi-age\nImprove presentation of fuel loading from literature",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -836,8 +836,8 @@
     "objectID": "work_log.html#section-33",
     "href": "work_log.html#section-33",
     "title": "Work log",
-    "section": "2023-06-13",
-    "text": "2023-06-13\n\ncomplete vegetation loading\nwebsite\ncomplete dufflitter fuel loading",
+    "section": "2023-06-14",
+    "text": "2023-06-14\n\nminor website change\nsummarize total fuel loading",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -847,8 +847,8 @@
     "objectID": "work_log.html#section-34",
     "href": "work_log.html#section-34",
     "title": "Work log",
-    "section": "2023-06-12",
-    "text": "2023-06-12\n\nwork on duff/litter, values from lit.",
+    "section": "2023-06-13",
+    "text": "2023-06-13\n\ncomplete vegetation loading\nwebsite\ncomplete dufflitter fuel loading",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -858,8 +858,8 @@
     "objectID": "work_log.html#section-35",
     "href": "work_log.html#section-35",
     "title": "Work log",
-    "section": "2023-06-08",
-    "text": "2023-06-08\n\nfix problems, render site\ndeleted\nfirst data test, new test scripts file",
+    "section": "2023-06-12",
+    "text": "2023-06-12\n\nwork on duff/litter, values from lit.",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -869,8 +869,8 @@
     "objectID": "work_log.html#section-36",
     "href": "work_log.html#section-36",
     "title": "Work log",
-    "section": "2023-06-05",
-    "text": "2023-06-05\n\nfuel loading background and parameters",
+    "section": "2023-06-08",
+    "text": "2023-06-08\n\nfix problems, render site\ndeleted\nfirst data test, new test scripts file",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -880,8 +880,8 @@
     "objectID": "work_log.html#section-37",
     "href": "work_log.html#section-37",
     "title": "Work log",
-    "section": "2023-06-01",
-    "text": "2023-06-01\n\nminor project updates\nfigure out how to pivot longer\ndeleted files\ndata entry",
+    "section": "2023-06-05",
+    "text": "2023-06-05\n\nfuel loading background and parameters",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -891,8 +891,8 @@
     "objectID": "work_log.html#section-38",
     "href": "work_log.html#section-38",
     "title": "Work log",
-    "section": "2023-05-31",
-    "text": "2023-05-31\n\nfuel sampling layout figure dxf-&gt;pdf-&gt;svg-&gt;png\nadded to data variable descriptions\nfixed typo in datasheet\nfunction to combine all fuel datasheets in a folder",
+    "section": "2023-06-01",
+    "text": "2023-06-01\n\nminor project updates\nfigure out how to pivot longer\ndeleted files\ndata entry",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -902,8 +902,8 @@
     "objectID": "work_log.html#section-39",
     "href": "work_log.html#section-39",
     "title": "Work log",
-    "section": "2023-05-30",
-    "text": "2023-05-30\n\ndata entry and work on data description",
+    "section": "2023-05-31",
+    "text": "2023-05-31\n\nfuel sampling layout figure dxf-&gt;pdf-&gt;svg-&gt;png\nadded to data variable descriptions\nfixed typo in datasheet\nfunction to combine all fuel datasheets in a folder",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -913,8 +913,8 @@
     "objectID": "work_log.html#section-40",
     "href": "work_log.html#section-40",
     "title": "Work log",
-    "section": "2023-05-26",
-    "text": "2023-05-26\n\nsome data entry\nFirst week of work",
+    "section": "2023-05-30",
+    "text": "2023-05-30\n\ndata entry and work on data description",
     "crumbs": [
       "Full analysis",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
@@ -923,6 +923,17 @@
   {
     "objectID": "work_log.html#section-41",
     "href": "work_log.html#section-41",
+    "title": "Work log",
+    "section": "2023-05-26",
+    "text": "2023-05-26\n\nsome data entry\nFirst week of work",
+    "crumbs": [
+      "Full analysis",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Work log</span>"
+    ]
+  },
+  {
+    "objectID": "work_log.html#section-42",
+    "href": "work_log.html#section-42",
     "title": "Work log",
     "section": "2023-05-22",
     "text": "2023-05-22\n\ninitial commit",
