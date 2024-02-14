@@ -5,6 +5,8 @@ format:
     code-fold: true
 ---
 
+::: {.content-visible when-format="html"}
+
 Load those libraries
 
 ```{r}
@@ -71,8 +73,9 @@ I'll make the simplying assumption that individuals in the 0-1 and 1-2 inch size
 classes are on average at their midpoint in diameter. So each individual is 0.5
 and 1.5 inches DBH for the first and second size classes, respectively.
 
-I'll put live crown base heights in a separate table and get one long list of
-each regenerating stem.
+I'll put live crown base heights in a separate table. For stems, I'll get one
+long list of each regenerating stem. Finally, I'll convert inches to
+centimeters.
 
 ```{r}
 
@@ -98,7 +101,8 @@ regen_2 <- local({
 
   bind_rows(regen_lt2_long, regen_gt2_long) |>
     arrange(site, treat, plot, spp, dbh) |>
-    mutate(treat = factor(treat, c("gs", "ld", "ha", "hd")))
+    mutate(treat = factor(treat, c("gs", "ld", "ha", "hd"))) |>
+    mutate(dbh = dbh * 2.54)
 })
 
 ```
@@ -113,3 +117,4 @@ save(regen, regen_lcbh, file = "regen_wrangled.RData")
 
 ```
 
+:::

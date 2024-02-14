@@ -1,35 +1,18 @@
+execute:
+  freeze: auto
+  # keep-md: true
+
 project:
   type: book
   output-dir: ../docs
   execute-dir: project
-  pre-render: cmd.exe /c "scripts\make_git_log.bat"
-execute:
-  freeze: auto
-format:
-  html:
-    toc-depth: 4
 
 book:
-  title: "Redwoood multi-age experiment"
-  author: "Judson Fisher"
-  date: "2023-05-22"
-  chapters:
-    - index.qmd
-    - part: "Fuels"
-      chapters:
-        - data_description.qmd
-        - calculate_fuel_loading.qmd
-        - fuel_data_exploration.qmd
-        - hypothesis_test.qmd
-    - part: "Sprouts"
-      chapters:
-        - sprouts_import_data.qmd
-        - sprout_data_exploration_modeling.qmd
-    - part: "Regeneration"
-      chapters:
-        - regen_data_import.qmd
-        - regen_visualize.qmd
-    - work_log.qmd
+  title: >
+    Regeneration and Fuel Loads with Varying Overstory Retention in Redwood
+    Stands 10 Years after Transformation to Multiaged Management
+  author: Judson Fisher
+  date: 2024-02-13
 
 bibliography: 
   - multi-age.bib

@@ -1,0 +1,249 @@
+---
+title: Sprout data exploration
+format:
+  html:
+    code-fold: true
+---
+
+::: {.content-visible when-format="html"}
+
+First, we'll load some libraries and our data.
+
+```{r}
+#| output: false
+
+library(ggdist)
+library(ggridges)
+library(tidyverse)
+library(patchwork)
+
+load("wrangled_sprouts.RData")
+source("./scripts/rnd_color_brewer.r")
+
+```
+
+```{r}
+#| include: false
+
+ggplot2::theme_update(
+  panel.grid.major = ggplot2::element_blank(),
+  panel.grid.minor = ggplot2::element_blank()
+)
+
+```
+
+## Objectives
+
+1. For each species/treatment combination, is there a difference in height
+   increment between the first and second periods?
+2. Is there a difference in redwood or tanoak sprout heights at year 10, if so,
+   what is the magnitude of the difference?
+
+## Visualize data
+
+### Tree heights
+
+The following figures reveal possible trends in the raw data.
+
+#### Species/treatment/year
+
+@fig-data-summary-treatments reveals fine, species specific differences between
+treatments and general trends over time. It shows that over time, LD and GS
+treatments have more taller trees than the other treatments, with GS having the
+most. This is true for both redwood and tanoak. Additionally, for redwood it
+appears that HA may have taller trees than HD, at least in year 10.
+
+@fig-data-summary-spp shows the same information as before, but is arguably 
+easier to look at. There is a general increasing trend in heights with
+treatments as follows:
+
+    HD < HA < LD < GS
+
+Redwood is consistently taller than tanoak, and the GS treatment confers the
+greatest advantage to redwood.
+
+Across all treatments, it is also interesting to note that over times, the
+height distributions, especially for redwood, seem to becoming more multi-modal
+and more widely distributed. This could be due to site or plot effects, or to
+microsite (within plot) effects, but it is not immediately clear why this
+diverging performance should be so apparent with redwood and not tanoak. 
+
+
+```{r}
+#| label: fig-data-summary-treatments
+#| fig-height: 8
+#| fig-width: 8
+#| fig-cap: >
+#|   Height distributions for tanoak and redwood over time for each of four
+#|   treatments. Treatments GS and LD have higher proportions of taller trees.
+#|   Years refers to number of years after treatment.
+#| message: false
+
+sprouts |>
+  lengthen_data("ht") |>
+  ggplot(aes(ht, treat, color = treat, fill = treat)) +
+  scale_y_discrete(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  geom_dots(binwidth = unit(0.019, "npc")) +
+  facet_grid(vars(spp), vars(year), scales = "free", labeller = label_both) +
+  labs(x = "Height (m)", y = "Treatment") +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  theme(legend.position = "bottom")
+
+
+```
+
+```{r}
+#| label: fig-data-summary-spp
+#| fig-height: 8
+#| fig-cap: >
+#|   Similar to @fig-data-summary-treatments, but with an emphasis on
+#|   differences between speceis responses across treatments. Comparisons are
+#|   made for each year. The GS treatment appears to favor redwood response the
+#|   most, but all treatments show redwoods are taller than tanoak. Years refers
+#|   to number of years after treatment.
+#| message: false
+
+sprouts |>
+  lengthen_data("ht") |>
+  ggplot(aes(
+    x = ht,
+    y = fct_relevel(treat, treat_order),
+    color = factor(spp, levels = c("SESE", "LIDE"))
+  )) +
+  scale_y_discrete(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  geom_density_ridges(alpha = .3, size = 1) +
+  facet_grid(year ~ ., labeller = label_both) +
+  labs(x = "Height (m)", y = "Treatment") +
+  scale_color_brewer(palette = "Set2", name = "Species")
+```
+
+#### Species/year/SDI
+@fig-data-summary-sdi shows that above around 400 SDI, tree heights level off.
+It also implies a steady decrease in height from 0 to around 400 SDI. The
+strength of the relationship appears to be increasing over time, particularly
+for redwood.
+
+```{r}
+#| label: fig-data-summary-sdi
+#| fig-cap: SDI vs HT for both species, across measurement years.
+#| fig-width: 8.5
+
+sprouts |>
+  lengthen_data("ht") |>
+  ggplot(aes(sdi_init, ht, color = factor(year))) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(span = 1.2) +
+  facet_wrap(~spp) +
+  scale_color_brewer(palette = "Set2")
+```
+
+#### Species/site/plots
+Lets see what the variability among sites and plots looks like, I'll focus on
+year 10 only.
+
+@fig-data-summary-sites reveals some differences between sites, particularly for
+redwoods. Waldo North tends to have larger redwoods and Camp 6 has a large
+proportion of smaller redwoods.
+
+@fig-data-summary-plots shows that much of the difference in sites has to do
+with one outlier plot within a site, and less about general site trends. We
+should expect plots to capture a portion of the variance. Most notable is the
+plot level difference between redwood and tanoak. For redwood, the large ammount
+of within plot variability combined with the between plot variability obscures
+the treatment (and site) effect. If you squint, there appears to be a similar
+overall pattern between redwood and tanoak repsonse to treatment, but it appears
+they respond differentially to certain plots.
+
+```{r}
+#| label: fig-data-summary-sites
+#| fig-cap: >
+#|   Distribution of heights at year 10 at each site for two species. Slabs are
+#|   normalized by sample size to reflect the raw data, plotted as dots below.
+
+
+sprouts |>
+  ggplot(aes(ht10, site, fill = spp)) +
+  stat_slab(aes(thickness = after_stat(pdf * n)), alpha = 0.6, scale = 0.7) +
+  stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(x = "year 10 height (m)", y = NULL, fill = "species")
+
+```
+
+```{r}
+#| label: fig-data-summary-plots
+#| fig-height: 7
+#| fig-cap: >
+#|   Same as for @fig-data-summary-sites, but for each plot (Site/treatment
+#|   interaction). Grouped by treatment.
+
+sprouts |>
+  mutate(treat = fct_relevel(treat, treat_order)) |>
+  ggplot(aes(
+    ht10,
+    site,
+    fill = treat,
+  )) +
+  stat_slab(aes(thickness = after_stat(pdf * n)), alpha = 0.5, scale = 0.7) +
+  stat_pointinterval(position = position_dodge(width = 0.5, preserve = "single")) +
+  scale_color_brewer(palette = "Set2") +
+  facet_wrap(~spp) +
+  theme(legend.position = "bottom") +
+  labs(y = NULL, x = "year 10 height (m)", fill = "treatment")
+
+```
+
+### Height increments
+
+Height increments contain similar information as heights, but allow us to
+compare directly between years.
+
+@fig-data-summary-ht-inc-year shows that across treatments and species, height
+growth slows down in the second period (years 5-10). This is more true for
+redwood but it starts with more rapid growth than tanoak. In the most crowded
+treatment (HD), redwoods height increment has become slower than tanoaks in the
+second period. Also, in the second period, the high density, aggregated
+treatment appears to have slightly higher (or equal) average growth increment,
+which is not completely expected.
+
+```{r}
+#| label: fig-data-summary-ht-inc-year
+#| fig-height: 7
+#| fig-cap: >
+#|   Variations in annual height growth increment between the first and second
+#|   measurement periods (years 1-5, and 5-10, respectively).
+
+sprouts |>
+  lengthen_data("ht_inc") |>
+  ggplot(
+    aes(
+      ht_inc,
+      fct_relevel(treat, treat_order),
+      fill = factor(year),
+      color = factor(year)
+    )
+  ) +
+  stat_slab(alpha = 0.5) +
+  stat_pointinterval(
+    position = position_dodge(width = 0.4, preserve = "single")
+  ) +
+  facet_wrap(~spp) +
+  theme(legend.position = "bottom") +
+  labs(
+    fill = "Year",
+    color = "Year",
+    y = "Treatment",
+    x = expression(Height~increment~(m~yr^-1))
+  ) +
+  scale_color_manual(
+    values = rnd_color_brewer("Set2", c(1,4)),
+    aesthetics = c("color", "fill")
+  )
+
+```
+
+:::
