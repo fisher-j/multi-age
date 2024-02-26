@@ -5,14 +5,15 @@ format:
     number-sections: false
 execute:
   freeze: false
+project:
+  pre-render: cmd.exe /c "scripts\make_git_log.bat"
+description: |
+  This is an auto-generated list of all commits (saves) that I've made to the
+  repository.
 ---
-
-::: {.content-visible when-format="html"}
 
 *The following is a log of the work completed for this project*
 
 ```{r}
 #| child: _git_log.md
 ```
-
-:::

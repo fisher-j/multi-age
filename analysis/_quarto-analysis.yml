@@ -1,0 +1,30 @@
+format:
+  html:
+    toc-depth: 4
+
+project:
+  pre-render: cp analysis/_index.qmd index.qmd
+  output-dir: ../docs/analysis
+  type: book
+
+book:
+  title: Multiaged experiment -- 10-year analysis
+  author: Judson Fisher
+  date: 2024-02-20
+  chapters:
+    - index.qmd
+    - part: "Fuels"
+      chapters:
+        - analysis/fuel_data_description.qmd
+        - analysis/calculate_fuel_loading.qmd
+        - analysis/fuel_data_exploration.qmd
+        - analysis/fuel_data_modeling.qmd
+    - part: "Sprout height"
+      chapters:
+        - analysis/sprouts_import_data.qmd
+        - analysis/sprout_data_exploration.qmd
+        - analysis/sprout_modeling.qmd
+    - part: "Regeneration"
+      chapters:
+        - analysis/regen_data_import.qmd
+        - analysis/regen_visualize.qmd

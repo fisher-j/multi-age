@@ -1,1 +1,1 @@
-quarto render --profile website && quarto render --profile docx
+quarto render --profile analysis && quarto render --profile thesis && quarto render --profile listing
