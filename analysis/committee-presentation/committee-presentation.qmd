@@ -1,0 +1,637 @@
+---
+date: 03/05/2024
+format: 
+  revealjs:
+    theme: serif
+    css: committee-presentation.css
+---
+
+## Regeneration and Fuel Loads with Varying Overstory Retention in Redwood Stands 10 Years after Transformation to Multiaged Management {style="text-align: center"}
+
+Thesis committee presentation by Judson Fisher
+
+# Thank you
+
+# Today's plan
+
+1. What we did
+1. [Why we did it]{.fragment fragment-index=1 .semi-fade-out}
+1. [Some results]{.fragment fragment-index=1 .semi-fade-out}
+1. [My questions]{.fragment fragment-index=1 .semi-fade-out}
+1. [Your questions]{.fragment fragment-index=1 .semi-fade-out}
+
+# What we did
+
+1. Implement experiment
+1. [Establish plots and transects]{.fragment fragment-index=1 .semi-fade-out}
+1. [Sample sprout heights, sprout densities, and fuels]{.fragment fragment-index=1 .semi-fade-out}
+1. [Model sprout heights, report densities, model fuels]{.fragment fragment-index=1 .semi-fade-out}
+
+## Implementation
+
+In 2012 we harvested 16, 1-hectare blocks using different harvest treatments.
+
+HD
+: High-density dispersed retention
+
+HA
+: High-density aggregated retention
+
+LD
+: Low-density dispersed retentions
+
+GS
+: Group selection
+
+These four treatments were replicated across four sites.
+
+## The treatments
+![](../figures/treatments.png)
+
+## One site{background-color="black" background-image="../figures/treatments_aerial.png" background-size="contain"}
+[LD]{.absolute top="27%" left="3%"}
+[HD]{.absolute top="63%" left="37%"}
+[GS]{.absolute top="20%" left="53%"}
+[HA]{.absolute top="73%" left="90%"}
+
+## {background-color="black" background-image="../figures/LD.jpg" background-size="contain"}
+:::{.absolute bottom="5%" right="5%"}
+[LD]{style="font-size: 2em;"}
+:::
+
+## {background-color="black" background-image="../figures/HD.jpg" background-size="contain"}
+:::{.absolute bottom="5%" right="5%"}
+[HD]{style="font-size: 2em;"}
+:::
+
+## {background-color="black" background-image="../figures/GS.jpg" background-size="contain"}
+:::{.absolute bottom="5%" right="5%"}
+[GS]{style="font-size: 2em;"}
+:::
+
+## {background-color="black" background-image="../figures/HA.jpg" background-size="contain"}
+:::{.absolute bottom="5%" right="5%"}
+[HA]{style="font-size: 2em;"}
+:::
+
+# What we did
+
+1. [Implement experiment]{style="opacity: 50%"}
+1. Establish plots and transects
+1. [Sample fuels, sprout heights, and sprout densities]{style="opacity: 50%"}
+1. [Model sprout heights, report densities, model fuels]{style="opacity: 50%"}
+
+## Sampling hierarchy
+
+We located macro plots within the center of each treatment block
+
+- 0.4 ha square **macro plot**
+  - Four 4-meter radius **sprout density plots**, near macro plot corners
+    - Two 10-meter **transects**, terminating at the center of each sprout density
+      plot (eight per macro plot)
+      - Two 1-meter radius **sampling cylinders** along each transect (16 per macro
+        plot)
+
+## {.smaller}
+
+### A macro plot
+
+:::{.columns }
+:::{.column style="vertical-align:middle; width:30%;"}
+
+Large [green]{style="color: green"} circles
+: Density plots
+
+Ten-meter black lines
+: Fuel transects
+
+Small [orange]{style="color: orange"} circles
+: Fuel sampling cylinders
+
+:::
+:::{.column style="vertical-align:middle; width:70%"}
+![](../figures/fuel_sampling_layout.png)
+:::
+:::
+
+## Experimental design overview
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-cap: >
+#|   Black points are fuel transect corners, and line segments represent
+#|   individual transects. Boxes represent the macro plot boundaries.
+library(ggplot2)
+library(dplyr)
+
+draw_sampling_design <- function() {
+  max <- 44.7
+  # CW from bottom left
+  xdir <- c(1, 1, -1, -1)
+  ydir <- c(1, -1, -1, 1)
+  corner_inset <- 10 / sqrt(2)
+  centerx <- xdir * corner_inset + c(0, 0, max, max)
+  centery <- ydir * corner_inset + c(0, max, max, 0)
+  xend <- xdir * 10 + centerx
+  yend <- ydir * 10 + centery
+  centers <- data.frame(centerx, centery)
+  ends <- rbind(centers, centers)
+  # Half of the x and y coordinates of the transect ends are the same as the
+  # center, and half are different.
+  ends$xend <- c(xend, centerx)
+  ends$yend <- c(centery, yend)
+
+  data <- tidyr::expand_grid(
+    treatment = c("GS", "LD", "HA", "HD"),
+    site = factor(c(1, 2, 3, 4)), 
+    ends
+  )
+  
+  p <- ggplot(data) +
+  geom_rect(
+    aes(xmin = 0, ymin = 0, xmax = 44.7, ymax = 44.7),
+    color = "black",
+    fill = NA
+  )+
+  geom_point(aes(centerx, centery)) +
+  geom_segment(aes(centerx, centery, xend = xend, yend = yend)) +
+  facet_grid(
+    site ~ treatment,
+    switch = "y"
+  ) +
+  theme(
+    panel.grid = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    panel.spacing = unit(0, "in"),
+    aspect.ratio = 1,
+    plot.background = element_blank()
+  ) +
+  scale_x_continuous(position = "top") +
+  labs(x = "Treatment", y = "Site")
+
+  print(p)
+}
+
+draw_sampling_design()
+
+```
+
+# What we did
+
+1. [Implement experiment]{style="opacity: 50%"}
+1. [Establish plots and transects]{style="opacity: 50%"}
+1. Sample sprout heights, sprout densities, and fuels
+1. [Model sprout heights, report densities, model fuels]{style="opacity: 50%"}
+
+## Sapling heights: Macro plot
+
+- 25 each of tanoak and redwood sprout clumps were selected for measurement
+- Tallest sprout in clump measured at years 1, 5, and 10
+
+::: {layout-ncol=2}
+
+![Year 1](../figures/measuring_sprouts1.jpg){height=350}
+
+![Year 10](../figures/measuring_sprouts10.jpg){height=350}
+
+:::
+
+## Regeneration density and composition: Density plots
+
+Diameter and species of all sprouts and seedlings taller than 1.4 m
+
+
+## Downed woody fuels: Transects
+
+Class name | Size (cm)  | Transect length (m)
+---------- | ---------- | -------------------
+1 hr       | < 0.64     | 1
+10 hr      | 0.64 - 2.5 | 2
+100 hr     | 2.5 - 7.6  | 4
+1,000 hr   | > 7.6      | 10
+
+- Particles were tallied by size class
+- Counts were converted to load (Mg/ha) using linear intersect theory and
+  parameters from the literature
+
+## Litter and duff: Sampling cylinders
+
+- Litter and duff depth measured from a representative location within the
+  sampling cylinder
+- Depth-to-load equation taken from the literature
+
+## Wet and dry live vegetation: Sampling cylinders
+ 
+We estimated percent cover for standing vegetation in four classes:
+
+::: {layout="[30, 70]"}
+- Herbaceous
+  - Green (wet)
+  - Dry (brown)
+- Woody
+  - Green (wet)
+  - Dry (brown)
+
+![](../figures/green-fuel-percent-cover.png){width=70% fig-align=right}
+:::
+
+## Wet and dry live vegetation: Sampling cylinders
+
+We estimated average height of woody and herbaceous particles
+
+We calculated: 
+
+$$load = ht. \times pct. cover \times \rho,$$
+
+where $\rho$ is a bulk density of 8 and 18 Mg/ha/m for herbaceous and shrub
+components, respectively. 
+
+ 
+## Fuel bed depth: Sampling cylinders
+
+We estimated the combined average fuel bed depth of all litter and downed woody
+debris within the sampling cylinder
+
+# What we did
+
+1. [Implement experiment]{style="opacity: 50%"}
+1. [Establish plots and transects]{style="opacity: 50%"}
+1. [Sample sprout heights, sprout densities, and fuels]{style="opacity: 50%"}
+1. Model sprout heights, report densities, model fuels
+
+## Sprout heights
+
+- Frequentist framework
+- Model selection was performed using AIC
+- Treatment and year were **factors**
+- Tested various random effects 
+- Included fixed effect model for dispersion
+- Model checked using simulated residuals
+
+## Sprout densities 
+
+I report species diameter frequency and basal area weighted frequency
+distributions for each treatment.
+
+## Fuels
+
+- Bayesian framework
+- Separate models for six different fuel class response variables
+- Used $gamma$ hurdle model: zeros modeled separately as a proportion
+- Priors determined from data with support from literature
+- Model checked with posterior predictive distribution
+
+# Today's plan
+
+1. [What we did]{style="opacity: 50%"}
+1. Why we did it
+1. [Some results]{style="opacity: 50%"}
+1. [My questions]{style="opacity: 50%"}
+1. [Your questions]{style="opacity: 50%"}
+
+# Implications for multiaged silviculture
+
+## Ecological forestry
+
+- Diversity of forest structures == Diversity of silvicultural techniques
+- Predominace of even-aged management
+- This work contributes to our understanding of mulitaged stand development
+- Greater understanding -> increased adoption
+
+## Suitability of redwood forests
+
+- Timber value
+- Shade tollerance
+- Reliable regneration
+
+# Implications for fire-informed management
+
+## Towards pyrosilviculture
+
+- Slow adoption of fire-informed management on the North Coast
+- Redwood is a fire-adapted species
+- Historical record shows frequent fire
+- What is the pyrosilvicultural significance of our management actions?
+
+# Today's plan
+
+1. [What we did]{style="opacity: 50%"}
+1. [Why we did it]{style="opacity: 50%"}
+1. Some results
+1. [My questions]{style="opacity: 50%"}
+1. [Your questions]{style="opacity: 50%"}
+
+## Sprout heights
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 6
+#| fig-cap: >
+#|   Modeled heights, confidence interval, distribution on data, and comparison
+#|   to a linear relationship with year.
+
+library(emmeans)
+library(ggplot2)
+library(glmmTMB)
+library(ggdist)
+library(multcomp)
+library(multcompView)
+load("./sprout_modeling.rda")
+
+mht18emmeans <- emmeans(
+  mht18,
+  c("spp", "treat", "year"),
+  type = "response"
+)
+
+mht18emmeans |>
+  as_tibble() |>
+  mutate(
+    year = as.numeric(levels(year))[year]
+  ) |>
+  rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL"))) |>
+  ggplot(aes(year, response, color = spp, fill = spp, group = spp)) +
+    geom_line() +
+    facet_wrap(~ treat) +
+    geom_ribbon(
+      aes(ymin = lower.CL, ymax = upper.CL, color = NULL),
+      alpha = .2
+    ) +
+    stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
+    stat_smooth(
+      data = dht,
+      aes(year, ht),
+      method = lm,
+      color = "gray60",
+      se = FALSE,
+      linewidth = 0.7
+    ) +
+    scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+    theme_gray(base_size = 20) +
+    theme(
+      plot.background = element_blank(),
+      legend.background = element_blank()
+    ) +
+    labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species") +
+    scale_x_continuous(breaks = c(1, 5, 10)) +
+    coord_cartesian(xlim = c(1, 11))
+
+```
+
+## Sprout heights
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 6
+#| fig-cap: >
+#|   Means, confidence intervals, and Tukey's letters.
+
+library(stringr)
+
+mht18_compare <- emmeans(
+  mht18,
+  spec = "treat",
+  by = c("spp"),
+  at = list(year = "10"),
+  type = "response"
+) |>
+  cld(Letters = letters) |>
+  as_tibble() |>
+  mutate(
+    # year = as.numeric(levels(year))[year],
+    .group = str_replace_all(.group, " ", "")
+  ) |>
+  rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL")))
+
+multiple_years_plot <- filter(dht, year == 10) |>
+  ggplot(aes(treat, ht, color = spp, fill = spp)) +
+  facet_grid(~spp, switch = "x") +
+  geom_dots() +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  geom_pointrange(
+    aes(y = response, ymin = lower.CL, ymax = upper.CL),
+    data = mht18_compare,
+    color = "gray50", position = position_nudge(x = -0.07),
+    size = 0.7,
+    linewidth = 1,
+    show.legend = FALSE
+  ) +
+  geom_text(
+    aes(y = upper.CL, label = .group),
+    data = mht18_compare,
+    color = "gray30",
+    position = position_nudge(x = -0.3, y = 0.2),
+    size = 6
+  ) +
+  labs(x = "Treatment", y = "Height (m)", color = "Species", fill = "Species") +
+  theme_gray(base_size = 20) +
+  theme(
+    panel.spacing = unit(0, "lines"),
+    plot.background = element_blank(),
+    legend.background = element_blank(),
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    legend.position = "bottom"
+  )
+
+multiple_years_plot
+
+```
+
+## Regeneration density
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 6
+#| fig-cap: Trees per hectare by species and size.
+
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(forcats)
+
+load("./regen_visualize.rda")
+
+raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
+  generate_facet_totals <- function(data) {
+    summarize(data,
+      .by = treat,
+      n = paste("Total: ", round(n() * per_ha["treat"])),
+    )
+  }
+  regen |>
+    filter({{ group }}) |>
+    ggplot(aes(dbh, fill = fct_reorder(spp, spp, length))) +
+    stat_bin(aes(y = after_stat(count) * per_ha["treat"]), breaks = bin_breaks) +
+    ggpp::geom_text_npc(
+      data = generate_facet_totals,
+      aes(npcx = "center", npcy = "top", label = n, fill = NULL),
+      size = 6
+    ) +
+    facet_wrap(vars(treat), nrow = 1) +
+    labs(y = expression(trees %.% ha^-1), x = "dbh (cm)", fill = "spp") +
+    scale_x_continuous(breaks = scale_breaks) +
+    scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
+    scale_fill_manual(values = spp_col) +
+    theme_bw(base_size = 20) 
+}
+
+raw_hist2(dbh < 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
+  raw_hist2(dbh >= 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(27, 600))  +
+  plot_layout(axis_titles = "collect", axes = "collect_x") &
+  theme(
+    plot.background = element_blank(),
+    legend.background = element_blank()
+  )
+
+```
+
+## Regeneration density
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-cap: Basal area by species and size.
+
+local({
+  bin_breaks <- seq(0, 17.5, 2.5)
+  scale_breaks <- seq(0, 15, 5)
+  facet_total_label <- function(data) {
+    summarize(data,
+      .by = treat,
+      ba_ha = round(sum(per_ha["treat"] * for_const(dbh)), 1)
+    )
+  }
+  regen |>
+    ggplot(aes(dbh, fill = fct_reorder(spp, dbh, .fun = ~sum(.x^2)))) +
+    stat_bin(aes(weight = per_ha["treat"] * for_const(dbh)), breaks = bin_breaks) +
+    ggpp::geom_text_npc(
+      data = facet_total_label,
+      mapping = aes(npcx = "center", npcy = "top", label = ba_ha, fill = NULL),
+      size = 6
+    ) +
+    facet_wrap(vars(treat), nrow = 1) +
+    labs(y = expr(m^2 %.% ha^-1), x = "dbh (cm)", fill = "spp") +
+    scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
+    scale_x_continuous(breaks = scale_breaks) +
+    scale_fill_manual(values = spp_col) +
+    theme_bw(
+      base_size = 20,
+    ) +
+    theme(
+      plot.background = element_blank(),
+      legend.background = element_blank(),
+    )
+})
+
+```
+
+## Fuels
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 6
+
+load("fuel_data_modeling.rda")
+source("./scripts/coord_cartesian_panels.r")
+library(tidyr)
+library(dplyr)
+
+local({
+  data <- bf4a
+  newdata <- tidyr::expand(data$data[[1]], tidyr::nesting(treatment))
+  data <- mutate(data,
+    pred = list(
+      tidybayes::epred_draws(mod, newdata,
+        re_formula = NA,
+        value = "pred"
+      )
+    ),
+    lims = list(
+      tibble(xmin = 0, xmax = quantile(pred$pred, .995))
+    )
+  )
+  data |>
+    tidyr::unnest(pred) |>
+    ggplot(aes(pred, treatment)) +
+    tidybayes::stat_halfeye(normalize = "panels") +
+    facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
+    coord_cartesian_panels(
+      panel_limits = tidyr::unnest(dplyr::select(data, lims), lims)
+    ) +
+    scale_y_discrete(labels = toupper) +
+    labs(x = expression(Load~(Mg%.%ha^-1)), y = "Treatment") +
+    theme_grey(base_size = 20) +
+    theme(
+      plot.background = element_blank(),
+      legend.background = element_blank()
+    )
+})
+```
+
+## Fuels
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 6
+
+expected_contrasts <- function(data, rope_size, plot = TRUE, re_formula = NA) {
+  # Assume treatment levels are the same for all models: they are.
+  newdata <- expand(data$data[[1]], nesting(treatment))
+  d <- data |>
+    mutate(
+      pred = list(
+        tidybayes::epred_draws(mod, newdata, re_formula = NA, value = "pred") |>
+        tidybayes::compare_levels(pred, by = treatment) |>
+        dplyr::select(contrast = treatment, pred) 
+      ),
+      rope = rope_size * sd(data$load),
+      lims = list(
+        tibble(xmin = quantile(pred$pred, .001), xmax = quantile(pred$pred, .999))
+      )
+    )
+  p <- d |>
+    unnest(c(pred)) |>
+    ggplot(aes(x = pred, y = contrast)) +
+    tidybayes::stat_halfeye(normalize = "panels") +
+    geom_vline(aes(xintercept = rope))  +
+    geom_vline(aes(xintercept = -rope))  +
+    facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
+    coord_cartesian_panels(
+      panel_limits = unnest(dplyr::select(d, lims), lims)
+    ) +
+    scale_y_discrete(labels = toupper) +
+    labs(x = expression(Load~(Mg%.%ha^-1)), y = "Treatment") +
+    theme_gray(base_size = 20) +
+    theme(
+      plot.background = element_blank(),
+      legend.background = element_blank()
+    )
+  p
+}
+
+expected_contrasts(bf4a, 0)
+
+```
+
+# Today's plan
+
+1. [What we did]{style="opacity: 50%"}
+1. [Why we did it]{style="opacity: 50%"}
+1. [Some results]{style="opacity: 50%"}
+1. My questions
+1. [Your questions]{style="opacity: 50%"}
+
+## Post-pct
+
+## Analyzing regeneration distributions
+
+# Today's plan
+
+1. [What we did]{style="opacity: 50%"}
+1. [Why we did it]{style="opacity: 50%"}
+1. [Some results]{style="opacity: 50%"}
+1. [My questions]{style="opacity: 50%"}
+1. Your questions
+
+# Questions?
+
+learn more at online at:
+
+<http://fisher-j.github.io/multi-age>
+
+# Thanks again
+

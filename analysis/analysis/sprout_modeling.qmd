@@ -5,8 +5,6 @@ format:
     code-fold: true
 ---
 
-::: {.content-visible when-format="html"}
-
 First, we'll load some libraries and our data.
 
 ```{r}
@@ -813,4 +811,11 @@ sprouts |>
   theme(legend.position = "bottom", legend.title = element_blank())
 
 ```
-:::
+
+## Output
+
+saved data for later use
+
+```{r}
+save(dht, mht18, file = "sprout_modeling.rda")
+```

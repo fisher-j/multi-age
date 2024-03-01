@@ -1,0 +1,10 @@
+project:
+  type: website
+  pre-render: cp _index.qmd index.qmd
+  output-dir: ../docs
+  render:
+    - "**/*.qmd"
+    - "!analysis/"
+    - "!thesis/"
+
+format: html

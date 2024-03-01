@@ -609,17 +609,17 @@ bf2 <- mutate(d,
 # informativeness of the prior. Average over all fixed effects.
 
 plot_pri_post <- function(mod) {
-  tidy_draws(mod) |> 
+  tidy_draws(mod) |>
   select(c(matches("b_"), matches("sd"), matches("sigma"), matches("hu"))) |>
   pivot_longer(everything()) |>
   mutate(
     name = if_else(
       str_starts(name, "prior"),
-      name, 
+      name,
       paste0("posterior_", name)
     )
   ) |>
-  separate_wider_regex(name, 
+  separate_wider_regex(name,
       c(phase = "prior|posterior", "_", name = ".*")
   ) |>
   mutate(name = str_remove(name, "__.*")) |>
@@ -778,7 +778,7 @@ Here is an interpretation for each line of the above model.
 3. The prior for bar-a, the grand mean, is assumed to be normally distributed
    with mean and SD of $M$ and $S$, repsectively. These are chosen based on the
    mean and 2.5 times the SD of the data converted to produce a log normal
-   distribution on the log scale. This should be a minimally informative prior.
+   distribution on the log scale. This should be a weakly informative prior.
 4. Each of the four unique site effects come from a normal distribution centered
    on zero.
 5. Same as above for 16 plot
@@ -786,7 +786,7 @@ Here is an interpretation for each line of the above model.
 7. The site effects come from a normal distribution with a SD that is assumed
    to be from a postive constrained, standard normal distribution. On the
    response scale, about 95% of the mass of the joint distribution of this line
-   and line 4 ($U_j\sigma_u$ is in the interval $[0.11,8.9]$), which implies
+   and line 4 ($U_j\sigma_u$) is in the interval $[0.11,8.9]$, which implies
    that we would be supprised to see any site with a load more than 9 times any
    other.
 8. Same as 7 for plots.
@@ -836,7 +836,7 @@ d <- load2("long", all_of(c(transectid, load_vars))) |>
 lnp <- function(data) {
   # Desired values
   m <- mean(data)
-  s <- 2 * sd(data)
+  s <- 2.5 * sd(data)
   # use the equations
   mu    <- log(m / sqrt(s^2 / m^2 + 1))
   sigma <- sqrt(log(s^2 / m^2 + 1))
@@ -859,7 +859,7 @@ pd <- d |>
     priors = list(brms::set_prior(
       str_glue("normal({mu}, {sigma})", .envir = lnp(data$load))
     )),
-    prior_dist = list( tidybayes::parse_dist(priors)),
+    prior_dist = list(tidybayes::parse_dist(priors)),
     lims = list(
       tibble(
         xmin = quantile(exp(prior_dist$.dist_obj), .01),
@@ -869,15 +869,22 @@ pd <- d |>
   ) |>
   rename(fuel_class = class)
 
-ggplot(data = unnest(pd, prior_dist, names_repair = "universal")) +
-tidybayes::stat_halfeye(
-  aes(xdist = exp(.dist_obj)), 
-  normalize = "panels"
-) +
-geom_text(aes(label = format(.dist_obj), x = mean(exp(.dist_obj)), y = 0.97, hjust = 0)) +
-facet_wrap(~ fuel_class, scales = "free_x", labeller = fuel_class_labeller) +
-coord_cartesian_panels(panel_limits = unnest(select(pd, lims), lims)) +
-labs(x = expression(exp(bar(alpha))))
+ggplot(data = unnest(pd, prior_dist)) +
+  tidybayes::stat_halfeye(
+    aes(xdist = exp(.dist_obj)),
+    normalize = "panels"
+  ) +
+  geom_text(
+    aes(
+      label = format(.dist_obj),
+      x = mean(exp(.dist_obj)),
+      y = 0.97,
+      hjust = 0
+    )
+  ) +
+  facet_wrap(~ fuel_class, scales = "free_x", labeller = fuel_class_labeller) +
+  coord_cartesian_panels(panel_limits = unnest(select(pd, lims), lims)) +
+  labs(x = expression(exp(bar(alpha))))
 
 ```
 
@@ -1068,11 +1075,11 @@ against the posterior distributions for the variables that we set priors for.
 
 
 plot_pri_post(bf4a$mod[[1]]) + ggtitle("1-hr")
-# plot_pri_post(bf4a$mod[[2]]) + ggtitle("10-hr")
-# plot_pri_post(bf4a$mod[[3]]) + ggtitle("100-hr")
-# plot_pri_post(bf4a$mod[[4]]) + ggtitle("duff & litter")
-# plot_pri_post(bf4a$mod[[5]]) + ggtitle("1000-hr")
-# plot_pri_post(bf4a$mod[[6]]) + ggtitle("Vegetation")
+plot_pri_post(bf4a$mod[[2]]) + ggtitle("10-hr")
+plot_pri_post(bf4a$mod[[3]]) + ggtitle("100-hr")
+plot_pri_post(bf4a$mod[[4]]) + ggtitle("duff & litter")
+plot_pri_post(bf4a$mod[[5]]) + ggtitle("1000-hr")
+plot_pri_post(bf4a$mod[[6]]) + ggtitle("Vegetation")
 ```
 
 #### Posterior predictive check

@@ -1,0 +1,2375 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Multiaged experiment – 10-year analysis - 3&nbsp; Calculate fuel loading</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../analysis/fuel_data_exploration.html" rel="next">
+<link href="../analysis/fuel_data_description.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../analysis/fuel_data_description.html">Fuels</a></li><li class="breadcrumb-item"><a href="../analysis/calculate_fuel_loading.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Calculate fuel loading</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Multiaged experiment – 10-year analysis</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preface</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Fuels</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/fuel_data_description.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fuel data description</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/calculate_fuel_loading.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Calculate fuel loading</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/fuel_data_exploration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/fuel_data_modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fuel modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Sprout height</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/sprouts_import_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sprout height data description</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/sprout_data_exploration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Sprout data exploration</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/sprout_modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Sprout data modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Regeneration</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/regen_data_import.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Import and wrangle regeneration data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/regen_visualize.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Reneration data summary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-load-fuel-data" id="toc-sec-load-fuel-data" class="nav-link active" data-scroll-target="#sec-load-fuel-data"><span class="header-section-number">3.1</span> Load data from datasheets</a></li>
+  <li><a href="#fine-woody-debris" id="toc-fine-woody-debris" class="nav-link" data-scroll-target="#fine-woody-debris"><span class="header-section-number">3.2</span> Fine woody debris</a></li>
+  <li><a href="#coarse-woody-debris" id="toc-coarse-woody-debris" class="nav-link" data-scroll-target="#coarse-woody-debris"><span class="header-section-number">3.3</span> Coarse woody debris</a></li>
+  <li><a href="#duff-and-litter" id="toc-duff-and-litter" class="nav-link" data-scroll-target="#duff-and-litter"><span class="header-section-number">3.4</span> Duff and litter</a></li>
+  <li><a href="#vegetation" id="toc-vegetation" class="nav-link" data-scroll-target="#vegetation"><span class="header-section-number">3.5</span> Vegetation</a></li>
+  <li><a href="#sec-total-load" id="toc-sec-total-load" class="nav-link" data-scroll-target="#sec-total-load"><span class="header-section-number">3.6</span> Total load</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.7</span> Summary</a></li>
+  <li><a href="#save-data" id="toc-save-data" class="nav-link" data-scroll-target="#save-data"><span class="header-section-number">3.8</span> Save data</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../analysis/fuel_data_description.html">Fuels</a></li><li class="breadcrumb-item"><a href="../analysis/calculate_fuel_loading.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Calculate fuel loading</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Calculate fuel loading</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We used the line intercept method for tallying fine and coarse woody debris <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982 brownHandbookInventoryingDowned1974">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>; <a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">Brown 1974</a>)</span>. In essence, with this technique we are recording the diameters of all dead, downed woody pieces that cross an imaginary sampling plane of a specified length and height. These diameters are convered to crossectional areas which can then be extended to a volume by multiplying by a width. Finally, volume can be converted to mass using specific gravity. This method requires the assumptions that a particle is (1) cylidrical, (2) horizontal, and (3) perpendicular to the sampling plane. While (1) may be a reasonable assumption for many woody particles, 2 and 3 are less likely. For 2, we use a factor which allows us to trade out this assumption, for the assumption that pieces are randomly oriented in the horizontal plane. For 3, we use a correction factor (<span class="math inline">\(\sec \theta\)</span>) based estimates of average paticle inclination (<span class="math inline">\(\theta\)</span>).</p>
+<p>In practice, the diameter of each piece is not measured, but tallied by size class (up to a certain size, after which it is prudent to measure individual pieces). We used the common time-lag size classes &lt; 0.635 cm; 0.635 - 2.54 cm; and 2.54 - 7.62 cm. All pieces larger than 7.62 cm were measured to the nearest cm. This requires estimating an average diameter (quadratic mean diameter is used) for pieces in each category which can be done using emperical data gathered from specific forest types <span class="citation" data-cites="brownHandbookInventoryingDowned1974">(<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">Brown 1974</a>)</span>, or estimated from the sampling distribution of the tallies themselves <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>)</span>. Here we will use the former, with values found in the literature.</p>
+<p>The resulting equation for estimating fuel load (Mg/ha) is:</p>
+<p><span id="eq-load"><span class="math display">\[Load = \frac{\sum d^2  G  k  a  c}{l} \tag{3.1}\]</span></span></p>
+<p>where d is diameter (cm), G is specific gravity, k=1.234 is a constant which accounts for random horizontal particle orientation, the density of water and unit conversion factors <span class="citation" data-cites="vanwagnerPracticalAspectsLine1982">(<a href="#ref-vanwagnerPracticalAspectsLine1982" role="doc-biblioref">Van Wagner 1982</a>)</span>, a is the particle inclination correction factor, c is the transect slope correction factor and l is the transect length. The calculation of a is described above and c is calculated as <span class="math inline">\(c = \sqrt{1 + (slope ratio)^2}\)</span>.</p>
+<p>Thus in R, our basic fuel load function will look like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simple_load <span class="ot">&lt;-</span> <span class="cf">function</span>(sum_d2, G, <span class="at">k =</span> <span class="fl">1.234</span>, a, percent_slope, l) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">+</span> (percent_slope <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (sum_d2 <span class="sc">*</span> G <span class="sc">*</span> k <span class="sc">*</span> a <span class="sc">*</span> c) <span class="sc">/</span> l</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The “composite” values for G (for both sound and rotten wood), a, and the quadratic mean diameter of a size class (used for d) where provided by <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span> for use when site specific data are unknown. The values given a pertain to “non-slash”. Somewhat larger values are used for slash fuel beds.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lit_particle_params <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>source,        <span class="sc">~</span>parameter, <span class="sc">~</span>onehr, <span class="sc">~</span>tenhr, <span class="sc">~</span>hundhr, <span class="sc">~</span>thoushr_s, <span class="sc">~</span>thoushr_r,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"brown"</span>,        <span class="st">"d2"</span>,       <span class="fl">0.10</span>,   <span class="fl">1.86</span>,   <span class="fl">17.81</span>,   <span class="dv">1</span>,         <span class="dv">1</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"brown"</span>,        <span class="st">"G"</span>,        <span class="fl">0.48</span>,   <span class="fl">0.48</span>,   <span class="fl">0.40</span>,    <span class="fl">0.40</span>,       <span class="fl">0.30</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"brown"</span>,        <span class="st">"a"</span>,        <span class="fl">1.13</span>,   <span class="fl">1.13</span>,   <span class="fl">1.13</span>,    <span class="fl">1.00</span>,       <span class="fl">1.00</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vanwagtendonk"</span>,<span class="st">"d2"</span>,       <span class="fl">0.12</span>,   <span class="fl">1.28</span>,   <span class="fl">14.52</span>,   <span class="dv">1</span>,         <span class="dv">1</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vanwagtendonk"</span>,<span class="st">"G"</span>,        <span class="fl">0.58</span>,   <span class="fl">0.57</span>,   <span class="fl">0.53</span>,    <span class="fl">0.47</span>,       <span class="fl">0.36</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vanwagtendonk"</span>,<span class="st">"a"</span>,        <span class="fl">1.03</span>,   <span class="fl">1.02</span>,   <span class="fl">1.02</span>,    <span class="fl">1.02</span>,       <span class="fl">1.02</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>glebocki_particle_params <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>id, <span class="sc">~</span>parameter, <span class="sc">~</span>onehr, <span class="sc">~</span>tenhr, <span class="sc">~</span>hundhr, <span class="sc">~</span>thoushr_s, <span class="sc">~</span>thoushr_r,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0405"</span>, <span class="st">"a"</span>, <span class="fl">1.03</span>, <span class="fl">1.03</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0405"</span>, <span class="st">"d2"</span>, <span class="fl">0.13</span>, <span class="fl">1.32</span>, <span class="fl">16.13</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0405"</span>, <span class="st">"G"</span>, <span class="fl">0.45</span>, <span class="fl">0.46</span>, <span class="fl">0.42</span>, <span class="fl">0.38</span>, <span class="fl">0.37</span>, </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0607"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0607"</span>, <span class="st">"d2"</span>, <span class="fl">0.10</span>, <span class="fl">1.21</span>, <span class="fl">20.90</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0607"</span>, <span class="st">"G"</span>, <span class="fl">0.53</span>, <span class="fl">0.48</span>, <span class="fl">0.40</span>, <span class="fl">0.33</span>, <span class="fl">0.25</span>, </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0809"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0809"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.27</span>, <span class="fl">19.24</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-0809"</span>, <span class="st">"G"</span>, <span class="fl">0.44</span>, <span class="fl">0.49</span>, <span class="fl">0.38</span>, <span class="fl">0.46</span>, <span class="fl">0.28</span>, </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-1011"</span>, <span class="st">"a"</span>, <span class="fl">1.04</span>, <span class="fl">1.02</span>, <span class="fl">1.03</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-1011"</span>, <span class="st">"d2"</span>, <span class="fl">0.10</span>, <span class="fl">1.48</span>, <span class="fl">21.72</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-1011"</span>, <span class="st">"G"</span>, <span class="fl">0.51</span>, <span class="fl">0.53</span>, <span class="fl">0.43</span>, <span class="fl">0.47</span>, <span class="fl">0.32</span>, </span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-C"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-C"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.28</span>, <span class="fl">17.74</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"85-C"</span>, <span class="st">"G"</span>, <span class="fl">0.47</span>, <span class="fl">0.41</span>, <span class="fl">0.31</span>, <span class="fl">0.30</span>, <span class="fl">0.30</span>, </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0405"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0405"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.45</span>, <span class="fl">20.68</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0405"</span>, <span class="st">"G"</span>, <span class="fl">0.42</span>, <span class="fl">0.51</span>, <span class="fl">0.41</span>, <span class="fl">0.36</span>, <span class="fl">0.29</span>, </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0607"</span>, <span class="st">"a"</span>, <span class="fl">1.03</span>, <span class="fl">1.05</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, </span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0607"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.52</span>, <span class="fl">19.42</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0607"</span>, <span class="st">"G"</span>, <span class="fl">0.46</span>, <span class="fl">0.43</span>, <span class="fl">0.43</span>, <span class="fl">0.37</span>, <span class="fl">0.27</span>, </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0809"</span>, <span class="st">"a"</span>, <span class="fl">1.03</span>, <span class="fl">1.04</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0809"</span>, <span class="st">"d2"</span>, <span class="fl">0.11</span>, <span class="fl">1.44</span>, <span class="fl">17.69</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-0809"</span>, <span class="st">"G"</span>, <span class="fl">0.47</span>, <span class="fl">0.51</span>, <span class="fl">0.44</span>, <span class="fl">0.46</span>, <span class="fl">0.41</span>, </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-1011"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.03</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, <span class="fl">1.00</span>, </span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-1011"</span>, <span class="st">"d2"</span>, <span class="fl">0.13</span>, <span class="fl">1.64</span>, <span class="fl">15.32</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-1011"</span>, <span class="st">"G"</span>, <span class="fl">0.49</span>, <span class="fl">0.52</span>, <span class="fl">0.47</span>, <span class="fl">0.43</span>, <span class="fl">0.32</span>, </span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-C"</span>, <span class="st">"a"</span>, <span class="fl">1.04</span>, <span class="fl">1.02</span>, <span class="fl">1.03</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, </span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-C"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.41</span>, <span class="fl">14.50</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9192-C"</span>, <span class="st">"G"</span>, <span class="fl">0.46</span>, <span class="fl">0.44</span>, <span class="fl">0.43</span>, <span class="fl">0.39</span>, <span class="fl">0.28</span>, </span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-0809"</span>, <span class="st">"a"</span>, <span class="fl">1.06</span>, <span class="fl">1.04</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.00</span>, </span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-0809"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.81</span>, <span class="fl">20.35</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-0809"</span>, <span class="st">"G"</span>, <span class="fl">0.46</span>, <span class="fl">0.52</span>, <span class="fl">0.46</span>, <span class="fl">0.47</span>, <span class="fl">0.45</span>, </span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-1011"</span>, <span class="st">"a"</span>, <span class="fl">1.11</span>, <span class="fl">1.29</span>, <span class="fl">1.01</span>, <span class="fl">1.01</span>, <span class="fl">1.04</span>, </span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-1011"</span>, <span class="st">"d2"</span>, <span class="fl">0.11</span>, <span class="fl">1.46</span>, <span class="fl">18.49</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-1011"</span>, <span class="st">"G"</span>, <span class="fl">0.48</span>, <span class="fl">0.56</span>, <span class="fl">0.46</span>, <span class="fl">0.42</span>, <span class="fl">0.41</span>, </span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-C"</span>, <span class="st">"a"</span>, <span class="fl">1.02</span>, <span class="fl">1.01</span>, <span class="fl">1.03</span>, <span class="fl">1.08</span>, <span class="fl">1.00</span>, </span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-C"</span>, <span class="st">"d2"</span>, <span class="fl">0.12</span>, <span class="fl">1.40</span>, <span class="fl">18.63</span>,  <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>  <span class="st">"97-C"</span>, <span class="st">"G"</span>, <span class="fl">0.39</span>, <span class="fl">0.36</span>, <span class="fl">0.44</span>, <span class="fl">0.37</span>, <span class="fl">0.37</span>, </span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Currently this function summarizes data across all Glebocki plots, I could #</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co"># adapt this later if I only want to include some plots.</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>summarize_glebocki <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(parameter) <span class="sc">|&gt;</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">round</span>(<span class="fu">mean</span>(.x), <span class="dv">2</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>lit_particle_params <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>  lit_particle_params,</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_glebocki</span>(glebocki_particle_params)</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(parameter)</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>get_particle_params <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">params =</span> lit_particle_params, source) {</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>  params[params<span class="sc">$</span>source <span class="sc">==</span> source, <span class="sc">!</span><span class="fu">names</span>(params) <span class="sc">%in%</span> <span class="st">"source"</span>] <span class="sc">|&gt;</span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(parameter), <span class="at">names_to =</span> <span class="st">"class"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> parameter, <span class="at">values_from =</span> value)</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>A study of Sierra Nevada conifers found these values to vary by species, and estimates of fuel loading ranged from 40% less to 8% more than when using those suggested by <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. A study of young, treated redwood and Douglas-fir stands <span class="citation" data-cites="glebockiFuelLoadingMoisture2015">(<a href="#ref-glebockiFuelLoadingMoisture2015" role="doc-biblioref">Glebocki 2015</a>)</span> found similar values for G to those of <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>, and values for a much closer to those of <span class="citation" data-cites="vanwagtendonkPhysicalPropertiesWoody1996">J. W. Van Wagtendonk, Benedict, and Sydoriak (<a href="#ref-vanwagtendonkPhysicalPropertiesWoody1996" role="doc-biblioref">1996</a>)</span> (<a href="#tbl-params" class="quarto-xref">Table&nbsp;<span>3.1</span></a>). Note that the 1’s for thousand hr fuel diameters reflect that the diameters, not counts were measured in the field.</p>
+<div class="cell">
+<div id="tbl-params" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-params-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.1: Physical properties of woody fuel particles used for calculating fuel loading from several different sources in the literature.
+</figcaption>
+<div aria-describedby="tbl-params-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">source</th>
+<th style="text-align: left;">parameter</th>
+<th style="text-align: right;">onehr</th>
+<th style="text-align: right;">tenhr</th>
+<th style="text-align: right;">hundhr</th>
+<th style="text-align: right;">thoushr_s</th>
+<th style="text-align: right;">thoushr_r</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">brown</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">0.30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vanwagtendonk</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">0.57</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">glebocki</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">brown</td>
+<td style="text-align: left;">a</td>
+<td style="text-align: right;">1.13</td>
+<td style="text-align: right;">1.13</td>
+<td style="text-align: right;">1.13</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">vanwagtendonk</td>
+<td style="text-align: left;">a</td>
+<td style="text-align: right;">1.03</td>
+<td style="text-align: right;">1.02</td>
+<td style="text-align: right;">1.02</td>
+<td style="text-align: right;">1.02</td>
+<td style="text-align: right;">1.02</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">glebocki</td>
+<td style="text-align: left;">a</td>
+<td style="text-align: right;">1.04</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">1.02</td>
+<td style="text-align: right;">1.02</td>
+<td style="text-align: right;">1.01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">brown</td>
+<td style="text-align: left;">d2</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">1.86</td>
+<td style="text-align: right;">17.81</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vanwagtendonk</td>
+<td style="text-align: left;">d2</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">1.28</td>
+<td style="text-align: right;">14.52</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">glebocki</td>
+<td style="text-align: left;">d2</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">1.44</td>
+<td style="text-align: right;">18.52</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<section id="sec-load-fuel-data" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="sec-load-fuel-data"><span class="header-section-number">3.1</span> Load data from datasheets</h2>
+<p>Data in quasi-csv format, described in <a href="fuel_data_description.html#sec-data-entry" class="quarto-xref"><span>Section 2.1</span></a>. I’m ommitting the medium density dispersed plot (MD), which only exists at one site.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data and ensure unique transects</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/process_datasheets.r"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/test_funs.r"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">combine_fuels_datasheets</span>(<span class="st">"../data"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) <span class="fu">filter</span>(x, treatment <span class="sc">!=</span> <span class="st">"md"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`
+Joining with `by = join_by(transect)`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">warn_duplicates</span>(d<span class="sc">$</span>transects, site, treatment, corner, azi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="fine-woody-debris" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="fine-woody-debris"><span class="header-section-number">3.2</span> Fine woody debris</h2>
+<p>The above information will allow us to calculate fuel loading for fine and coarse woody debris. First we’ll load our data and get the FWD (and the fuel particle parameters) in a long format for easier calculations.</p>
+<p>Two transects are missing slope. I’m giving them a slope of 0 for now.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use this to reduce the amount of typing when referring to transects</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>transectid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"corner"</span>, <span class="st">"azi"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>fwd <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">slope =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(slope), <span class="dv">0</span>, slope)) <span class="sc">|&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(d<span class="sc">$</span>plots, site, treatment, <span class="fu">matches</span>(<span class="st">"one|ten|hun"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># move onehr, tenhr, etc to new column and create new columns for transect</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># length and particle counts</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"count|len"</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">get_particle_params</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> <span class="fu">simple_load</span>(</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">sum_d2 =</span> count <span class="sc">*</span> d2,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">l =</span> length,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent_slope =</span> slope,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">G =</span> G,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">a =</span> a</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(G, a))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="coarse-woody-debris" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="coarse-woody-debris"><span class="header-section-number">3.3</span> Coarse woody debris</h2>
+<p>Coarse woody debris is already in a long format so we don’t need to pivot longer, but we will summarize the data for each transect by getting the sum of squared diameters. This differs from the fine woody data because we have actual diameters instead of counts, each diameter corresponds to a single observation.</p>
+<p>We only have parameters for “sound” and “rotten” particles, so anything over decay class 3 will be considered “rotten”. Finally, we need to join in transect slopes, and transect lengths.</p>
+<p>I’m setting a couple of missing slope to zero.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cwd <span class="ot">&lt;-</span> d<span class="sc">$</span>coarse_woody <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">if_else</span>(decay <span class="sc">&gt;</span> <span class="dv">3</span>, <span class="st">"thoushr_r"</span>, <span class="st">"thoushr_s"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, treatment, corner, azi, class) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># named count to match fwd table, but these are actually summed d^2</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sum_d2 =</span> <span class="fu">sum</span>(dia<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">n</span>(),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">med_d =</span> <span class="fu">median</span>(dia),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d<span class="sc">$</span>transects[<span class="fu">c</span>(transectid, <span class="st">"slope"</span>)]) <span class="sc">|&gt;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">slope =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(slope), <span class="dv">0</span>, slope)) <span class="sc">|&gt;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d<span class="sc">$</span>plots[<span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treatment"</span>, <span class="st">"thoushr_length"</span>)]) <span class="sc">|&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">get_particle_params</span>(<span class="at">source =</span> <span class="st">"glebocki"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> <span class="fu">simple_load</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">sum_d2 =</span> sum_d2,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">l =</span> thoushr_length,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">percent_slope =</span> slope,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">G =</span> G,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">a =</span> a</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(G, a, d2), <span class="at">length =</span> thoushr_length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="duff-and-litter" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="duff-and-litter"><span class="header-section-number">3.4</span> Duff and litter</h2>
+<p>We measured total duff/litter depth, and then estimated a percent of this depth that would be classified as litter. Litter is any leaf material not classified as a 1-hr fuel, that has not yet begun to break down. Particles that were very dark in color and that were broken into smaller pieces than when they had originally fallen were classified as duff.</p>
+<p>Duff and litter were measured at two locations along each transect, for a total of 16 measurements per plot.</p>
+<p>To convert these depths to load values we use a depth to load equation. <span class="citation" data-cites="finneyFuelLoadingBulk1993">Finney and Martin (<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">1993</a>)</span> found a wide variability in the bulk densities of samples, suggesting that simply using the average bulk density should be sufficient, as opposed to calculating bulk densities based on strata depth or differentiating between duff and litter.</p>
+<div class="cell">
+<div id="tbl-load" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-load-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.2: Average depth to load multiplier from different sources in the literature.
+</figcaption>
+<div aria-describedby="tbl-load-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<colgroup>
+<col style="width: 41%">
+<col style="width: 43%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: right;">Load Mg ha<sup>-1</sup> cm<sup>-1</sup></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="citation" data-cites="finneyFuelLoadingBulk1993">Finney and Martin (<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">1993</a>)</span></td>
+<td style="text-align: left;">Annadel SP &amp; Humboldt Redwoods SP (rw dbh &lt;= 60 in)</td>
+<td style="text-align: right;">7.15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="citation" data-cites="kittredgeComparisonForestFloors1940">Kittredge (<a href="#ref-kittredgeComparisonForestFloors1940" role="doc-biblioref">1940</a>)</span></td>
+<td style="text-align: left;">plantation redwoods</td>
+<td style="text-align: right;">6.80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Stuart, J.D. 1985, Unpubl. in <span class="citation" data-cites="finneyFuelLoadingBulk1993">Finney and Martin (<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">1993</a>)</span></td>
+<td style="text-align: left;">Redwoods SP, (mean of duff &amp; litter)</td>
+<td style="text-align: right;">9.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="citation" data-cites="vanwagtendonkFuelBedCharacteristics1998">Jan W. Van Wagtendonk, Benedict, and Sydoriak (<a href="#ref-vanwagtendonkFuelBedCharacteristics1998" role="doc-biblioref">1998</a>)</span></td>
+<td style="text-align: left;">Avg. for Sierra Nevada conifers</td>
+<td style="text-align: right;">16.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="citation" data-cites="nivesFireBehaviorForest1989">Nives (<a href="#ref-nivesFireBehaviorForest1989" role="doc-biblioref">1989</a>)</span></td>
+<td style="text-align: left;">Redwood NP, Lost Man Cr., Redwood Cr.</td>
+<td style="text-align: right;">2.42</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="citation" data-cites="kriegerChronosequenceFuelLoading2020">Krieger et al. (<a href="#ref-kriegerChronosequenceFuelLoading2020" role="doc-biblioref">2020</a>)</span></td>
+<td style="text-align: left;">No ref. cited, 2.75 and 5.5 lbs/ft<sup>3</sup> litter and duff resp.</td>
+<td style="text-align: right;">6.60</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="citation" data-cites="valachovicSuddenOakDeathcaused2011">Valachovic et al. (<a href="#ref-valachovicSuddenOakDeathcaused2011" role="doc-biblioref">2011</a>)</span></td>
+<td style="text-align: left;">Tanoak-Douglas-fir, litter only, Humboldt County</td>
+<td style="text-align: right;">0.93</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>On average, we have about 50% litter and a depth of about 6.2 cm. If we use the mean of the first 3 rows in <a href="#tbl-load" class="quarto-xref">Table&nbsp;<span>3.2</span></a>, an average depth to load multiplier for redwood forests (with 50% litter) is 7.73 Mg ha<sup>-1</sup> cm<sup>-1</sup>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_pct_litter =</span> <span class="fu">mean</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      litter_depth <span class="sc">/</span> (duff_depth <span class="sc">+</span> litter_depth), </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_total_depth =</span> <span class="fu">mean</span>(duff_depth <span class="sc">+</span> litter_depth),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  treatment avg_pct_litter avg_total_depth
+  &lt;chr&gt;              &lt;dbl&gt;           &lt;dbl&gt;
+1 gs                 0.482            6.26
+2 ha                 0.548            5.20
+3 hd                 0.395            7.11
+4 ld                 0.453            5.80</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dufflitter <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">load =</span> (duff_depth <span class="sc">+</span> litter_depth) <span class="sc">*</span> <span class="fl">7.73</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- todo: Ask Pascal/Jeff about these numbers
+
+"To calculate litter and duff loadings, the average depth was multiplied by the
+bulk density of litter (2.75 lbs/ft3) or duff (5.5 lbs/ft3), and converted to
+tons/acre [16] using Equation (4):"
+
+Krieger, R. M., Wall, B. E., et al. (2020), Chronosequence of Fuel Loading and
+Fuel Depth Following Forest Rehabilitation Frill Treatment of Tanoak to Release
+Douglas-Fir: A Case Study from Northern California. -->
+</section>
+<section id="vegetation" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="vegetation"><span class="header-section-number">3.5</span> Vegetation</h2>
+<p>We based our data collection on the Firemon protocol, which determines vegetative fuel loading by multiplying estimated percent cover by height by a constant bulk densities of 8 and 18 t/ha/m for herbaceous and shrub components, respectively.</p>
+<p>Here I want to standardize the data so that heights are all zero (instead of NA), if percent cover for live and dead were both zero. Also, I want total percent cover, with total proportion dead.</p>
+<p>Theoretically, with the Firemon protocol, total percent cover could be greater than 100, because live and dead percent covers are assessed separately. In practice, sum of live and dead cover was over 100 percent.</p>
+<!-- TODO: find better sources of shrub bulk density. -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>veg_match <span class="ot">&lt;-</span> <span class="st">"woody|herb|avg_w_ht|avg_h_ht|species"</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>veg <span class="ot">&lt;-</span> d<span class="sc">$</span>transects <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), slope, <span class="fu">matches</span>(veg_match)) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">c</span>(<span class="fu">any_of</span>(transectid), slope),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"station"</span>),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(</span><span class="sc">\\</span><span class="st">w+)([12])"</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_ht =</span> <span class="fu">if_else</span>(live_woody <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_woody <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_w_ht),</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_ht =</span> <span class="fu">if_else</span>(live_herb <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> dead_herb <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, avg_h_ht),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_load =</span> ((live_woody <span class="sc">+</span> dead_woody) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> woody_ht <span class="sc">*</span> <span class="dv">18</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">woody_p_dead =</span> <span class="fu">if_else</span>(</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>      woody_load <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_woody <span class="sc">/</span> (live_woody <span class="sc">+</span> dead_woody)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_load =</span> ((live_herb <span class="sc">+</span> dead_herb) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">*</span> herb_ht <span class="sc">*</span> <span class="dv">8</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">herb_p_dead =</span> <span class="fu">if_else</span>(</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>      herb_load <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, dead_herb <span class="sc">/</span> (live_herb <span class="sc">+</span> dead_herb)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">matches</span>(<span class="st">"live_|dead_|avg_"</span>), woody_ht, herb_ht) <span class="sc">|&gt;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"woody|herb"</span>),</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"class"</span>, <span class="st">".value"</span>),</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_pattern =</span> <span class="st">"(woody|herb)_(.*)"</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="sec-total-load" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-total-load"><span class="header-section-number">3.6</span> Total load</h2>
+<p>Now we can join results for fine woody debris, coarse woody debris, litter, and duff into a single dataframe.</p>
+<p>Vegetation and duff/litter first need to be summarized to the transect level.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dufflitter_load <span class="ot">&lt;-</span> dufflitter <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid))) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">class =</span> <span class="st">"dufflitter"</span>, <span class="at">load =</span> <span class="fu">mean</span>(load))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>veg_load <span class="ot">&lt;-</span> veg <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(transectid)), class) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">load =</span> <span class="fu">mean</span>(load))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>fwd_load <span class="ot">&lt;-</span> fwd <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), class, load)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>cwd_load <span class="ot">&lt;-</span> cwd <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">all_of</span>(transectid), class, load)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>total_load <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dufflitter_load, veg_load, fwd_load, cwd_load)<span class="sc">|&gt;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>John Stuart measured old-growth forest fuels in in Bull Creek Drainage of Humboldt Redwood State Park, approximately 30 km inland from the coast. Overstory BA was about 66 m<sup>2</sup>ha<sup>-1</sup>. Plots were classifed based on their overstory/understory species as one of:</p>
+<ul>
+<li>redwood-Douglas-fir/tanoak-evergreen huckleberry</li>
+<li>redwood-Douglas-fir/evergreen huckleberry-tanoak</li>
+<li>Douglas-fir-redwood/evergreen huckleberry</li>
+</ul>
+<p><span class="citation" data-cites="finneyFuelLoadingBulk1993">Finney and Martin (<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">1993</a>)</span> measured fuels at two loacations. In Annadel SP with 30-40% slopes and 45 - 60 m<sup>2</sup>ha<sup>-1</sup> of trees approximate 120 years old. At RW SP, BA was between 20 and 60 m<sup>2</sup>ha<sup>-1</sup> that sprouted after harvest and were around 90 years old.</p>
+<p><span class="citation" data-cites="kittredgeComparisonForestFloors1940">Kittredge (<a href="#ref-kittredgeComparisonForestFloors1940" role="doc-biblioref">1940</a>)</span> studied duff and litter in redwood plantations with an average total depth of 4 cm.</p>
+<p><span class="citation" data-cites="valachovicSuddenOakDeathcaused2011">Valachovic et al. (<a href="#ref-valachovicSuddenOakDeathcaused2011" role="doc-biblioref">2011</a>)</span> measured surface fuels in Douglas-fir-tanoak forests from Sonoma to northern Humboldt counteis. The values shown are from across this range.</p>
+<div id="tbl-total-load" class="quarto-layout-panel anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-total-load-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.3: Summary of fuel loading metrics for this and other studies.
+</figcaption>
+<div aria-describedby="tbl-total-load-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-total-load" style="flex-basis: 50.0%;justify-content: center;">
+<div id="dftlhsphnv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dftlhsphnv table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#dftlhsphnv thead, #dftlhsphnv tbody, #dftlhsphnv tfoot, #dftlhsphnv tr, #dftlhsphnv td, #dftlhsphnv th {
+  border-style: none;
+}
+
+#dftlhsphnv p {
+  margin: 0;
+  padding: 0;
+}
+
+#dftlhsphnv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#dftlhsphnv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#dftlhsphnv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#dftlhsphnv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#dftlhsphnv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#dftlhsphnv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#dftlhsphnv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#dftlhsphnv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#dftlhsphnv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#dftlhsphnv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#dftlhsphnv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#dftlhsphnv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#dftlhsphnv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#dftlhsphnv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#dftlhsphnv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dftlhsphnv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#dftlhsphnv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#dftlhsphnv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#dftlhsphnv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dftlhsphnv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#dftlhsphnv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dftlhsphnv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#dftlhsphnv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dftlhsphnv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dftlhsphnv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dftlhsphnv .gt_left {
+  text-align: left;
+}
+
+#dftlhsphnv .gt_center {
+  text-align: center;
+}
+
+#dftlhsphnv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#dftlhsphnv .gt_font_normal {
+  font-weight: normal;
+}
+
+#dftlhsphnv .gt_font_bold {
+  font-weight: bold;
+}
+
+#dftlhsphnv .gt_font_italic {
+  font-style: italic;
+}
+
+#dftlhsphnv .gt_super {
+  font-size: 65%;
+}
+
+#dftlhsphnv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#dftlhsphnv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#dftlhsphnv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#dftlhsphnv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#dftlhsphnv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#dftlhsphnv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#dftlhsphnv .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<div id="tbl-total-load-1" class="gt_table do-not-create-environment quarto-float anchored" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-total-load-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a)
+</figcaption>
+<div aria-describedby="tbl-total-load-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table id="tbl-total-load-1" class="gt_table do-not-create-environment table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" style="text-align: left;" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="source" class="gt_col_heading gt_columns_bottom_border gt_left" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">source</th>
+<th id="low" class="gt_col_heading gt_columns_bottom_border gt_right" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">low</th>
+<th id="high" class="gt_col_heading gt_columns_bottom_border gt_right" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">high</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd gt_row_group_first">
+<td class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="litter stub_1_1 stub_1">litter</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="litter stub_1_1 source">valachovic</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="litter stub_1_1 low">2.9</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="litter stub_1_1 high">4.7</td>
+</tr>
+<tr class="even gt_row_group_first">
+<td rowspan="4" class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="dufflitter stub_1_2 stub_1">dufflitter</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="dufflitter stub_1_2 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="dufflitter stub_1_2 low">40.2</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="dufflitter stub_1_2 high">55.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="dufflitter source_3 source">finney</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="dufflitter source_3 low">29.0</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="dufflitter source_3 high">55.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="dufflitter source_4 source">kittredge</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="dufflitter source_4 low">24.0</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="dufflitter source_4 high">24.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="dufflitter source_5 source">stuart</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="dufflitter source_5 low">30.9</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="dufflitter source_5 high">73.6</td>
+</tr>
+<tr class="even gt_row_group_first">
+<td rowspan="3" class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="onehr stub_1_6 stub_1">onehr</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="onehr stub_1_6 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onehr stub_1_6 low">0.6</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onehr stub_1_6 high">1.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="onehr source_7 source">valachovic</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onehr source_7 low">2.0</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onehr source_7 high">3.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="onehr source_8 source">stuart</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onehr source_8 low">0.9</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onehr source_8 high">2.1</td>
+</tr>
+<tr class="odd gt_row_group_first">
+<td rowspan="3" class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="tenhr stub_1_9 stub_1">tenhr</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="tenhr stub_1_9 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="tenhr stub_1_9 low">2.9</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="tenhr stub_1_9 high">3.7</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="tenhr source_10 source">valachovic</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="tenhr source_10 low">2.5</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="tenhr source_10 high">6.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="tenhr source_11 source">stuart</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="tenhr source_11 low">3.5</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="tenhr source_11 high">6.4</td>
+</tr>
+<tr class="even gt_row_group_first">
+<td rowspan="3" class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="hundhr stub_1_12 stub_1">hundhr</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="hundhr stub_1_12 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="hundhr stub_1_12 low">9.5</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="hundhr stub_1_12 high">11.8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="hundhr source_13 source">valachovic</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="hundhr source_13 low">3.1</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="hundhr source_13 high">7.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="hundhr source_14 source">stuart</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="hundhr source_14 low">2.8</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="hundhr source_14 high">7.5</td>
+</tr>
+<tr class="odd gt_row_group_first">
+<td rowspan="4" class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="onetenhundhr stub_1_15 stub_1">onetenhundhr</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="onetenhundhr stub_1_15 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onetenhundhr stub_1_15 low">13.4</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onetenhundhr stub_1_15 high">16.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="onetenhundhr source_16 source">finney</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onetenhundhr source_16 low">9.0</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onetenhundhr source_16 high">20.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="onetenhundhr source_17 source">valachovic</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onetenhundhr source_17 low">9.0</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onetenhundhr source_17 high">15.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="onetenhundhr source_18 source">stuart</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onetenhundhr source_18 low">8.0</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="onetenhundhr source_18 high">13.4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-total-load" style="flex-basis: 50.0%;justify-content: center;">
+<div id="bqvpuvzqfs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bqvpuvzqfs table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bqvpuvzqfs thead, #bqvpuvzqfs tbody, #bqvpuvzqfs tfoot, #bqvpuvzqfs tr, #bqvpuvzqfs td, #bqvpuvzqfs th {
+  border-style: none;
+}
+
+#bqvpuvzqfs p {
+  margin: 0;
+  padding: 0;
+}
+
+#bqvpuvzqfs .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bqvpuvzqfs .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#bqvpuvzqfs .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#bqvpuvzqfs .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#bqvpuvzqfs .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#bqvpuvzqfs .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#bqvpuvzqfs .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#bqvpuvzqfs .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#bqvpuvzqfs .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#bqvpuvzqfs .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#bqvpuvzqfs .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#bqvpuvzqfs .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#bqvpuvzqfs .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#bqvpuvzqfs .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#bqvpuvzqfs .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bqvpuvzqfs .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bqvpuvzqfs .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bqvpuvzqfs .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#bqvpuvzqfs .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bqvpuvzqfs .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bqvpuvzqfs .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bqvpuvzqfs .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#bqvpuvzqfs .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bqvpuvzqfs .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bqvpuvzqfs .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bqvpuvzqfs .gt_left {
+  text-align: left;
+}
+
+#bqvpuvzqfs .gt_center {
+  text-align: center;
+}
+
+#bqvpuvzqfs .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#bqvpuvzqfs .gt_font_normal {
+  font-weight: normal;
+}
+
+#bqvpuvzqfs .gt_font_bold {
+  font-weight: bold;
+}
+
+#bqvpuvzqfs .gt_font_italic {
+  font-style: italic;
+}
+
+#bqvpuvzqfs .gt_super {
+  font-size: 65%;
+}
+
+#bqvpuvzqfs .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#bqvpuvzqfs .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bqvpuvzqfs .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bqvpuvzqfs .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bqvpuvzqfs .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bqvpuvzqfs .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bqvpuvzqfs .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<div id="tbl-total-load-2" class="gt_table do-not-create-environment quarto-float anchored" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-total-load-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b)
+</figcaption>
+<div aria-describedby="tbl-total-load-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table id="tbl-total-load-2" class="gt_table do-not-create-environment table" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" style="text-align: left;" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="source" class="gt_col_heading gt_columns_bottom_border gt_left" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">source</th>
+<th id="low" class="gt_col_heading gt_columns_bottom_border gt_right" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">low</th>
+<th id="high" class="gt_col_heading gt_columns_bottom_border gt_right" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">high</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd gt_row_group_first">
+<td rowspan="3" class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="thoushr_s stub_1_1 stub_1">thoushr_s</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr_s stub_1_1 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_s stub_1_1 low">27.4</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_s stub_1_1 high">72.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr_s source_2 source">valachovic</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_s source_2 low">4.9</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_s source_2 high">76.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr_s source_3 source">stuart</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_s source_3 low">5.0</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_s source_3 high">117.4</td>
+</tr>
+<tr class="even gt_row_group_first">
+<td rowspan="3" class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="thoushr_r stub_1_4 stub_1">thoushr_r</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr_r stub_1_4 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_r stub_1_4 low">23.0</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_r stub_1_4 high">59.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr_r source_5 source">valachovic</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_r source_5 low">3.1</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_r source_5 high">35.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr_r source_6 source">stuart</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_r source_6 low">0.5</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr_r source_6 high">46.7</td>
+</tr>
+<tr class="odd gt_row_group_first">
+<td rowspan="4" class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="thoushr stub_1_7 stub_1">thoushr</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr stub_1_7 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr stub_1_7 low">45.1</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr stub_1_7 high">60.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr source_8 source">finney</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr source_8 low">0.0</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr source_8 high">264.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr source_9 source">valachovic</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr source_9 low">18.3</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr source_9 high">85.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="thoushr source_10 source">stuart</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr source_10 low">5.6</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="thoushr source_10 high">126.3</td>
+</tr>
+<tr class="odd gt_row_group_first">
+<td rowspan="2" class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="veg_woody stub_1_11 stub_1">veg_woody</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="veg_woody stub_1_11 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="veg_woody stub_1_11 low">12.4</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="veg_woody stub_1_11 high">37.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: left;" headers="veg_woody source_12 source">stuart</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="veg_woody source_12 low">0.1</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="veg_woody source_12 high">5.6</td>
+</tr>
+<tr class="odd gt_row_group_first">
+<td class="gt_row gt_left gt_stub_row_group" style="text-align: left;" headers="veg_herb stub_1_13 stub_1">veg_herb</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="veg_herb stub_1_13 source">thisstudy</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="veg_herb stub_1_13 low">0.2</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="veg_herb stub_1_13 high">0.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</section>
+<section id="summary" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.7</span> Summary</h2>
+<p>Our combined duff-litter depths were comparable to other studies, resulting in comparable loading for litter and duff.</p>
+<p>Onehr fuels were lower than then other redwood study and that found in Douglas-fir/tanoak forests, which is somewhat supprising.</p>
+<p>Hundhr fuels were higher in our stands. This makes sense given the logging.</p>
+<p>Total fine fuel loading (onetenhundhr) was similar to other studies, but apprently with more hundhr particles.</p>
+<p>Thoushr fuels are notoriously variable. Those on our sites were more consistent and within the middle of the range of other reported values.</p>
+<p>Woody vegetation was much higher than in the one other reported study. That study was in old-growth redwoods. Our values include tree sprout vegetation, which can be several times taller than evergreen huckleberry and much bushier than understory tanoak saplings. Stuart did mention the presence of “nearly inpenetrable [evergreen huckleberry] thickets.” <span class="citation" data-cites="stuartRedwoodFireEcology1985">Stuart (<a href="#ref-stuartRedwoodFireEcology1985" role="doc-biblioref">1985</a>)</span> found good correlation of live fuels (which included leaves and “twigs”) with basal diamter for both huckleberry and tanoak saplings. The simple scaling factor and/or the occular estimates we used may be biased.</p>
+</section>
+<section id="save-data" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="save-data"><span class="header-section-number">3.8</span> Save data</h2>
+<p>I’ll Save this data so it can be used in subsequent analysis.</p>
+<ul>
+<li>dufflitter, fwd, cwd, and veg, represent mostly raw data in a long format
+<ul>
+<li>this includes two stations per transect for classes for veg and dufflitter</li>
+</ul></li>
+<li>total_load is the summarized loading for all classes by transect.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(dufflitter, fwd, cwd, veg, total_load, <span class="at">file =</span> <span class="st">"data_long.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-brownHandbookInventoryingDowned1974" class="csl-entry" role="listitem">
+Brown, James K. 1974. <span>“Handbook for Inventorying Downed Woody Material.”</span> <em>Gen. Tech. Rep. INT-16. Ogden, UT: US Department of Agriculture, Forest Service, Intermountain Forest and Range Experiment Station. 24 p.</em> 16.
+</div>
+<div id="ref-finneyFuelLoadingBulk1993" class="csl-entry" role="listitem">
+Finney, Mark A., and Robert E. Martin. 1993. <span>“Fuel Loading, Bulk Density, and Depth of Forest Floor in Coast Redwood Stands.”</span> <em>Forest Science</em> 39 (3): 617–22.
+</div>
+<div id="ref-glebockiFuelLoadingMoisture2015" class="csl-entry" role="listitem">
+Glebocki, Radoslaw. 2015. <span>“Fuel Loading and Moisture Dynamics in Thinned Coast Redwood Forests in <span>Headwaters Forest Reserve</span>, <span>California</span>.”</span> Master’s thesis, Humboldt State University. <a href="https://scholarworks.calstate.edu/concern/theses/ws859j014">https://scholarworks.calstate.edu/concern/theses/ws859j014</a>.
+</div>
+<div id="ref-kittredgeComparisonForestFloors1940" class="csl-entry" role="listitem">
+Kittredge, Joseph. 1940. <span>“A Comparison of Forest Floors from Plantations of the Same Age and Environment.”</span> <em>Journal of Forestry</em> 38 (9): 729–31. <a href="https://doi.org/10.1093/jof/38.9.729">https://doi.org/10.1093/jof/38.9.729</a>.
+</div>
+<div id="ref-kriegerChronosequenceFuelLoading2020" class="csl-entry" role="listitem">
+Krieger, Raven M., Brian E. Wall, Cody W. Kidd, and John-Pascal Berrill. 2020. <span>“Chronosequence of <span>Fuel Loading</span> and <span>Fuel Depth Following Forest Rehabilitation Frill Treatment</span> of <span>Tanoak</span> to <span>Release Douglas-Fir</span>: <span>A Case Study</span> from <span>Northern California</span>.”</span> <em>Forests</em> 11 (6): 691. <a href="https://doi.org/10.3390/f11060691">https://doi.org/10.3390/f11060691</a>.
+</div>
+<div id="ref-nivesFireBehaviorForest1989" class="csl-entry" role="listitem">
+Nives, Sherryl L. 1989. <span>“Fire Behavior on the Forest Floor in Coastal Redwood Forests, <span>Redwood National Park</span>.”</span> PhD thesis, Humboldt State University.
+</div>
+<div id="ref-stuartRedwoodFireEcology1985" class="csl-entry" role="listitem">
+Stuart, John. 1985. <span>“Redwood Fire Ecology: Final Report Submitted to <span>California Department</span> of <span>Parks</span> and <span>Recreation</span>.”</span> <span>Forestry Department, Humboldt State University</span>.
+</div>
+<div id="ref-valachovicSuddenOakDeathcaused2011" class="csl-entry" role="listitem">
+Valachovic, Yana S., Christopher A. Lee, Hugh Scanlon, J. Morgan Varner, Radoslaw Glebocki, Bradley D. Graham, and David M. Rizzo. 2011. <span>“Sudden Oak Death-Caused Changes to Surface Fuel Loading and Potential Fire Behavior in <span class="nocase">Douglas-fir-tanoak</span> Forests.”</span> <em>Forest Ecology and Management</em> 261 (11): 1973–86. <a href="https://doi.org/10.1016/j.foreco.2011.02.024">https://doi.org/10.1016/j.foreco.2011.02.024</a>.
+</div>
+<div id="ref-vanwagnerPracticalAspectsLine1982" class="csl-entry" role="listitem">
+Van Wagner, C. E. 1982. <span>“Practical Aspects of the Line Intersect Method.”</span> PI-X-12. <span>Chalk River, Ontario, Canada</span>: <span>Petawawa National Forestry Institute, Canadian Forestry Service</span>.
+</div>
+<div id="ref-vanwagtendonkPhysicalPropertiesWoody1996" class="csl-entry" role="listitem">
+Van Wagtendonk, J. W., J. M. Benedict, and W. M. Sydoriak. 1996. <span>“Physical Properties of Woody Fuel Particles of <span>Sierra Nevada</span> Conifers.”</span> <em>International Journal of Wildland Fire</em> 6 (3): 117–23. <a href="https://doi.org/10.1071/wf9960117">https://doi.org/10.1071/wf9960117</a>.
+</div>
+<div id="ref-vanwagtendonkFuelBedCharacteristics1998" class="csl-entry" role="listitem">
+Van Wagtendonk, Jan W., James M. Benedict, and Walter M. Sydoriak. 1998. <span>“Fuel Bed Characteristics of <span>Sierra Nevada</span> Conifers.”</span> <em>Western Journal of Applied Forestry</em> 13 (3): 73–84. <a href="https://doi.org/10.1093/wjaf/13.3.73">https://doi.org/10.1093/wjaf/13.3.73</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../analysis/fuel_data_description.html" class="pagination-link  aria-label=" &lt;span="" data="" description&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fuel data description</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../analysis/fuel_data_exploration.html" class="pagination-link" aria-label="<span class='chapter-number'>4</span>&nbsp; <span class='chapter-title'>Fuel data exploration</span>">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
