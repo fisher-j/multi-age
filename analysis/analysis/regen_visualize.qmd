@@ -23,10 +23,16 @@ for_const <- function(dbh) {
   pi * dbh^2 / (4 * 10000)
 }
 
-# I need a mapping so that each species gets a unique color
-spp_col <- set_names(
-  scales::pal_viridis(option = "D")(n_distinct(regen$spp)), unique(regen$spp)
-)
+# I need a mapping so that each species gets a unique color, I'll make this a
+# function that takes a palette function from the scales package and returns a
+# named vector
+
+spp_col <- function(data, .palfun, ...) {
+  pal <- .palfun(...)
+  spp <- unique(data$spp)
+  purrr::set_names(pal(length(spp)), spp)
+}
+
 
 ```
 
@@ -93,9 +99,10 @@ raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
       n = paste("Total: ", round(n() * per_ha["treat"])),
     )
   }
+  colors <- spp_col(regen, scales::brewer_pal, palette = "Set2")
   regen |>
     filter({{ group }}) |>
-    ggplot(aes(dbh, fill = fct_reorder(spp, spp, length))) +
+    ggplot(aes(dbh, fill = forcats::fct_reorder(spp, spp, length))) +
     stat_bin(aes(y = after_stat(count) * per_ha["treat"]), breaks = bin_breaks) +
     ggpp::geom_text_npc(
       data = generate_facet_totals,
@@ -105,7 +112,7 @@ raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
     labs(y = expression(trees %.% ha^-1), x = "dbh (cm)", fill = "spp") +
     scale_x_continuous(breaks = scale_breaks) +
     scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
-    scale_fill_manual(values = spp_col) +
+    scale_fill_manual(values = colors) +
     theme_bw()
 }
 
@@ -129,7 +136,7 @@ local({
     )
   }
   regen |>
-    ggplot(aes(dbh, fill = fct_reorder(spp, dbh, .fun = ~sum(.x^2)))) +
+    ggplot(aes(dbh, fill = forcats::fct_reorder(spp, dbh, .fun = ~sum(.x^2)))) +
     stat_bin(aes(weight = per_ha["treat"] * for_const(dbh)), breaks = bin_breaks) +
     ggpp::geom_text_npc(
       data = facet_total_label,
@@ -139,10 +146,23 @@ local({
     labs(y = expr(m^2 %.% ha^-1), x = "dbh (cm)", fill = "spp") +
     scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
     scale_x_continuous(breaks = scale_breaks) +
-    scale_fill_manual(values = spp_col) +
-    # scale_fill_grey() +
+    scale_fill_manual(values = spp_col(regen, scales::brewer_pal, palette = "Set2")) +
     theme_bw()
 })
+
+```
+
+We decided that the minor species are not that interesting here, we are
+grouping them into "other." I'll also order them they their prevelance which
+will aid in plotting.
+
+```{r}
+
+# Reduce number of species
+regen <- mutate(regen,
+  spp = if_else(spp %in% c("rw", "to", "df"), spp, "other"),
+  spp = forcats::fct_reorder(spp, spp, length),
+)
 
 ```
 
@@ -155,4 +175,10 @@ larger than 2 cm (p = 0.02 and p = 0.001, respectively)*
 
 *The HD treatment resulted in more Douglas-fir than the LD and GS treatments*
 
+Save data from this page for future use
 
+```{r}
+
+save(regen, spp_col, per_ha, for_const, file = "regen_visualize.rda")
+
+```

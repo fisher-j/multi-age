@@ -7,7 +7,8 @@ load2 <- function(shape = "wide", ...) {
       thoushr = rowSums(pick(c(thoushr_s, thoushr_r)), na.rm = TRUE),
       veg = rowSums(pick(c(woody, herb)), na.rm = TRUE),
       .keep = "unused"
-    )
+    ) |>
+    mutate(treatment = forcats::fct_relevel(treatment, c("gs", "ld", "ha", "hd")))
   if (!missing(...)) tl <- select(tl, ...)
   if (shape == "long") {
     tl <- pivot_longer(tl,

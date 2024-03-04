@@ -1154,3 +1154,91 @@ sprouts |>
   ) +
   scale_x_continuous(limits = c(-2, 16))
 
+################################################################################
+################################# A macro plot #################################
+################################################################################
+library(ggforce)
+library(ggplot2)
+library(dplyr)
+
+max <- 44.7
+# CW from bottom left
+xdir <- c(1, 1, -1, -1)
+ydir <- c(1, -1, -1, 1)
+corner_inset <- 10 / sqrt(2)
+centerx <- xdir * corner_inset + c(0, 0, max, max)
+centery <- ydir * corner_inset + c(0, max, max, 0)
+centers <- data.frame(x = centerx, y = centery)
+regen <- cbind(centers, r = 4)
+transects <- rbind(centers, centers)
+transect_endx <- xdir * 10 + centerx
+transect_endy <- ydir * 10 + centery
+# Half of the x and y coordinates of the transect ends are the same as the
+# center, and half are different.
+transects$xend <- c(transect_endx, centerx)
+transects$yend <- c(centery, transect_endy)
+# distance of samp. cyls. from regen centers 
+x = c(1, 1, 0, 0, 0, 0, 1, 1, -1, -1, 0, 0, 0, 0, -1, -1)
+y = c(0, 0, 1, 1, -1, -1, 0, 0, 0, 0, -1, -1, 1, 1, 0, 0)
+samp_cyl <- data.frame(
+  x = x * c(9, 5) + rep(centerx, each = 4),
+  y = y * c(9, 5) + rep(centery, each = 4),
+  r = 1
+)
+
+plot_design <- function() {
+  ggplot() +
+  geom_rect(
+    aes(xmin = 0, ymin = 0, xmax = max, ymax = max),
+    color = "black",
+    fill = NA
+  ) +
+  # geom_point(aes(centerx, centery)) +
+  geom_circle(data = regen, aes(x0 = x, y0 = y, r = r), color = "#008000") +
+  geom_circle(data = samp_cyl, aes(x0 = x, y0 = y, r = r), color = "#ff7f00") +
+  geom_segment(data = transects, aes(x, y, xend = xend, yend = yend)) +
+  theme(
+    panel.grid = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    panel.spacing = unit(0, "in"),
+    aspect.ratio = 1,
+    plot.background = element_blank()
+  ) +
+  scale_x_continuous(position = "top") +
+  labs(x = "Treatment", y = "Site")
+}
+
+experiment_design <- function() {
+  treatment <- c("GS", "LD", "HA", "HD")
+  site <- factor(c(1, 2, 3, 4))
+  all_transects <- tidyr::expand_grid(treatment, site, transects)
+  all_regen <- tidyr::expand_grid(treatment, site, regen)
+  all_samp_cyl <- tidyr::expand_grid(treatment, site, samp_cyl)
+
+  ggplot() +
+  geom_rect(
+    aes(xmin = 0, ymin = 0, xmax = max, ymax = max),
+    color = "black",
+    fill = NA
+  ) +
+  # geom_point(aes(centerx, centery)) +
+  geom_circle(data = all_regen, aes(x0 = x, y0 = y, r = r), color = "#008000") +
+  geom_circle(data = all_samp_cyl, aes(x0 = x, y0 = y, r = r), color = "#ff7f00") +
+  geom_segment(data = all_transects, aes(x, y, xend = xend, yend = yend)) +
+  facet_grid(
+    site ~ treatment,
+    switch = "y"
+  ) +
+  theme(
+    panel.grid = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    panel.spacing = unit(0, "in"),
+    aspect.ratio = 1,
+    plot.background = element_blank()
+  ) +
+  scale_x_continuous(position = "top") +
+  labs(x = "Treatment", y = "Site")
+}
+
