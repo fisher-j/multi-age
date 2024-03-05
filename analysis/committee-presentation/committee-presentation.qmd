@@ -286,6 +286,26 @@ plot_design("samp_cyl")
 :::
 ::::
 
+## Sampling review
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 4
+library(patchwork)
+
+local({
+  title <- function(T) {
+    list(
+      ggplot2::labs(title = T),
+      ggplot2::theme(plot.title = ggplot2::element_text(size = 20))
+    )
+  }
+  plot_design("macro") + title("Sprout heights") +
+    plot_design("regen") + title("Regen. density") +
+    plot_design(c("samp_cyl", "transect")) + title("Fuels")
+})
+
+```
+
 ## What we did
 
 1. [Implementation]{style="opacity: 50%"}
@@ -649,25 +669,6 @@ $$load = ht. \times pct. cover \times \rho,$$
 where $\rho$ is a bulk density of 8 and 18 Mg/ha/m for herbaceous and shrub
 components, respectively. 
  
-## Sampling review
-
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-height: 4
-library(patchwork)
-
-local({
-  title <- function(T) {
-    list(
-      ggplot2::labs(title = T),
-      ggplot2::theme(plot.title = ggplot2::element_text(size = 20))
-    )
-  }
-  plot_design("macro") + title("Sprout heights") +
-    plot_design("regen") + title("Regen. density") +
-    plot_design(c("samp_cyl", "transect")) + title("Fuels")
-})
-
-```
 
 ## Fuel bed depth
 
