@@ -1242,3 +1242,24 @@ experiment_design <- function() {
   labs(x = "Treatment", y = "Site")
 }
 
+
+design <- "
+############
+############
+############
+############
+############
+1###########
+"
+
+source("./scripts/design.r")
+
+plot_design("transect") + ggplot2::expand_limits(x = 300, y = 200)
+  ggplot2::ggsave("figures/transect_bg.png")
+plot_design("macro") + ggplot2::expand_limits(x = 300, y = 200)
+  ggplot2::ggsave("figures/macro_bg.png")
+plot_design("regen") + ggplot2::expand_limits(x = 300, y = 200)
+  ggplot2::ggsave("figures/regen_bg.png")
+plot_design("samp_cyl") + ggplot2::expand_limits(x = 300, y = 200)
+  ggplot2::ggsave("figures/samp_cyl_bg.png")
+

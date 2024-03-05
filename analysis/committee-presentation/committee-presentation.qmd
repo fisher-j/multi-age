@@ -19,62 +19,100 @@ Thesis committee presentation by Judson Fisher
 
 ## Thank you
 
-## {background-image="../figures/site_map_2.png" background-size="contain"}
+:::{.notes}
+- Thank you for being here
+- exciting time
+- appreciate your willingness to see me through to the finish
+- by the end
+  - good understanding of project
+  - some idea of where you'll be able to offer support/feedback
+:::
 
 ## Today's plan
 
-1. **Why we did it**
-1. [Why we did it]{.fragment fragment-index=1 .semi-fade-out}
+1. **Introduction**
+1. [What we did]{.fragment fragment-index=1 .semi-fade-out}
 1. [Some results]{.fragment fragment-index=1 .semi-fade-out}
 1. [My questions]{.fragment fragment-index=1 .semi-fade-out}
 1. [Your questions]{.fragment fragment-index=1 .semi-fade-out}
 
-## Multiaged silviculture is an important part of Ecological forest management
+---
+
+:::{.columns}
+:::{.column width=35%}
+### A multiaged silviculture experiment
+:::
+:::{.column width=65%}
+![](../figures/site_map_2.png)
+:::
+:::
+
+## An important part of ecological forest management
 
 - Diversity of forest structures == Diversity of silvicultural techniques
-- Predominace of even-aged management
-- This work contributes to our understanding of mulitaged stand development
+- Predominance of even-aged management
+- This work contributes to our understanding of multiaged stand development
 - Greater understanding -> increased adoption
 
 ## Suitability of redwood forests
 
+:::{.columns}
+:::{.column}
 - Timber value
-- Shade tollerance
-- Reliable regneration
+- Shade tolerance
+- Reliable regeneration
+:::
+:::{.column}
+![](../figures/redwood_sprouts.jpg)
+:::
+:::
 
-## Towards fire-informed management in the redwood region
+## Fire-informed management
+
+:::{.columns}
+:::{.column width=70%}
 
 - Slow adoption of fire-informed management on the North Coast
 - Redwood is a fire-adapted species
 - Historical record shows frequent fire
 - What is the pyrosilvicultural significance of our management actions?
 
+:::
+:::{.column width=30%}
+![](../figures/redwood_fire.png){height=500}
+:::
+:::
+
 ## Today's plan
 
-1. [Why we did it]{.fragment fragment-index=1 .semi-fade-out}
+1. [Introduction]{.fragment fragment-index=1 .semi-fade-out}
 1. **What we did**
 1. [Some results]{.fragment fragment-index=1 .semi-fade-out}
 1. [My questions]{.fragment fragment-index=1 .semi-fade-out}
 1. [Your questions]{.fragment fragment-index=1 .semi-fade-out}
 
+:::{.notes}
+Now that you have and idea of the what and why, I'll explain more of the details
+of what we did.
+:::
 
 ## What we did
 
-1. **Implement experiment**
-1. [Establish plots and transects]{style="opacity: 50%"}
-1. [Sample fuels, sprout heights, and sprout densities]{style="opacity: 50%"}
-1. [Model sprout heights, report densities, model fuels]{style="opacity: 50%"}
+1. **Implementation**
+1. [Sampling procedure]{style="opacity: 50%"}
+1. [Analysis]{style="opacity: 50%"}
 
 
-## In 2012 we harvested 16 one-hectare blocks using different harvest treatments{.smaller}
+## Initial harvest: 2012
 
 :::{.columns}
 :::{.column width=60%}
 
-- **GS**: Group selection
-- **LD**: Low density dispersed
-- **HA**: High density aggregated 
-- **HD**: High density dispersed
+- 16 one-hectare blocks 
+  - **GS**: Group selection
+  - **LD**: Low density dispersed
+  - **HA**: High density aggregated 
+  - **HD**: High density dispersed
 
 These four treatments were replicated across four sites.
 
@@ -118,10 +156,9 @@ experiment_design("macro")
 
 ## What we did
 
-1. [Implement experiment]{style="opacity: 50%"}
-1. **Establish plots and transects**
-1. [Sample fuels, sprout heights, and sprout densities]{style="opacity: 50%"}
-1. [Model sprout heights, report densities, model fuels]{style="opacity: 50%"}
+1. [Implementation]{style="opacity: 50%"}
+1. **Sampling procedure**
+1. [Analysis]{style="opacity: 50%"}
 
 ## The plot structure{.smaller}
 
@@ -140,73 +177,32 @@ experiment_design("macro")
 :::
 
 :::{.notes}
-We located macro plots within the center of each treatment block
-
-- 0.4 ha square **macro plot**
-  - Four 4-meter radius **sprout density plots**, near macro plot corners
-    - Two 10-meter **transects**, terminating at the center of each sprout density
-      plot (eight per macro plot)
-      - Two 1-meter radius **sampling cylinders** along each transect (16 per macro
-        plot)
+The macro and regeneration plots are just fixed area plots.
+Here is a visualization of the fuels transect and sampling cylinders
 :::
-
-##
-
-:::{.columns}
-:::{.column}
-![Sampling cylinders](../figures/samp_cyl.png)
-:::
-:::{.column}
-![A fuel transect](../figures/transect.jpg)
-:::
-:::
-
-
-## What we did
-
-1. [Implement experiment]{style="opacity: 50%"}
-1. [Establish plots and transects]{style="opacity: 50%"}
-1. **Sample sprout heights, regen. densities, and fuels**
-1. [Model sprout heights, report densities, model fuels]{style="opacity: 50%"}
-
-
-## Sampling
-
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-height: 4
-library(patchwork)
-
-local({
-  title <- function(T) {
-    list(
-      ggplot2::labs(title = T),
-      ggplot2::theme(plot.title = ggplot2::element_text(size = 20))
-    )
-  }
-  plot_design("macro") + title("Sprout heights") +
-    plot_design("regen") + title("Regen. density") +
-    plot_design(c("samp_cyl", "transect")) + title("Fuels")
-})
-
-```
 
 ## Sprout height
 
 :::{.columns}
 :::{.column width=60%}
+
 - 25 each of tanoak and redwood sprout clumps were selected for measurement
 - Tallest sprout in clump measured at years 1, 5, and 10
+
 :::
 :::{.column width=40%}
+![](../figures/measuring_sprouts10.jpg){}
+
+
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-cap: Macro plot
-#| fig-width: 3.5
-#| fig-height: 3.5
+#| fig-width: 1.5
+#| fig-height: 1.5
 plot_design("macro")
 ```
 :::
 :::
 
+<!--
 ---
 
 :::: {.columns}
@@ -214,21 +210,23 @@ plot_design("macro")
 ![Year 1](../figures/measuring_sprouts1.jpg){height=350}
 :::
 :::{.column}
-![Year 10](../figures/measuring_sprouts10.jpg){height=350}
 :::
 ::::
+-->
 
 ## Regeneration density and composition
 
 :::{.columns}
 :::{.column width=60%}
 We recorded diameter and species of all sprouts and seedlings taller than 1.4 m
+
 :::
 :::{.column width=40%}
+
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-cap: Regen. plots
 #| fig-width: 3.5
 #| fig-height: 3.5
+#| fig-align: left
 plot_design("regen")
 ```
 :::
@@ -244,24 +242,11 @@ plot_design("regen")
   parameters from the literature
 :::
 :::{.column width=40%}
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-cap: Fuels transects
-#| fig-width: 3.5
-#| fig-height: 3.5
-plot_design("transect")
-```
+
+![A transect](../figures/transect.jpg)
+
 :::
 :::
-
-## Downed woody fuel classes
-
-Class name | Size (cm)  | Transect length (m)
----------- | ---------- | -------------------
-1 hr       | < 0.64     | 1
-10 hr      | 0.64 - 2.5 | 2
-100 hr     | 2.5 - 7.6  | 4
-1,000 hr   | > 7.6      | 10
-
 
 ## Litter and duff
 
@@ -273,7 +258,6 @@ Class name | Size (cm)  | Transect length (m)
 :::
 :::{.column width=40%}
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-cap: Sampling cylinders
 #| fig-width: 3.5
 #| fig-height: 3.5
 plot_design("samp_cyl")
@@ -281,49 +265,22 @@ plot_design("samp_cyl")
 :::
 :::
 
-## Wet and dry live vegetation
+## Vegetation
 
 :::: {.columns}
 :::{.column width=60%}
-We estimated percent cover and average height for standing vegetation in four classes:
-
-- Green (wet) herbaceous
-- Dry (brown) herbaceous
-- Green (wet) woody
-- Dry (brown) woody
+- We estimated percent cover and average height 
+- Converted to load using a constant bulk density
 :::
 
 :::{.column width=40%}
+
+![](../figures/samp_cyl.png)
+
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-cap: Sampling cylinders
-#| fig-width: 3.5
-#| fig-height: 3.5
-plot_design("samp_cyl")
-```
-:::
-::::
-
-## Wet and dry live vegetation
-
-We calculated average load for herbaceous and woody vegetation: 
-
-$$load = ht. \times pct. cover \times \rho,$$
-
-where $\rho$ is a bulk density of 8 and 18 Mg/ha/m for herbaceous and shrub
-components, respectively. 
- 
-## Fuel bed depth
-
-:::: {.columns}
-:::{.column width=60%}
-We estimated the combined average fuel bed depth of all litter and downed woody
-debris within the sampling cylinder.
-:::
-:::{.column width=40%}
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-cap: Sampling cylinders
-#| fig-width: 3.5
-#| fig-height: 3.5
+#| fig-width: 1.5
+#| fig-height: 1.5
+#| fig-align: left
 plot_design("samp_cyl")
 ```
 :::
@@ -331,10 +288,9 @@ plot_design("samp_cyl")
 
 ## What we did
 
-1. [Implement experiment]{style="opacity: 50%"}
-1. [Establish plots and transects]{style="opacity: 50%"}
-1. [Sample sprout heights, regen. density, and fuels]{style="opacity: 50%"}
-1. **Model sprout heights, report on regen., model fuels**
+1. [Implementation]{style="opacity: 50%"}
+1. [Sampling procedure]{style="opacity: 50%"}
+1. **Analysis**
 
 ## Sprout height
 
@@ -540,23 +496,6 @@ raw_hist2(dbh < 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
 
 ```
 
-## Regeneration density: frequency
-
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-width: 8
-#| fig-height: 5.5
-
-raw_hist2(dbh < 5 & treat %in% c("gs", "hd"), seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
-  raw_hist2(dbh >= 5 & treat %in% c("gs", "hd"), seq(0, 17.5, 2.5), seq(0, 15, 5), c(27, 600)) +
-  theme(strip.text = element_blank()) +
-  plot_layout(axis_titles = "collect", axes = "collect_x") &
-  theme(
-    plot.background = element_blank(),
-    legend.background = element_blank()
-  )
-
-```
-
 ## Regeneration density: basal area
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
@@ -690,3 +629,76 @@ learn more at online at:
 
 ## Thanks again
 
+
+## Downed woody fuel classes
+
+Class name | Size (cm)  | Transect length (m)
+---------- | ---------- | -------------------
+1 hr       | < 0.64     | 1
+10 hr      | 0.64 - 2.5 | 2
+100 hr     | 2.5 - 7.6  | 4
+1,000 hr   | > 7.6      | 10
+
+
+## Vegetation: Load calc.
+
+We calculated average load for herbaceous and woody vegetation: 
+
+$$load = ht. \times pct. cover \times \rho,$$
+
+where $\rho$ is a bulk density of 8 and 18 Mg/ha/m for herbaceous and shrub
+components, respectively. 
+ 
+## Sampling review
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 4
+library(patchwork)
+
+local({
+  title <- function(T) {
+    list(
+      ggplot2::labs(title = T),
+      ggplot2::theme(plot.title = ggplot2::element_text(size = 20))
+    )
+  }
+  plot_design("macro") + title("Sprout heights") +
+    plot_design("regen") + title("Regen. density") +
+    plot_design(c("samp_cyl", "transect")) + title("Fuels")
+})
+
+```
+
+## Fuel bed depth
+
+:::: {.columns}
+:::{.column width=60%}
+We estimated the combined average fuel bed depth of all litter and downed woody
+debris within the sampling cylinder.
+:::
+:::{.column width=40%}
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 1.5
+#| fig-height: 1.5
+#| fig-align: right
+plot_design("samp_cyl")
+```
+:::
+::::
+
+## Regeneration density: frequency
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 8
+#| fig-height: 5.5
+
+raw_hist2(dbh < 5 & treat %in% c("gs", "hd"), seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
+  raw_hist2(dbh >= 5 & treat %in% c("gs", "hd"), seq(0, 17.5, 2.5), seq(0, 15, 5), c(27, 600)) +
+  theme(strip.text = element_blank()) +
+  plot_layout(axis_titles = "collect", axes = "collect_x") &
+  theme(
+    plot.background = element_blank(),
+    legend.background = element_blank()
+  )
+
+```
