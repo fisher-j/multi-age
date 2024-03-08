@@ -47,12 +47,26 @@ Thesis committee presentation by Judson Fisher
 :::
 :::
 
+:::{.notes}
+10 years ago, Pascal implemented a large scale, replicated, manipulative
+silvicultural experiment to demonstrate and study the transformation from
+even-aged to multiaged management in redwood dominated forests in the Jackson
+Demonstration State Forest in Mendocino County. My thesis serves as a 10-year
+report of the remeasurement of several key factors of that experiment ----
+sprout heights, regeneration density, and fuels.
+:::
+
 ## An important part of ecological forest management
 
 - Diversity of forest structures == Diversity of silvicultural techniques
 - Predominance of even-aged management
 - This work contributes to our understanding of multiaged stand development
 - Greater understanding -> increased adoption
+
+
+:::{.notes}
+Why study multiaged management?
+:::
 
 ## Suitability of redwood forests
 
@@ -65,6 +79,10 @@ Thesis committee presentation by Judson Fisher
 :::{.column}
 ![](../figures/redwood_sprouts.jpg)
 :::
+:::
+
+:::{.notes}
+Why do this study in redwood forests?
 :::
 
 ## Fire-informed management
@@ -81,6 +99,10 @@ Thesis committee presentation by Judson Fisher
 :::{.column width=30%}
 ![](../figures/redwood_fire.png){height=500}
 :::
+:::
+
+:::{.notes}
+Why study fuels in addition to tree growth?
 :::
 
 ## Today's plan
@@ -101,6 +123,13 @@ of what we did.
 1. **Implementation**
 1. [Sampling procedure]{style="opacity: 50%"}
 1. [Analysis]{style="opacity: 50%"}
+
+:::{.notes}
+I've broken this section into 3 parts.
+
+By the end of this section you'll understand how the treatments and how they
+were applied across the landscape.
+:::
 
 
 ## Initial harvest: 2012
@@ -128,9 +157,18 @@ experiment_design("macro")
 :::
 :::
 
+:::{.notes}
+This is how the treatments are defined. They are listed in order from least, to
+greatest amount of competition (light and growing space).
+:::
+
 ## The treatments are defined in terms of retained trees after harvest
 
 ![](../figures/treatments.png)
+
+:::{.notes}
+And this is that the treatments mean, in a schematic representation.
+:::
 
 ## One site{background-color="black" background-image="../figures/treatments_aerial_labeled.png" background-size="contain"}
 
@@ -160,6 +198,15 @@ experiment_design("macro")
 1. **Sampling procedure**
 1. [Analysis]{style="opacity: 50%"}
 
+:::{.notes}
+At the end of this next section, you'll understand how my sampling design
+resulted in response variables across three categories:
+
+- Sprout heights
+- Regeneration density
+- Fuels
+:::
+
 ## The plot structure{.smaller}
 
 :::{.columns }
@@ -177,8 +224,9 @@ experiment_design("macro")
 :::
 
 :::{.notes}
-The macro and regeneration plots are just fixed area plots.
-Here is a visualization of the fuels transect and sampling cylinders
+Here I define the various aspects of the sampling design.
+
+Next, I'll describe what we sampled in each of these.
 :::
 
 ## Sprout height
@@ -201,18 +249,6 @@ plot_design("macro")
 ```
 :::
 :::
-
-<!--
----
-
-:::: {.columns}
-:::{.column}
-![Year 1](../figures/measuring_sprouts1.jpg){height=350}
-:::
-:::{.column}
-:::
-::::
--->
 
 ## Regeneration density and composition
 
@@ -274,7 +310,6 @@ plot_design("samp_cyl")
 :::
 
 :::{.column width=40%}
-
 ![](../figures/samp_cyl.png)
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
@@ -303,14 +338,22 @@ local({
     plot_design("regen") + title("Regen. density") +
     plot_design(c("samp_cyl", "transect")) + title("Fuels")
 })
-
 ```
+:::{.notes}
+That was a lot of response variables. Here they are summarized in three
+categories.
+:::
 
 ## What we did
 
 1. [Implementation]{style="opacity: 50%"}
 1. [Sampling procedure]{style="opacity: 50%"}
 1. **Analysis**
+
+:::{.notes}
+By the end of this section, you'll have an idea of they methods I used to anlyze
+these data.
+:::
 
 ## Sprout height
 
@@ -395,12 +438,13 @@ mht18emmeans |>
     coord_cartesian(xlim = c(1, 11))
 
 ```
-
 :::{.notes}
 - redwood is growing faster than tanoak
 - redwood is taller than tanoak
-- slow down in growth rates is negligible across treatments
+- the difference in slow down in growth rates is negligible across treatments
 - redwood is more variable than tanoak
+- Is the slow down in growth rate different between species?
+- Is the slow down statistically significant?
 :::
 
 ## Sprout height: year 10
@@ -408,7 +452,6 @@ mht18emmeans |>
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| fig-height: 5
 #| fig-width: 9
-
 
 # Means, confidence intervals, and Tukey's letters and raw data.
 
@@ -463,6 +506,10 @@ local({
 })
 
 ```
+:::{.notes}
+Our data were only sufficient to detect a statistical difference for height in
+year 10 for the GS treatment
+:::
 
 ## Regeneration density: frequency
 
@@ -515,6 +562,12 @@ raw_hist2(dbh < 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
   ) 
 
 ```
+:::{.notes}
+- the number of tanoak in the smallest size class increases with greater
+  competition.
+- the number of stems in other size classes follow a decreasing trend
+- The decreasing trend is more pronounced for redwood
+:::
 
 ## Regeneration density: basal area
 
@@ -555,6 +608,11 @@ local({
 })
 
 ```
+:::{.notes}
+- This emphasizes the decreasing trend in redwood abundance
+- The trend is less clear for tanoak
+:::
+
 
 ## Fuel: means
 
@@ -587,8 +645,15 @@ local({
     )
 })
 
-
 ```
+:::{.notes}
+- 1hr fuels are slightly higher in HD and HA and lower in LD and GS. Likely due
+  to inputs from residual trees.
+- 10-- and 100hr fuels are very similar across treatments, but slightly
+  increasing with increasing light.
+- duff & litter are highest in HD and lowest in HA. Why?
+- veg is lowest in HA, highest in GS
+:::
 
 ## Fuel: comparisons
 
@@ -618,6 +683,11 @@ local({
 })
 
 ```
+:::{.notes}
+- 1hr HA > GS, and almost HA > LD. Also HD almost > GS
+- Duff & Litter HD maybe greater than HA
+- veg GS > HA; LD maybe > HA
+:::
 
 ## Today's plan
 
@@ -703,3 +773,14 @@ raw_hist2(dbh < 5 & treat %in% c("gs", "hd"), seq(0, 17.5, 2.5), seq(0, 15, 5), 
   )
 
 ```
+
+---
+
+:::: {.columns}
+:::{.column}
+Year 1 height measurement
+:::
+:::{.column}
+![](../figures/measuring_sprouts1.jpg){height=350}
+:::
+::::
