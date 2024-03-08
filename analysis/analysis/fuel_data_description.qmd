@@ -132,6 +132,7 @@ format. A complete description of the data varialbes can be found in
   - hundhr
   - thoushr
   - trans_count notes *(site level notes, should not contain commas)*
+  - phase
 
 - `#transects`
   - transect *(number 1 through 8, corresponds with transect column in other
@@ -144,6 +145,7 @@ format. A complete description of the data varialbes can be found in
   - metermark1 *(location along transect of first station)*
   - metermark2 *(location along transect of second station)*
   - notes *(transect specific notes)*
+  - timestamp
 
 - `#duff_litter_fbd`
   - transect *(number 1 through 8)*
@@ -241,12 +243,14 @@ vegetation measurements, are all recorded within these cylinders.
 |hundhr      |Distance from end of transect for which 100-hr fuels were counted| 
 |thoushr     |Distance from end of transect for which 1000-hr fuels were counted| 
 |trans_count |number of transects on macro plot| 
-|notes       |            | 
+|notes       |            |
+|phase       |Phase of experiment: `prepct` or `postpct`|
 
 ## `$transects`
 
 |Variable     |Description |
 |:------------|:-----------|
+|phase        |same as for `plots`|
 |site         |One of four different sites: whiskey, waldon, waldos, and camp6|
 |treatment    |One of HD=High density, dispersed retention, LD=Low density dispersed retention, MD=Medium densty dispersed retention, HA=High density aggreagated retention, GS=Group selection opening (1 ha, centered on plot)|
 |corner       |One of n,s,e,w for "diamond" plost and one of ne, nw, se, sw for "square" plots|

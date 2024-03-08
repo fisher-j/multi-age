@@ -7,7 +7,7 @@ warn_duplicates <- function(data, ...) {
     dplyr::filter(n > 1)
 
   if(nrow(duplicates) != 0) {
-    duplicates <- do.call(sprintf, c(duplicates, "%s %s %s %s: %s")) |>
+    duplicates <- do.call(sprintf, c(duplicates, "%s %s %s %s %s: %s")) |>
       paste(collapse = "\n")
     warning(
       call. = FALSE,

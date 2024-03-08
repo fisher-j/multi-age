@@ -1,5 +1,7 @@
 source("./scripts/test_funs.r")
 
+# file <- "../data/1_fuel_camp6_gs.csv"
+
 # This function processess one datasheet and returns three tables that can
 # be combined with corresponding tables from other data sheets
 wrangle_datasheet <- function(file) {
@@ -32,8 +34,12 @@ wrangle_datasheet <- function(file) {
     # collapse sections to strings so they can be read as if they were files
     purrr::map(\(x) paste(x, collapse = "\n")) |>
     # leave empty column names so they can be removed
-    purrr::map(\(x) 
-      readr::read_csv(x, show_col_types = FALSE, name_repair = "minimal", progress = FALSE)
+    purrr::map(\(x)
+      readr::read_csv(x,
+        show_col_types = FALSE,
+        name_repair = "minimal",
+        progress = FALSE
+      )
     ) |>
     # Remove empty columns
     purrr::map(\(x) x[!names(x) %in% ""])
@@ -52,28 +58,29 @@ wrangle_datasheet <- function(file) {
     # differentiate between transect lenghts and particle counts
     dplyr::rename_with(\(x) paste0(x, "_count"), ends_with("hr")) |>
     dplyr::mutate(
-      sections$site_data[c("site", "treatment")],
+      sections$site_data[c("phase", "site", "treatment")],
       .before = corner
     ) |>
     dplyr::select(-transect)
 
   coarse_woody_debris <- sections$coarse_woody_debris |>
     dplyr::mutate(
-      sections$site_data[c("site", "treatment")],
+      sections$site_data[c("phase", "site", "treatment")],
       .after = transect
     ) |>
     dplyr::left_join(
       sections$transects[c("transect", "corner", "azi")]
     ) |>
-    dplyr::select(c(site, treatment, corner, azi, dia, decay))
+    dplyr::select(c(phase, site, treatment, corner, azi, dia, decay))
+  
   
   plots <- sections$site_data |>
     # differentiate between transect lenghts and particle counts
     dplyr::rename_with(\(x) paste0(x, "_length"), ends_with("hr"))
 
   # I'll add a check to make sure that all transects and plots are unique
-  warn_duplicates(transects, site, treatment, corner, azi)
-  warn_duplicates(plots, site, treatment)
+  warn_duplicates(transects, phase, site, treatment, corner, azi)
+  warn_duplicates(plots, phase, site, treatment)
 
   # Final output with three tables. These will be combined with corresponding
   # tables from other datasheets.
@@ -93,7 +100,7 @@ data_dir <- "../data"
 # "csv". It loads all matching files in a given folder and returns the same
 # tables as `wrangle_datasheet`, but for all plots combined.
 combine_fuels_datasheets <- function(data_dir) {
-  files <- list.files(data_dir, pattern = "^fuel.*csv$", full.names = TRUE)
+  files <- list.files(data_dir, pattern = "^\\d_fuel.*csv$", full.names = TRUE)
   sheets_list <- purrr::map(files, wrangle_datasheet)
   table_names <- purrr::set_names(names(sheets_list[[1]]))
   purrr::map(table_names, \(x) purrr::list_rbind(purrr::map(sheets_list, x)))

@@ -176,7 +176,9 @@ source("./scripts/test_funs.r")
 
 d <- combine_fuels_datasheets("../data") |>
   map(\(x) filter(x, treatment != "md"))
-warn_duplicates(d$transects, site, treatment, corner, azi)
+
+warn_duplicates(d$transects, phase, site, treatment, corner, azi)
+
 ```
 
 ## Fine woody debris
@@ -191,12 +193,12 @@ Two transects are missing slope. I'm giving them a slope of 0 for now.
 #| message: false
 #| code-fold: true
 # use this to reduce the amount of typing when referring to transects
-transectid <- c("site", "treatment", "corner", "azi")
+transectid <- c("phase", "site", "treatment", "corner", "azi")
 
 fwd <- d$transects |>
   select(all_of(transectid), slope, matches("one|ten|hun")) |>
   mutate(slope = if_else(is.na(slope), 0, slope)) |>
-  left_join(select(d$plots, site, treatment, matches("one|ten|hun"))) |>
+  left_join(select(d$plots, phase, site, treatment, matches("one|ten|hun"))) |>
   # move onehr, tenhr, etc to new column and create new columns for transect
   # length and particle counts
   pivot_longer(
@@ -207,11 +209,11 @@ fwd <- d$transects |>
   left_join(get_particle_params(source = "glebocki")) |>
   mutate(
     load = simple_load(
-    sum_d2 = count * d2,
-    l = length,
-    percent_slope = slope,
-    G = G,
-    a = a
+      sum_d2 = count * d2,
+      l = length,
+      percent_slope = slope,
+      G = G,
+      a = a
     )
   ) |>
   select(-c(G, a))
@@ -236,7 +238,7 @@ I'm setting a couple of missing slope to zero.
 
 cwd <- d$coarse_woody |>
   mutate(class = if_else(decay > 3, "thoushr_r", "thoushr_s")) |>
-  group_by(site, treatment, corner, azi, class) |>
+  group_by(phase, site, treatment, corner, azi, class) |>
   # named count to match fwd table, but these are actually summed d^2
   summarize(
     sum_d2 = sum(dia^2),
@@ -246,7 +248,7 @@ cwd <- d$coarse_woody |>
   ) |>
   left_join(d$transects[c(transectid, "slope")]) |>
   mutate(slope = if_else(is.na(slope), 0, slope)) |>
-  left_join(d$plots[c("site", "treatment", "thoushr_length")]) |>
+  left_join(d$plots[c("phase", "site", "treatment", "thoushr_length")]) |>
   left_join(get_particle_params(source = "glebocki")) |>
   mutate(
     load = simple_load(
@@ -347,7 +349,7 @@ dufflitter |>
   group_by(treatment) |>
   summarize(
     avg_pct_litter = mean(
-      litter_depth / (duff_depth + litter_depth), 
+      litter_depth / (duff_depth + litter_depth),
       na.rm = TRUE
     ),
     avg_total_depth = mean(duff_depth + litter_depth),
@@ -440,7 +442,7 @@ veg_load <- veg |>
 fwd_load <- fwd |> select(all_of(transectid), class, load)
 cwd_load <- cwd |> select(all_of(transectid), class, load)
 
-total_load <- bind_rows(dufflitter_load, veg_load, fwd_load, cwd_load)|>
+total_load <- bind_rows(dufflitter_load, veg_load, fwd_load, cwd_load) |>
   ungroup()
 
 ```
@@ -529,7 +531,9 @@ add_combined_classes <- function(data, newclass, classes) {
     ungroup()
 }
 
+# We have post PCT data, but I'm not including it here.
 tl_tab <- total_load |>
+  filter(phase = "prepct") |>
   mutate(class = if_else(
     str_detect(class, "woody|herb"), paste0("veg_", class), class
   )) |>
@@ -591,7 +595,7 @@ I'll Save this data so it can be used in subsequent analysis.
 
 ```{r}
 
-save(dufflitter, fwd, cwd, veg, total_load, file = "data_long.RData")
+save(dufflitter, fwd, cwd, veg, total_load, file = "data_long.rda")
 
 ```
 
