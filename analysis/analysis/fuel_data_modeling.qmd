@@ -12,7 +12,7 @@ source(knitr::purl("hypothesis_test.qmd", tempfile()))
 #| echo: false
 
 suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
-load("./data_long.RData")
+load("./data_long.rda")
 source("./scripts/get_fuel_data.r")
 transectid <- c("site", "treatment", "corner", "azi")
 
@@ -232,8 +232,8 @@ d <- load2("long", all_of(c(transectid, load_vars)))
 dd <- ungroup(d) |> split(~class)
 
 
-if(file.exists("pmod.Rdata")) {
-  load("pmod.Rdata")
+if(file.exists("pmod.rda")) {
+  load("pmod.rda")
 } else {
   cluster <- parallel::makeCluster(rep("localhost", parallel::detectCores()))
 
@@ -256,7 +256,7 @@ if(file.exists("pmod.Rdata")) {
     filter(test %in% c("LRT", "PBtest"))
  
   parallel::stopCluster(cluster)
-  save(pmod, file = "pmod.Rdata")
+  save(pmod, file = "pmod.rda")
 }
 
 pmod |> knitr::kable(digits = c(NA, NA, 2, 1, 2, 1, 4))

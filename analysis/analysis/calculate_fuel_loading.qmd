@@ -533,7 +533,7 @@ add_combined_classes <- function(data, newclass, classes) {
 
 # We have post PCT data, but I'm not including it here.
 tl_tab <- total_load |>
-  filter(phase = "prepct") |>
+  filter(phase == "prepct") |>
   mutate(class = if_else(
     str_detect(class, "woody|herb"), paste0("veg_", class), class
   )) |>
