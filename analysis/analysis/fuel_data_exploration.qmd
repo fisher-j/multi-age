@@ -5,16 +5,19 @@ title: Fuel data exploration
 ```{r init}
 #| echo: false
 suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
-load("./data_long.rda")
+load("./calculate_fuel_load.rda")
 transectid <- c("site", "treatment", "corner", "azi")
 load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
+treatment_load_vars <- c("treatment", load_vars)
 ```
 
 Our main questions regarding fuel loading are:
 
-1. Are there differences in fuel loading between treatments?
-2. If so, what fuel loading components differ, and in which treatments?
-3. What is the magnitude of the difference (for each fuel class) by treatment?
+1. Are there differences in fuel loading between treatments before and after pct?
+2. If so, what fuel loading components differ, and in which treatments before
+   and after pct?
+3. What is the magnitude of the difference (for each fuel class) by treatment
+   before and after pct?
 
 We have a range of response variables that include loading in several different
 classes of surface fuels. Some of these may be correlated with each other, which
@@ -22,9 +25,34 @@ may have an effect on our interpretation of differences between treatments. For
 instance, if duff-litter load is negatively correlated with vegetation, even if
 we don't see differences between treatment in either of these variables
 separately, it might be found that for any given level of vegetation loading, one
-treatment, or another may have consistently higher levels of duff-litter.
-Capturing differences between treatments in terms of interactions like these
-requires different tools than assessing any one variable on its own.
+treatment, or another may have consistently higher levels of duff-litter. I will
+be analyzing fuel loading categories independently. While not ideal, this
+simplifies the analysis.
+
+In addition to correlation among classes, there may also be overlap. Primarily,
+this would be relevant to the 1-hr and duff/litter classes. We used a cutoff
+between redwoowd sprays that were counted as 1-hr fuels at about 2mm. These same
+1-hr fuels were also included in the duff/litter depth because they were usually
+thouroughly mixed with the litter. For this reason, it is not possible to simply
+add these two classes.
+
+Similarly, fuel beds after pct were covered with substantial slash, often
+precluding the ability to measure duff/litter. Furthermore, as a result of an
+oversight in the sampling protocol, leaves suspended in slash were not
+addressed, as they were neither captured as litter or 1-hr fuels. But these
+would be expected to contribute significantly to fire behavior after curing. It
+is also unclear how long long the slash leaves will remain suspended --- we
+would expect this to vary by species --- and their impact on fire behavior would
+be expected to change dramatically with their spatial arrangement (bulk
+density), with reduced behavior as they settle to the forest floor. For this
+reason, comparisons of duff/litter and 1-hr fuels before and after pct would be
+difficult to interpret.
+
+Finallly, because herbaceous vegetation played a relatively minor role in our
+plots, it was lumped together with woody vegetation.
+
+I opt to restrict quantitative comparisons to between treatments, before and after pct
+seperately.
 
 In order to assess potential outliers, co-linearity, interactions, and other
 problems with statistical tests, we'll first conduct some data exploration as
@@ -35,31 +63,58 @@ interest.
 
 1. duff/litter load
 2. woody vegetation
-3. herbaceous vegetation
-4. one hr fuels
-5. ten hr fuels
-6. hundred hr fuels
-7. coarse woody debris
+3. one hr fuels
+4. ten hr fuels
+5. hundred hr fuels
+6. coarse woody debris
 
-It's important to note that variables 1-3 were measured twice per transect and
-the rest were measured once per transect. All analysese were conducted at the
-transect level--variables 1-3 were analyzed at their transect average (average
-of two observations per transect.) This was done to simplify the analysis.
+It's important to note that variables 1 and 2 were measured twice per transect
+and the rest were measured once per transect. All analysese were conducted at
+the transect level--variables 1-3 were analyzed at their transect average
+(average of two observations per transect.) This was done to simplify the
+analysis.
 
 ## Basic Summary
 
 ```{r load2}
 #| code-fold: true
 #| file: ./scripts/get_fuel_data.r
+if(interactive()) source("./scripts/get_fuel_data.r")
 ```
 
-```{r}
-#| label: fig-raw-data
-#| fig-cap: Two outliers were removed to aide in interpretability--600 and 199
-#|   t/ha in ha-thoushr and gs-veg, respectively.
+@fig-raw-fuel-histogram seems to indicate that, pre-pct, there is slightly
+higher 1-hr fuel load for HA and HD, compared to GS and LD. Ten years after
+harvest, we would expect 1-hr fuels to be dominated by twigs and branches
+falling from live crowns and there is ostensibly a greater crown volume in the
+HA and HD treatments. Duff and litter may be slightly higher in the HD
+treatment, compared to the others. For live fuels, there appears to be a
+decreasing trend from GS > LD > HA & HD. Most of live fuel is due to
+regenerating sprouts. The difference in sprout growth in high vs. low light
+environments was readily apparent in the field.
 
-load2("long", everything()) |>
-  filter(!(load > 190 & class == "veg" | load > 400 & class == "thoushr")) |>
+Ten-hr and 100-hr, and 1000-hr fuels do not reveal an obvious trend. I'm not
+sure why this is at the moment.
+
+Post-pct
+
+
+```{r}
+#| label: fig-raw-fuel-histogram
+#| fig-cap: >
+#|   Histograms of raw data Pre- and post-pct.
+#| fig-subcap:
+#|   - Pre-pct data
+#|   - Post-pct data, "dufflitter" data is not valid for this phase of the
+#|     experiment. 1-hr fuels do not included suspended leaves
+
+load2("long", "pre") |>
+  # filter(!(load > 190 & class == "veg" | load > 400 & class == "thoushr")) |>
+  ggplot(aes(treatment, load)) +
+  geom_boxplot() +
+  facet_wrap(~class, scales = "free")
+
+load2("long", "post", -dufflitter) |>
+  # filter(!(load > 190 & class == "veg" | load > 400 & class == "thoushr")) |>
   ggplot(aes(treatment, load)) +
   geom_boxplot() +
   facet_wrap(~class, scales = "free")
@@ -70,11 +125,12 @@ Here is a table summary of our raw data.
 
 ```{r}
 #| label: tbl-raw-data
-#| tbl-cap: Average (sd) transect level load (Mg ha^-1^) for six fuel class categories in
-#|   four different overstory harvest techniques.
+#| tbl-cap: >
+#|   Average (sd) transect level load (Mg ha^-1^) for six fuel class categories
+#|   in four different overstory harvest techniques.
 
 spf <- "%.1f"
-load2("long", all_of(c(transectid, load_vars))) |>
+load2("long", "pre") |>
   group_by(class, treatment) |>
   summarize(
     avg_load = mean(load),
@@ -221,7 +277,7 @@ myqqplot <- function(data, var) {
   )
 }
 
-load2("long", treatment, all_of(load_vars)) |>
+load2("long", "pre") |>
   myqqplot(load)
 
 ```
@@ -230,8 +286,9 @@ load2("long", treatment, all_of(load_vars)) |>
 
 # This code creates a dataframe with nested columns that include the original
 # data and calculated coordinates of a superimposed normal distribution.
+# TODO: why does this inlcude site corner azi?
 bins <- 16
-hist_dat <- load2("long", treatment, all_of(load_vars)) |>
+hist_dat <- load2("long", "pre", all_of(treatment_load_vars)) |>
   drop_na() |>
   # Facet grid each column (class) has same scale, find limits to calculate bin
   # width, limits are either implied by the constructed normal curce, or the raw
@@ -246,10 +303,10 @@ hist_dat <- load2("long", treatment, all_of(load_vars)) |>
   # generate data for a normal curve with mean and sd from observed data to
   # cover 3 sd.
   mutate(
-    norm_x = map(data, function (d) {
+    norm_x = map(data, function(d) {
       seq(
-        from = mean(d$load) - 3 * sd(d$load), 
-        to = mean(d$load) + 3 * sd(d$load), 
+        from = mean(d$load) - 3 * sd(d$load),
+        to = mean(d$load) + 3 * sd(d$load),
         length.out = 100
       )
     }),
@@ -288,7 +345,7 @@ hist_dat <- load2("long", treatment, all_of(load_vars)) |>
 
 walk(list(c(1:3), c(4:6)),
   function(x) {
-    p <- load2("long") |>
+    p <- load2("long", "pre") |>
       filter(class %in% load_vars[x]) |>
       ggplot(aes(load)) +
       geom_histogram(bins = 16) +
@@ -314,7 +371,7 @@ boxcox <- function(y, lambda1, lambda2) {
   }
 }
 
-load2("long", treatment, all_of(load_vars)) |>
+load2("long", "pre", all_of(treatment_load_vars)) |>
   group_by(class) |> nest() |> rowwise() |>
   mutate(
     lambda = list(suppressMessages(geoR::boxcoxfit(data$load, lambda2 = TRUE)$lambda)),
@@ -342,13 +399,13 @@ output below indicates the rows with the greatest deviation from normal.
 #|   - ""
 #|   - ""
 
-tl <- load2("wide", treatment, all_of(load_vars))
+tl <- load2("wide", "pre", all_of(treatment_load_vars))
 load_mod <- lm(as.matrix(tl[-1]) ~ treatment, data = tl)
 m_dist <- heplots::cqplot(load_mod)
 
-load2("wide", everything())[order(m_dist, decreasing = TRUE)[1:10], ]
+load2("wide", "pre", everything())[order(m_dist, decreasing = TRUE)[1:10], ]
 
-treatments = c("gs", "ha", "ld", "hd")
+treatments <- c("gs", "ha", "ld", "hd")
 par(mfrow = c(2, 2))
 invisible(lapply(treatments, 
   \(x) heplots::cqplot(filter(tl, treatment == x)[-1], main = x)
@@ -377,7 +434,7 @@ all_mvn_tests <- function(data) {
   )
 }
 
-all_mvn_tests(load2("wide", treatment, all_of(load_vars))) |>
+all_mvn_tests(load2("wide", "pre", all_of(treatment_load_vars))) |>
   knitr::kable(digits = 4)
 
 ```
@@ -432,7 +489,7 @@ compared to other common distributions. It looks somewhat Gamma-ish?
 #| layout-ncol: 2
 #| column: page
 
-d <- load2("long", treatment, all_of(load_vars)) |> 
+d <- load2("long", "pre", treatment, all_of(load_vars)) |>
   split(~class) |> map(~split(.x, ~treatment))
 
 # imap_dfr(d, \(x, y) tibble(class = y, treatment = names(x) )) |>
@@ -530,14 +587,14 @@ that maximum variance ration should be below 4.
 
 ```{r}
 
-max_var <- load2("long", everything()) |>
+max_var <- load2("long", "pre") |>
   group_by(class, treatment) |>
   summarize(var = sd(load)^2, load = max(load), .groups = "drop_last") |>
   summarize(
     max_var_rat = paste("Max. var. ratio: ", round(max(var) / min(var))),
     x = 1.1, y = max(load) * 1.1, .groups = "drop")
 
-load2("long", everything()) |>
+load2("long", "pre") |>
   ggplot(aes(treatment, load)) +
   geom_boxplot() +
   geom_text(data = max_var, aes(x, y, label = max_var_rat, hjust = "inward")) +
@@ -552,7 +609,7 @@ which is only defined for positive values.
 
 ```{r}
 
-load2("long", everything()) |>
+load2("long", "pre") |>
   group_by(class, treatment) |>
   summarize(zeros = sum(load == 0), percent = zeros / n(), .groups = "drop") |>
   ggplot(aes(treatment, percent)) +
@@ -576,7 +633,7 @@ given treatment.
 #| label: fig-response-corr
 #| fig-cap: Correlation among the response variables (fuel classes).
 
-suppressMessages(GGally::ggpairs(load2("wide", all_of(load_vars))))
+suppressMessages(GGally::ggpairs(load2("wide", "pre", all_of(load_vars))))
 
 ```
 

@@ -12,7 +12,7 @@ source(knitr::purl("hypothesis_test.qmd", tempfile()))
 #| echo: false
 
 suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
-load("./data_long.rda")
+load("./calculate_fuel_load.rda")
 source("./scripts/get_fuel_data.r")
 transectid <- c("site", "treatment", "corner", "azi")
 
