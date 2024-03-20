@@ -7,21 +7,34 @@ title: Fuel modeling
 source(knitr::purl("hypothesis_test.qmd", tempfile()))
 -->
 ```
+# Setup
+
+```{r}
+
+library(glmmTMB)
+library(ggdist)
+library(bayesplot)
+library(brms)
+library(tidybayes)
+library(DHARMa)
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+load("./calculate_fuel_load.rda")
+source("./scripts/get_fuel_data.r")
+
+transectid <- c("site", "treatment", "corner", "azi")
+
+```
 
 ```{r init}
 #| echo: false
 
-suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
-load("./calculate_fuel_load.rda")
-source("./scripts/get_fuel_data.r")
-transectid <- c("site", "treatment", "corner", "azi")
+# this allows to adjust each panels coordinate limits
+source("./scripts/coord_cartesian_panels.r")
 
 theme_update(
   panel.grid.major = element_blank(),
   panel.grid.minor = element_blank()
 )
-# this allows to adjust each panels coordinate limits
-source("./scripts/coord_cartesian_panels.r")
 
 class_labels <- c(
   onehr = "1-hr",
@@ -52,7 +65,7 @@ This suggests that it is unlikely that all treatemnts are equal.
 
 ```{r}
 load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
-tl <- load2("wide", treatment, all_of(load_vars))
+tl <- load2("wide", "pre", treatment, all_of(load_vars))
 myexpr <- expr(cbind(!!!syms(load_vars)) ~ treatment)
 test1 <- do.call("manova", list(myexpr, data = quote(tl)))
 summary(test1)
@@ -76,7 +89,7 @@ but there isn't such evidence for the other fuel loading classes.
 #|   for all fuel loading classes. Welches tests suggest that veg and onehr
 #|   fuels may have different means among treatments.
 
-d <- load2("long", treatment, all_of(load_vars)) |> group_by(class)
+d <- load2("long", "pre", treatment, all_of(load_vars)) |> group_by(class)
 
 d |> nest() |>
   rowwise() |>
@@ -136,7 +149,7 @@ corner, based on modeled variances for each of these grouping levels.
 
 ```{r}
 
-d <- load2("long", site, treatment, corner, all_of(load_vars)) |> 
+d <- load2("long", "pre", site, treatment, corner, all_of(load_vars)) |> 
   group_by(class)
 
 m1 <- d |> nest() |> rowwise() |>
@@ -195,30 +208,25 @@ others from the package documentation for reference. I'm also including an
 F-test in which degrees of freedom are estimated with Kenward-Rogers approach.
 
 LRT
-
-:   Assuming that LRT has a chi-square distribution.
+: Assuming that LRT has a chi-square distribution.
 
 PBtest
-
-:   The fraction of simulated LRT-values that are larger or equal to the
-    observed LRT value.
+: The fraction of simulated LRT-values that are larger or equal to the
+  observed LRT value.
 
 Bartlett
-
-:   A Bartlett correction is of LRT is calculated from the mean of the simulated
-    LRT-values
+: A Bartlett correction is of LRT is calculated from the mean of the simulated
+  LRT-values
 
 Gamma
-
-:   The reference distribution of LRT is assumed to be a gamma distribution with
-    mean and variance determined as the sample mean and sample variance of the
-    simulated LRT-values.
+: The reference distribution of LRT is assumed to be a gamma distribution with
+  mean and variance determined as the sample mean and sample variance of the
+  simulated LRT-values.
 
 F
-
-:   The LRT divided by the number of degrees of freedom is assumed to be
-    F-distributed, where the denominator degrees of freedom are determined by
-    matching the first moment of the reference distribution.
+: The LRT divided by the number of degrees of freedom is assumed to be
+  F-distributed, where the denominator degrees of freedom are determined by
+  matching the first moment of the reference distribution.
 
 ```{r}
 #| warning: false
@@ -228,7 +236,7 @@ F
 #|   significance: whether the model with treatment, fits the data better than
 #|   the intercept only model (adjusting for nesting structure).
 
-d <- load2("long", all_of(c(transectid, load_vars)))
+d <- load2("long", "pre", all_of(c(transectid, load_vars)))
 dd <- ungroup(d) |> split(~class)
 
 
@@ -297,7 +305,7 @@ resid_qq_plot <- function(data) {
   )
 }
 
-d <- load2("long", all_of(c(transectid, load_vars))) |>
+d <- load2("long", "pre", all_of(c(transectid, load_vars))) |>
   group_by(class) |> nest() |> rowwise()
 
 ```
@@ -331,7 +339,10 @@ using the weights argument. I'll be using the pearson residuals which are
 I had to use the control argument `sigma = 1` for the model to fit. I'm not sure
 why, I read it in the documentation for `nlme::varConstProp`. I'm modeling
 variance as a constant proportion of the fitted values of the model. This seems
-to have cleaned up the variance.
+to have cleaned up the variance, but the the model for 1,000-hr fuels is causing
+a "singular matrix" error. Perhaps this is because of the excess of zeros?
+
+Additionaly, residuals are still not normally distributed.
 
 ```{r}
 #| label: fig-mod2-diagnostic
@@ -341,6 +352,7 @@ to have cleaned up the variance.
 #|   (scaled) residuals are more homogenous now.
 
 mod2 <- d |>
+  filter(class != "thoushr") |>
   mutate(
     mod = list(nlme::lme(
       fixed = load ~ treatment,
@@ -358,9 +370,9 @@ patchwork::wrap_plots(resid_qq_plot(mod2), ncol = 1)
 
 ```
 
-I'll compare AIC of the two models to see if one performs better than the other.
-
-first, I want to see if the models produced by lme and lmer are equivalent
+first, I want to see if the models produced by lme and lmer are equivalent they
+seem equivalent enough, although the random effects variances estimated by
+`lmer` are somewhat smaller. 
 
 ```{r}
 
@@ -379,13 +391,16 @@ d |>
   mutate(s = list(broom.mixed::tidy(value, effect = "fixed"))) |>
   select(class, model, s) |>
   unnest(everything()) |>
-  arrange(class, term)
+  arrange(class, term) |> print(n=48)
 
 ```
 
-they seem equivalent enough, although the random effects variances estimated by
-`lmer` are somewhat smaller. Now, lets compare the two `lme` models. I'm fitting
-with REML because I'm not changing the fixed effects structure.
+Now, lets compare the two `lme` models using AIC. I'm fitting with REML because
+I'm not changing the fixed effects structure. I still have to remove 1,000-hr
+fuels from the mix.
+
+This indicates that the model with modeled variance fits the data better than
+the model without.
 
 ```{r}
 #| label: tbl-multilivel-aic-compare
@@ -395,6 +410,7 @@ with REML because I'm not changing the fixed effects structure.
 #|   consistently lower AIC, indicating better fit.
 
 mod_c <- d |>
+  filter(class != "thoushr") |>
   mutate(
     unweighted = list(nlme::lme(
       fixed = load ~ treatment,
@@ -417,17 +433,16 @@ mod_c |>
 
 ```
 
-This indicates that the model with modeled variance fits the data better than
-the model without.
-
 Does this change our conclusions about the effect of the treatment?
+
+No, it doesn't seem to make much of a difference.
 
 ```{r}
 
-d <- load2("long", site, treatment, corner, all_of(load_vars)) |> 
-  group_by(class)
+d <- load2("long", "pre", site, treatment, corner, all_of(load_vars))
 
-m2 <- d |> nest() |> rowwise() |>
+m2 <- d |> group_by(class) |> nest() |> rowwise() |>
+  filter(class != "thoushr") |>
   transmute(
     mod = list(nlme::lme(
       fixed = load ~ treatment,
@@ -466,8 +481,6 @@ group_map(m2, ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |
 
 ```
 
-No, it doesn't seem to make much of a difference.
-
 ### Other random effects structures
 
 I'm not sure I'm using the correct random effects specification. The somewhat
@@ -477,14 +490,81 @@ notation: `1 | site/treatment/corner`, I'm estimating a variance for
 `corner:treatment:site`, `treatment:site`, and `site`. The interaction of
 treatment and site here is analagous to a plot effect, of which there are 16.
 
+
+## Trying glmmTMB
+
+This package also alows fitting flexible models, but unlike the Bayesian
+approach, it is fast, and familiar as it works in the frequentist paradigm.
+
+```{r}
+
+d <- load2("long", "pre", -c(phase, azi)) |> nest(.by = class) |> rowwise()
+
+form <- load ~ treatment + (1 | site/treatment/corner)
+
+# Dufflitter doesn't have any zeros, I'm assuming gamma is a good model for all
+# fuel classes
+choose_model <- function(class, data) {
+  if (class == "dufflitter") {
+    m <- list(glmmTMB(form, family = Gamma(link = "log"), data = data))
+  } else {
+    m <- list(glmmTMB(form, family = ziGamma(link = "log"), ziformula = ~1, data = data))
+  }
+  m
+}
+
+m <- d |>
+  mutate(
+    mod = choose_model(class, data),
+    emmeans = list(emmeans::emmeans(mod, "treatment", type = "response")),
+    pairs = list(as_tibble(pairs(emmeans, infer = TRUE)))
+  )
+
+```
+
+TODO: interpret these results
+
+```{r}
+
+group_map(m, ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
+  patchwork::wrap_plots()
+
+```
+
+Here are the (nearly) significant (p <= 0.1) pairwise comparisons in table form
+
+```{r}
+
+select(m, pairs) |> unnest(pairs) |> filter(p.value <= 0.1) |> knitr::kable()
+
+```
+
+I think these residuals look OK
+
+```{r}
+
+plot_simulated_residuals <- function(m, type = c("qq", "res")) {
+  data <- pluck(m, "data", 1, "treatment")
+  resid_sim <- simulateResiduals(m$mod[[1]], allow.new.levels = TRUE)
+  if(type == "qq") plotQQunif(resid_sim, main = m$class)
+  if(type == "res") plotResiduals(resid_sim, main = m$class, form = m$data[[1]]$treatment)
+}
+
+par(mfrow = c(2, 3))
+m |> group_walk(~ plot_simulated_residuals(.x, type = "res"))
+m |> group_walk(~ plot_simulated_residuals(.x, type = "qq"))
+
+```
+
 ## Bayesian mode
+
+It has been difficult fitting these models zeros, non-constant variance, and
+non-normal response. A more flexible approach may be to implement my models in a
+Bayesian context. This has the added benefits of ease of interpretability of the
+results and quantified estimates of uncertainty.
 
 ```{r}
 #| include: false
-library(tidybayes)
-library(brms)
-library(bayesplot)
-library(ggdist)
 ```
 
 I'll use `brms` with the same formula I used for the lmm above. First we'll
@@ -495,7 +575,7 @@ look at the average loading to get an idea of the data.
 
 ```{r}
 
-d <- load2("long", all_of(c(transectid, load_vars))) |>
+d <- load2("long", "pre", all_of(c(transectid, load_vars))) |>
   group_by(class) |> nest() |> rowwise()
 
 ```
@@ -534,7 +614,6 @@ negative.
 #|   used as the intercept. 
 
 # add calcualted priors to the data
-library(ggdist)
 
 d <- mutate(d, 
   priors = list(
@@ -828,7 +907,7 @@ use for our prior on the grand mean ($\bar{\alpha}$).
 
 ```{r convert-prior}
 
-d <- load2("long", all_of(c(transectid, load_vars))) |>
+d <- load2("long", "pre", all_of(c(transectid, load_vars))) |>
   group_by(class) |> nest() |> rowwise()
 
 lnp <- function(data) {
