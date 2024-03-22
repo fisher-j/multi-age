@@ -1,29 +1,41 @@
 ---
 title: Fuel modeling
+format:
+  html:
+    code-fold: true
 ---
 
-```{=html}
-<!-- 
-source(knitr::purl("hypothesis_test.qmd", tempfile()))
--->
+
+```{r}
+#| echo: false
+
+load_quiet <- function(...) {
+  for(p in as.list(match.call()[-1])) {
+    (suppressWarnings(suppressPackageStartupMessages(eval(p))))
+  }
+}
 ```
+
+
 # Setup
 
 ```{r}
 
-library(glmmTMB)
-library(ggdist)
-library(bayesplot)
-library(brms)
-library(tidybayes)
-library(DHARMa)
-suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+load_quiet(
+library(glmmTMB),
+library(ggdist),
+library(bayesplot),
+library(brms),
+library(tidybayes),
+library(DHARMa),
+library(tidyverse)
+)
 load("./calculate_fuel_load.rda")
 source("./scripts/get_fuel_data.r")
-
 transectid <- c("site", "treatment", "corner", "azi")
 
 ```
+
 
 ```{r init}
 #| echo: false
@@ -44,9 +56,12 @@ class_labels <- c(
   dufflitter = "Duff & litter",
   veg = "Live vegetation"
 )
+
 fuel_class_labeller <- labeller(class = class_labels, fuel_class = class_labels)
 
 ```
+
+
 
 ## Frequentist approach
 
@@ -277,7 +292,6 @@ Taking a look at residual vs. fitted and qqplots of the model, it looks like our
 residuals are not normally distributed and there is not constant variance.
 
 ```{r}
-#| code-fold: true
 
 # These are functions to plot for each model, residuals vs fitted and normal
 # quantiles. The third function is a wrapper to do both.
@@ -497,36 +511,60 @@ This package also alows fitting flexible models, but unlike the Bayesian
 approach, it is fast, and familiar as it works in the frequentist paradigm.
 
 ```{r}
+#| echo: false
 
-d <- load2("long", "pre", -c(phase, azi)) |> nest(.by = class) |> rowwise()
-
-form <- load ~ treatment + (1 | site/treatment/corner)
-
-# Dufflitter doesn't have any zeros, I'm assuming gamma is a good model for all
-# fuel classes
-choose_model <- function(class, data) {
-  if (class == "dufflitter") {
-    m <- list(glmmTMB(form, family = Gamma(link = "log"), data = data))
-  } else {
-    m <- list(glmmTMB(form, family = ziGamma(link = "log"), ziformula = ~1, data = data))
-  }
-  m
+# helper function for selecting a model from a list based on class
+select_fuel_mod <- function(class, data, mods) {
+  class <- as.character(class)
+  class_mod <- if_else(class %in% names(mods), class, "default")
+  class_print <- paste0(strrep(" ", 12 - nchar(class)), class)
+  cat(class_print, ": ", format(mods[[class_mod]]), "\n", sep = "")
+  list(eval(mods[[class_mod]]))
 }
 
-m <- d |>
+```
+
+```{r}
+
+# this function will create the model output for each of the fuel classes
+run_glmmtmb_mod <- function(d, mods) {
+  d |>
   mutate(
-    mod = choose_model(class, data),
+    mod = select_fuel_mod(class, data, mods),
     emmeans = list(emmeans::emmeans(mod, "treatment", type = "response")),
-    pairs = list(as_tibble(pairs(emmeans, infer = TRUE)))
+    pairs = list(as_tibble(pairs(emmeans, infer = TRUE))),
+    aic = AIC(mod),
+    res = list(simulateResiduals(mod, allow.new.levels = TRUE))
   )
+}
+
+# heres where I'll store model results
+fuel_tmb <- list()
+
+# The pre-pct data
+d <- load2("long", "pre", -c(phase, azi)) |> nest(.by = class) |> rowwise()
+
+# The general model formula including random effects
+form <- load ~ treatment + (1 | site/treatment/corner)
+
+# Dufflitter doesn't have any zeros, so i'm using regular gamma. I'm assuming
+# gamma is a good model for all fuel classes (default)
+mods <- alist(
+  dufflitter = glmmTMB(form, data, family = Gamma(link = "log")),
+  default = glmmTMB(form, data, family = ziGamma(link = "log"), ziformula = ~1)
+)
+
+fuel_tmb$pre <- run_glmmtmb_mod(d, mods)
 
 ```
 
 TODO: interpret these results
 
 ```{r}
+#| fig-width: 8
 
-group_map(m, ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
+group_map(fuel_tmb$pre,
+  ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
   patchwork::wrap_plots()
 
 ```
@@ -535,26 +573,105 @@ Here are the (nearly) significant (p <= 0.1) pairwise comparisons in table form
 
 ```{r}
 
-select(m, pairs) |> unnest(pairs) |> filter(p.value <= 0.1) |> knitr::kable()
+select(fuel_tmb$pre, class, pairs) |>
+  unnest(pairs) |>
+  filter(p.value <= 0.1) |>
+  knitr::kable()
 
 ```
 
 I think these residuals look OK
 
 ```{r}
+#| fig-width: 9
+#| fig-height: 11
+par(mfrow = c(3, 2))
+fuel_tmb$pre |> group_walk(~ plotResiduals(.x$res[[1]], form = .x$data[[1]]$treatment))
+fuel_tmb$pre |> group_walk(\(x, ...){
+  plotResiduals(x$res[[1]], form = x$data[[1]]$treatment)
+  title(sub = x$class)
+})
+```
 
-plot_simulated_residuals <- function(m, type = c("qq", "res")) {
-  data <- pluck(m, "data", 1, "treatment")
-  resid_sim <- simulateResiduals(m$mod[[1]], allow.new.levels = TRUE)
-  if(type == "qq") plotQQunif(resid_sim, main = m$class)
-  if(type == "res") plotResiduals(resid_sim, main = m$class, form = m$data[[1]]$treatment)
-}
+```{r}
+#| fig-width: 7
+#| fig-height: 9.5
+par(mfrow = c(3, 2))
+fuel_tmb$pre |> group_walk(~ plotQQunif(.x$res[[1]], main = .x$class))
+```
 
-par(mfrow = c(2, 3))
-m |> group_walk(~ plot_simulated_residuals(.x, type = "res"))
-m |> group_walk(~ plot_simulated_residuals(.x, type = "qq"))
+### Post-pct
+
+All fuel classes have zeros, except for dufflitter, but this fuel class is not
+really valid for post-pct data---we don't have a depth to load equation suitable
+for how litter depth was gathered.
+
+The veg_diff (pre-pct minus post-pct live vegetation) resulted in some negative
+values, these are mostly < 2.5 Mg/ha, and I think are attributable to
+measurement error. I'm simply converting negative values to zero.
+
+Including a model for dispersion (~treatment) only increases aic marginally and
+only for veg.
+
+```{r}
+
+d <- load2("long", "post", -c(phase, azi, dufflitter)) |>
+  mutate(load = if_else(class == "veg_diff" & load <= 0, 0, load)) |>
+  nest(.by = class) |> rowwise()
+
+# same general formula as for pre-pct
+form <- load ~ treatment + (1 | site/treatment/corner)
+
+mods <- alist(
+  default = glmmTMB(form, data, family = ziGamma(link = "log"), ziformula = ~1)
+)
+
+mods2 <- alist(
+  default = glmmTMB(form, data, family = ziGamma(link = "log"), ziformula = ~1, dispformula = ~ treatment)
+)
+
+fuel_tmb$post <- run_glmmtmb_mod(d, mods)
+# fuel_tmb$post2 <- run_glmmtmb_mod(d, mods2)
+
+# data.frame(class = fuel_tmb$post$class, no_disp = fuel_tmb$post$aic, disp = fuel_tmb$post2$aic)
 
 ```
+
+```{r}
+#| fig-width: 8
+
+group_map(fuel_tmb$post,
+  ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
+  patchwork::wrap_plots()
+
+```
+
+```{r}
+
+select(fuel_tmb$post, class, pairs) |>
+  unnest(pairs) |>
+  filter(p.value <= 0.1) |>
+  knitr::kable()
+
+```
+
+```{r}
+#| fig-width: 9
+#| fig-height: 11
+par(mfrow = c(3, 2))
+fuel_tmb$post |> group_walk(\(x, ...){
+  plotResiduals(x$res[[1]], form = x$data[[1]]$treatment)
+  title(sub = x$class)
+})
+```
+
+```{r}
+#| fig-width: 7
+#| fig-height: 9.5
+par(mfrow = c(3, 2))
+fuel_tmb$post |> group_walk(~ plotQQunif(.x$res[[1]], main = .x$class))
+```
+
 
 ## Bayesian mode
 
@@ -680,7 +797,6 @@ bf2 <- mutate(d,
 #### Prior check
 
 ```{r prior-check-functions}
-#| code-fold: true
 
 # Plod density of model priors against posterior to get a sense of the
 # informativeness of the prior. Average over all fixed effects.
@@ -733,7 +849,6 @@ plot_pri_post(bf2$mod[[1]]) + ggtitle("1-hr")
 #### Posterior Predictive check (Gaussian)
 
 ```{r posterior-check-func}
-#| code-fold: true
 
 posterior_predictive_check <- function(models) {
   models <- mutate(models,
@@ -1035,7 +1150,6 @@ bf4a <- mutate(d,
 
 ```{r}
 #| message: false
-#| code-fold: true
 
 bf3 <- mutate(d,
   priors = list(brms::set_prior(
@@ -1253,7 +1367,6 @@ expected_predictions |>
 ```
 
 ```{r comparisons-func}
-#| code-fold: true
 
 predict_expected_contrasts <- function(data, rope_size, plot = TRUE,
                                        re_formula = NA) {
