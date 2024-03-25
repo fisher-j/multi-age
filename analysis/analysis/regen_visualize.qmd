@@ -164,20 +164,6 @@ local({
 
 ```
 
-We decided that the minor species are not that interesting here, we are
-grouping them into "other." I'll also order them they their prevelance which
-will aid in plotting.
-
-```{r}
-
-# Reduce number of species
-regen <- mutate(regen,
-  spp = if_else(spp %in% c("rw", "to", "df"), spp, "other"),
-  spp = forcats::fct_reorder(spp, spp, length),
-)
-
-```
-
 # Community analysis: Species and abundance (BA)
 
 What I would like to know is, are there significant differences between

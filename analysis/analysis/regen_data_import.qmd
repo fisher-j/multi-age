@@ -104,13 +104,28 @@ regen_2 <- local({
     mutate(treat = factor(treat, c("gs", "ld", "ha", "hd")))
 })
 
+regen <- regen_2
+
+```
+
+We decided that the minor species are not that interesting here, we are
+grouping them into "other." I'll also order them they their prevelance which
+will aid in plotting.
+
+```{r}
+
+# Reduce number of species
+regen <- mutate(regen,
+  spp = if_else(spp %in% c("rw", "to", "df"), spp, "other"),
+  spp = forcats::fct_reorder(spp, spp, length),
+)
+
 ```
 
 Save this data for summary, visualization, and potentially, modeling.
 
 ```{r}
 
-regen <- regen_2
 
 save(regen, regen_lcbh, file = "regen_wrangled.rda")
 
