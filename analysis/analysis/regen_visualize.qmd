@@ -158,7 +158,9 @@ local({
     labs(y = expr(m^2 %.% ha^-1), x = "dbh (cm)", fill = "spp") +
     scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
     scale_x_continuous(breaks = scale_breaks) +
-    scale_fill_manual(values = spp_col(regen, scales::brewer_pal, palette = "Set2")) +
+    scale_fill_manual(
+      values = spp_col(regen, scales::brewer_pal, palette = "Set2")
+    ) +
     theme_bw()
 })
 
@@ -173,6 +175,23 @@ class. For instance, a hypothetical result might be:
 *GS has 30% more redwood stems and 20% more redwood basal area than LD*
 
 *The HD treatment resulted in more Douglas-fir than the LD and GS treatments*
+
+Above I visualize basal area by treatment, species, and size class. Here I'll
+simplify and visualize just treatment and species.
+
+```{r}
+
+regen |>
+  summarise(
+    .by = c(site, treat, plot, spp),
+    ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
+  ) |>
+  ggplot(aes(treat, ba_ha, fill = spp)) +
+  geom_boxplot()
+
+```
+
+## Permanova
 
 While it's not possible to include fully nested random effects using the
 `adonis2` function, it seems important to try to include at least some
@@ -256,8 +275,10 @@ ordispider(mod, ba_ha$site, lty = 3, col = "red")
 
 ```
 
-The first two models don't include the site as strata. When I put site in the
-model as a fixed effect, p-values increase slightly.
+In the following models, the strata argument is used to: "Constrain perumtations
+within groups." The first two models don't include the site as strata. 
+
+When I include site as a fixed effect, p-values increase slightly.
 
 ```{r}
 
@@ -336,8 +357,6 @@ with(ba_ha, adonis2(
 ))
 
 ```
-
-
 
 Save data from this page for future use
 
