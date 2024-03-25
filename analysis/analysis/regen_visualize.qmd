@@ -256,11 +256,8 @@ ordispider(mod, ba_ha$site, lty = 3, col = "red")
 
 ```
 
-The first models don't include the site as strata. When I put site in the model,
-p-values increase slightly.
-
-If I include site in strata, then it doesn't seem to matter if I put in in the
-model or not.
+The first two models don't include the site as strata. When I put site in the
+model as a fixed effect, p-values increase slightly.
 
 ```{r}
 
@@ -278,6 +275,12 @@ adonis2(
   permutations = perms
 )
 
+```
+
+If I put site in `strata`, then it doesn't seem to matter if I include it as a
+fixed effect or not.
+
+```{r}
 adonis2(
   ba_ha[c("rw", "to", "df", "other")] ~ treat,
   data = ba_ha,
@@ -292,12 +295,45 @@ adonis2(
   strata = ba_ha$site
 )
 
+```
+
+If I try to do `strata` with the interaction of site and treatment, then the
+model seems to not work. Perhaps this is because there is only one of each
+site:treatment interaction.
+
+```{r}
+
 with(ba_ha, adonis2(
   cbind(rw, to, df, other) ~ treat,
   permutations = perms,
   strata = interaction(site, treat)
 ))
 
+```
+
+If I include the interaction of site:treatment as a fixed effect, it is not
+significant.
+
+```{r}
+
+with(ba_ha, adonis2(
+  cbind(rw, to, df, other) ~ site + site:treat + treat,
+  permutations = perms
+))
+
+
+```
+
+I'm not sure what it means to include site as a main effect, interaction, AND as
+the strata
+
+```{r}
+
+with(ba_ha, adonis2(
+  cbind(rw, to, df, other) ~ site + site:treat + treat,
+  permutations = perms,
+  strata = site
+))
 
 ```
 

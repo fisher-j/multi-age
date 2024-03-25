@@ -521,8 +521,7 @@ Figure&nbsp;9.2: Histograms of regen by species and size class. On top are stems
 </div>
 </div>
 </div>
-<p>The first models don’t include the site as strata. When I put site in the model, p-values increase slightly.</p>
-<p>If I include site in strata, then it doesn’t seem to matter if I put in in the model or not.</p>
+<p>The first two models don’t include the site as strata. When I put site in the model as a fixed effect, p-values increase slightly.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -542,7 +541,7 @@ Number of permutations: 500
 
 adonis2(formula = ba_ha[c("rw", "to", "df", "other")] ~ treat, data = ba_ha, permutations = perms)
          Df SumOfSqs      R2      F   Pr(&gt;F)   
-treat     3   2.1777 0.13288 3.0649 0.003992 **
+treat     3   2.1777 0.13288 3.0649 0.001996 **
 Residual 60  14.2104 0.86712                   
 Total    63  16.3881 1.00000                   
 ---
@@ -564,13 +563,16 @@ Number of permutations: 500
 
 adonis2(formula = ba_ha[c("rw", "to", "df", "other")] ~ site + treat, data = ba_ha, permutations = perms)
          Df SumOfSqs      R2      F   Pr(&gt;F)   
-site      3   2.0502 0.12510 3.2034 0.003992 **
-treat     3   2.1777 0.13288 3.4026 0.005988 **
+site      3   2.0502 0.12510 3.2034 0.001996 **
+treat     3   2.1777 0.13288 3.4026 0.001996 **
 Residual 57  12.1602 0.74201                   
 Total    63  16.3881 1.00000                   
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
+</div>
+<p>If I put site in <code>strata</code>, then it doesn’t seem to matter if I include it as a fixed effect or not.</p>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adonis2</span>(</span>
@@ -620,6 +622,9 @@ Total    63  16.3881 1.00000
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
+</div>
+<p>If I try to do <code>strata</code> with the interaction of site and treatment, then the model seems to not work. Perhaps this is because there is only one of each site:treatment interaction.</p>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(ba_ha, <span class="fu">adonis2</span>(</span>
@@ -642,11 +647,65 @@ Residual 60  14.2104 0.86712
 Total    63  16.3881 1.00000              </code></pre>
 </div>
 </div>
+<p>If I include the interaction of site:treatment as a fixed effect, it is not significant.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(ba_ha, <span class="fu">adonis2</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(rw, to, df, other) <span class="sc">~</span> site <span class="sc">+</span> site<span class="sc">:</span>treat <span class="sc">+</span> treat,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">permutations =</span> perms</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 500
+
+adonis2(formula = cbind(rw, to, df, other) ~ site + site:treat + treat, permutations = perms)
+           Df SumOfSqs      R2      F   Pr(&gt;F)   
+site        3   2.0502 0.12510 3.1966 0.001996 **
+treat       3   2.1777 0.13288 3.3953 0.003992 **
+site:treat  9   1.8982 0.11583 0.9865 0.499002   
+Residual   48  10.2620 0.62619                   
+Total      63  16.3881 1.00000                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>I’m not sure what it means to include site as a main effect, interaction, AND as the strata</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(ba_ha, <span class="fu">adonis2</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(rw, to, df, other) <span class="sc">~</span> site <span class="sc">+</span> site<span class="sc">:</span>treat <span class="sc">+</span> treat,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">permutations =</span> perms,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">strata =</span> site</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Blocks:  strata 
+Permutation: free
+Number of permutations: 500
+
+adonis2(formula = cbind(rw, to, df, other) ~ site + site:treat + treat, permutations = perms, strata = site)
+           Df SumOfSqs      R2      F   Pr(&gt;F)   
+site        3   2.0502 0.12510 3.1966 0.021956 * 
+treat       3   2.1777 0.13288 3.3953 0.001996 **
+site:treat  9   1.8982 0.11583 0.9865 0.493014   
+Residual   48  10.2620 0.62619                   
+Total      63  16.3881 1.00000                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
 <p>Save data from this page for future use</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(regen, spp_col, per_ha, for_const, <span class="at">file =</span> <span class="st">"regen_visualize.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(regen, spp_col, per_ha, for_const, <span class="at">file =</span> <span class="st">"regen_visualize.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
