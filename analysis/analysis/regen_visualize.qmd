@@ -1,13 +1,25 @@
 ---
 title: Reneration data summary
+format:
+  html:
+    code-fold: true
 ---
+
+```{r}
+#| include: false
+source("./scripts/utils.r")
+```
 
 ```{r}
 #| output: false
 
-library(tidyverse)
-library(ggdist)
-library(patchwork)
+load_quiet(
+library(tidyr),
+library(tidyverse),
+library(ggdist),
+library(patchwork),
+library(vegan)
+)
 
 load("regen_wrangled.rda")
 ```
@@ -166,14 +178,144 @@ regen <- mutate(regen,
 
 ```
 
+# Community analysis: Species and abundance (BA)
+
 What I would like to know is, are there significant differences between
 treatments in terms of number of stems, or basal area each species and size
 class. For instance, a hypothetical result might be: 
 
-*GS has 30% more redwood stems and 20% more redwood basal area than LD for stems
-larger than 2 cm (p = 0.02 and p = 0.001, respectively)*
+*GS has 30% more redwood stems and 20% more redwood basal area than LD*
 
 *The HD treatment resulted in more Douglas-fir than the LD and GS treatments*
+
+While it's not possible to include fully nested random effects using the
+`adonis2` function, it seems important to try to include at least some
+accounting for grouping. I think `site` might be the most beneficial grouping
+level to capture because it captures differences in aspect, and also contains
+more observations than lower grouping levels.
+
+I will start out by visualizing the differences associated with sites.
+
+This first plot shows that the whiskey spring site has generally higher basal
+area and that the waldo n site has an especially high basal area for the just
+the ld treatment.
+
+```{r}
+#| fig-width: 9
+#| fig-height: 5
+
+total_ba_ha <- regen |>
+  summarize(.by = c(site, treat, plot),
+    ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
+  )
+
+dotplot(
+  ba_ha ~ treat,
+  total_ba_ha,
+  groups = site,
+  type = c("p", "a"),
+  xlab = "Treatment",
+  ylab = expression(m^2%.%ha^-1),
+  auto.key = list(columns = 2, lines = TRUE),
+  jitter.x = TRUE
+)
+
+```
+
+This figure shows that the site:treatment interaction is likely significant.
+There are similar trends across sites, but their magnitude is different
+depending on treatment.
+
+```{r}
+#| fig-width: 9
+#| fig-height: 5
+
+dotplot(
+  ba_ha ~ site,
+  total_ba_ha,
+  groups = treat,
+  type = c("p", "a"),
+  xlab = "Site",
+  ylab = expression(m^2%.%ha^-1),
+  auto.key = list(columns = 2, lines = TRUE),
+  jitter.x = TRUE
+)
+
+```
+
+Next, I'll prepare the species data for analysis
+
+```{r}
+
+ba_ha <- regen |>
+  summarise(
+    .by = c(site, treat, plot, spp),
+    ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
+  ) |>
+  pivot_wider(names_from = spp, values_from = ba_ha) |>
+  mutate(across(where(is.double), ~ replace_na(.x, 0)))
+
+```
+
+I took these from the help for `adonis2`, I'm not quite sure what aspect of the
+data they are showing yet.
+
+```{r}
+
+mod <- metaMDS(ba_ha[c("rw", "to", "df", "other")], trace = FALSE)
+plot(mod)
+
+ordiellipse(mod, ba_ha$site, kind = "ehull", label = TRUE)
+ordispider(mod, ba_ha$site, lty = 3, col = "red")
+
+```
+
+The first models don't include the site as strata. When I put site in the model,
+p-values increase slightly.
+
+If I include site in strata, then it doesn't seem to matter if I put in in the
+model or not.
+
+```{r}
+
+perms <- 500
+
+adonis2(
+  ba_ha[c("rw", "to", "df", "other")] ~ treat,
+  data = ba_ha,
+  permutations = perms
+)
+
+adonis2(
+  ba_ha[c("rw", "to", "df", "other")] ~ site + treat,
+  data = ba_ha,
+  permutations = perms
+)
+
+adonis2(
+  ba_ha[c("rw", "to", "df", "other")] ~ treat,
+  data = ba_ha,
+  strata = ba_ha$site,
+  permutations = perms
+)
+
+adonis2(
+  ba_ha[c("rw", "to", "df", "other")] ~ site + treat,
+  data = ba_ha,
+  permutations = perms,
+  strata = ba_ha$site
+)
+
+with(ba_ha, adonis2(
+  cbind(rw, to, df, other) ~ treat,
+  permutations = perms,
+  strata = interaction(site, treat)
+))
+
+
+```
+
+
 
 Save data from this page for future use
 

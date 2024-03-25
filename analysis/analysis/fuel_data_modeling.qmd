@@ -5,21 +5,17 @@ format:
     code-fold: true
 ---
 
-
-```{r}
-#| echo: false
-
-load_quiet <- function(...) {
-  for(p in as.list(match.call()[-1])) {
-    (suppressWarnings(suppressPackageStartupMessages(eval(p))))
-  }
-}
-```
-
-
 # Setup
 
 ```{r}
+#| include: false
+source("./scripts/utils.r")
+```
+
+```{r}
+load("./calculate_fuel_load.rda")
+source("./scripts/get_fuel_data.r")
+transectid <- c("site", "treatment", "corner", "azi")
 
 load_quiet(
 library(glmmTMB),
@@ -30,9 +26,6 @@ library(tidybayes),
 library(DHARMa),
 library(tidyverse)
 )
-load("./calculate_fuel_load.rda")
-source("./scripts/get_fuel_data.r")
-transectid <- c("site", "treatment", "corner", "azi")
 
 ```
 
@@ -671,6 +664,8 @@ fuel_tmb$post |> group_walk(\(x, ...){
 par(mfrow = c(3, 2))
 fuel_tmb$post |> group_walk(~ plotQQunif(.x$res[[1]], main = .x$class))
 ```
+
+TODO: I should think about looking at different distribution families and comparing AIC.
 
 
 ## Bayesian mode
