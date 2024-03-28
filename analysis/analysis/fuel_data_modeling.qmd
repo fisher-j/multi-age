@@ -536,18 +536,45 @@ fuel_tmb <- list()
 
 # The pre-pct data
 d <- load2("long", "pre", -c(phase, azi)) |> nest(.by = class) |> rowwise()
-
 # The general model formula including random effects
 form <- load ~ treatment + (1 | site/treatment/corner)
-
 # Dufflitter doesn't have any zeros, so i'm using regular gamma. I'm assuming
 # gamma is a good model for all fuel classes (default)
 mods <- alist(
   dufflitter = glmmTMB(form, data, family = Gamma(link = "log")),
-  default = glmmTMB(form, data, family = ziGamma(link = "log"), ziformula = ~1)
+  default = glmmTMB(form, data, family = ziGamma(link = "log"), 
+    ziformula = ~1
+  ),
+  tenhr = glmmTMB(form, data, family = ziGamma(link = "log"),
+    ziformula = ~ treatment,
+    dispformula = ~ treatment
+  ),
 )
-
 fuel_tmb$pre <- run_glmmtmb_mod(d, mods)
+# select(fuel_tmb$pre, class, aic)
+
+```
+
+I think these residuals look OK
+
+```{r}
+#| fig-width: 9
+#| fig-height: 11
+
+par(mfrow = c(3, 2))
+fuel_tmb$pre |> group_walk(\(x, ...){
+  plotResiduals(x$res[[1]], form = x$data[[1]]$treatment)
+  title(sub = x$class)
+})
+
+```
+
+```{r}
+#| fig-width: 7
+#| fig-height: 9.5
+
+par(mfrow = c(3, 2))
+fuel_tmb$pre |> group_walk(~ plotQQunif(.x$res[[1]], main = .x$class))
 
 ```
 
@@ -573,25 +600,6 @@ select(fuel_tmb$pre, class, pairs) |>
 
 ```
 
-I think these residuals look OK
-
-```{r}
-#| fig-width: 9
-#| fig-height: 11
-par(mfrow = c(3, 2))
-fuel_tmb$pre |> group_walk(~ plotResiduals(.x$res[[1]], form = .x$data[[1]]$treatment))
-fuel_tmb$pre |> group_walk(\(x, ...){
-  plotResiduals(x$res[[1]], form = x$data[[1]]$treatment)
-  title(sub = x$class)
-})
-```
-
-```{r}
-#| fig-width: 7
-#| fig-height: 9.5
-par(mfrow = c(3, 2))
-fuel_tmb$pre |> group_walk(~ plotQQunif(.x$res[[1]], main = .x$class))
-```
 
 ### Post-pct
 
@@ -627,14 +635,39 @@ mods <- alist(
   ),
   hundhr = glmmTMB(form, data, 
     family = ziGamma(link = "log"),
-    ziformula = ~ 1,
+    ziformula = ~ treatment + site,
     dispformula = ~ treatment
   )
 )
-
 fuel_tmb$post <- run_glmmtmb_mod(d, mods)
+select(fuel_tmb$post, class, aic)
 
 ```
+
+Residuals looking pretty good.
+
+```{r}
+#| fig-width: 9
+#| fig-height: 11
+
+par(mfrow = c(3, 2))
+fuel_tmb$post |> group_walk(\(x, ...){
+  plotResiduals(x$res[[1]], form = x$data[[1]]$treatment)
+  title(sub = x$class)
+})
+
+```
+
+```{r}
+#| fig-width: 7
+#| fig-height: 9.5
+
+par(mfrow = c(3, 2))
+fuel_tmb$post |> group_walk(~ plotQQunif(.x$res[[1]], main = .x$class))
+
+```
+
+TODO: interpret results
 
 ```{r}
 #| fig-width: 8
@@ -653,26 +686,6 @@ select(fuel_tmb$post, class, pairs) |>
   knitr::kable()
 
 ```
-
-```{r}
-#| fig-width: 9
-#| fig-height: 11
-par(mfrow = c(3, 2))
-fuel_tmb$post |> group_walk(\(x, ...){
-  plotResiduals(x$res[[1]], form = x$data[[1]]$treatment)
-  title(sub = x$class)
-})
-```
-
-```{r}
-#| fig-width: 7
-#| fig-height: 9.5
-par(mfrow = c(3, 2))
-fuel_tmb$post |> group_walk(~ plotQQunif(.x$res[[1]], main = .x$class))
-```
-
-TODO: I should think about looking at different distribution families and comparing AIC.
-
 
 ## Bayesian mode
 
@@ -1264,7 +1277,13 @@ against the posterior distributions for the variables that we set priors for.
 #| fig-cap: >
 #|   Posterior and prior distributions for variables we set priors for, for one
 #|   fuel class model.
-
+#| fig-subcap:
+#|   - ""
+#|   - ""
+#|   - ""
+#|   - ""
+#|   - ""
+#|   - ""
 
 plot_pri_post(bf4a$mod[[1]]) + ggtitle("1-hr")
 plot_pri_post(bf4a$mod[[2]]) + ggtitle("10-hr")
@@ -1272,6 +1291,7 @@ plot_pri_post(bf4a$mod[[3]]) + ggtitle("100-hr")
 plot_pri_post(bf4a$mod[[4]]) + ggtitle("duff & litter")
 plot_pri_post(bf4a$mod[[5]]) + ggtitle("1000-hr")
 plot_pri_post(bf4a$mod[[6]]) + ggtitle("Vegetation")
+
 ```
 
 #### Posterior predictive check
