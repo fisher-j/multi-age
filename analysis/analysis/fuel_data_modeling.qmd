@@ -616,17 +616,23 @@ d <- load2("long", "post", -c(phase, azi, dufflitter)) |>
 form <- load ~ treatment + (1 | site/treatment/corner)
 
 mods <- alist(
-  default = glmmTMB(form, data, family = ziGamma(link = "log"), ziformula = ~1)
-)
-
-mods2 <- alist(
-  default = glmmTMB(form, data, family = ziGamma(link = "log"), ziformula = ~1, dispformula = ~ treatment)
+  default = glmmTMB(form, data,
+    family = ziGamma(link = "log"),
+    ziformula = ~ 1
+  ),
+  onehr = glmmTMB(form, data,
+    family = ziGamma(link = "log"),
+    ziformula = ~ 1,
+    dispformula = ~ treatment
+  ),
+  hundhr = glmmTMB(form, data, 
+    family = ziGamma(link = "log"),
+    ziformula = ~ 1,
+    dispformula = ~ treatment
+  )
 )
 
 fuel_tmb$post <- run_glmmtmb_mod(d, mods)
-# fuel_tmb$post2 <- run_glmmtmb_mod(d, mods2)
-
-# data.frame(class = fuel_tmb$post$class, no_disp = fuel_tmb$post$aic, disp = fuel_tmb$post2$aic)
 
 ```
 

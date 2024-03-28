@@ -599,7 +599,7 @@ Number of permutations: 500
 
 adonis2(formula = ba_ha[c("rw", "to", "df", "other")] ~ treat, data = ba_ha, permutations = perms)
          Df SumOfSqs      R2      F   Pr(&gt;F)   
-treat     3   2.1777 0.13288 3.0649 0.003992 **
+treat     3   2.1777 0.13288 3.0649 0.001996 **
 Residual 60  14.2104 0.86712                   
 Total    63  16.3881 1.00000                   
 ---
@@ -621,7 +621,7 @@ Number of permutations: 500
 
 adonis2(formula = ba_ha[c("rw", "to", "df", "other")] ~ site + treat, data = ba_ha, permutations = perms)
          Df SumOfSqs      R2      F   Pr(&gt;F)   
-site      3   2.0502 0.12510 3.2034 0.003992 **
+site      3   2.0502 0.12510 3.2034 0.001996 **
 treat     3   2.1777 0.13288 3.4026 0.001996 **
 Residual 57  12.1602 0.74201                   
 Total    63  16.3881 1.00000                   
@@ -649,7 +649,7 @@ Number of permutations: 500
 
 adonis2(formula = ba_ha[c("rw", "to", "df", "other")] ~ treat, data = ba_ha, permutations = perms, strata = ba_ha$site)
          Df SumOfSqs      R2      F   Pr(&gt;F)   
-treat     3   2.1777 0.13288 3.0649 0.001996 **
+treat     3   2.1777 0.13288 3.0649 0.003992 **
 Residual 60  14.2104 0.86712                   
 Total    63  16.3881 1.00000                   
 ---
@@ -673,9 +673,9 @@ Number of permutations: 500
 
 adonis2(formula = cbind(rw, to, df, other) ~ site + site:treat + treat, permutations = perms)
            Df SumOfSqs      R2      F   Pr(&gt;F)   
-site        3   2.0502 0.12510 3.1966 0.003992 **
-treat       3   2.1777 0.13288 3.3953 0.001996 **
-site:treat  9   1.8982 0.11583 0.9865 0.487026   
+site        3   2.0502 0.12510 3.1966 0.001996 **
+treat       3   2.1777 0.13288 3.3953 0.003992 **
+site:treat  9   1.8982 0.11583 0.9865 0.500998   
 Residual   48  10.2620 0.62619                   
 Total      63  16.3881 1.00000                   
 ---
@@ -946,7 +946,6 @@ Results are given on the log (not the response) scale.
 P value adjustment: tukey method for comparing a family of 4 estimates </code></pre>
 </div>
 </div>
-<p>TODO: pairwise adonis may be available: <a href="https://github.com/pmartinezarbizu/pairwiseAdonis" class="uri">https://github.com/pmartinezarbizu/pairwiseAdonis</a></p>
 <p>Save data from this page for future use</p>
 <div class="cell">
 <details class="code-fold">
