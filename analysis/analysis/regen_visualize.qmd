@@ -13,13 +13,13 @@ source("./scripts/utils.r")
 ```{r}
 #| output: false
 
-load_quiet(
-library(tidyr),
-library(tidyverse),
-library(ggdist),
-library(patchwork),
+library(tidyr)
+library(tidyverse)
+library(ggdist)
+library(patchwork)
 library(vegan)
-)
+library(glmmTMB)
+library(DHARMa)
 
 load("regen_wrangled.rda")
 ```
@@ -181,14 +181,38 @@ simplify and visualize just treatment and species.
 
 ```{r}
 
+# I'm expanding my data to ensure that any plot missing a species observation is
+# recorded as zeros.
+colors <- spp_col(regen, scales::brewer_pal, palette = "Set2")
+
 regen |>
   summarise(
     .by = c(site, treat, plot, spp),
     ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
   ) |>
+  complete(nesting(site, treat, plot), spp, fill = list(ba_ha = 0)) |>
   ggplot(aes(treat, ba_ha, fill = spp)) +
-  geom_boxplot()
+  geom_boxplot() +
+  facet_wrap(~ spp, scales = "free_y") +
+  scale_fill_manual(values = colors)
 
+```
+
+Here is another plot to get a better sense of what the data within treatment blocks
+looks like
+
+```{r}
+
+regen |>
+  summarise(
+    .by = c(site, treat, plot, spp),
+    ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
+  ) |>
+  complete(nesting(site, treat, plot), spp, fill = list(ba_ha = 0)) |>
+  ggplot(aes(treat, ba_ha, fill = spp)) +
+  geom_boxplot() +
+  facet_wrap(~ spp + site, scales = "free_y") +
+  scale_fill_manual(values = colors)
 ```
 
 ## Permanova
@@ -298,8 +322,7 @@ adonis2(
 
 ```
 
-If I put site in `strata`, then it doesn't seem to matter if I include it as a
-fixed effect or not.
+If I put site in `strata`, I get similar results.
 
 ```{r}
 adonis2(
@@ -308,27 +331,6 @@ adonis2(
   strata = ba_ha$site,
   permutations = perms
 )
-
-adonis2(
-  ba_ha[c("rw", "to", "df", "other")] ~ site + treat,
-  data = ba_ha,
-  permutations = perms,
-  strata = ba_ha$site
-)
-
-```
-
-If I try to do `strata` with the interaction of site and treatment, then the
-model seems to not work. Perhaps this is because there is only one of each
-site:treatment interaction.
-
-```{r}
-
-with(ba_ha, adonis2(
-  cbind(rw, to, df, other) ~ treat,
-  permutations = perms,
-  strata = interaction(site, treat)
-))
 
 ```
 
@@ -345,18 +347,169 @@ with(ba_ha, adonis2(
 
 ```
 
-I'm not sure what it means to include site as a main effect, interaction, AND as
-the strata
+I think we can safely conclude that ther are some significant differences in
+basal are composition (I assume at the alpha = 0.05 level) between treatments.
+
+Next, we might consider where these differences (in abundance defined as basal
+area) are. We could ask about:
+
+- Differences between species within a treatment or
+- Differences between treatment within a species. 
+
+I will be focussing on the latter which is in keeping with the theme of the rest
+of my analysis. These differences have already been visualized above.
+
+Again, I'm making zero observations explicit, effectively making our data
+**presence-absence**, rather than presence only.
 
 ```{r}
 
-with(ba_ha, adonis2(
-  cbind(rw, to, df, other) ~ site + site:treat + treat,
-  permutations = perms,
-  strata = site
-))
+regen_pa <- regen |>
+  summarize(.by = c(site, treat, plot, spp),
+    ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
+  ) |>
+  complete(nesting(site, treat, plot), spp, fill = list(ba_ha = 0))
+
+regen_po <- regen |>
+  summarize(.by = c(site, treat, plot, spp),
+    ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
+  )
 
 ```
+
+So, perhaps with our 16 observations per species/treatment, we can detect some
+differences in basal area with a multi-level model that accounts for
+non-independence of our sampling design.
+
+```{r}
+
+library(emmeans)
+m1 <- glmmTMB(ba_ha ~ treat * spp + (1 | site/treat/plot), regen_pa)
+res1 <- simulateResiduals(m1)
+plot(res1)
+
+m3 <- glmmTMB(
+  ba_ha ~ treat * spp + (1 | site/treat),
+  regen_pa,
+  dispformula = ~ spp
+)
+res3 <- simulateResiduals(m3)
+plot(res3)
+
+m4 <- glmmTMB(
+  ba_ha ~ treat * spp + (1 | site/treat),
+  regen_pa,
+  family = ziGamma(link = "log"),
+  dispformula = ~ spp,
+  ziformula = ~ spp
+)
+plot(simulateResiduals(m4))
+
+m4 <- glmmTMB(
+  ba_ha ~ treat * spp + (1 | site/treat),
+  regen_pa,
+  family = ziGamma(link = "log"),
+  dispformula = ~ spp + treat,
+  ziformula = ~ spp
+)
+res4 <- simulateResiduals(m4)
+plot(res4)
+plotResiduals(res4, form = regen_pa$spp)
+plotResiduals(res4, form = regen_pa$treat)
+plotResiduals(res4, form = interaction(regen_pa$treat, regen_pa$spp))
+
+```
+
+Here I plot some simulations from this model to see if it generates plausible
+data.
+
+```{r}
+
+regen_pa |>
+  mutate(simulate(m4, nsim = 5)) |>
+  rename(obs = ba_ha) |>
+  pivot_longer(where(is.double), names_to = "type", values_to = "ba_ha") |>
+  ggplot(aes(
+    treat, ba_ha, # fill = type
+    group = interaction(type, treat),
+    fill = forcats::fct_collapse(type, sim = paste0("sim_", 1:5))
+  )) +
+  geom_boxplot() +
+  facet_wrap(~ spp, scales = "free_y") +
+  labs(fill = "obs/sim")
+
+```
+
+Finally, significant differences?
+
+We'd expect 5 times as much basal area of other species in LD compared to HA, and
+interestingly, 6 times more other species basal area in HD compared to HA.
+
+We expect 5 times more redwood regen basal area in GS compared to HA, and 7
+times compared to HD.
+
+For tanoak, we expect about twice as much regen basal area in GS compared to HA.
+
+```{r}
+
+emmeans(m4, c("spp", "treat"), by = "spp", type = "response") |>
+contrast("pairwise") |>
+as_tibble() |>
+filter(p.value < 0.05) |>
+relocate(spp)
+
+```
+
+For Douglas-fir in particular, we are interested in the counts of stems more
+than the basal area. This, requires another model. A counts model.
+
+Heres the raw counts, It looks like site plays the largest role.
+
+```{r}
+
+regen_df <- regen |>
+  count(site, treat, plot, spp) |>
+  complete(nesting(site, treat, plot), spp, fill = list(n = 0)) |>
+  filter(spp == "df")
+
+regen_df |>
+  ggplot(aes(site, n, fill = treat)) +
+  geom_boxplot()
+
+regen_df |> summarize(.by = c(site, treat), mean(n), sd(n))
+
+```
+
+A negative binomial model seems to fit acceptably. I was not able to achive
+model convergence with the specification of zero inflation or dispersion
+formulae.
+
+```{r}
+
+m1 <- glmmTMB(
+  n ~ treat + (1 | site/treat),
+  regen_df,
+  family = nbinom1()
+)
+
+res1 <- simulateResiduals(m1)
+plot(res1)
+
+```
+
+There are no statistically detectable differences
+
+```{r}
+
+emmeans(m1, "treat") |>
+  contrast("pairwise")
+
+```
+
+
+
+TODO: pairwise adonis may be available:
+<https://github.com/pmartinezarbizu/pairwiseAdonis>
 
 Save data from this page for future use
 
