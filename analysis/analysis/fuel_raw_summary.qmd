@@ -1,0 +1,231 @@
+---
+title: Summarize raw fuel data
+format:
+  html:
+    code-fold: true
+---
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(message = FALSE)
+```
+
+```{r}
+#| warning: false
+library(tidyverse, warn.conflicts = FALSE)
+source("./scripts/process_datasheets.r")
+source("./scripts/test_funs.r")
+```
+
+Before I convert our data to fuel loads, I would like to have at least a summary
+of the actual data that we collected in the field.
+
+
+## Load data from datasheets
+
+Data in quasi-csv format, described in @sec-data-entry. I'm ommitting the medium
+density dispersed plot (MD), which only exists at one site.
+
+Counts data is straight forward
+
+Sampling cylinder data uses a mix of NA and 0 if there was no vegetation. I'm
+making the height 0 if there was no vegetation. Also, if there is no vegetation,
+species is "-".
+
+I'm converting to duff/litter depth and percent litter to duff depth and litter
+depth.
+
+```{r}
+
+transectid <- c("phase", "site", "treatment", "corner", "azi")
+
+d <- combine_fuels_datasheets("../data") |>
+  map(\(x) filter(x, treatment != "md"))
+
+warn_duplicates(d$transects, phase, site, treatment, corner, azi)
+
+counts <- d$transect |>
+  select(all_of(transectid), slope, matches("(one|ten|hund)hr_count")) |>
+  replace_na(list(slope = 0))
+
+stations <- d$transect |>
+  select(all_of(transectid), matches("\\w+[12]$")) |>
+  pivot_longer(!all_of(transectid),
+    names_to = c(".value", "station"),
+    names_pattern = "(\\w+)([12])"
+  ) |>
+  # there was some inconsistency in whether heights were zero or blank if no veg
+  # was present, here I sort that out.
+  mutate(
+    avg_w_ht = if_else(live_woody == 0 & dead_woody == 0, 0, avg_w_ht),
+    avg_h_ht = if_else(live_herb == 0 & dead_herb == 0, 0, avg_h_ht),
+    species = tolower(str_replace(species, "hb", "eh")),
+    species = if_else(avg_w_ht == 0, "-", species),
+    litter_depth = duff_litter * pct_litter / 100,
+    duff_depth = duff_litter - litter_depth
+  ) |>
+  select(-c(metermark, duff_litter, pct_litter)) |>
+  relocate(fbd, .after = last_col())
+
+most_freq_string <- function(x) names(which.max(table(x)))
+
+cwd <- d$coarse_woody
+
+```
+
+Heights and decay class observations are conditional on percent cover and
+diameter respectively, it might make more sense to report weighted averages
+here, but I'm not doing that.
+
+For coarse woody debris, counts are averaged differently than diameter and decay
+class. I'll report average diameter of *observed* particles only, and average of
+counts at the transect level (including zeros). I need to ensure I'm making zero
+counts explicit, as they are not in the data.
+
+```{r}
+
+sum_funcs <- list(
+  mean = function(x) mean(x, na.rm = TRUE),
+  se = function(x) mean(x, na.rm = TRUE) / sqrt(sum(!is.na(x)))
+)
+
+stations_sum <- stations |>
+  group_by(phase, treatment) |>
+  summarise(across(c(where(is.double), -azi), sum_funcs)) |>
+  pivot_longer(-c(treatment, phase),
+    names_to = c("class", ".value"),
+    names_pattern = "(.*)_(mean|se)"
+  )
+
+counts_sum <- counts |>
+  group_by(phase, treatment) |>
+  summarise(across(c(where(is.double), -azi), sum_funcs)) |>
+  pivot_longer(-c(treatment, phase),
+    names_to = c("class", ".value"),
+    names_pattern = "(.*)_(mean|se)"
+  )
+
+# I need to know all possible transects to know where there are zeros for coarse
+# woody
+all_transects <- d$transects |>
+  expand(nesting(phase, site, treatment, corner, azi))
+
+# Average decay and size across all measured logs, average counts for all
+# transects
+cwd_sum <- cwd |>
+  group_by(phase, treatment) |>
+  mutate(across(c(dia, decay), sum_funcs)) |>
+  group_by(phase, treatment, site, corner, azi) |>
+  summarize(count = n(), across(matches("_(se|mean)$"), first)) |>
+  right_join(all_transects) |>
+  replace_na(list(count = 0)) |>
+  group_by(phase, treatment) |>
+  summarize(across(count, sum_funcs), across(matches("_(se|mean)$"), first)) |>
+  pivot_longer(-c(treatment, phase),
+    names_to = c("class", ".value"),
+    names_pattern = "(.*)_(mean|se)"
+  )
+
+```
+
+Here is a summmary of all the data we collected.
+
+```{r}
+#| label: tbl-raw-sampling-cylinders
+#| tbl-cap: >
+#|   Raw raw summary of data collected within sampling cylinders for each
+#|   treatment (n = 64). Average heights are for live and dead vegetation
+#|   particles, and don't represent an average height across an area. They are
+#|   meant to be multiplied by percent cover, but are presented indepenently
+#|   here to document our actual measurements.
+
+# this pivots wider and formats mean and se to print
+stations_sum |>
+  mutate(across(c(mean, se), \(x) format(round(x, 1)))) |>
+  mutate(mean = glue::glue("{mean} ({se})", .trim = FALSE), .keep = "unused") |>
+  pivot_wider(names_from = "class", values_from = "mean") |>
+  mutate(
+    treatment = fct_relevel(treatment, c("gs", "ld", "ha", "hd")),
+    phase = factor(phase, levels = c("prepct", "postpct"))
+  ) |>
+  arrange(phase, treatment) |>
+  rename(
+   "Phase" = phase,
+   "Treatment" = treatment,
+   "Live Woody Cover (%)" = live_woody,
+   "Dead Woody Cover (%)" = dead_woody,
+   "Average Woody Height (m)" = avg_w_ht,
+   "Live Herb Cover (%)" = live_herb,
+   "Dead Herb Cover (%)" = dead_herb,
+   "Average Herb Height (m)" = avg_h_ht,
+   "Litter Depth (cm)" = litter_depth,
+   "Duff Depth (cm)" = duff_depth,
+   "Fuel Bed Depth (cm)" = fbd
+   ) |>
+  knitr::kable(align = c("l" ,"l" , rep("r", 9)))
+
+```
+
+```{r}
+#| label: tbl-raw-fwd-transects
+#| tbl-cap: >
+#|   Raw raw summary of data collected along fuel transects for each
+#|   treatment (n = 32). Transect lengths for 1-hr, 10-hr, and 100-hr fuels were
+#|   1, 2, and 4 m, respectively. Redwood leaf sprays were only counted if they
+#|   were ⪆2 mm.
+
+counts_sum |>
+  mutate(across(c(mean, se), \(x) format(round(x, 1)))) |>
+  mutate(mean = glue::glue("{mean} ({se})", .trim = FALSE), .keep = "unused") |>
+  pivot_wider(names_from = "class", values_from = "mean") |>
+  mutate(
+    treatment = fct_relevel(treatment, c("gs", "ld", "ha", "hd")),
+    phase = factor(phase, levels = c("prepct", "postpct"))
+  ) |>
+  arrange(phase, treatment) |>
+  rename(
+   "Phase" = phase,
+   "Treatment" = treatment,
+   "Slope" = slope,
+   "1-hr Count" = onehr_count,
+   "10-hr Count" = tenhr_count,
+   "100-hr Count" = hundhr_count
+  ) |>
+  knitr::kable(align = c("l", "l", rep("r", 4)))
+  
+
+```
+
+
+```{r}
+#| label: tbl-raw-cwd-transects
+#| tbl-cap: >
+#|   Raw raw summary of data collected for coarse woody debris (> 7.62 cm) along
+#|   10-m transects for each treatment (n = 32). Diameter and decay class are
+#|   for observed particles averaged at the treatment level (48 ≤ n ≤ 84).
+#|   Counts are made at the transect level and averaged at the treatment level
+#|   (n = 32).
+
+cwd_sum |>
+  mutate(across(c(mean, se), \(x) format(round(x, 1)))) |>
+  mutate(mean = glue::glue("{mean} ({se})", .trim = FALSE), .keep = "unused") |>
+  pivot_wider(names_from = "class", values_from = "mean") |>
+  mutate(
+    treatment = fct_relevel(treatment, c("gs", "ld", "ha", "hd")),
+    phase = factor(phase, levels = c("prepct", "postpct"))
+  ) |>
+  arrange(phase, treatment) |>
+  rename(
+   "Phase" = phase,
+   "Treatment" = treatment,
+   "Count" = count,
+   "Diameter (cm)" = dia,
+   "Decay Class" = decay
+  ) |>
+  knitr::kable(align = c("l", "l", rep("r", 3)))
+
+```
+
+```{r}
+save(d, file = "summarize_collected_data.rda")
+```
+

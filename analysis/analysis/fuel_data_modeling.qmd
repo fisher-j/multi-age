@@ -13,19 +13,20 @@ source("./scripts/utils.r")
 ```
 
 ```{r}
+#| warning: false
+#| message: false
+
 load("./calculate_fuel_load.rda")
 source("./scripts/get_fuel_data.r")
 transectid <- c("site", "treatment", "corner", "azi")
 
-load_quiet(
-library(glmmTMB),
-library(ggdist),
-library(bayesplot),
-library(brms),
-library(tidybayes),
-library(DHARMa),
+library(glmmTMB)
+library(ggdist)
+library(bayesplot)
+library(brms)
+library(tidybayes)
+library(DHARMa)
 library(tidyverse)
-)
 
 ```
 
@@ -46,9 +47,12 @@ class_labels <- c(
   tenhr = "10-hr",
   hundhr = "100-hr",
   thoushr = "1,000-hr",
-  dufflitter = "Duff & litter",
-  veg = "Live vegetation"
+  dufflitter = "Duff & Litter",
+  veg = "Live Vegetation",
+  veg_diff = "Live Vegetation Difference"
 )
+
+class_labels2 <- imap(class_labels, \(x, i)  eval(bquote(`~`(.(i), .(x)))))
 
 fuel_class_labeller <- labeller(class = class_labels, fuel_class = class_labels)
 
@@ -500,6 +504,7 @@ treatment and site here is analagous to a plot effect, of which there are 16.
 
 ## Trying glmmTMB
 
+
 This package also alows fitting flexible models, but unlike the Bayesian
 approach, it is fast, and familiar as it works in the frequentist paradigm.
 
@@ -515,27 +520,30 @@ select_fuel_mod <- function(class, data, mods) {
   list(eval(mods[[class_mod]]))
 }
 
-```
-
-```{r}
-
 # this function will create the model output for each of the fuel classes
 run_glmmtmb_mod <- function(d, mods) {
   d |>
   mutate(
     mod = select_fuel_mod(class, data, mods),
-    emmeans = list(emmeans::emmeans(mod, "treatment", type = "response")),
-    pairs = list(as_tibble(pairs(emmeans, infer = TRUE))),
+    .emmeans = list(emmeans::emmeans(mod, "treatment", type = "response")),
+    emmeans = list(as_tibble(.emmeans)),
+    pairs = list(as_tibble(pairs(.emmeans, infer = TRUE))),
     aic = AIC(mod),
     res = list(simulateResiduals(mod, allow.new.levels = TRUE))
   )
 }
 
+```
+
+### Pre-pct
+
+```{r}
+
 # heres where I'll store model results
 fuel_tmb <- list()
 
 # The pre-pct data
-d <- load2("long", "pre", -c(phase, azi)) |> nest(.by = class) |> rowwise()
+dpre <- load2("long", "pre", -c(phase, azi)) |> nest(.by = class) |> rowwise()
 # The general model formula including random effects
 form <- load ~ treatment + (1 | site/treatment/corner)
 # Dufflitter doesn't have any zeros, so i'm using regular gamma. I'm assuming
@@ -550,7 +558,7 @@ mods <- alist(
     dispformula = ~ treatment
   ),
 )
-fuel_tmb$pre <- run_glmmtmb_mod(d, mods)
+fuel_tmb$pre <- run_glmmtmb_mod(dpre, mods)
 # select(fuel_tmb$pre, class, aic)
 
 ```
@@ -578,14 +586,31 @@ fuel_tmb$pre |> group_walk(~ plotQQunif(.x$res[[1]], main = .x$class))
 
 ```
 
-TODO: interpret these results
+For Duff & Litter, the largest difference was between the HD and HA treatments.
+The HD treatment had about 1.4 times more duff and litter (p = 0.07). Generally,
+all treatments were similar, with estimated loading of around 50 Mg ha^-1^.
+One-hour fuels were around 50% higher in the HA treatment compared to the LD and
+GS treatments (p = 0.07, and p = 0.01, respectively), with mean differences of
+around 0.5 Mg ha^-1^. Ten, hundred and thousand-hour fuels were statistically,
+very similar across treatments (p = 0.7 --- p = 1). Point esimates varied
+by about 1, 3, and <20 Mg ha^-1^ for ten, hundred, and thousand-hour fuels,
+respectively.
 
 ```{r}
 #| fig-width: 8
+#| fig-cap: >
+#|   Estimated marginal means (black dots) confidence intervals (purple bands)
+#|   and comparisons (red arrows) of fuel loading across four treatments for six
+#|   different fuel-class models. Non-overlapping red arrows indicates
+#|   statistical significance at the α = 0.05 level.
 
-group_map(fuel_tmb$pre,
-  ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
-  patchwork::wrap_plots()
+fuel_tmb$pre |>
+  mutate(class = case_match(as.character(class), !!!class_labels2)) |>
+  group_map(function(x, ...) {
+  plot(x$.emmeans[[1]], comparisons = TRUE) +
+  labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
+  }) |>
+  patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
 
 ```
 
@@ -599,7 +624,6 @@ select(fuel_tmb$pre, class, pairs) |>
   knitr::kable()
 
 ```
-
 
 ### Post-pct
 
@@ -616,13 +640,11 @@ only for veg.
 
 ```{r}
 
-d <- load2("long", "post", -c(phase, azi, dufflitter)) |>
+dpost <- load2("long", "post", -c(phase, azi, dufflitter)) |>
   mutate(load = if_else(class == "veg_diff" & load <= 0, 0, load)) |>
   nest(.by = class) |> rowwise()
-
 # same general formula as for pre-pct
 form <- load ~ treatment + (1 | site/treatment/corner)
-
 mods <- alist(
   default = glmmTMB(form, data,
     family = ziGamma(link = "log"),
@@ -639,8 +661,7 @@ mods <- alist(
     dispformula = ~ treatment
   )
 )
-fuel_tmb$post <- run_glmmtmb_mod(d, mods)
-select(fuel_tmb$post, class, aic)
+fuel_tmb$post <- run_glmmtmb_mod(dpost, mods)
 
 ```
 
@@ -667,14 +688,40 @@ fuel_tmb$post |> group_walk(~ plotQQunif(.x$res[[1]], main = .x$class))
 
 ```
 
-TODO: interpret results
+Post-pct resulted in greater stratification of treatments. One-hour fuels were
+generally around 2.4 Mg ha^-1^, but the HA treatment had around half of that
+amount (p = 0.01 --- p = 0.02). The GS treatment had the greatest 10-hr fuel
+loading with 8.8 Mg ha^-1^, which was about 1.6, 2.3 and 2.9 times greater than
+the LD, HA, and HD treatments respectively (p = 0.03, p < 0.001, for the others,
+respectively). The LD treatment also had about 1.7 times more 10-hr fuels that
+the HD treatment (5.4 vs. 3 Mg ha^-1^, p = 0.001). Hundred-hour fuels were also
+greatest in the GS treatment, with an average of about 19 Mg ha^-1^, which was
+about 2.6 times greater than in the HD treatment (7 Mg ha^-1^, p < 0.001).
+Thousand-hour fuels were greatest in the HD treatment, with 80 Mg ha^-1^, which
+was about 2.7 times greater than the LD and HD treatments (p = 0.03 and p = 0.05,
+respectively). Fuel loading for live vegetation was similar across treatments at
+around 2.5 Mg ha^-1^. The pre-post vegetation difference was greatest in the GS
+treatment at about 31 Mg ha^-1^, which was 2.5 and 2.8 times the HD and HA
+treatments, respectively (p ≈ 0.01).
 
 ```{r}
 #| fig-width: 8
+#| fig-cap: >
+#|   Estimated marginal means (black dots) confidence intervals (purple bands)
+#|   and comparisons (red arrows) of fuel loading across four treatments for six
+#|   different fuel-class models. Non-overlapping red arrows indicates
+#|   statistical significance at the α = 0.05 level. Vegetation difference
+#|   equals the transect level difference in vegetation load in the pre and
+#|   post-pct conditions. This represents slash fuels recruited to the forest
+#|   floor following the pre-commercial thinning.
 
-group_map(fuel_tmb$post,
-  ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
-  patchwork::wrap_plots()
+fuel_tmb$post |>
+  mutate(class = case_match(as.character(class), !!!class_labels2)) |>
+  group_map(function(x, ...) {
+  plot(x$.emmeans[[1]], comparisons = TRUE) +
+  labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
+  }) |>
+  patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
 
 ```
 
@@ -1571,6 +1618,8 @@ save(
   expected_predictions,
   expected_contrasts,
   fuel_class_labeller,
+  class_labels2,
+  fuel_tmb,
   file = "fuel_data_modeling.rda"
 )
 

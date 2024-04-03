@@ -1,6 +1,10 @@
 ---
 title: Fuel data exploration
+format:
+  html:
+    code-fold: true
 ---
+
 
 ```{r init}
 #| echo: false
@@ -9,6 +13,25 @@ load("./calculate_fuel_load.rda")
 transectid <- c("site", "treatment", "corner", "azi")
 load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
 treatment_load_vars <- c("treatment", load_vars)
+```
+
+
+```{r}
+#| echo: false
+
+class_labels <- c(
+  onehr = "1-hr",
+  tenhr = "10-hr",
+  hundhr = "100-hr",
+  thoushr = "1,000-hr",
+  dufflitter = "Duff & Litter",
+  veg = "Live Vegetation",
+  veg_diff = "Live Vegetation Difference"
+)
+
+class_labels2 <- imap(class_labels, \(x, i)  eval(bquote(`~`(.(i), .(x)))))
+
+fuel_class_labeller <- labeller(class = class_labels, fuel_class = class_labels)
 ```
 
 Our main questions regarding fuel loading are:
@@ -95,29 +118,42 @@ environments was readily apparent in the field.
 Ten-hr and 100-hr, and 1000-hr fuels do not reveal an obvious trend. I'm not
 sure why this is at the moment.
 
-Post-pct
-
 
 ```{r}
-#| label: fig-raw-fuel-histogram
+#| label: fig-raw-fuel-boxplot-pre
 #| fig-cap: >
-#|   Histograms of raw data Pre- and post-pct.
-#| fig-subcap:
-#|   - Pre-pct data
-#|   - Post-pct data, "dufflitter" data is not valid for this phase of the
-#|     experiment. 1-hr fuels do not included suspended leaves
+#|   Boxplots of fuels data summarized for six fuel classes across four
+#|   overstory harvest treatments, prior to pre-commercial thinning, 10 years
+#|   after harvest. Woody and herbaceous vegetation have been combined and sound
+#|   and rotten, 1,000-hr fuels have been combined.
 
 load2("long", "pre") |>
-  # filter(!(load > 190 & class == "veg" | load > 400 & class == "thoushr")) |>
   ggplot(aes(treatment, load)) +
   geom_boxplot() +
-  facet_wrap(~class, scales = "free")
+  facet_wrap(~class, scales = "free", labeller = fuel_class_labeller) +
+  labs(x = "Treatment", y = expression(Load~(Mg%.%ha^-1))) +
+  scale_x_discrete(labels = toupper)
+
+```
+
+```{r}
+#| label: fig-raw-fuel-boxplot-post
+#| fig-cap: >
+#|   Boxplots of transect level fuels data summarized for six fuel classes
+#|   across four overstory harvest treatments, following pre-commercial
+#|   thinning, 10 years after harvest. Woody and herbaceous vegetation have been
+#|   combined and sound and rotten, 1,000-hr fuels have been combined. Duff and
+#|   litter data was not collected for this phase of the experiment. One-hour
+#|   fuels do not included leaves suspended in the slash. Vegetation difference
+#|   is the difference in pre- and post-pct vegetation fuels and represents
+#|   vegetation slash recruited to the forest floor.
 
 load2("long", "post", -dufflitter) |>
-  # filter(!(load > 190 & class == "veg" | load > 400 & class == "thoushr")) |>
   ggplot(aes(treatment, load)) +
   geom_boxplot() +
-  facet_wrap(~class, scales = "free")
+  facet_wrap(~class, scales = "free", labeller = fuel_class_labeller) +
+  labs(x = "Treatment", y = expression(Load~(Mg%.%ha^-1))) +
+  scale_x_discrete(labels = toupper)
 
 ```
 
@@ -182,7 +218,7 @@ cleavland_plot <- function(data, title, load_var = load) {
 #|   - Ten hour fuels
 #|   - Hundred hour fuels
 
-fwd |> 
+fwd |>
   mutate(class = factor(class, levels = c("onehr", "tenhr", "hundhr"))) |>
   group_by(class) |> 
   group_walk(\(data, groups) print(cleavland_plot(data, groups$class)))

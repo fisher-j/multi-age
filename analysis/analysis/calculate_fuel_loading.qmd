@@ -1,11 +1,19 @@
 ---
 title: Calculate fuel loading
+format:
+  html:
+    code-fold: true
 ---
 
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(message = FALSE)
+```
 
 ```{r}
 #| warning: false
 library(tidyverse, warn.conflicts = FALSE)
+library(patchwork)
+load("summarize_collected_data.rda")
 ```
 
 We used the line intercept method for tallying fine and coarse woody debris
@@ -161,26 +169,6 @@ lit_particle_params |> knitr::kable()
 
 ```
 
-## Load data from datasheets {#sec-load-fuel-data}
-
-Data in quasi-csv format, described in @sec-data-entry. I'm ommitting the medium
-density dispersed plot (MD), which only exists at one site.
-
-```{r}
-#| echo: true
-#| message: true
-
-# load data and ensure unique transects
-source("./scripts/process_datasheets.r")
-source("./scripts/test_funs.r")
-
-d <- combine_fuels_datasheets("../data") |>
-  map(\(x) filter(x, treatment != "md"))
-
-warn_duplicates(d$transects, phase, site, treatment, corner, azi)
-
-```
-
 ## Fine woody debris
 
 The above information will allow us to calculate fuel loading for fine and
@@ -198,6 +186,7 @@ transectid <- c("phase", "site", "treatment", "corner", "azi")
 fwd <- d$transects |>
   select(all_of(transectid), slope, matches("one|ten|hun")) |>
   mutate(slope = if_else(is.na(slope), 0, slope)) |>
+  # join transect lengths for one ten and hundred hour counts
   left_join(select(d$plots, phase, site, treatment, matches("one|ten|hun"))) |>
   # move onehr, tenhr, etc to new column and create new columns for transect
   # length and particle counts
@@ -233,6 +222,8 @@ transect slopes, and transect lengths.
 
 I'm setting a couple of missing slope to zero.
 
+TODO: Make missing transects be explicit zeros
+
 ```{r}
 #| message: false
 
@@ -246,8 +237,13 @@ cwd <- d$coarse_woody |>
     med_d = median(dia),
     .groups = "drop"
   ) |>
-  left_join(d$transects[c(transectid, "slope")]) |>
-  mutate(slope = if_else(is.na(slope), 0, slope)) |>
+  # left_join(d$transects[c(transectid, "slope")]) |>
+  # make missing cwd explicit
+  right_join(d$transects[c(transectid, "slope")]) |>
+  replace_na(
+    list(med_d = 0, sum_d2 = 0, count = 0, slope = 0, class = "thoushr_s")
+  ) |>
+  # mutate(slope = if_else(is.na(slope), 0, slope)) |>
   left_join(d$plots[c("phase", "site", "treatment", "thoushr_length")]) |>
   left_join(get_particle_params(source = "glebocki")) |>
   mutate(
@@ -562,6 +558,80 @@ tl_tab <- total_load |>
     gt::gt(groupname_col = "class") |>
     gt::tab_options(row_group.as_column = TRUE) |>
     gt::fmt_number(decimals = 1)
+
+```
+
+## Summarize fuel load
+
+```{r}
+#| label: fig-load-summary
+#| fig-cap: >
+#|   Calculated fuel load summarized for eight fuel load classes, two
+#|   measurement periods (before and after pct = pre-commercial thin), and four
+#|   harvest treatments (GS = group selection; LD = low-density dispersed; HA =
+#|   high-density aggregate; HD = high-density dispersed). Data sampled within
+#|   sampling cylinders, including duff & litter and vegetative fuels, were
+#|   averaged to the transect level (n = 2) prior to calculating averages (dots)
+#|   and standard errors (lines).
+
+fig_labels <- labeller(
+  class = c(
+    dufflitter = "Duff & Litter",
+    herb = "Herbaceous Veg.",
+    hundhr = "100-hr",
+    onehr = "1-hr",
+    tenhr = "10-hr",
+    thoushr_r = "1000-hr Rotten",
+    thoushr_s = "1000-hr Sound",
+    woody = "Woody Veg."
+    ),
+  phase = c(
+    prepct = "Pre-pct",
+    postpct = "Post-pct"
+  )
+)
+
+p1 <- total_load |>
+  summarize(
+    .by = c(phase, treatment, class),
+    mean = mean(load, na.rm = TRUE),
+    se = mean / sqrt(sum(!is.na(load)))
+  ) |>
+  filter(str_detect(class, "one|ten|hund|duff")) |>
+  mutate(
+    phase = factor(phase, levels = c("prepct", "postpct")),
+    treatment = factor(treatment, levels = c("gs", "ld", "ha", "hd")),
+    class = factor(class,
+      levels = c("onehr", "tenhr", "hundhr", "dufflitter",
+        "thoushr_r", "thoushr_s", "woody", "herb")
+    )
+  ) |>
+  filter(!phase == "postpct" | !class == "dufflitter") |>
+  ggplot(aes(treatment, mean)) +
+  geom_pointrange(aes(ymin = mean - se, ymax = mean + se)) +
+  facet_grid(class ~ phase, scales = "free_y", labeller = fig_labels)
+
+p2 <- total_load |>
+  summarize(
+    .by = c(phase, treatment, class),
+    mean = mean(load, na.rm = TRUE),
+    se = mean / sqrt(sum(!is.na(load)))
+  ) |>
+  filter(str_detect(class, "thous|wood|herb")) |>
+  mutate(
+    phase = factor(phase, levels = c("prepct", "postpct")),
+    treatment = factor(treatment, levels = c("gs", "ld", "ha", "hd")),
+    class = factor(class,
+      levels = c("onehr", "tenhr", "hundhr", "dufflitter",
+        "thoushr_r", "thoushr_s", "woody", "herb")
+    )
+  ) |>
+  filter(!phase == "postpct" | !class == "dufflitter") |>
+  ggplot(aes(treatment, mean)) +
+  geom_pointrange(aes(ymin = mean - se, ymax = mean + se)) +
+  facet_grid(class ~ phase, scales = "free_y", labeller = fig_labels)
+
+p1 + p2 + plot_layout(guides = "collect")
 
 ```
 
