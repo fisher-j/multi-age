@@ -39,6 +39,16 @@ ggplot2::theme_update(
 
 ```
 
+## Objectives
+
+1. Summarize differences in species response
+1. For each species, is there a difference in height increment between
+   treatments?
+1. For each species/treatment combination, is there a difference in height
+   increment between the first and second periods?
+2. Is there a treatment difference in redwood or tanoak sprout heights at year
+   10, if so, what is the magnitude of the difference?
+
 ## Modeling
 
 We have nested data where we have multiple observations within trees (over
@@ -109,6 +119,11 @@ minc <- lst(
   minc9 = update(minc8, ~ . + treat:year),
   minc10 = update(minc8, ~ . - (1 | plot) + (0 + spp | plot)),
   minc11 = update(minc10, ~ . - treat:spp),
+  minc12 = glmmTMB(
+    ht_inc ~ treat + year * spp + (1 | tree) + (0 + spp | plot),
+    dispformula = ~ spp * year * treat,
+    data = dinc
+  )
 )
 
 format_model_formula <- function(mod) {
@@ -184,6 +199,12 @@ this with a model.
    
     Removing the treat * species interaction results in a solid AIC boost. 
 
+12. ``r format_model_formula(minc[[12]])`` 
+   
+    Switching to glmmTMB and adding a dispersion model that includes a
+    three-way interaction reduces AIC, and results in more well-behaved
+    residuals.
+
 ```{r}
 #| echo: false
 #| column: body-outset
@@ -196,7 +217,8 @@ rearrange_coef_names <- function(x) {
 }
 
 modelsummary(
-  minc,
+  shape = term ~ model,
+  minc[1:11],
   stars = TRUE,
   coef_rename = rearrange_coef_names,
   output = "markdown",
@@ -207,46 +229,119 @@ modelsummary(
 
 ```
 
-### Height increment results
-
-The model selected based on AIC lacks a treatment x year interaction. This means
-that there was not enough evidence to suggest that any treatment results in a
-lesser or greater slow down in height growth. Across treatments, the effect of
-year was significant, and this varied significantly by species--redwood's height
-growth rate reduction was about 3 times that of tanoak.
+The coefficients are different for the glmmTMB model because it includes a model
+for dispersion. Here it is displayed with the conditional estimates only.
 
 ```{r}
+
+modelsummary(
+  minc[12],
+  shape = term + component ~ model,
+  output = "markdown",
+  group_map = c(conditional = "")
+)
+
+```
+
+Model 12 has the lowest AIC and the residuals are relatively well behaved
+
+```{r}
+library(DHARMa)
+simulateResiduals(minc[[12]]) |> plot()
+```
+
+### Height increment results
+
+The final selected model, based on AIC and examination of residuals had the
+form: 
+
+```{r, echo = FALSE}
+format_model_formula(minc[[12]])
+```
+
+The model selected based on AIC lacks a treatment x species interaction,
+suggesting that there is not evidence that treatments affected species
+differentially. It also lacks a treatment x year interaction. This means that
+there was not enough evidence to support that treatment was related to changes
+in growth rate.
+
+The presence of treatment in the model (0.001 ≤ p < 0.03) suggests that
+the levels of treatment were associated with different growth rates across
+species and years. And the species x year interaction (p < 0.001) suggests
+changes in growth rates are different for redwood and tanoak.
+
+Averaging over growth periods, treatment specific height increments for redwood
+ranged from 0.66 to 0.86 m yr^-1^, and for tanoak, from 0.29 to 0.49, with the
+slowest growth in the HD treatment and the fastest in the GS treatment. height
+increment was greater in the GS treatment than the HA and HD treatments by about
+0.19 m yr^-1^ (p < 0.001). The LD treatment was intermediate, but not
+statistically distinguishable from the other treatments (0.13 < p < 0.28).
+
+```{r}
+#| label: fig-sprout-inc-treat
+#| fig-cap: >
+#|   Estimated marginal means for the effect of harvest treatment on redwood and
+#|   tanoak sprout height increment, averaged over two growth periods, ten years
+#|   after harvest. Purple bars represent confidence intervals and statistical
+#|   significance (α = 0.05) is indicated by non-overlaping red arrows.
+
+emm_treat <- emmeans(minc[[12]], "treat", by = "spp")
+plot(emm_treat, comparisons = TRUE)
+```
+
+Redwood growth slowed from 0.80 to 0.67 m yr^-1^ in the second period and tanoak slowed from 0.39  to 0.34 m yr^-1^.
+
+Redwood grew faster than tanoak, but slowed down more relative
+to it in the second period. Height increment for redwood was 0.42 m yr^-1^ greater in
+the first period and 0.33 m yr^-1^ greater in the second period than tanoak
+height increment.
+
+
+```{r}
+#| label: fig-sprout-inc-year
+#| fig-cap: >
+#|   Estimated marginal means for the effect of growth period on redwood and
+#|   tanoak sprout height increment, averaged over four harvest treatments, ten
+#|   years after harvest. Purple bars represent confidence intervals and
+#|   statistical significance (α = 0.05) is indicated by non-overlaping red
+#|   arrows.
+
+emmeans(minc[[12]], c("year"), by = "spp") |> plot(comparisons = TRUE)
+```
+
+```{r}
+#| include: false
 #| label: fig-ht-inc-contrast
 #| fig-cap: >
 #|   Growth period 1 is year 1-5, growth period 2 is year 5-10. Growth
 #|   significantly decreased in the second period for both species.
 
-minc11em <- emmeans(minc[[11]], c("year"), by = c("spp"))
+minc11em <- emmeans(minc[[12]], "year", by = c("spp"))
 
-minc11con <- contrast(minc11em, "consec") |> confint() |> as_tibble()
+minc11con <- contrast(minc11em, "consec", infer = TRUE) |> as_tibble()
 
 minc11cld <- cld(minc11em, Letters = letters) |>
   as_tibble() |>
   mutate(.group = str_replace_all(.group, " ", ""))
 
 minc11con |>
-  ggplot(aes(spp, -estimate, color = spp)) +
+  ggplot(aes(spp, estimate, color = spp)) +
   geom_pointrange(
-    aes(ymin = -lower.CL, ymax = -upper.CL),
+    aes(ymin = lower.CL, ymax = upper.CL),
     linewidth = 1, size = 1
     ) +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   labs(
     x = NULL,
-    y = expression(Height ~ increment ~ reduction ~ (-m %.% yr^-1)),
+    y = expression(Height ~ increment ~ change ~ (m %.% yr^-1)),
     color = "Species"
   )
 
 ```
 
 ```{r}
-#| label: tbl-ht-inc-contrast
-#| tbl-cap: >
+#| incldue: false
+
 #|   Growth period 1 is year 1-5, growth period 2 is year 5-10. Growth
 #|   significantly decreased in the second period for both species.
 
@@ -291,9 +386,9 @@ minc11cld |>
 ```
 
 ### Heights - year 10 only
+
 The simplest model that I'm willing to look at includes a treatment/species
 interaction, and no random effects. It will serve as a baseline for comparison.
-
 
 ```{r}
 #| code-fold: false
@@ -332,11 +427,21 @@ mht109 <- glmmTMB(
   ht ~ treat + spp + (0 + spp | plot),
   family = gaussian(link = "log"),
   data = dht10,
-  dispformula = ~ spp + treat
+  dispformula = ~ spp * treat
 )
 
 mht10_list <- lst(
   mht101, mht102, mht103, mht104, mht105, mht106, mht107, mht108, mht109
+)
+
+modelsummary(
+  lst(mht108, mht109),
+  stars = TRUE,
+  output = "markdown",
+  shape = term:component + statistic ~ model,
+  metrics = c("AIC", "BIC", "RMSE"),
+  estimator = "ML",
+  gof_omit = "F|Log.Lik"
 )
 
 modelsummary(
@@ -358,6 +463,12 @@ treatment.
 
 ```{r}
 
+plot(simulateResiduals(mht109))
+
+```
+
+```{r}
+
 ht10_sel <- mht109
 
 ```
@@ -367,10 +478,11 @@ ht10_sel <- mht109
 ```{r}
 #| label: fig-year-10-only
 #| fig-cap: >
-#|   Mean and 95% confidence interval for the selected model, displayed with raw
-#|   data. Shared letters between treatments (within species) indicates that
-#|   there is not sufficient evidence to claim the estiamtes come from different
-#|   distributions.
+#|   Predicted mean height and 95% confidence intervals for redwood and tanoak
+#|   stump sprouts 10 years after harvest using four different harvest
+#|   treatments. The letters indicate statistically significant differences
+#|   between treatments within a species.
+
 
 ht10_cld <- emmeans(ht10_sel,
   pairwise ~ treat,
@@ -653,14 +765,6 @@ mht18emmeans |>
       alpha = .2
     ) +
     stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
-    stat_smooth(
-      data = dht,
-      aes(year, ht),
-      method = lm,
-      color = "gray60",
-      se = FALSE,
-      linewidth = 0.7
-    ) +
     scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
     theme(legend.position = "bottom") +
     labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species")
@@ -680,7 +784,7 @@ mht18_compare <- emmeans(
   by = c("spp"),
   at = list(year = "10"),
   type = "response"
-) |>
+) |> 
   cld(Letters = letters) |>
   as_tibble() |>
   mutate(
