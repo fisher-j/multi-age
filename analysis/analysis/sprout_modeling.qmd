@@ -23,6 +23,7 @@ library(patchwork)
 library(DHARMa)
 library(glmmTMB)
 library(ggeffects)
+library(DHARMa)
 
 load("wrangled_sprouts.rda")
 source("./scripts/rnd_color_brewer.r")
@@ -205,6 +206,11 @@ this with a model.
     three-way interaction reduces AIC, and results in more well-behaved
     residuals.
 
+The coefficients are different for the glmmTMB model because it includes a model
+for dispersion. Here the dispersion model estimates are ommitted.
+
+Model 12 has the lowest AIC and the residuals are relatively well behaved.
+
 ```{r}
 #| echo: false
 #| column: body-outset
@@ -213,40 +219,25 @@ this with a model.
 # table
 rearrange_coef_names <- function(x) {
   str_replace(x, "^(.*):(treat[HALD]{2})$", "\\2:\\1") |>
-    str_replace(":", " x ")
+    str_replace_all(":", " x ") |>
+    str_replace("dispersion|conditional", "")
 }
 
 modelsummary(
-  shape = term ~ model,
-  minc[1:11],
-  stars = TRUE,
+  minc[1:12],
+  shape = term:component ~ model,
+  coef_omit = ".*dispersion$",
   coef_rename = rearrange_coef_names,
+  gof_omit = "F|Log.Lik",
+  stars = TRUE,
   output = "markdown",
   metrics = c("AIC", "BIC", "RMSE"),
   estimator = "ML",
-  gof_omit = "F|Log.Lik"
 )
 
 ```
 
-The coefficients are different for the glmmTMB model because it includes a model
-for dispersion. Here it is displayed with the conditional estimates only.
-
 ```{r}
-
-modelsummary(
-  minc[12],
-  shape = term + component ~ model,
-  output = "markdown",
-  group_map = c(conditional = "")
-)
-
-```
-
-Model 12 has the lowest AIC and the residuals are relatively well behaved
-
-```{r}
-library(DHARMa)
 simulateResiduals(minc[[12]]) |> plot()
 ```
 
@@ -289,12 +280,13 @@ emm_treat <- emmeans(minc[[12]], "treat", by = "spp")
 plot(emm_treat, comparisons = TRUE)
 ```
 
-Redwood growth slowed from 0.80 to 0.67 m yr^-1^ in the second period and tanoak slowed from 0.39  to 0.34 m yr^-1^.
+Redwood growth slowed from 0.80 to 0.67 m yr^-1^ in the second period and tanoak
+slowed from 0.39  to 0.34 m yr^-1^.
 
-Redwood grew faster than tanoak, but slowed down more relative
-to it in the second period. Height increment for redwood was 0.42 m yr^-1^ greater in
-the first period and 0.33 m yr^-1^ greater in the second period than tanoak
-height increment.
+Redwood grew faster than tanoak, but slowed down more relative to it in the
+second period. Height increment for redwood was 0.42 m yr^-1^ greater in the
+first period and 0.33 m yr^-1^ greater in the second period than tanoak height
+increment.
 
 
 ```{r}
@@ -435,37 +427,28 @@ mht10_list <- lst(
 )
 
 modelsummary(
-  lst(mht108, mht109),
-  stars = TRUE,
-  output = "markdown",
-  shape = term:component + statistic ~ model,
-  metrics = c("AIC", "BIC", "RMSE"),
-  estimator = "ML",
-  gof_omit = "F|Log.Lik"
-)
-
-modelsummary(
   mht10_list,
   stars = TRUE,
   output = "markdown",
   shape = term:component + statistic ~ model,
+  coef_omit = ".*dispersion$",
+  coef_rename = rearrange_coef_names, 
   metrics = c("AIC", "BIC", "RMSE"),
   estimator = "ML",
   gof_omit = "F|Log.Lik"
 )
 
 ```
-The best model according to AIC includes a random intercept for plot and a
-random slope for spp. Because spp is a factor, this effectively estimates a
-species specific intercept, but also takes into account the covariance of the
-species plot effect. The best model for dispersion included speceis and
-treatment.
+
+We can see the residuals are not perfect, but nor are they very offensive.
 
 ```{r}
 
 plot(simulateResiduals(mht109))
 
 ```
+
+### Here I make my selection
 
 ```{r}
 
@@ -475,26 +458,46 @@ ht10_sel <- mht109
 
 ### Year 10 only Results
 
+#### Random effects
+The best model according to AIC includes a random intercept for plot and a
+random slope for spp. Because spp is a factor, this effectively estimates a
+species specific intercept, but also takes into account the covariance of the
+species plot effect. 
+
+#### Fixed effects
+The best model for dispersion included speceis and treatment, but no
+interactions. This suggests that treatments do not affect species
+differentially.
+
+
+
+```{r, include=FALSE}
+
+(ht10emm <- emmeans(ht10_sel, "treat", by = c("spp"), type = "response"))
+
+( ht10comp <- pairs(ht10emm) )
+
+emmcomp <- plot(ht10emm, comparisons = TRUE, plotit = FALSE) |> as_tibble()
+
+```
+
+Because the best model did not contain a species x treatment interaction,
+comparisons between treatments is the same for both species. The GS treatment
+resulted in greater heights in year 10 than the other treatments (0.001 < p <
+0.04). Predicted mean height for redwood ranged from 10.29 m in the GS treatment
+to 6.16 m in the HD treatment. For tanoak, predicted mean height ranged from
+5.12 in the GS treatment to 3.04 in the HD treatment. Predicted mean heights
+followed the pattern GS > LD > HA > HD.
+
 ```{r}
 #| label: fig-year-10-only
 #| fig-cap: >
-#|   Predicted mean height and 95% confidence intervals for redwood and tanoak
-#|   stump sprouts 10 years after harvest using four different harvest
-#|   treatments. The letters indicate statistically significant differences
-#|   between treatments within a species.
+#|   Predicted mean height and 95% confidence intervals (gray bars) for redwood
+#|   and tanoak stump sprouts 10 years after harvest using four different
+#|   harvest treatments. Non-overlaping blue arrows indicate statistically
+#|   significant differences between treatments within a species.
 
-
-ht10_cld <- emmeans(ht10_sel,
-  pairwise ~ treat,
-  by = c("spp"),
-  type = "response"
-) |>
-  cld(Letters = letters) |>
-  as_tibble() |>
-  rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL"))) |>
-  mutate( .group = str_replace_all(.group, " ", ""))
-
-year_10_only_plot <- dht10 |>
+dht10 |>
   ggplot(aes(treat, ht, color = spp, fill = spp)) +
   facet_grid(~spp, switch = "x") +
   theme(panel.spacing = unit(0, "lines"),
@@ -504,22 +507,34 @@ year_10_only_plot <- dht10 |>
   geom_dots() +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   geom_pointrange(
-    data = ht10_cld,
-    aes(y = response, ymin = lower.CL, ymax = upper.CL),
-    color = "gray50",
+    data = emmcomp,
+    aes(y = the.emmean, ymin = lower.CL, ymax = upper.CL),
+    color = "gray60",
     position = position_nudge(x = -0.07),
     size = 0.7,
-    linewidth = 1,
+    linewidth = 2.3,
     show.legend = FALSE
   ) +
-  geom_text(
-    data = ht10_cld,
-    aes(y = upper.CL, label = .group),
-    color = "black",
-    position = position_nudge(x = -0.3, y = 0.2)
+  geom_segment(
+    data = emmcomp,
+    aes(y = the.emmean, xend = treat, yend = rcmpl),
+    color = "blue4",
+    lineend = "butt",
+    linejoin = "bevel",
+    arrow = arrow(length = grid::unit(2.5, "mm")),
+    position = position_nudge(x = -0.07),
+    linewidth = 1
+  ) +
+  geom_segment(
+    data = emmcomp,
+    aes(y = the.emmean, xend = treat, yend = lcmpl),
+    color = "blue4",
+    lineend = "butt",
+    linejoin = "bevel",
+    arrow = arrow(length = grid::unit(2.5, "mm")),
+    position = position_nudge(x = -0.07),
+    linewidth = 1
   )
-
-year_10_only_plot
 
 ```
 
@@ -543,7 +558,8 @@ The following models were fit, and are summarized in @tbl-model-summaries.
 7. Same as 6, but attempt to simplify the random effects by forcing them to be
    estimated independently, correlation between species is not estimated.
 8. Re-introduce the 3-way interaction again.
-9. Omit the random effect for site. This is supported by the interpretation of @fig-data-summary-plots.
+9. Omit the random effect for site. This is supported by the interpretation of
+   @fig-data-summary-plots.
 10. Like 9, but try simplified (independent) random effects.
 
 One problem with this is that I'm comparing AIC for different random effects
@@ -823,16 +839,16 @@ multiple_years_plot
 
 ```
 
-
 ### Multi-year vs. year 10 only
 
 ```{r}
+
 standard_model_col_names <- c(
   LCL = "lower.CL",  UCL = "upper.CL",  LCL = "asymp.LCL", UCL = "asymp.UCL",
-  emmean = "response"
+  emmean = "response", emmean = "the.emmean"
 )
 
-list("year 10 only" = ht10_cld, "multi-year" = mht18_compare) |>
+list("year 10 only" = emmcomp, "multi-year" = mht18_compare) |>
   map(\(x) rename(x, any_of(standard_model_col_names))) |>
   bind_rows(.id = "model") |>
   ggplot(aes(treat, ht, color = model, fill = model)) +
@@ -846,10 +862,6 @@ list("year 10 only" = ht10_cld, "multi-year" = mht18_compare) |>
   geom_dots(
     data = dht10, color = "gray50", fill = "gray70",
     position = position_nudge(x = 0.2), scale = 0.7, binwidth = 0.18
-  ) +
-  geom_text(
-    aes(y = UCL + 0.6, label = .group, color = model,),
-    position = position_dodge(width = 0.4),
   ) +
   theme(legend.position = "bottom") + 
   scale_color_manual(

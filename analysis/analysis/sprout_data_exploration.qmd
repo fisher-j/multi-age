@@ -47,17 +47,6 @@ The following figures reveal possible trends in the raw data.
 
 #### Species/treatment/year
 
-@fig-data-summary-treatments reveals fine, species specific differences between
-treatments and general trends over time. It shows that over time, LD and GS
-treatments have more taller trees than the other treatments, with GS having the
-most. This is true for both redwood and tanoak. Additionally, for redwood it
-appears that HA may have taller trees than HD, at least in year 10.
-
-@fig-data-summary-spp shows the same information as before, but is arguably 
-easier to look at. There is a general increasing trend in heights with
-treatments as follows:
-
-    HD < HA < LD < GS
 
 Redwood is consistently taller than tanoak, and the GS treatment confers the
 greatest advantage to redwood.
@@ -74,10 +63,19 @@ diverging performance should be so apparent with redwood and not tanoak.
 #| fig-height: 8
 #| fig-width: 8
 #| fig-cap: >
-#|   Height distributions for tanoak and redwood over time for each of four
-#|   treatments. Treatments GS and LD have higher proportions of taller trees.
-#|   Years refers to number of years after treatment.
+#|   Raw sprout heights for redwood and tanoak in four different harvest
+#|   treatments, at three measurement periods over 10 years. Note the difference
+#|   in x-axis scales.
+#|
 #| message: false
+
+species_labels <- c(LIDE = "Tanoak", SESE = "Redwood")
+year_labels <- c(`1` = "Year 1", `5` = "Year 5", `10` = "Year 10")
+plot_labels <- labeller(
+  spp = species_labels,
+  year =  year_labels
+)
+
 
 sprouts |>
   lengthen_data("ht") |>
@@ -86,7 +84,7 @@ sprouts |>
   scale_x_continuous(expand = c(0, 0)) +
   coord_cartesian(clip = "off") +
   geom_dots(binwidth = unit(0.019, "npc")) +
-  facet_grid(vars(spp), vars(year), scales = "free", labeller = label_both) +
+  facet_grid(vars(spp), vars(year), scales = "free_x", labeller = plot_labels) +
   labs(x = "Height (m)", y = "Treatment") +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   theme(legend.position = "bottom")
@@ -94,15 +92,19 @@ sprouts |>
 
 ```
 
+This plot shows the raw data collected for ~100 redwood and tanoak sprout clumps
+in each of four harvest treatments. There is a clear increasing trend with year.
+The height distribution of redwood is much more dispersed than tanoak. The
+dispersion of both species increases with year. Redwood are consistently taller.
+There appears to be an increasing trend in height in treatments where GS > LD >
+HA > HD.
+
 ```{r}
 #| label: fig-data-summary-spp
 #| fig-height: 8
 #| fig-cap: >
-#|   Similar to @fig-data-summary-treatments, but with an emphasis on
-#|   differences between speceis responses across treatments. Comparisons are
-#|   made for each year. The GS treatment appears to favor redwood response the
-#|   most, but all treatments show redwoods are taller than tanoak. Years refers
-#|   to number of years after treatment.
+#|   Density plots of raw sprout heights for redwood and tanoak in four
+#|   different harvest treatments, at three measurement periods over 10 years.
 #| message: false
 
 sprouts |>
@@ -116,9 +118,10 @@ sprouts |>
   scale_x_continuous(expand = c(0, 0)) +
   coord_cartesian(clip = "off") +
   geom_density_ridges(alpha = .3, size = 1) +
-  facet_grid(year ~ ., labeller = label_both) +
+  facet_grid(year ~ ., labeller = plot_labels) +
   labs(x = "Height (m)", y = "Treatment") +
-  scale_color_brewer(palette = "Set2", name = "Species")
+  scale_color_brewer(palette = "Set2", name = "Species", labels = species_labels)
+
 ```
 
 #### Species/year/SDI

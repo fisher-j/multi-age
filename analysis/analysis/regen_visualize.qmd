@@ -24,6 +24,17 @@ library(DHARMa)
 load("regen_wrangled.rda")
 ```
 
+```{r include=FALSE}
+
+species_labels <- c(to = "Tanoak", rw = "Redwood", df = "Douglas-fir", 
+  other = "Other")
+
+plot_labels <- labeller(
+  spp = species_labels
+)
+
+```
+
 Some functions and constants that I need later on, these might should get moved
 to their own function and sourced.
 
@@ -180,6 +191,7 @@ Above I visualize basal area by treatment, species, and size class. Here I'll
 simplify and visualize just treatment and species.
 
 ```{r}
+#| label: fig-raw-abundance-ba
 
 # I'm expanding my data to ensure that any plot missing a species observation is
 # recorded as zeros.
@@ -351,13 +363,18 @@ I think we can safely conclude that ther are some significant differences in
 basal are composition (I assume at the alpha = 0.05 level) between treatments.
 
 Next, we might consider where these differences (in abundance defined as basal
-area) are. We could ask about:
+area) are. 
+
+# Species abundance model
+
+We could ask about:
 
 - Differences between species within a treatment or
 - Differences between treatment within a species. 
 
 I will be focussing on the latter which is in keeping with the theme of the rest
-of my analysis. These differences have already been visualized above.
+of my analysis. These differences have already been visualized above in
+@fig-raw-abundance-ba.
 
 Again, I'm making zero observations explicit, effectively making our data
 **presence-absence**, rather than presence only.
@@ -388,22 +405,22 @@ m1 <- glmmTMB(ba_ha ~ treat * spp + (1 | site/treat/plot), regen_pa)
 res1 <- simulateResiduals(m1)
 plot(res1)
 
-m3 <- glmmTMB(
+m2 <- glmmTMB(
   ba_ha ~ treat * spp + (1 | site/treat),
   regen_pa,
   dispformula = ~ spp
 )
-res3 <- simulateResiduals(m3)
-plot(res3)
+res2 <- simulateResiduals(m2)
+plot(res2)
 
-m4 <- glmmTMB(
+m3 <- glmmTMB(
   ba_ha ~ treat * spp + (1 | site/treat),
   regen_pa,
   family = ziGamma(link = "log"),
   dispformula = ~ spp,
   ziformula = ~ spp
 )
-plot(simulateResiduals(m4))
+plot(simulateResiduals(m3))
 
 m4 <- glmmTMB(
   ba_ha ~ treat * spp + (1 | site/treat),
@@ -412,13 +429,18 @@ m4 <- glmmTMB(
   dispformula = ~ spp + treat,
   ziformula = ~ spp
 )
+
 res4 <- simulateResiduals(m4)
 plot(res4)
 plotResiduals(res4, form = regen_pa$spp)
 plotResiduals(res4, form = regen_pa$treat)
 plotResiduals(res4, form = interaction(regen_pa$treat, regen_pa$spp))
 
+AIC(m1, m2, m3, m4)
+
 ```
+
+Model three is the simplest, has the lowest AIC and has well-behaved residuals.
 
 Here I plot some simulations from this model to see if it generates plausible
 data.
@@ -426,7 +448,7 @@ data.
 ```{r}
 
 regen_pa |>
-  mutate(simulate(m4, nsim = 5)) |>
+  mutate(simulate(m3, nsim = 5)) |>
   rename(obs = ba_ha) |>
   pivot_longer(where(is.double), names_to = "type", values_to = "ba_ha") |>
   ggplot(aes(
@@ -448,24 +470,68 @@ interestingly, 6 times more other species basal area in HD compared to HA.
 We expect 5 times more redwood regen basal area in GS compared to HA, and 7
 times compared to HD.
 
-For tanoak, we expect about twice as much regen basal area in GS compared to HA.
+For tanoak, we expect about twice as much regeneration basal area in the GS treatment compared to HA.
+
+```{r}
+#| label: fig-species-ba-model
+#| fig-cap: 
+
+emmeans(m3, c("spp", "treat"), by = "spp", type = "response") |>
+  plot(comparisons = TRUE, plotit = FALSE) |> as_tibble() |>
+  ggplot(aes(treat, the.emmean)) +
+  facet_wrap(~ spp, scales = "free", labeller = plot_labels) +
+  geom_linerange(
+    aes(ymin = asymp.LCL, ymax = asymp.UCL),
+    color = "gray60",
+    size = 0.7,
+    linewidth = 2.3,
+    show.legend = FALSE
+  ) +
+  geom_segment(
+    aes(xend = treat, yend = rcmpl),
+    color = "blue4",
+    lineend = "butt",
+    linejoin = "bevel",
+    arrow = arrow(length = grid::unit(2.5, "mm")),
+    linewidth = 1
+  ) +
+  geom_segment(
+    aes(xend = treat, yend = lcmpl),
+    color = "blue4",
+    lineend = "butt",
+    linejoin = "bevel",
+    arrow = arrow(length = grid::unit(2.5, "mm")),
+    linewidth = 1
+  ) +
+  geom_point(color = "black", size = 2) +
+  labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2%.%ha^-1))) +
+  scale_x_discrete(labels = toupper)
+
+```
 
 ```{r}
 
-emmeans(m4, c("spp", "treat"), by = "spp", type = "response") |>
+emmeans(m3, c("spp", "treat"), by = "spp", type = "response") |>
 contrast("pairwise") |>
 as_tibble() |>
 filter(p.value < 0.05) |>
 relocate(spp)
-
 ```
+
+## Douglas-fir counts
 
 For Douglas-fir in particular, we are interested in the counts of stems more
 than the basal area. This, requires another model. A counts model.
 
-Heres the raw counts, It looks like site plays the largest role.
+Heres the raw counts. There doesn't appear to be any treatment differences in
+the number of Douglas-fir seedlings per plot.
 
 ```{r}
+#| label: fig-raw-dougfir-counts
+#| fig-cap: >
+#|   Summary of raw count data for Douglas-fir expressed in stems per
+#|   hectare, for Douglas-fir seedlings in four harvest treatments 10 years
+#|   after harvest.
 
 regen_df <- regen |>
   count(site, treat, plot, spp) |>
@@ -473,16 +539,15 @@ regen_df <- regen |>
   filter(spp == "df")
 
 regen_df |>
-  ggplot(aes(site, n, fill = treat)) +
-  geom_boxplot()
-
-regen_df |> summarize(.by = c(site, treat), mean(n), sd(n))
+  ggplot(aes(treat, n * per_ha["corner"])) +
+  geom_boxplot() +
+  labs(x = "Treatment", y = expression(Stems%.%ha^-1))
 
 ```
 
-A negative binomial model seems to fit acceptably. I was not able to achive
-model convergence with the specification of zero inflation or dispersion
-formulae.
+A negative binomial model seems to fit acceptably when modeling raw counts (not
+TPH). I was not able to achive model convergence with the specification of zero
+inflation or dispersion formulae.
 
 ```{r}
 
@@ -501,8 +566,24 @@ There are no statistically detectable differences
 
 ```{r}
 
+emmeans(m1, "treat")
+
+```
+
+The model for Douglas-fir seedling counts does not result in any statistically
+significant differences between treatments. Generally, we expect about six
+seedlings per 4-meter-radius plot, or 1,000 to 1,400 seedling per hectare.
+
+```{r}
+#| label: tbl-dougfir-counts-p-values
+#| tbl-cap: >
+#|   P-values for pairwise contrasts of Douglas-fir seedling counts in
+#|   in four different harvest treatments 10 years after harvest.
+
 emmeans(m1, "treat") |>
-  contrast("pairwise")
+  contrast("pairwise") |>
+  as_tibble() |>
+  tinytable::tt()
 
 ```
 

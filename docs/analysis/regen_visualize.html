@@ -253,6 +253,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#permanova" id="toc-permanova" class="nav-link" data-scroll-target="#permanova"><span class="header-section-number">11.1</span> Permanova</a></li>
   </ul></li>
+  <li><a href="#species-abundance-model" id="toc-species-abundance-model" class="nav-link" data-scroll-target="#species-abundance-model"><span class="header-section-number">12</span> Species abundance model</a>
+  <ul>
+  <li><a href="#douglas-fir-counts" id="toc-douglas-fir-counts" class="nav-link" data-scroll-target="#douglas-fir-counts"><span class="header-section-number">12.1</span> Douglas-fir counts</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -437,7 +441,7 @@ Figure&nbsp;10.2: Histograms of regen by species and size class. On top are stem
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -468,9 +472,14 @@ Figure&nbsp;10.2: Histograms of regen by species and size class. On top are stem
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-raw-abundance-ba" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-raw-abundance-ba-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="regen_visualize_files/figure-html/fig-raw-abundance-ba-1.png" id="fig-raw-abundance-ba" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-raw-abundance-ba-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.1
+</figcaption>
 </figure>
 </div>
 </div>
@@ -493,7 +502,7 @@ Figure&nbsp;10.2: Histograms of regen by species and size class. On top are stem
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -525,7 +534,7 @@ Figure&nbsp;10.2: Histograms of regen by species and size class. On top are stem
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="864"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="864"></p>
 </figure>
 </div>
 </div>
@@ -548,7 +557,7 @@ Figure&nbsp;10.2: Histograms of regen by species and size class. On top are stem
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="864"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="864"></p>
 </figure>
 </div>
 </div>
@@ -579,7 +588,7 @@ Figure&nbsp;10.2: Histograms of regen by species and size class. On top are stem
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -605,7 +614,7 @@ Number of permutations: 500
 
 adonis2(formula = ba_ha[c("rw", "to", "df", "other")] ~ treat, data = ba_ha, permutations = perms)
          Df SumOfSqs      R2      F   Pr(&gt;F)   
-treat     3   2.1777 0.13288 3.0649 0.001996 **
+treat     3   2.1777 0.13288 3.0649 0.003992 **
 Residual 60  14.2104 0.86712                   
 Total    63  16.3881 1.00000                   
 ---
@@ -628,7 +637,7 @@ Number of permutations: 500
 adonis2(formula = ba_ha[c("rw", "to", "df", "other")] ~ site + treat, data = ba_ha, permutations = perms)
          Df SumOfSqs      R2      F   Pr(&gt;F)   
 site      3   2.0502 0.12510 3.2034 0.005988 **
-treat     3   2.1777 0.13288 3.4026 0.003992 **
+treat     3   2.1777 0.13288 3.4026 0.001996 **
 Residual 57  12.1602 0.74201                   
 Total    63  16.3881 1.00000                   
 ---
@@ -679,9 +688,9 @@ Number of permutations: 500
 
 adonis2(formula = cbind(rw, to, df, other) ~ site + site:treat + treat, permutations = perms)
            Df SumOfSqs      R2      F   Pr(&gt;F)   
-site        3   2.0502 0.12510 3.1966 0.001996 **
-treat       3   2.1777 0.13288 3.3953 0.005988 **
-site:treat  9   1.8982 0.11583 0.9865 0.479042   
+site        3   2.0502 0.12510 3.1966 0.003992 **
+treat       3   2.1777 0.13288 3.3953 0.001996 **
+site:treat  9   1.8982 0.11583 0.9865 0.526946   
 Residual   48  10.2620 0.62619                   
 Total      63  16.3881 1.00000                   
 ---
@@ -689,12 +698,17 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>I think we can safely conclude that ther are some significant differences in basal are composition (I assume at the alpha = 0.05 level) between treatments.</p>
-<p>Next, we might consider where these differences (in abundance defined as basal area) are. We could ask about:</p>
+<p>Next, we might consider where these differences (in abundance defined as basal area) are.</p>
+</section>
+</section>
+<section id="species-abundance-model" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Species abundance model</h1>
+<p>We could ask about:</p>
 <ul>
 <li>Differences between species within a treatment or</li>
 <li>Differences between treatment within a species.</li>
 </ul>
-<p>I will be focussing on the latter which is in keeping with the theme of the rest of my analysis. These differences have already been visualized above.</p>
+<p>I will be focussing on the latter which is in keeping with the theme of the rest of my analysis. These differences have already been visualized above in <a href="#fig-raw-abundance-ba" class="quarto-xref">Figure&nbsp;<span>11.1</span></a>.</p>
 <p>Again, I’m making zero observations explicit, effectively making our data <strong>presence-absence</strong>, rather than presence only.</p>
 <div class="cell">
 <details class="code-fold">
@@ -723,42 +737,42 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  ba_ha <span class="sc">~</span> treat <span class="sc">*</span> spp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site<span class="sc">/</span>treat),</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  regen_pa,</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dispformula =</span> <span class="sc">~</span> spp</span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>res3 <span class="ot">&lt;-</span> <span class="fu">simulateResiduals</span>(m3)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> <span class="fu">simulateResiduals</span>(m2)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  ba_ha <span class="sc">~</span> treat <span class="sc">*</span> spp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site<span class="sc">/</span>treat),</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  regen_pa,</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">ziGamma</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dispformula =</span> <span class="sc">~</span> spp,</span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ziformula =</span> <span class="sc">~</span> spp</span>
 <span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(m4))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(m3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-17-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-18-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -771,13 +785,14 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dispformula =</span> <span class="sc">~</span> spp <span class="sc">+</span> treat,</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ziformula =</span> <span class="sc">~</span> spp</span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>res4 <span class="ot">&lt;-</span> <span class="fu">simulateResiduals</span>(m4)</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>res4 <span class="ot">&lt;-</span> <span class="fu">simulateResiduals</span>(m4)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-17-4.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-18-4.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -788,7 +803,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-17-5.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-18-5.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -799,7 +814,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-17-6.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-18-6.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -810,32 +825,44 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-17-7.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-18-7.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(m1, m2, m3, m4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   df       AIC
+m1 20 1408.0527
+m2 22  848.3299
+m3 26  647.9944
+m4 29  649.8549</code></pre>
 </div>
+</div>
+<p>Model three is the simplest, has the lowest AIC and has well-behaved residuals.</p>
 <p>Here I plot some simulations from this model to see if it generates plausible data.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>regen_pa <span class="sc">|&gt;</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">simulate</span>(m4, <span class="at">nsim =</span> <span class="dv">5</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">obs =</span> ba_ha) <span class="sc">|&gt;</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">where</span>(is.double), <span class="at">names_to =</span> <span class="st">"type"</span>, <span class="at">values_to =</span> <span class="st">"ba_ha"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    treat, ba_ha, <span class="co"># fill = type</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">interaction</span>(type, treat),</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> forcats<span class="sc">::</span><span class="fu">fct_collapse</span>(type, <span class="at">sim =</span> <span class="fu">paste0</span>(<span class="st">"sim_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> spp, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"obs/sim"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>regen_pa <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">simulate</span>(m3, <span class="at">nsim =</span> <span class="dv">5</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">obs =</span> ba_ha) <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">where</span>(is.double), <span class="at">names_to =</span> <span class="st">"type"</span>, <span class="at">values_to =</span> <span class="st">"ba_ha"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    treat, ba_ha, <span class="co"># fill = type</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">interaction</span>(type, treat),</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> forcats<span class="sc">::</span><span class="fu">fct_collapse</span>(type, <span class="at">sim =</span> <span class="fu">paste0</span>(<span class="st">"sim_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> spp, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"obs/sim"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -843,91 +870,129 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Finally, significant differences?</p>
 <p>We’d expect 5 times as much basal area of other species in LD compared to HA, and interestingly, 6 times more other species basal area in HD compared to HA.</p>
 <p>We expect 5 times more redwood regen basal area in GS compared to HA, and 7 times compared to HD.</p>
-<p>For tanoak, we expect about twice as much regen basal area in GS compared to HA.</p>
+<p>For tanoak, we expect about twice as much regeneration basal area in the GS treatment compared to HA.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m4, <span class="fu">c</span>(<span class="st">"spp"</span>, <span class="st">"treat"</span>), <span class="at">by =</span> <span class="st">"spp"</span>, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(<span class="st">"pairwise"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(spp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m3, <span class="fu">c</span>(<span class="st">"spp"</span>, <span class="st">"treat"</span>), <span class="at">by =</span> <span class="st">"spp"</span>, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">comparisons =</span> <span class="cn">TRUE</span>, <span class="at">plotit =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treat, the.emmean)) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> spp, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">labeller =</span> plot_labels) <span class="sc">+</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_linerange</span>(</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> asymp.LCL, <span class="at">ymax =</span> asymp.UCL),</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray60"</span>,</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span>,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">2.3</span>,</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">FALSE</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> treat, <span class="at">yend =</span> rcmpl),</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"blue4"</span>,</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">lineend =</span> <span class="st">"butt"</span>,</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">linejoin =</span> <span class="st">"bevel"</span>,</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fl">2.5</span>, <span class="st">"mm"</span>)),</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> treat, <span class="at">yend =</span> lcmpl),</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"blue4"</span>,</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">lineend =</span> <span class="st">"butt"</span>,</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">linejoin =</span> <span class="st">"bevel"</span>,</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fl">2.5</span>, <span class="st">"mm"</span>)),</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="fu">expression</span>(Basal <span class="sc">~</span> Area <span class="sc">~</span> (m<span class="sc">^</span><span class="dv">2</span><span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))) <span class="sc">+</span></span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> toupper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 4 rows containing missing values (`geom_segment()`).
+Removed 4 rows containing missing values (`geom_segment()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-species-ba-model" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-species-ba-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="regen_visualize_files/figure-html/fig-species-ba-model-1.png" id="fig-species-ba-model" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-species-ba-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m3, <span class="fu">c</span>(<span class="st">"spp"</span>, <span class="st">"treat"</span>), <span class="at">by =</span> <span class="st">"spp"</span>, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(<span class="st">"pairwise"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(spp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 8
   spp   contrast ratio     SE    df  null z.ratio p.value
   &lt;fct&gt; &lt;fct&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-1 other ld / ha  5.56  3.37     Inf     1    2.83 0.0240 
-2 other ha / hd  0.165 0.0904   Inf     1   -3.29 0.00557
-3 rw    gs / ha  4.97  2.91     Inf     1    2.74 0.0309 
-4 rw    gs / hd  6.67  4.42     Inf     1    2.86 0.0222 
-5 to    gs / ha  2.39  0.758    Inf     1    2.75 0.0307 </code></pre>
+1 other ld / ha  5.64  3.61     Inf     1    2.71  0.0342
+2 other ha / hd  0.164 0.0984   Inf     1   -3.01  0.0139
+3 rw    gs / ha  5.00  2.91     Inf     1    2.76  0.0296
+4 rw    gs / hd  6.78  4.35     Inf     1    2.98  0.0151
+5 to    gs / ha  2.39  0.767    Inf     1    2.70  0.0346</code></pre>
 </div>
 </div>
+<section id="douglas-fir-counts" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="douglas-fir-counts"><span class="header-section-number">12.1</span> Douglas-fir counts</h2>
 <p>For Douglas-fir in particular, we are interested in the counts of stems more than the basal area. This, requires another model. A counts model.</p>
-<p>Heres the raw counts, It looks like site plays the largest role.</p>
+<p>Heres the raw counts. There doesn’t appear to be any treatment differences in the number of Douglas-fir seedlings per plot.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>regen_df <span class="ot">&lt;-</span> regen <span class="sc">|&gt;</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(site, treat, plot, spp) <span class="sc">|&gt;</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(<span class="fu">nesting</span>(site, treat, plot), spp, <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(spp <span class="sc">==</span> <span class="st">"df"</span>)</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>regen_df <span class="sc">|&gt;</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(site, n, <span class="at">fill =</span> treat)) <span class="sc">+</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>regen_df <span class="ot">&lt;-</span> regen <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(site, treat, plot, spp) <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(<span class="fu">nesting</span>(site, treat, plot), spp, <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(spp <span class="sc">==</span> <span class="st">"df"</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>regen_df <span class="sc">|&gt;</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treat, n <span class="sc">*</span> per_ha[<span class="st">"corner"</span>])) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="fu">expression</span>(Stems<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<div id="fig-raw-dougfir-counts" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-raw-dougfir-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="regen_visualize_files/figure-html/fig-raw-dougfir-counts-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-raw-dougfir-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.2: Summary of raw count data for Douglas-fir expressed in stems per hectare, for Douglas-fir seedlings in four harvest treatments 10 years after harvest.
+</figcaption>
 </figure>
 </div>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>regen_df <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="at">.by =</span> <span class="fu">c</span>(site, treat), <span class="fu">mean</span>(n), <span class="fu">sd</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 16 × 4
-   site            treat `mean(n)` `sd(n)`
-   &lt;chr&gt;           &lt;fct&gt;     &lt;dbl&gt;   &lt;dbl&gt;
- 1 camp 6          gs         5.75   7.54 
- 2 camp 6          ld         3.25   3.30 
- 3 camp 6          ha         5      5.42 
- 4 camp 6          hd         7.5    0.577
- 5 waldo north     gs         1.5    0.577
- 6 waldo north     ld         0.5    0.577
- 7 waldo north     ha         0.75   1.5  
- 8 waldo north     hd         1.5    1    
- 9 waldo south     gs         0.25   0.5  
-10 waldo south     ld         1.5    1.29 
-11 waldo south     ha         5.5    7.55 
-12 waldo south     hd         1      0.816
-13 whiskey springs gs         2.75   4.86 
-14 whiskey springs ld         1      1.41 
-15 whiskey springs ha         0.75   1.5  
-16 whiskey springs hd         0.5    1    </code></pre>
 </div>
-</div>
-<p>A negative binomial model seems to fit acceptably. I was not able to achive model convergence with the specification of zero inflation or dispersion formulae.</p>
+<p>A negative binomial model seems to fit acceptably when modeling raw counts (not TPH). I was not able to achive model convergence with the specification of zero inflation or dispersion formulae.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  n <span class="sc">~</span> treat <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site<span class="sc">/</span>treat),</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  regen_df,</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">nbinom1</span>()</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>res1 <span class="ot">&lt;-</span> <span class="fu">simulateResiduals</span>(m1)</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  n <span class="sc">~</span> treat <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site<span class="sc">/</span>treat),</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  regen_df,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">nbinom1</span>()</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>res1 <span class="ot">&lt;-</span> <span class="fu">simulateResiduals</span>(m1)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -936,27 +1001,189 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m1, <span class="st">"treat"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">contrast</span>(<span class="st">"pairwise"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m1, <span class="st">"treat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code> contrast estimate    SE  df z.ratio p.value
- gs - ld    0.1955 0.400 Inf   0.488  0.9618
- gs - ha    0.0961 0.413 Inf   0.233  0.9956
- gs - hd   -0.2780 0.368 Inf  -0.755  0.8744
- ld - ha   -0.0993 0.426 Inf  -0.233  0.9955
- ld - hd   -0.4735 0.384 Inf  -1.232  0.6063
- ha - hd   -0.3742 0.395 Inf  -0.947  0.7792
+<pre><code> treat emmean    SE  df asymp.LCL asymp.UCL
+ gs     0.704 0.416 Inf    -0.111      1.52
+ ld     0.509 0.433 Inf    -0.340      1.36
+ ha     0.608 0.434 Inf    -0.242      1.46
+ hd     0.983 0.390 Inf     0.219      1.75
 
 Results are given on the log (not the response) scale. 
-P value adjustment: tukey method for comparing a family of 4 estimates </code></pre>
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<p>The model for Douglas-fir seedling counts does not result in any statistically significant differences between treatments. Generally, we expect about six seedlings per 4-meter-radius plot, or 1,000 to 1,400 seedling per hectare.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m1, <span class="st">"treat"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">contrast</span>(<span class="st">"pairwise"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  tinytable<span class="sc">::</span><span class="fu">tt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-dougfir-counts-p-values" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dougfir-counts-p-values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;12.1: P-values for pairwise contrasts of Douglas-fir seedling counts in in four different harvest treatments 10 years after harvest.
+</figcaption>
+<div aria-describedby="tbl-dougfir-counts-p-values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+ 
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_cfiyub4q8o0o0cqe3dsw</title>
+    <style>
+.table td.tinytable_css_o7jytiphqf6ph8jglf3c, .table th.tinytable_css_o7jytiphqf6ph8jglf3c {    border-bottom: solid 0.1em #d3d8dc; }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+  
+
+  
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_cfiyub4q8o0o0cqe3dsw" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col">contrast</th>
+                <th scope="col">estimate</th>
+                <th scope="col">SE</th>
+                <th scope="col">df</th>
+                <th scope="col">z.ratio</th>
+                <th scope="col">p.value</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>gs - ld</td>
+                  <td> 0.19546011</td>
+                  <td>0.4004914</td>
+                  <td>Inf</td>
+                  <td> 0.4880507</td>
+                  <td>0.9617809</td>
+                </tr>
+                <tr>
+                  <td>gs - ha</td>
+                  <td> 0.09613691</td>
+                  <td>0.4132590</td>
+                  <td>Inf</td>
+                  <td> 0.2326311</td>
+                  <td>0.9955689</td>
+                </tr>
+                <tr>
+                  <td>gs - hd</td>
+                  <td>-0.27803131</td>
+                  <td>0.3680676</td>
+                  <td>Inf</td>
+                  <td>-0.7553812</td>
+                  <td>0.8743937</td>
+                </tr>
+                <tr>
+                  <td>ld - ha</td>
+                  <td>-0.09932320</td>
+                  <td>0.4261828</td>
+                  <td>Inf</td>
+                  <td>-0.2330531</td>
+                  <td>0.9955450</td>
+                </tr>
+                <tr>
+                  <td>ld - hd</td>
+                  <td>-0.47349142</td>
+                  <td>0.3842515</td>
+                  <td>Inf</td>
+                  <td>-1.2322436</td>
+                  <td>0.6062714</td>
+                </tr>
+                <tr>
+                  <td>ha - hd</td>
+                  <td>-0.37416822</td>
+                  <td>0.3949796</td>
+                  <td>Inf</td>
+                  <td>-0.9473103</td>
+                  <td>0.7792439</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      function styleCell_tinytable_6ronxzjzhrsg5tnslcin(i, j, css_id) {
+        var table = document.getElementById("tinytable_cfiyub4q8o0o0cqe3dsw");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_cfiyub4q8o0o0cqe3dsw');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_6ronxzjzhrsg5tnslcin(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_cfiyub4q8o0o0cqe3dsw");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 0, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
+window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 1, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
+window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 2, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
+window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 3, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
+window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 4, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
+window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 5, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
+    </script>
+
+  
+
+
+</div>
+</div>
+</figure>
 </div>
 </div>
 <p>Save data from this page for future use</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(regen, spp_col, per_ha, for_const, <span class="at">file =</span> <span class="st">"regen_visualize.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(regen, spp_col, per_ha, for_const, <span class="at">file =</span> <span class="st">"regen_visualize.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
