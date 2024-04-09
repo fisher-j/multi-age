@@ -636,7 +636,7 @@ Number of permutations: 500
 
 adonis2(formula = ba_ha[c("rw", "to", "df", "other")] ~ site + treat, data = ba_ha, permutations = perms)
          Df SumOfSqs      R2      F   Pr(&gt;F)   
-site      3   2.0502 0.12510 3.2034 0.005988 **
+site      3   2.0502 0.12510 3.2034 0.003992 **
 treat     3   2.1777 0.13288 3.4026 0.001996 **
 Residual 57  12.1602 0.74201                   
 Total    63  16.3881 1.00000                   
@@ -690,7 +690,7 @@ adonis2(formula = cbind(rw, to, df, other) ~ site + site:treat + treat, permutat
            Df SumOfSqs      R2      F   Pr(&gt;F)   
 site        3   2.0502 0.12510 3.1966 0.003992 **
 treat       3   2.1777 0.13288 3.3953 0.001996 **
-site:treat  9   1.8982 0.11583 0.9865 0.526946   
+site:treat  9   1.8982 0.11583 0.9865 0.495010   
 Residual   48  10.2620 0.62619                   
 Total      63  16.3881 1.00000                   
 ---
@@ -841,28 +841,35 @@ m3 26  647.9944
 m4 29  649.8549</code></pre>
 </div>
 </div>
+<p><strong>Select this model</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>mba_sel <span class="ot">&lt;-</span> m3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <p>Model three is the simplest, has the lowest AIC and has well-behaved residuals.</p>
 <p>Here I plot some simulations from this model to see if it generates plausible data.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>regen_pa <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">simulate</span>(m3, <span class="at">nsim =</span> <span class="dv">5</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">obs =</span> ba_ha) <span class="sc">|&gt;</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">where</span>(is.double), <span class="at">names_to =</span> <span class="st">"type"</span>, <span class="at">values_to =</span> <span class="st">"ba_ha"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    treat, ba_ha, <span class="co"># fill = type</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">interaction</span>(type, treat),</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> forcats<span class="sc">::</span><span class="fu">fct_collapse</span>(type, <span class="at">sim =</span> <span class="fu">paste0</span>(<span class="st">"sim_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> spp, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"obs/sim"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>regen_pa <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">simulate</span>(mba_sel, <span class="at">nsim =</span> <span class="dv">5</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">obs =</span> ba_ha) <span class="sc">|&gt;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">where</span>(is.double), <span class="at">names_to =</span> <span class="st">"type"</span>, <span class="at">values_to =</span> <span class="st">"ba_ha"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    treat, ba_ha, <span class="co"># fill = type</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">interaction</span>(type, treat),</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> forcats<span class="sc">::</span><span class="fu">fct_collapse</span>(type, <span class="at">sim =</span> <span class="fu">paste0</span>(<span class="st">"sim_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> spp, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"obs/sim"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -874,41 +881,36 @@ m4 29  649.8549</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m3, <span class="fu">c</span>(<span class="st">"spp"</span>, <span class="st">"treat"</span>), <span class="at">by =</span> <span class="st">"spp"</span>, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">comparisons =</span> <span class="cn">TRUE</span>, <span class="at">plotit =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treat, the.emmean)) <span class="sc">+</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> spp, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">labeller =</span> plot_labels) <span class="sc">+</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_linerange</span>(</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> asymp.LCL, <span class="at">ymax =</span> asymp.UCL),</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray60"</span>,</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.7</span>,</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">2.3</span>,</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">FALSE</span></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> treat, <span class="at">yend =</span> rcmpl),</span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"blue4"</span>,</span>
-<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">lineend =</span> <span class="st">"butt"</span>,</span>
-<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">linejoin =</span> <span class="st">"bevel"</span>,</span>
-<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fl">2.5</span>, <span class="st">"mm"</span>)),</span>
-<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
-<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
-<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> treat, <span class="at">yend =</span> lcmpl),</span>
-<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"blue4"</span>,</span>
-<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">lineend =</span> <span class="st">"butt"</span>,</span>
-<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">linejoin =</span> <span class="st">"bevel"</span>,</span>
-<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fl">2.5</span>, <span class="st">"mm"</span>)),</span>
-<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
-<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="fu">expression</span>(Basal <span class="sc">~</span> Area <span class="sc">~</span> (m<span class="sc">^</span><span class="dv">2</span><span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))) <span class="sc">+</span></span>
-<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> toupper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(mba_sel, <span class="fu">c</span>(<span class="st">"spp"</span>, <span class="st">"treat"</span>), <span class="at">by =</span> <span class="st">"spp"</span>, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">comparisons =</span> <span class="cn">TRUE</span>, <span class="at">plotit =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treat, the.emmean)) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> spp, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">labeller =</span> plot_labels) <span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_linerange</span>(</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> asymp.LCL, <span class="at">ymax =</span> asymp.UCL),</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray70"</span>,</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">2.3</span>,</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">FALSE</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> treat, <span class="at">yend =</span> rcmpl),</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#4444d1"</span>,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">lineend =</span> <span class="st">"butt"</span>,</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">linejoin =</span> <span class="st">"bevel"</span>,</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fl">2.5</span>, <span class="st">"mm"</span>)),</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xend =</span> treat, <span class="at">yend =</span> lcmpl),</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#4444d1"</span>,</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">lineend =</span> <span class="st">"butt"</span>,</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">linejoin =</span> <span class="st">"bevel"</span>,</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fl">2.5</span>, <span class="st">"mm"</span>)),</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="fu">expression</span>(Basal <span class="sc">~</span> Area <span class="sc">~</span> (m<span class="sc">^</span><span class="dv">2</span><span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))) <span class="sc">+</span></span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> toupper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.</code></pre>
-</div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 4 rows containing missing values (`geom_segment()`).
 Removed 4 rows containing missing values (`geom_segment()`).</code></pre>
@@ -929,7 +931,7 @@ Figure&nbsp;12.1
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m3, <span class="fu">c</span>(<span class="st">"spp"</span>, <span class="st">"treat"</span>), <span class="at">by =</span> <span class="st">"spp"</span>, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(mba_sel, <span class="fu">c</span>(<span class="st">"spp"</span>, <span class="st">"treat"</span>), <span class="at">by =</span> <span class="st">"spp"</span>, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(<span class="st">"pairwise"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
@@ -992,16 +994,23 @@ Figure&nbsp;12.2: Summary of raw count data for Douglas-fir expressed in stems p
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regen_visualize_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regen_visualize_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
+</div>
+<p><strong>Select this model</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>mdf_sel <span class="ot">&lt;-</span> m1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>There are no statistically detectable differences</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m1, <span class="st">"treat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m1, <span class="st">"treat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code> treat emmean    SE  df asymp.LCL asymp.UCL
@@ -1018,10 +1027,10 @@ Confidence level used: 0.95 </code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m1, <span class="st">"treat"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">contrast</span>(<span class="st">"pairwise"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  tinytable<span class="sc">::</span><span class="fu">tt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m1, <span class="st">"treat"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">contrast</span>(<span class="st">"pairwise"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  tinytable<span class="sc">::</span><span class="fu">tt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-dougfir-counts-p-values" class="cell quarto-float anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1035,9 +1044,9 @@ Table&nbsp;12.1: P-values for pairwise contrasts of Douglas-fir seedling counts 
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_cfiyub4q8o0o0cqe3dsw</title>
+    <title>tinytable_l9dmvvcv4eglw2v466tr</title>
     <style>
-.table td.tinytable_css_o7jytiphqf6ph8jglf3c, .table th.tinytable_css_o7jytiphqf6ph8jglf3c {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_87fg5gevctsnqzd6hjwg, .table th.tinytable_css_87fg5gevctsnqzd6hjwg {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -1055,7 +1064,7 @@ Table&nbsp;12.1: P-values for pairwise contrasts of Douglas-fir seedling counts 
 
   
     <div class="container">
-      <table class="table table-borderless" id="tinytable_cfiyub4q8o0o0cqe3dsw" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_l9dmvvcv4eglw2v466tr" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1122,12 +1131,12 @@ Table&nbsp;12.1: P-values for pairwise contrasts of Douglas-fir seedling counts 
     </div>
 
     <script>
-      function styleCell_tinytable_6ronxzjzhrsg5tnslcin(i, j, css_id) {
-        var table = document.getElementById("tinytable_cfiyub4q8o0o0cqe3dsw");
+      function styleCell_tinytable_om0fma5hwxv0o0fg7o57(i, j, css_id) {
+        var table = document.getElementById("tinytable_l9dmvvcv4eglw2v466tr");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_cfiyub4q8o0o0cqe3dsw');
+        var table = document.getElementById('tinytable_l9dmvvcv4eglw2v466tr');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1135,8 +1144,8 @@ Table&nbsp;12.1: P-values for pairwise contrasts of Douglas-fir seedling counts 
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_6ronxzjzhrsg5tnslcin(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_cfiyub4q8o0o0cqe3dsw");
+      function spanCell_tinytable_om0fma5hwxv0o0fg7o57(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_l9dmvvcv4eglw2v466tr");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1163,12 +1172,12 @@ Table&nbsp;12.1: P-values for pairwise contrasts of Douglas-fir seedling counts 
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 0, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
-window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 1, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
-window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 2, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
-window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 3, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
-window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 4, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
-window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5tnslcin(0, 5, 'tinytable_css_o7jytiphqf6ph8jglf3c') })
+window.addEventListener('load', function () { styleCell_tinytable_om0fma5hwxv0o0fg7o57(0, 0, 'tinytable_css_87fg5gevctsnqzd6hjwg') })
+window.addEventListener('load', function () { styleCell_tinytable_om0fma5hwxv0o0fg7o57(0, 1, 'tinytable_css_87fg5gevctsnqzd6hjwg') })
+window.addEventListener('load', function () { styleCell_tinytable_om0fma5hwxv0o0fg7o57(0, 2, 'tinytable_css_87fg5gevctsnqzd6hjwg') })
+window.addEventListener('load', function () { styleCell_tinytable_om0fma5hwxv0o0fg7o57(0, 3, 'tinytable_css_87fg5gevctsnqzd6hjwg') })
+window.addEventListener('load', function () { styleCell_tinytable_om0fma5hwxv0o0fg7o57(0, 4, 'tinytable_css_87fg5gevctsnqzd6hjwg') })
+window.addEventListener('load', function () { styleCell_tinytable_om0fma5hwxv0o0fg7o57(0, 5, 'tinytable_css_87fg5gevctsnqzd6hjwg') })
     </script>
 
   
@@ -1183,7 +1192,7 @@ window.addEventListener('load', function () { styleCell_tinytable_6ronxzjzhrsg5t
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(regen, spp_col, per_ha, for_const, <span class="at">file =</span> <span class="st">"regen_visualize.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(regen, spp_col, per_ha, for_const, mba_sel, mdf_sel, <span class="at">file =</span> <span class="st">"regen_visualize.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 

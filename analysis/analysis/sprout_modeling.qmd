@@ -33,10 +33,10 @@ source("./scripts/rnd_color_brewer.r")
 ```{r}
 #| include: false
 
-ggplot2::theme_update(
-  panel.grid.major = ggplot2::element_blank(),
-  panel.grid.minor = ggplot2::element_blank()
-)
+# ggplot2::theme_update(
+#   panel.grid.major = ggplot2::element_blank(),
+#   panel.grid.minor = ggplot2::element_blank()
+# )
 
 ```
 
@@ -247,7 +247,8 @@ The final selected model, based on AIC and examination of residuals had the
 form: 
 
 ```{r, echo = FALSE}
-format_model_formula(minc[[12]])
+minc_sel <- minc[[12]]
+format_model_formula(minc_sel) |> cat()
 ```
 
 The model selected based on AIC lacks a treatment x species interaction,
@@ -276,7 +277,7 @@ statistically distinguishable from the other treatments (0.13 < p < 0.28).
 #|   after harvest. Purple bars represent confidence intervals and statistical
 #|   significance (α = 0.05) is indicated by non-overlaping red arrows.
 
-emm_treat <- emmeans(minc[[12]], "treat", by = "spp")
+emm_treat <- emmeans(minc_sel, "treat", by = "spp")
 plot(emm_treat, comparisons = TRUE)
 ```
 
@@ -298,7 +299,7 @@ increment.
 #|   statistical significance (α = 0.05) is indicated by non-overlaping red
 #|   arrows.
 
-emmeans(minc[[12]], c("year"), by = "spp") |> plot(comparisons = TRUE)
+emmeans(minc_sel, c("year"), by = "spp") |> plot(comparisons = TRUE)
 ```
 
 ```{r}
@@ -308,7 +309,7 @@ emmeans(minc[[12]], c("year"), by = "spp") |> plot(comparisons = TRUE)
 #|   Growth period 1 is year 1-5, growth period 2 is year 5-10. Growth
 #|   significantly decreased in the second period for both species.
 
-minc11em <- emmeans(minc[[12]], "year", by = c("spp"))
+minc11em <- emmeans(minc_sel, "year", by = c("spp"))
 
 minc11con <- contrast(minc11em, "consec", infer = TRUE) |> as_tibble()
 
@@ -934,6 +935,6 @@ saved data for later use
 
 ```{r}
 
-save(dht, mht18, file = "sprout_modeling.rda")
+save(ht10_sel, minc_sel, dht, mht18, file = "sprout_modeling.rda")
 
 ```
