@@ -30,7 +30,6 @@ library(tidyverse)
 
 ```
 
-
 ```{r init}
 #| echo: false
 
@@ -42,23 +41,24 @@ source("./scripts/coord_cartesian_panels.r")
 #   panel.grid.minor = element_blank()
 # )
 
-class_labels <- c(
+fuel_class_labels <- c(
   onehr = "1-hr",
   tenhr = "10-hr",
   hundhr = "100-hr",
   thoushr = "1,000-hr",
   dufflitter = "Duff & Litter",
-  veg = "Live Vegetation",
-  veg_diff = "Live Vegetation Difference"
+  veg = "Vegetation",
+  veg_diff = "Vegetation Difference"
 )
 
-class_labels2 <- imap(class_labels, \(x, i)  eval(bquote(`~`(.(i), .(x)))))
+fuel_class_labels2 <- imap(fuel_class_labels, \(x, i)  eval(bquote(`~`(.(i), .(x)))))
 
-fuel_class_labeller <- labeller(class = class_labels, fuel_class = class_labels)
+fuel_class_labeller <- labeller(
+  class = fuel_class_labels,
+  fuel_class = fuel_class_labels
+)
 
 ```
-
-
 
 ## Frequentist approach
 
@@ -605,7 +605,7 @@ respectively.
 #|   statistical significance at the α = 0.05 level.
 
 fuel_tmb$pre |>
-  mutate(class = case_match(as.character(class), !!!class_labels2)) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
   group_map(function(x, ...) {
   plot(x$.emmeans[[1]], comparisons = TRUE) +
   labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
@@ -716,7 +716,7 @@ treatments, respectively (p ≈ 0.01).
 #|   floor following the pre-commercial thinning.
 
 fuel_tmb$post |>
-  mutate(class = case_match(as.character(class), !!!class_labels2)) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
   group_map(function(x, ...) {
   plot(x$.emmeans[[1]], comparisons = TRUE) +
   labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
@@ -1618,7 +1618,8 @@ save(
   expected_predictions,
   expected_contrasts,
   fuel_class_labeller,
-  class_labels2,
+  fuel_class_labels,
+  fuel_class_labels2,
   fuel_tmb,
   file = "fuel_data_modeling.rda"
 )

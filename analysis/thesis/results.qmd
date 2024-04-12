@@ -1,5 +1,5 @@
 ---
-execution:
+execute:
   echo: false
 ---
 
@@ -10,23 +10,42 @@ load("./fuel_data_modeling.rda")
 load("./sprout_modeling.rda")
 load("./regen_visualize.rda")
 
-format_model_formula <- function(mod, component) {
-  format(formula(mod, component = component)) |>
+library(tidyverse)
+library(emmeans)
+library(ggdist)
+```
+
+```{r}
+
+# Given a glmmTMB model and one of "cond", "disp", or "zi", print model formula
+# optionally including labels and link functions
+format_model_formula <- function(mod, component, label = FALSE) {
+  comp_label <- switch(component,
+    cond = c("Conditional:", ""),
+    disp = c("Dispersion:", "(log)"),
+    zi = c("Hurdle:", "(logit)")
+  )
+  form <- format(formula(mod, component = component)) |>
     paste0(collapse = "") |>
     str_replace("\\s{2,}", " ")
+  if (label) return(paste(comp_label[1], form, comp_label[2]))
+  form
 }
 
-print_model_info <- function(mod) {
-  cat(
-    "Family: ", mod$modelInfo$family$family, "\n",
-    "Link: ", mod$modelInfo$family$link, "\n",
-    "Conditional: ", format_model_formula(mod, "cond"), "\n",
-    "Dispersion: ", format_model_formula(mod, "disp"), "\n",
-    "Hurdle: ", format_model_formula(mod, "zi"), "\n"
+# given a glmmTMB model and extra component model types, print conditional and
+# component model formula and link functions
+print_model_info <- function(mod, components = c("disp", "zi")) {
+  comp <- c("cond", components)
+  fam <- paste0(
+    "Family: ", mod$modelInfo$family$family,
+    " (", mod$modelInfo$family$link, ")"
   )
+  cat(fam, "\n")
+  walk(comp, \(x) cat(format_model_formula(mod, x, label = TRUE), "\n"))
 }
 
-species_labels <- c(LIDE = "Tanoak", SESE = "Redwood")
+species_labels <- c(LIDE = "Tanoak", SESE = "Redwood", other = "Other", df =
+"Douglas-fir", rw = "Redwood", to = "Tanoak")
 year_labels <- c(`1` = "Year 1", `5` = "Year 5", `10` = "Year 10")
 plot_labels <- labeller(
   spp = species_labels,
@@ -86,125 +105,85 @@ draw_emm <- function(data = ., position = "identity") {
 
 ```
 
-## Fuels
+## Regeneration composition
 
-### Pre-pct
+### Basal area
 
-Gamma distributed, linear multi-level models, with a log link were used for all
-six fuel class responses. Random intercepts were specified for three levels of
-nesting, representing sites, treatment blocks, and transect corners. All models
-except for the duff & litter model included a hurdle model to account for
-zero, which was modeled with a logit link. For the 10-hr fuel model, the hurdle
-portion was modeled as a function of treatment, and for the others, it was
-modeled as a single rate for all observations. The 10-hr fuel model also
-included a dispersion model, which was modeled with a log link, using treatment
-as a predictor.
+Composition of regeneration in terms of total basal area of each species was
+modeled as a gamma distribution with a log link with fixed effects for
+treatment, species, and their interaction and random effects for sites and
+macro-plots. Dispersion was modeled separately as a function of species, using a
+log link and the rate of zeros was modeled using the logit link, for each
+species (@lst-mod-regen-ba).
 
+::: {#lst-mod-regen-ba}
 ```{r}
-
-fuel_tmb$pre |>
-  transmute(
-    class = class,
-    Family = mod$modelInfo$family$family,
-    Link = mod$modelInfo$family$link,
-    Conditional = format_model_formula(mod, "cond"),
-    "Dispersion (log)" = format_model_formula(mod, "disp"),
-    "Hurdle (logit)" = format_model_formula(mod, "zi")
-) |> tinytable::tt()
-
+print_model_info(mba_sel)
 ```
+::: 
 
-For Duff & Litter, the largest difference was between the HD and HA treatments.
-The HD treatment had about 1.4 times more duff and litter (p = 0.07). Generally,
-all treatments were similar, with estimated loading of around 50 Mg ha-1.
-One-hour fuels were around 50% higher in the HA treatment compared to the LD and
-GS treatments (p = 0.07, and p = 0.01, respectively), with mean differences of
-around 0.5 Mg ha-1. Ten, hundred and thousand-hour fuels were statistically,
-very similar across treatments (p = 0.7 — p = 1). Point esimates varied by about
-1, 3, and <20 Mg ha-1 for ten, hundred, and thousand-hour fuels, respectively.
+According to this model, we would expect five times as much basal area of other
+species in LD compared to HA (p = 0.034), and interestingly, six times more other species
+basal area in HD compared to HA (p = 0.014, @fig-mod-regen-ba).
+
+We expect 5 times more redwood regeneration basal area in the GS treatment
+compared to HA (p = 0.03), and 7 times compared to HD (p = 0.02).
+
+For tanoak, we expect about twice as much regeneration basal area in the GS
+treatment compared to HA (p = 0.03).
 
 ```{r}
-#| fig-width: 8
+#| label: fig-mod-regen-ba
 #| fig-cap: >
-#|   Estimated marginal means (black dots) confidence intervals (gray bands) and
-#|   comparisons (blue arrows) of fuel loading across four treatments for six
-#|   different fuel-class models. Non-overlapping blue arrows indicates
-#|   statistical significance at the α = 0.05 level.
+#|   Basal area (m^2^ ha^-1^) modeled at the vegetation plot level for four
+#|   harvest treatments and four species classes (n = 16). Gray bars represent
+#|   the 95% confidence interval, black dots---the mean, and non-overlapping
+#|   blue arrows signify statistical significance (α = 0.05).
 
-fuel_tmb$pre |>
-  mutate(class = case_match(as.character(class), !!!class_labels2)) |>
-  group_map(function(x, ...) {
-    emm_to_df(x$.emmeans[[1]]) |>
-    ggplot(emm_mapping()) +
-    draw_emm() +
-    scale_x_discrete(labels = toupper) +
-    labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
-  }) |>
-  patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
+emmeans(mba_sel, "treat", by = "spp", type = "response") |> # pairs()
+ emm_to_df() |>
+ ggplot(emm_mapping()) +
+ facet_wrap(~ spp, ncol = 2, labeller = plot_labels, scales = "free") +
+ draw_emm() +
+ scale_x_discrete(labels = toupper) +
+ labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2%.%ha^-1)))
 
 ```
 
-### Post-pct
+### Douglas-fir counts
 
-The response for all six, post-pct fuel classes were modeled with a gamma
-distribtuion and a log link, and included the same multi-level random effects as
-for the pre-pct models. Dispersion models with treatment as the only predictor
-were included for 1-hr and 100-hr fuel classes. All modeles included a hurdle
-portion to model zeros using a logit link. For 100-hr fuels, this model included
-treatment and site as predictors, and for the rest, a constant rate for all
-observations was used.
+Counts of regenerating Douglas-fir seedlings per vegetation plot (n = 16) were
+analyzed for differences between harvest treatments using a negative binomial
+response with a log link, fixed effects for treatment, random effects for site
+and macro-plot (@lst-mod-df-counts).
 
+::: {#lst-mod-df-counts}
 ```{r}
-
-fuel_tmb$post |>
-  transmute(
-    class = class,
-    Family = mod$modelInfo$family$family,
-    Link = mod$modelInfo$family$link,
-    Conditional = format_model_formula(mod, "cond"),
-    "Dispersion (log)" = format_model_formula(mod, "disp"),
-    "Hurdle (logit)" = format_model_formula(mod, "zi")
-) |> tinytable::tt()
-
+print_model_info(mdf_sel, NULL)
 ```
+:::
 
-Post-pct resulted in greater stratification of treatments. One-hour fuels were
-generally around 2.4 Mg ha^-1^, but the HA treatment had around half of that
-amount (p = 0.01 --- p = 0.02). The GS treatment had the greatest 10-hr fuel
-loading with 8.8 Mg ha^-1^, which was about 1.6, 2.3 and 2.9 times greater than
-the LD, HA, and HD treatments respectively (p = 0.03, p < 0.001, for the others,
-respectively). The LD treatment also had about 1.7 times more 10-hr fuels that
-the HD treatment (5.4 vs. 3 Mg ha^-1^, p = 0.001). Hundred-hour fuels were also
-greatest in the GS treatment, with an average of about 19 Mg ha^-1^, which was
-about 2.6 times greater than in the HD treatment (7 Mg ha^-1^, p < 0.001).
-Thousand-hour fuels were greatest in the HD treatment, with 80 Mg ha^-1^, which
-was about 2.7 times greater than the LD and HD treatments (p = 0.03 and p = 0.05,
-respectively). Fuel loading for live vegetation was similar across treatments at
-around 2.5 Mg ha^-1^. The pre-post vegetation difference was greatest in the GS
-treatment at about 31 Mg ha^-1^, which was 2.5 and 2.8 times the HD and HA
-treatments, respectively (p ≈ 0.01).
+This model for Douglas-fir counts does not result in any statistically
+significant differences between treatments. Generally, we expect about 2
+seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
+(@fig-mod-df-counts).
 
 ```{r}
-#| fig-width: 8
+#| label: fig-mod-df-counts
 #| fig-cap: >
-#|   Estimated marginal means (black dots) confidence intervals (gray bars) and
-#|   comparisons (blue arrows) of fuel loading across four treatments for six
-#|   different fuel-class models. Non-overlapping red arrows indicates
-#|   statistical significance at the α = 0.05 level. Vegetation difference
-#|   equals the transect level difference in vegetation load in the pre and
-#|   post-pct conditions. This represents slash fuels recruited to the forest
-#|   floor following the pre-commercial thinning.
+#|   Vegetation plot level counts of regenerating Douglas-fir seedlings in four
+#|   harvest treatments 10 years after harvest (n = 16). Results have been
+#|   scaled to stems per hectare (4-meter radium plots).
 
-fuel_tmb$post |>
-  mutate(class = case_match(as.character(class), !!!class_labels2)) |>
-  group_map(function(x, ...) {
-  emm_to_df(x$.emmeans[[1]]) |>
-  ggplot(emm_mapping()) +
-  draw_emm() +
-  scale_x_discrete(labels = toupper) +
-  labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
-  }) |>
-  patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
+# predict(mdf_sel) |> mean() |> exp() * per_ha["corner"]
+
+emmeans(mdf_sel, "treat", type = "response") |>
+ emm_to_df() |>
+ mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
+ ggplot(emm_mapping()) +
+ draw_emm() +
+ scale_x_discrete(labels = toupper) +
+ labs(x = "Treatment", y = expression(Stems%.%ha^-1))
 
 ```
 
@@ -218,20 +197,13 @@ interaction of species and growth period as fixed effects. A random intercept
 was included for tree (multiple observations) and macro-plot, and a random slope
 was included for species. The dispersion parameter for the response was modeled
 (with a log link) as a function of treatment, growth period, species and all
-three-way interactions.  
+three-way interactions (@lst-mod-sprout-ht-inc).  
 
+::: {#lst-mod-sprout-ht-inc}
 ```{r}
-
-cat(
-  "Family:", paste0(
-    minc_sel$modelInfo$family$family, " (",
-    minc_sel$modelInfo$family$link,  ")"
-  ), "\n",
-  "Conditional:", format_model_formula(minc_sel, "cond"), "\n",
-  "Dispersion:", format_model_formula(minc_sel, "disp")
-)
-
+print_model_info(minc_sel, "disp")
 ```
+:::
 
 The model selected based on AIC lacks a treatment x species interaction,
 suggesting that there is not evidence that treatments affected species
@@ -242,29 +214,27 @@ in growth rate.
 The presence of treatment in the model (0.001 ≤ p < 0.03) suggests that
 the levels of treatment were associated with different growth rates across
 species and years. And the species x year interaction (p < 0.001) suggests
-changes in growth rates are different for redwood and tanoak.
+changes in growth rates are different for redwood and tanoak
+(@fig-mod-sprout-ht-inc-treat).
 
 Averaging over growth periods, treatment specific height increments for redwood
 ranged from 0.66 to 0.86 m yr^-1^, and for tanoak, from 0.29 to 0.49, with the
-slowest growth in the HD treatment and the fastest in the GS treatment. height
+slowest growth in the HD treatment and the fastest in the GS treatment. Height
 increment was greater in the GS treatment than the HA and HD treatments by about
 0.19 m yr^-1^ (p < 0.001). The LD treatment was intermediate, but not
 statistically distinguishable from the other treatments (0.13 < p < 0.28).
 
 ```{r}
-#| label: fig-sprout-inc-treat
+#| label: fig-mod-sprout-ht-inc-treat
 #| fig-cap: >
 #|   Estimated marginal means for the effect of harvest treatment on redwood and
 #|   tanoak sprout height increment, averaged over two growth periods, ten years
 #|   after harvest. Gray bars represent confidence intervals and statistical
-#|   significance (α = 0.05) is indicated by non-overlaping blue arrows.
+#|   significance (α = 0.05) is indicated by non-overlapping blue arrows.
 
-emm_treat <- emmeans(minc_sel, "treat", by = "spp")
-plot(emm_treat, comparisons = TRUE)
-
-emmeans(minc_sel, "treat", by = "spp") |>
+emmeans(minc_sel, "treat", by = "spp", type = "response") |> # pairs()
   emm_to_df() |>
-  ggplot(aes(treat, emmean)) +
+  ggplot(emm_mapping()) +
   draw_emm() +
   facet_wrap(~ spp, labeller = plot_labels) +
   labs(x = "Treatment", y = expression(Height~Increment~(m%.%yr^-1)))
@@ -277,19 +247,19 @@ slowed from 0.39  to 0.34 m yr^-1^.
 Redwood grew faster than tanoak, but slowed down more relative to it in the
 second period. Height increment for redwood was 0.42 m yr^-1^ greater in the
 first period and 0.33 m yr^-1^ greater in the second period than tanoak height
-increment.
+increment (@fig-mod-sprout-ht-inc-year).
 
 
 ```{r}
-#| label: fig-sprout-inc-year
+#| label: fig-mod-sprout-ht-inc-year
 #| fig-cap: >
 #|   Estimated marginal means for the effect of growth period on redwood and
 #|   tanoak sprout height increment, averaged over four harvest treatments, from
 #|   years 1 to 5, and years 5 to 10 after harvest, plotted alongside actual
 #|   data. Gray bars represent confidence intervals and statistical significance
-#|   (α = 0.05) is indicated by non-overlaping blue arrows.
+#|   (α = 0.05) is indicated by non-overlapping blue arrows.
 
-emmeans(minc_sel, c("year"), by = "spp") |>
+emmeans(minc_sel, c("year"), by = "spp", type = "response") |>
   emm_to_df() |>
   ggplot(emm_mapping(x = year)) +
   draw_emm(position = position_nudge(x = -0.15)) +
@@ -306,23 +276,16 @@ emmeans(minc_sel, c("year"), by = "spp") |>
 ### Height at year 10
 
 Sprout heights at year 10 were modeled with a normal response and a log link.
-The best model included speceis and treatment, but no interactions in the fixed
+The best model included species and treatment, but no interactions in the fixed
 effects. This suggests that treatments do not affect species differentially. It
 also included a model for dispersion (log link) that had species, treatment, and
-their interaction as predictors.
+their interaction as predictors (@lst-mod-sprout-ht-yr-10).
 
+::: {#lst-mod-sprout-ht-yr-10}
 ```{r}
-
-cat(
-  "Family:", paste0(
-    ht10_sel$modelInfo$family$family, " (",
-    ht10_sel$modelInfo$family$link,  ")"
-  ), "\n",
-  "Conditional:", format_model_formula(ht10_sel, "cond"), "\n",
-  "Dispersion:", format_model_formula(ht10_sel, "disp")
-)
-
+print_model_info(ht10_sel, "disp")
 ```
+:::
 
 Because the best model did not contain a species x treatment interaction,
 comparisons between treatments is the same for both species. The GS treatment
@@ -330,14 +293,14 @@ resulted in greater heights in year 10 than the other treatments (0.001 < p <
 0.04). Predicted mean height for redwood ranged from 10.29 m in the GS treatment
 to 6.16 m in the HD treatment. For tanoak, predicted mean height ranged from
 5.12 in the GS treatment to 3.04 in the HD treatment. Predicted mean heights
-followed the pattern GS > LD > HA > HD.
+followed the pattern GS > LD > HA > HD (@fig-mod-sprout-ht-yr-10).
 
 ```{r}
-#| label: fig-year-10-only
+#| label: fig-mod-sprout-ht-yr-10
 #| fig-cap: >
 #|   Predicted mean height and 95% confidence intervals (gray bars) for redwood
 #|   and tanoak stump sprouts 10 years after harvest using four different
-#|   harvest treatments. Non-overlaping blue arrows indicate statistically
+#|   harvest treatments. Non-overlapping blue arrows indicate statistically
 #|   significant differences between treatments within a species.
 
 emmeans(ht10_sel, "treat", by = "spp", type = "response") |>
@@ -354,20 +317,131 @@ emmeans(ht10_sel, "treat", by = "spp", type = "response") |>
 
 ```
 
-## Regeneration composition
+## Fuels
 
+### Pre-pct
 
+Gamma distributed, linear multi-level models, with a log link were used for all
+six fuel class responses. Random intercepts were specified for three levels of
+nesting, representing sites, treatment blocks, and transect corners. All models
+except for the duff & litter model included a hurdle model to account for
+zero, which was modeled with a logit link. For the 10-hr fuel model, the hurdle
+portion was modeled as a function of treatment, and for the others, it was
+modeled as a single rate for all observations. The 10-hr fuel model also
+included a dispersion model, which was modeled with a log link, using treatment
+as a predictor (@tbl-mod-fuel-pre-pct).
 
 ```{r}
+#| label: tbl-mod-fuel-pre-pct
+#| tbl-cap: Model specifications for six fuel classes before pct.
 
-cat(
-  "Family:", paste0(
-    mba_sel$modelInfo$family$family, " (",
-    mba_sel$modelInfo$family$link,  ")"
-  ), "\n",
-  "Conditional:", format_model_formula(mba_sel, "cond"), "\n",
-  "Dispersion:", format_model_formula(mba_sel, "disp")
-)
+fuel_tmb$pre |>
+  transmute(
+    class = fuel_class_labels[as.character(class)],
+    Family = mod$modelInfo$family$family,
+    Link = mod$modelInfo$family$link,
+    Conditional = format_model_formula(mod, "cond"),
+    "Dispersion (log)" = format_model_formula(mod, "disp"),
+    "Hurdle (logit)" = format_model_formula(mod, "zi")
+) |> tinytable::tt()
+
+```
+
+For Duff & Litter, the largest difference was between the HD and HA treatments.
+The HD treatment had about 1.4 times more duff and litter (p = 0.07). Generally,
+all treatments were similar, with estimated loading of around 50 Mg ha-1.
+One-hour fuels were around 50% higher in the HA treatment compared to the LD and
+GS treatments (p = 0.07, and p = 0.01, respectively), with mean differences of
+around 0.5 Mg ha-1. Ten, hundred and thousand-hour fuels were statistically,
+very similar across treatments (p = 0.7 — p = 1). Point estimates varied by about
+1, 3, and <20 Mg ha-1 for ten, hundred, and thousand-hour fuels, respectively
+(@fig-mod-fuel-pre-pct).
+
+```{r}
+#| label: fig-mod-fuel-pre-pct
+#| fig-width: 8
+#| fig-cap: >
+#|   Estimated marginal means (black dots) confidence intervals (gray bands) and
+#|   comparisons (blue arrows) of fuel loading across four treatments for six
+#|   different fuel-class models. Non-overlapping blue arrows indicates
+#|   statistical significance at the α = 0.05 level.
+
+fuel_tmb$pre |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  group_map(function(x, ...) {
+    emm_to_df(x$.emmeans[[1]]) |>
+    ggplot(emm_mapping()) +
+    draw_emm() +
+    scale_x_discrete(labels = toupper) +
+    labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
+  }) |>
+  patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
+
+```
+
+### Post-pct
+
+The response for all six, post-pct fuel classes were modeled with a gamma
+distribution and a log link, and included the same multi-level random effects as
+for the pre-pct models. Dispersion models with treatment as the only predictor
+were included for 1-hr and 100-hr fuel classes. All models included a hurdle
+portion to model zeros using a logit link. For 100-hr fuels, this model included
+treatment and site as predictors, and for the rest, a constant rate for all
+observations was used (@tbl-mod-fuel-post-pct).
+
+```{r}
+#| label: tbl-mod-fuel-post-pct
+#| tbl-cap: Model specifications for six fuel classes after pct.
+fuel_tmb$post |>
+  transmute(
+    class = fuel_class_labels[as.character(class)],
+    Family = mod$modelInfo$family$family,
+    Link = mod$modelInfo$family$link,
+    Conditional = format_model_formula(mod, "cond"),
+    "Dispersion (log)" = format_model_formula(mod, "disp"),
+    "Hurdle (logit)" = format_model_formula(mod, "zi")
+) |> tinytable::tt()
+```
+
+Post-pct resulted in greater stratification of treatments
+(@fig-mod-fuel-post-pct). One-hour fuels were
+generally around 2.4 Mg ha^-1^, but the HA treatment had around half of that
+amount (p = 0.01 --- p = 0.02). The GS treatment had the greatest 10-hr fuel
+loading with 8.8 Mg ha^-1^, which was about 1.6, 2.3 and 2.9 times greater than
+the LD, HA, and HD treatments respectively (p = 0.03, p < 0.001, for the others,
+respectively). The LD treatment also had about 1.7 times more 10-hr fuels that
+the HD treatment (5.4 vs. 3 Mg ha^-1^, p = 0.001). Hundred-hour fuels were also
+greatest in the GS treatment, with an average of about 19 Mg ha^-1^, which was
+about 2.6 times greater than in the HD treatment (7 Mg ha^-1^, p < 0.001).
+Thousand-hour fuels were greatest in the HD treatment, with 80 Mg ha^-1^, which
+was about 2.7 times greater than the LD and HD treatments (p = 0.03 and p = 0.05,
+respectively). Fuel loading for live vegetation was similar across treatments at
+around 2.5 Mg ha^-1^. The pre-post vegetation difference was greatest in the GS
+treatment at about 31 Mg ha^-1^, which was 2.5 and 2.8 times the HD and HA
+treatments, respectively (p ≈ 0.01).
+
+```{r}
+#| label: fig-mod-fuel-post-pct
+#| fig-width: 8
+#| fig-cap: >
+#|   Estimated marginal means (black dots) confidence intervals (gray bars) and
+#|   comparisons (blue arrows) of fuel loading across four treatments for six
+#|   different fuel-class models. Non-overlapping red arrows indicates
+#|   statistical significance at the α = 0.05 level. Vegetation difference
+#|   equals the transect level difference in vegetation load in the pre and
+#|   post-pct conditions. This represents slash fuels recruited to the forest
+#|   floor following the pre-commercial thinning.
+
+fuel_tmb$post |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  group_map(function(x, ...) {
+  emm_to_df(x$.emmeans[[1]]) |>
+  ggplot(emm_mapping()) +
+  draw_emm() +
+  scale_x_discrete(labels = toupper) +
+  labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
+  }) |>
+  patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
 
 ```
 
