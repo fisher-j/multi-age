@@ -6,7 +6,8 @@ format:
     toc-depth: 4
 
 project:
-  pre-render: cp thesis/_index.qmd index.qmd
+  pre-render: 
+    - cp thesis/_index.qmd index.qmd
   output-dir: ../docs
   type: book
 
@@ -24,6 +25,7 @@ book:
     - thesis/methods.qmd
     - thesis/results.qmd
     - thesis/discussion.qmd 
+    - thesis/references.qmd
   sidebar:
     contents:
       - text: "Download docx"

@@ -1,5 +1,85 @@
 
+## 2024-05-02 
+ - render changes
+ - minor adjust
+ - refine sprout dynamics section
+ - refine effect thinning fuel
+
+## 2024-04-26 
+ - developing sprout section
+
+## 2024-04-25 
+ - developing sprout intro
+
+## 2024-04-22 
+ - revise thinning effects summary
+ - starting sprout lit review
+
+## 2024-04-17 
+ - thinning effects summary
+
+## 2024-04-11 
+ - completed results
+
+## 2024-04-08 
+ - most of thesis results section
+
+## 2024-04-05 
+ - touched up regen analysis figures
+
+## 2024-04-04 
+ - ht increment interp
+
+## 2024-04-03 
+ - interpret fuel results
+
+## 2024-03-28 
+ - minor adjust post-pct fuel models again
+ - minor adjust post-pct fuel mods
+
+## 2024-03-27 
+ - add regen species models
+
+## 2024-03-25 
+ - add BA by spp and treat boxplot
+ - include more regen models
+ - regen clump minor species
+ - include analyze regen model
+
+## 2024-03-21 
+ - model for post-pct fuel
+
+## 2024-03-20 
+ - render site
+ - include glmmTMB model and residual check
+
+## 2024-03-19 
+ - fix some wrong azimuths
+ - change shape of total_load
+
+## 2024-03-11 
+ - clean up files, save rdata with .rda extension
+
+## 2024-03-08 
+ - accomodate for new data
+ - rename data and add phase and timestamp columns
+ - create postpct fuel data
+ - add notes to slides
+
+## 2024-03-05 
+ - sampling review slide
+ - presentation version 3
+
+## 2024-03-04 
+ - near final draft of committee presentation
+ - save data
+ - finish 1st draft of presentation slides
+
+## 2024-02-26 
+ - first draft of presentation
+
 ## 2024-02-14 
+ - Merge branch 'main' of https://github.com/fisher-j/multi-age
  - explore basal area
  - refactor for thesis
 
@@ -126,7 +206,6 @@
 
 ## 2023-06-15 
  - clean up code blocks
- - Merge branch 'main' of https://github.com/fisher-j/multi-age
  - Improve presentation of fuel loading from literature
 
 ## 2023-06-14 

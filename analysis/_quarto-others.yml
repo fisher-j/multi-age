@@ -1,6 +1,8 @@
 project:
   type: website
-  pre-render: cp _index.qmd index.qmd
+  pre-render: 
+    - cp _index.qmd index.qmd
+    - cmd.exe /c "scripts\make_git_log.bat"
   output-dir: ../docs
   render:
     - "**/*.qmd"
