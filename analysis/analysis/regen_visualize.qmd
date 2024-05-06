@@ -442,7 +442,7 @@ AIC(m1, m2, m3, m4)
 **Select this model**
 
 ```{r}
-mba_sel <- m3
+mba <- m3
 ```
 
 Model three is the simplest, has the lowest AIC and has well-behaved residuals.
@@ -453,7 +453,7 @@ data.
 ```{r}
 
 regen_pa |>
-  mutate(simulate(mba_sel, nsim = 5)) |>
+  mutate(simulate(mba, nsim = 5)) |>
   rename(obs = ba_ha) |>
   pivot_longer(where(is.double), names_to = "type", values_to = "ba_ha") |>
   ggplot(aes(
@@ -481,7 +481,7 @@ For tanoak, we expect about twice as much regeneration basal area in the GS trea
 #| label: fig-species-ba-model
 #| fig-cap: 
 
-emmeans(mba_sel, c("spp", "treat"), by = "spp", type = "response") |>
+emmeans(mba, c("spp", "treat"), by = "spp", type = "response") |>
   plot(comparisons = TRUE, plotit = FALSE) |> as_tibble() |>
   ggplot(aes(treat, the.emmean)) +
   facet_wrap(~ spp, scales = "free", labeller = plot_labels) +
@@ -515,7 +515,7 @@ emmeans(mba_sel, c("spp", "treat"), by = "spp", type = "response") |>
 
 ```{r}
 
-emmeans(mba_sel, c("spp", "treat"), by = "spp", type = "response") |>
+emmeans(mba, c("spp", "treat"), by = "spp", type = "response") |>
 contrast("pairwise") |>
 as_tibble() |>
 filter(p.value < 0.05) |>
@@ -569,7 +569,7 @@ plot(res1)
 **Select this model**
 
 ```{r}
-mdf_sel <- m1
+mdf <- m1
 ```
 
 There are no statistically detectable differences
@@ -601,6 +601,6 @@ Save data from this page for future use
 
 ```{r}
 
-save(regen, spp_col, per_ha, for_const, mba_sel, regen_pa, mdf_sel, regen_df, file = "regen_visualize.rda")
+save(regen, spp_col, per_ha, for_const, mba, regen_pa, mdf, regen_df, file = "regen_visualize.rda")
 
 ```
