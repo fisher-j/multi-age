@@ -44,12 +44,14 @@ print_model_info <- function(mod, components = c("disp", "zi")) {
   walk(comp, \(x) cat(format_model_formula(mod, x, label = TRUE), "\n"))
 }
 
+treat_labels <- c(gs = "GS", ld = "LD", ha = "HA", hd = "HD")
 species_labels <- c(LIDE = "Tanoak", SESE = "Redwood", other = "Other", df =
 "Douglas-fir", rw = "Redwood", to = "Tanoak")
 year_labels <- c(`1` = "Year 1", `5` = "Year 5", `10` = "Year 10")
 plot_labels <- labeller(
   spp = species_labels,
-  year =  year_labels
+  year =  year_labels,
+  treat = treat_labels
 )
 
 standard_model_col_names <- c(
@@ -118,7 +120,7 @@ species (@lst-mod-regen-ba).
 
 ::: {#lst-mod-regen-ba}
 ```{r}
-print_model_info(mba_sel)
+print_model_info(mba)
 ```
 ::: 
 
@@ -140,13 +142,46 @@ treatment compared to HA (p = 0.03).
 #|   the 95% confidence interval, black dots---the mean, and non-overlapping
 #|   blue arrows signify statistical significance (α = 0.05).
 
-emmeans(mba_sel, "treat", by = "spp", type = "response") |> # pairs()
+emmeans(mba, "treat", by = "spp", type = "response") |> # pairs()
  emm_to_df() |>
  ggplot(emm_mapping()) +
  facet_wrap(~ spp, ncol = 2, labeller = plot_labels, scales = "free") +
  draw_emm() +
  scale_x_discrete(labels = toupper) +
  labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2%.%ha^-1)))
+
+```
+
+@fig-mod-regen-ba-rw-to shows the same model as @fig-mod-regen-ba, but with an
+emphasis treatment comparisons between redwood and tanoak. This shows that we
+expect on average, five times greater basal area of redwood than tanoak in the
+GS treatment (p < 0.001), and about 2.7 times in the LD treatment (p = 0.039).
+The two species were most similar in the HD treatment, where redwood basal area
+is expected to be 1.4 times that of tanoak (p = 0.56). The variability, in terms
+of the 95% confidence intervals is much greater than that of tanoak's across
+treatments.
+
+```{r}
+#| label: fig-mod-regen-ba-rw-to
+#| fig-cap: >
+#|   Basal area (m^2^ ha^-1^) modeled at the vegetation plot level for four
+#|   harvest treatments and two species classes (n = 16). Gray bars represent
+#|   the 95% confidence interval, black dots---the mean, and non-overlapping
+#|   blue arrows signify statistical significance (α = 0.05).
+
+emmeans(
+  mba,
+  "spp",
+  by = "treat",
+  at = list(spp = c("rw", "to")),
+  type = "response"
+) |> # pairs()
+  emm_to_df() |>
+  ggplot(emm_mapping(x = spp)) +
+  facet_wrap(~ treat, ncol = 2, labeller = plot_labels, scales = "free") +
+  draw_emm() +
+  scale_x_discrete(labels = species_labels) +
+  labs(x = "Species", y = expression(Basal ~ Area ~ (m^2%.%ha^-1)))
 
 ```
 
@@ -159,7 +194,7 @@ and macro-plot (@lst-mod-df-counts).
 
 ::: {#lst-mod-df-counts}
 ```{r}
-print_model_info(mdf_sel, NULL)
+print_model_info(mdf, NULL)
 ```
 :::
 
@@ -177,7 +212,7 @@ seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
 
 # predict(mdf_sel) |> mean() |> exp() * per_ha["corner"]
 
-emmeans(mdf_sel, "treat", type = "response") |>
+emmeans(mdf, "treat", type = "response") |>
  emm_to_df() |>
  mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
  ggplot(emm_mapping()) +
