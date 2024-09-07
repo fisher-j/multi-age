@@ -26,8 +26,12 @@ load("regen_wrangled.rda")
 
 ```{r include=FALSE}
 
-species_labels <- c(to = "Tanoak", rw = "Redwood", df = "Douglas-fir", 
-  other = "Other")
+species_labels <- c(
+  to = "Tanoak",
+  rw = "Redwood",
+  df = "Douglas-fir",
+  other = "Other"
+)
 
 plot_labels <- labeller(
   spp = species_labels
@@ -88,14 +92,17 @@ regen smaller than 5 cm separately.
 
 # expansion factors at different aggregation levels
 per_ha <- c(
-  all = 1/64, treat = 1/16, plot = 1/4, corner = 1) * (10000 / (16 * pi)
-)
+  all = 1 / 64,
+  treat = 1 / 16,
+  plot = 1 / 4,
+  corner = 1
+) * (10000 / (16 * pi))
 
 p <- regen |>
   ggplot(aes(dbh, fill = spp)) +
   stat_bin(aes(y = after_stat(count) * per_ha["treat"]), bins = 10) +
   facet_wrap(vars(treat), nrow = 1) +
-  labs(y = expr(trees%.%ha^-1))
+  labs(y = expr(trees %.% ha^-1))
 p
 
 ```
@@ -115,9 +122,10 @@ correlation with available light.
 #|   five centimeters in diameter, and stems greater than five centimeters are
 #|   on the bottom.
 
+
 raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
   generate_facet_totals <- function(data) {
-    summarize(data,
+    dplyr::summarize(data,
       .by = treat,
       n = paste("Total: ", round(n() * per_ha["treat"])),
     )
@@ -125,7 +133,7 @@ raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
   colors <- spp_col(regen, scales::brewer_pal, palette = "Set2")
   regen |>
     filter({{ group }}) |>
-    ggplot(aes(dbh, fill = forcats::fct_reorder(spp, spp, length))) +
+    ggplot2::ggplot(aes(dbh, fill = forcats::fct_reorder(spp, spp, length))) +
     stat_bin(aes(y = after_stat(count) * per_ha["treat"]), breaks = bin_breaks) +
     ggpp::geom_text_npc(
       data = generate_facet_totals,
@@ -545,7 +553,7 @@ regen_df <- regen |>
 regen_df |>
   ggplot(aes(treat, n * per_ha["corner"])) +
   geom_boxplot() +
-  labs(x = "Treatment", y = expression(Stems%.%ha^-1))
+  labs(x = "Treatment", y = expression(Stems %.% ha^-1))
 
 ```
 
@@ -556,7 +564,7 @@ inflation or dispersion formulae.
 ```{r}
 
 m1 <- glmmTMB(
-  n ~ treat + (1 | site/treat),
+  n ~ treat + (1 | site / treat),
   regen_df,
   family = nbinom1()
 )
@@ -601,6 +609,15 @@ Save data from this page for future use
 
 ```{r}
 
-save(regen, spp_col, per_ha, for_const, mba, regen_pa, mdf, regen_df, file = "regen_visualize.rda")
-
+save(
+  regen,
+  spp_col,
+  per_ha,
+  for_const,
+  mba,
+  regen_pa,
+  mdf,
+  regen_df,
+  file = "regen_visualize.rda"
+)
 ```

@@ -1,5 +1,12 @@
 
+## 2024-05-06 
+ - incorporate pascal edits
+ - rename model
+ - rw/to comparison
+
 ## 2024-05-02 
+ - switch to apa
+ - re-render
  - render changes
  - minor adjust
  - refine sprout dynamics section
@@ -110,7 +117,6 @@
  - random changes, don't use normal overlay in fuel data exploration
 
 ## 2024-01-31 
- - re-render
  - Minor fix, add transect photos
 
 ## 2023-12-20 
