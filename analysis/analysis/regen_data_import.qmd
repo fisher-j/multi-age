@@ -104,7 +104,6 @@ regen_2 <- local({
     mutate(treat = factor(treat, c("gs", "ld", "ha", "hd")))
 })
 
-regen <- regen_2
 
 ```
 
@@ -115,10 +114,27 @@ will aid in plotting.
 ```{r}
 
 # Reduce number of species
-regen <- mutate(regen,
+regen_3 <- mutate(regen_2,
   spp = if_else(spp %in% c("rw", "to", "df"), spp, "other"),
   spp = forcats::fct_reorder(spp, spp, length),
 )
+
+```
+
+```{r}
+#| eval: false
+#| include: false
+
+# How many observations of other species were there?
+regen_2 |>
+  filter(!spp %in% c("rw", "to", "df")) |>
+  count(spp)
+
+# where do the observations occur?
+regen_3 |>
+  filter(spp == "other") |>
+  count(site, treat) |>
+  complete(site, treat, fill = list(n = 0))
 
 ```
 
@@ -126,7 +142,7 @@ Save this data for summary, visualization, and potentially, modeling.
 
 ```{r}
 
-
+regen <- regen_3
 save(regen, regen_lcbh, file = "regen_wrangled.rda")
 
 ```

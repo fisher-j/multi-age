@@ -5,6 +5,10 @@ execute:
 
 # Results
 
+TODO: I've provided all the comparison results, most of which are not
+statistically significant. Maybe I should also provide grand mean, summary
+results.
+
 ```{r include=FALSE}
 load("./fuel_data_modeling.rda")
 load("./sprout_modeling.rda")
@@ -13,6 +17,14 @@ load("./regen_visualize.rda")
 library(tidyverse)
 library(emmeans)
 library(ggdist)
+library(purrr)
+library(stringr)
+library(tibble)
+library(dplyr)
+library(ggplot2)
+library(tibble)
+library(patchwork)
+library(tinytable)
 ```
 
 ```{r}
@@ -46,7 +58,7 @@ print_model_info <- function(mod, components = c("disp", "zi")) {
 
 treat_labels <- c(gs = "GS", ld = "LD", ha = "HA", hd = "HD")
 species_labels <- c(LIDE = "Tanoak", SESE = "Redwood", other = "Other", df =
-"Douglas-fir", rw = "Redwood", to = "Tanoak")
+  "Douglas-fir", rw = "Redwood", to = "Tanoak")
 year_labels <- c(`1` = "Year 1", `5` = "Year 5", `10` = "Year 10")
 plot_labels <- labeller(
   spp = species_labels,
@@ -68,17 +80,25 @@ emm_to_df <- function(emm) {
 }
 
 # Common mapping for all plots, allows for specification of x-axis variable
-emm_mapping <- function(x = treat) {
-  aes({{x}}, emmean, ymin = LCL, ymax = UCL, xend = {{x}})
+emm_mapping <- function(x = treat, group = NULL, color = NULL) {
+  aes({{x}}, emmean, ymin = LCL, ymax = UCL, xend = {{x}}, group = {{group}},
+  color = {{color}})
 }
 
 # Common elements of all plots: comparison arrows, and CI's 
-draw_emm <- function(data = ., position = "identity") {
+draw_emm <- function(data = ., position = "identity", show_legend = FALSE) {
   list(
     geom_linerange(
       color = "gray70",
       linewidth = 2.3,
-      show.legend = FALSE,
+      show.legend = show_legend,
+      position = position
+    ),
+    geom_point(
+      color = "white",
+      shape = "circle filled",
+      size = 2,
+      fill = "black",
       position = position
     ),
     geom_segment(
@@ -100,10 +120,27 @@ draw_emm <- function(data = ., position = "identity") {
       linewidth = 1,
       na.rm = TRUE,
       position = position
-    ),
-    geom_point(color = "black", size = 2, position = position)
+    )
   )
 }
+
+# Common elements of all plots: comparison arrows, and CI's 
+draw_emm2 <- function(data = ., position = position_dodge(width = .7)) {
+  list(
+    geom_linerange(
+      linewidth = 2.3,
+      position = position
+    ),
+    geom_point(
+      color = "white",
+      shape = "circle filled",
+      size = 2,
+      fill = "black",
+      position = position
+    )
+  )
+}
+
 
 ```
 
@@ -125,8 +162,9 @@ print_model_info(mba)
 ::: 
 
 According to this model, we would expect five times as much basal area of other
-species in LD compared to HA (p = 0.034), and interestingly, six times more other species
-basal area in HD compared to HA (p = 0.014, @fig-regen-ba).
+species in LD compared to HA (p = 0.034), and six times more other species
+basal area in HD compared to HA (p = 0.014), but the presence of other species
+was generally less than 0.75 m^2^ ha^-1^.
 
 We expect 5 times more redwood regeneration basal area in the GS treatment
 compared to HA (p = 0.03), and 7 times compared to HD (p = 0.02).
@@ -157,9 +195,10 @@ on treatment comparisons between redwood and tanoak. This shows that we expect
 on average, five times greater redwood basal area than tanoak basal area in the
 GS treatment (p < 0.001), and about 2.7 times in the LD treatment (p = 0.039).
 The two species were most similar in the HD treatment, where redwood basal area
-is expected to be 1.4 times that of tanoak (p = 0.56). The variability,
-indicated by the 95% confidence intervals, is much greater than that of tanoak's
-across treatments.
+is expected to be 1.4 times that of tanoak (p = 0.56). Redwood variability,
+indicated by the size of 95% confidence intervals, is much greater than that of
+tanoak's across treatments, and redwood variability was greater in GS and LD
+treatments than in the HA and HD treatments (@fig-regen-ba).
 
 ```{r}
 #| label: fig-regen-ba-rw-to
@@ -184,6 +223,14 @@ emmeans(
   labs(x = "Species", y = expression(Basal ~ Area ~ (m^2%.%ha^-1)))
 
 ```
+
+### Other species
+
+Other speceis included grand fir, madrone, and California wax-myrtle, of which
+there was a total of 23, 28, and 16 observations across our 16 macro plots
+(comprising 64 tree density plots). Generally, each plot had between 0 and 9
+observations of other species, except for one macro plot with the LD treatment,
+which had 16 observations (data not shown).
 
 ### Douglas-fir counts
 
@@ -411,15 +458,29 @@ fuel_tmb$pre |>
     ggplot(emm_mapping()) +
     draw_emm() +
     scale_x_discrete(labels = toupper) +
-    labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
+    labs(title = x$class, y = expression(Load~(Mg%.%ha^-1)), x = "Treatment")
   }) |>
   patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
 
 # inspect means and differences for vegetation fuels
 # fuel_tmb$pre$pairs[[6]]
 # fuel_tmb$pre$emmeans[[6]]
+# fuel_tmb$pre |> filter(class == "dufflitter") |> pluck("emmeans", 1)
 
 ```
+
+Here are the grand means, pre-PCT for each fuel type:
+
+```{r}
+
+grand_mean <- fuel_tmb$pre |>
+  mutate(grand_mean = as_tibble(emmeans(.emmeans, ~1))) |>
+  select(c(class, grand_mean)) |>
+  unnest(grand_mean)
+grand_mean |> tinytable::tt()
+
+```
+
 
 ### Post-pct
 
@@ -446,22 +507,22 @@ fuel_tmb$post |>
   tinytable::tt()
 ```
 
-Post-pct resulted in greater stratification of treatments
-(@fig-fuel-post-pct). One-hour fuels were
-generally around 2.4 Mg ha^-1^, but the HA treatment had around half of that
-amount (p = 0.01 --- p = 0.02). The GS treatment had the greatest 10-hr fuel
-loading with 8.8 Mg ha^-1^, which was about 1.6, 2.3 and 2.9 times greater than
-the LD, HA, and HD treatments respectively (p = 0.03, p < 0.001, for the others,
-respectively). The LD treatment also had about 1.7 times more 10-hr fuels that
-the HD treatment (5.4 vs. 3 Mg ha^-1^, p = 0.001). Hundred-hour fuels were also
-greatest in the GS treatment, with an average of about 19 Mg ha^-1^, which was
-about 2.6 times greater than in the HD treatment (7 Mg ha^-1^, p < 0.001).
-Thousand-hour fuels were greatest in the HD treatment, with 80 Mg ha^-1^, which
-was about 2.7 times greater than the LD and HD treatments (p = 0.03 and p = 0.05,
-respectively). Fuel loading for live vegetation was similar across treatments at
-around 2.5 Mg ha^-1^. The pre-post vegetation difference was greatest in the GS
-treatment at about 31 Mg ha^-1^, which was 2.5 and 2.8 times the HD and HA
-treatments, respectively (p ≈ 0.01).
+Post-pct resulted in greater stratification of treatments (@fig-fuel-post-pct).
+One-hour fuels for most treatments were around 2.4 Mg ha^-1^, but the HA
+treatment had around half of that amount (p = 0.01 to p = 0.02). The GS
+treatment had the greatest 10-hr fuel loading with 8.8 Mg ha^-1^, which was
+about 1.6, 2.3 and 2.9 times greater than the LD, HA, and HD treatments
+respectively (p = 0.03, p < 0.001, for the others, respectively). The LD
+treatment also had about 1.7 times more 10-hr fuels that the HD treatment (5.4
+vs. 3 Mg ha^-1^, p = 0.001). Hundred-hour fuels were also greatest in the GS
+treatment, with an average of about 19 Mg ha^-1^, which was about 2.6 times
+greater than in the HD treatment (7 Mg ha^-1^, p < 0.001). Thousand-hour fuels
+were greatest in the HD treatment, with 80 Mg ha^-1^, which was about 2.7 times
+greater than the LD and HD treatments (p = 0.03 and p = 0.05, respectively).
+Fuel loading for live vegetation was similar across treatments at around 2.5 Mg
+ha^-1^. The pre-post vegetation difference was greatest in the GS treatment at
+about 31 Mg ha^-1^, which was 2.5 and 2.8 times the HD and HA treatments,
+respectively (p ≈ 0.01).
 
 ```{r}
 #| label: fig-fuel-post-pct
@@ -478,13 +539,83 @@ treatments, respectively (p ≈ 0.01).
 fuel_tmb$post |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
   group_map(function(x, ...) {
-  emm_to_df(x$.emmeans[[1]]) |>
-  ggplot(emm_mapping()) +
-  draw_emm() +
-  scale_x_discrete(labels = toupper) +
-  labs(title = x$class, x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
+    emm_to_df(x$.emmeans[[1]]) |>
+    ggplot(emm_mapping()) +
+    draw_emm() +
+    scale_x_discrete(labels = toupper) +
+    labs(title = x$class, y = expression(Load~(Mg%.%ha^-1)), x = "Treatment")
   }) |>
   patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
 
 ```
+
+Here are the grand means post-PCT for each fuel type:
+
+```{r}
+
+grand_mean <- fuel_tmb$pre |>
+  mutate(grand_mean = as_tibble(emmeans(.emmeans, ~1))) |>
+  select(c(class, grand_mean)) |>
+  unnest(grand_mean)
+grand_mean |> tinytable::tt()
+
+```
+
+Pre-commercial thinning led to a small increase in average 100-hr fuel loading,
+only for the GS treatment, increased 10-hr fuels in the GS and LD treatments,
+and increased 1-hr fuels for all but the HA treatment
+(@fig-fuel-pct-comparison), although these results are not statistically
+comparable, due to slightly different model structures.
+
+```{r}
+#| label: fig-fuel-pct-comparison
+#| fig-width: 8
+#| fig-cap: >
+#|   Estimated marginal means (black dots) and confidence intervals (colored
+#|   bars) of fuel loading across four treatments and five different fuel
+#|   classes, before and after PCT. Pre- and Post PCT models within a treatment
+#|   are from similar, but not necisarily identical models.
+
+# pre and post together
+fuel_tmb$pre |>
+  # only use fuel classes that are the same between PCT phase
+  filter(class %in% c("onehr", "tenhr", "hundhr", "thoushr", "veg")) |>
+  # mutate(class = fuel_class_labels[as.character(class)]) |>
+  group_map(function(x, ...) {
+    # for each row in pre-treatment, get the pre-treatment data and the
+    # corresponding data for post-treatment
+    bind_rows(
+      pre = emm_to_df(x$.emmeans[[1]]),
+      post = emm_to_df(
+        pluck(filter(fuel_tmb$post, class == x$class), ".emmeans", 1)
+      ),
+      .id = "phase"
+    ) |>
+    ggplot(emm_mapping(
+      color = factor(phase, levels = c("pre", "post")),
+      group = factor(phase, levels = c("pre", "post"))
+    )) +
+    draw_emm2() +
+    scale_x_discrete(labels = toupper) +
+    scale_color_manual(
+      labels = c("Pre-PCT", "Post-PCT"),
+      values = c("#d17844", "#4444d1")
+    ) +
+    labs(
+      title = fuel_class_labels[as.character(x$class)],
+      y = expression(Load~(Mg%.%ha^-1)),
+      x = "Treatment",
+      color = "Phase"
+    )
+  }) |>
+  patchwork::wrap_plots() +
+    guide_area() +
+    patchwork::plot_layout(
+      axes = "collect_y",
+      axis_title = "collect",
+      guides = "collect"
+    )
+
+```
+
 
