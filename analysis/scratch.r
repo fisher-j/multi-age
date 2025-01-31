@@ -80,3 +80,11 @@ scales::show_col(colors()[!grepl("gr[ea]y", colors())], cex_label = 0.5)
 
 emmeans( mht18, spec = "treat", by = c("spp"), 
   at = list(year = "10"), type = "response") |> pairs()
+
+##### how many little tanoak sprouts? #####
+regen
+regen |> filter(dbh < 2.54) |>
+  group_by(treat) |>
+  summarize(ba_ha = round(sum(per_ha["treat"] * for_const(dbh)), 2)) |>
+  arrange(ba_ha)
+

@@ -88,13 +88,6 @@ emm_mapping <- function(x = treat, group = NULL, color = NULL) {
 # Common elements of all plots: comparison arrows, and CI's 
 draw_emm <- function(data = ., position = "identity", show_legend = FALSE) {
   list(
-    geom_point(
-      color = "white",
-      shape = "circle filled",
-      size = 2,
-      fill = "black",
-      position = position
-    ),
     geom_linerange(
       color = "gray70",
       linewidth = 2.3,
@@ -119,6 +112,13 @@ draw_emm <- function(data = ., position = "identity", show_legend = FALSE) {
       arrow = arrow(length = grid::unit(2.5, "mm")),
       linewidth = 1,
       na.rm = TRUE,
+      position = position
+    ),
+    geom_point(
+      color = "white",
+      shape = "circle filled",
+      size = 2,
+      fill = "black",
       position = position
     )
   )
