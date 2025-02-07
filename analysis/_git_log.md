@@ -1,4 +1,18 @@
 
+## 2025-01-31 
+ - continued work on rw and to basal area discussion
+
+## 2024-12-14 
+ - try to push website
+ - Merge branch 'main' of https://github.com/fisher-j/multi-age
+ - large load
+ - Create test.md
+ - Update README.md
+ - fix readme link
+
+## 2024-09-07 
+ - Re-starting again fall 2024
+
 ## 2024-05-06 
  - incorporate pascal edits
  - rename model
@@ -86,7 +100,6 @@
  - first draft of presentation
 
 ## 2024-02-14 
- - Merge branch 'main' of https://github.com/fisher-j/multi-age
  - explore basal area
  - refactor for thesis
 

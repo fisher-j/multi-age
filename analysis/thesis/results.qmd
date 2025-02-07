@@ -194,11 +194,13 @@ emmeans(mba, "treat", by = "spp", type = "response") |> # pairs()
 on treatment comparisons between redwood and tanoak. This shows that we expect
 on average, five times greater redwood basal area than tanoak basal area in the
 GS treatment (p < 0.001), and about 2.7 times in the LD treatment (p = 0.039).
-The two species were most similar in the HD treatment, where redwood basal area
-is expected to be 1.4 times that of tanoak (p = 0.56). Redwood variability,
-indicated by the size of 95% confidence intervals, is much greater than that of
-tanoak's across treatments, and redwood variability was greater in GS and LD
-treatments than in the HA and HD treatments (@fig-regen-ba).
+In the HA treatment, average redwood basal area is expected to be 2.5 times that
+of tanoak (p = 0.07). The two species were most similar in the HD treatment,
+where redwood basal area is expected to be 1.4 times that of tanoak (p = 0.56).
+Redwood variability, indicated by the size of 95% confidence intervals, is much
+greater than that of tanoak's across treatments, and redwood variability was
+greater in GS and LD treatments than in the HA and HD treatments
+(@fig-regen-ba).
 
 ```{r}
 #| label: fig-regen-ba-rw-to
@@ -208,8 +210,7 @@ treatments than in the HA and HD treatments (@fig-regen-ba).
 #|   the 95% confidence interval, black dots---the mean, and non-overlapping
 #|   blue arrows signify statistical significance (α = 0.05).
 
-emmeans(
-  mba,
+emmeans(mba,
   "spp",
   by = "treat",
   at = list(spp = c("rw", "to")),
@@ -574,7 +575,7 @@ comparable, due to slightly different model structures.
 #|   Estimated marginal means (black dots) and confidence intervals (colored
 #|   bars) of fuel loading across four treatments and five different fuel
 #|   classes, before and after PCT. Pre- and Post PCT models within a treatment
-#|   are from similar, but not necisarily identical models.
+#|   are from similar, but not necessarily identical models.
 
 # pre and post together
 fuel_tmb$pre |>
