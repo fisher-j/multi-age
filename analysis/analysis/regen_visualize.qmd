@@ -66,9 +66,9 @@ spp_col <- function(data, .palfun, ...) {
 ## Objectives
 
 - Determine if there are significant differences in species composition, or size
-  class distirbution between treatments
+  class distribution between treatments
 
-This objective is somewhat vaugue because I am not familiar with the statistical
+This objective is somewhat vague because I am not familiar with the statistical
 techniques used for the weighted (diameter), multi-variate (species)
 distribution data that we have.
 
@@ -111,7 +111,7 @@ Splitting the analysis at 5-cm-diameter stems shows a clear trend in treatments
 from most to least available light. Over this gradient, the number of 1.3-cm
 stems increases, and the 3.8-cm stems decrease, almost proportionally --- and
 most of this is due to tanoak. For >= 5-cm stems, the effect is a fairly
-homogenous decrease in the number of stems. There are few tanoak, Douglas-fir
+homogeneous decrease in the number of stems. There are few tanoak, Douglas-fir
 are only in the brightest areas. Mostly redwood (number of stems) shows a strong
 correlation with available light.
 
@@ -437,14 +437,22 @@ m4 <- glmmTMB(
   dispformula = ~ spp + treat,
   ziformula = ~ spp
 )
-
 res4 <- simulateResiduals(m4)
 plot(res4)
 plotResiduals(res4, form = regen_pa$spp)
 plotResiduals(res4, form = regen_pa$treat)
 plotResiduals(res4, form = interaction(regen_pa$treat, regen_pa$spp))
 
-AIC(m1, m2, m3, m4)
+m5 <- glmmTMB(
+  ba_ha ~ treat * spp + (1 | site:spp),
+  regen_pa,
+  family = ziGamma(link = "log"),
+  dispformula = ~ spp,
+  ziformula = ~ spp
+)
+plot(simulateResiduals(m5))
+
+AIC(m1, m2, m3, m4, m5)
 
 ```
 **Select this model**

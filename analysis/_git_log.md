@@ -1,4 +1,7 @@
 
+## 2025-02-07 
+ - Another couple weeks of slow editing
+
 ## 2025-01-31 
  - continued work on rw and to basal area discussion
 

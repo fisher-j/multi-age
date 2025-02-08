@@ -723,6 +723,15 @@ I'll Save this data so it can be used in subsequent analysis.
   - this includes two stations per transect for classes for veg and dufflitter
 - total_load is the summarized loading for all classes by transect.
 
+## Data export
+
+```{r}
+write.csv(total_load, file = "transect_fuel_load.csv")
+```
+
+If you are JD Wilder, you should download [this csv file](transect_fuel_load.csv) that has all of the
+fuel loads summarized by transect for pre- and post-pct.
+
 ```{r}
 
 total_load <- tl2

@@ -148,10 +148,11 @@ draw_emm2 <- function(data = ., position = position_dodge(width = .7)) {
 
 ### Basal area
 
-Composition of regeneration in terms of total basal area of each species was
-modeled as a gamma distribution with a log link with fixed effects for
-treatment, species, and their interaction and random effects for sites and
-macro-plots. Dispersion was modeled separately as a function of species, using a
+Composition of regeneration in terms of basal area per acre represented by each
+species in a 4-meter radius vegetation plot was modeled as a gamma distribution
+with a log link with fixed effects for treatment, species, and their interaction
+and random effects for sites and macro-plots (4 vegetation plots per
+macro-plot). Dispersion was modeled separately as a function of species, using a
 log link and the rate of zeros was modeled using the logit link, for each
 species (@lst-regen-ba).
 
@@ -215,7 +216,7 @@ emmeans(mba,
   by = "treat",
   at = list(spp = c("rw", "to")),
   type = "response"
-) |> # pairs()
+) |>  # pairs()
   emm_to_df() |>
   ggplot(emm_mapping(x = spp)) +
   facet_wrap(~ treat, ncol = 2, labeller = plot_labels, scales = "free") +

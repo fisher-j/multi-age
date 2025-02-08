@@ -6,6 +6,8 @@ project:
   pre-render: cp analysis/_index.qmd index.qmd
   output-dir: ../docs
   type: book
+  post-render: 
+    - cp transect_fuel_load.csv ../docs
 
 book:
   title: Multiaged experiment -- 10-year analysis
