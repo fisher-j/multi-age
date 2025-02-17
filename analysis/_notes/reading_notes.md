@@ -1,5 +1,15 @@
 # Reading notes
 
+## 2025-02-15
+
+@bowcuttTanoakTargetRise2011 
+Fritz saw solid tanoak and brush intrusions as an
+indicator of excessive logging and advocated lighter cutting.(73) State and
+federal foresters as well as private timberland owners opted not to follow
+Fritz's advice.
+This led to a policy of eradication (often through the use of herbicide)
+beginning in the 1950's and continuing today.
+
 ## 2025-01-17
 
 @linSaplingGrowthSurvivorship2002

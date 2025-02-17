@@ -348,7 +348,7 @@ dufflitter |>
       litter_depth / (duff_depth + litter_depth),
       na.rm = TRUE
     ),
-    avg_total_depth = mean(duff_depth + litter_depth),
+    avg_total_depth = mean(duff_depth + litter_depth)
 )
 
 dufflitter <- dufflitter |>
@@ -727,10 +727,15 @@ I'll Save this data so it can be used in subsequent analysis.
 
 ```{r}
 write.csv(total_load, file = "transect_fuel_load.csv")
+write.csv(dufflitter, file = "sampling_cylinder_dufflitter.csv")
 ```
 
 If you are JD Wilder, you should download [this csv file](transect_fuel_load.csv) that has all of the
 fuel loads summarized by transect for pre- and post-pct.
+
+Duff and litter depths were sampled at two places along each transect, [here is
+a csv](sampling_cylinder_dufflitter.csv) that has per-cylinder depths and the
+(crudely calculated) load.
 
 ```{r}
 
