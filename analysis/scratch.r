@@ -88,3 +88,35 @@ regen |> filter(dbh < 2.54) |>
   summarize(ba_ha = round(sum(per_ha["treat"] * for_const(dbh)), 2)) |>
   arrange(ba_ha)
 
+
+d$transects |>
+  select(all_of(transectid), slope, matches(veg_match)) |>
+  pivot_longer(
+    !c(any_of(transectid), slope),
+    names_to = c(".value", "station"),
+    names_pattern = "(\\w+)([12])"
+  ) |> 
+  # there was some inconsistency in whether heights were zero or blank if no veg
+  # was present, here I sort that out.
+  # We are interested in total load, but the dead component has implications for
+  # fuel moisture. We recorded percent cover of live and dead separately, so
+  # here i calculate a total and proportion dead.
+  mutate(
+    woody_ht = if_else(live_woody == 0 & dead_woody == 0, 0, avg_w_ht),
+    herb_ht = if_else(live_herb == 0 & dead_herb == 0, 0, avg_h_ht),
+    woody_load = ((live_woody + dead_woody) / 100) * woody_ht * 18,
+    woody_p_dead = if_else(
+      woody_load == 0, 0, dead_woody / (live_woody + dead_woody)
+    ),
+    herb_load = ((live_herb + dead_herb) / 100) * herb_ht * 8,
+    herb_p_dead = if_else(
+      herb_load == 0, 0, dead_herb / (live_herb + dead_herb)
+    )
+  ) |>  select(-c(phase, site, treatment, corner, slope))
+  select(!matches("live_|dead_|avg_"), woody_ht, herb_ht) |>
+  pivot_longer(
+    matches("woody|herb"),
+    names_to = c("class", ".value"),
+    names_pattern = "(woody|herb)_(.*)"
+  )
+

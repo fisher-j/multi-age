@@ -223,6 +223,27 @@ rearrange_coef_names <- function(x) {
     str_replace("dispersion|conditional", "")
 }
 
+# # This was to see if adding site made any difference. I probably tried this
+# previously but just didn't document it
+# minc13 <- glmmTMB(
+#   ht_inc ~ treat + year * spp + (1 | tree) + (0 + spp | plot) + (1 | site),
+#   dispformula = ~ spp * year * treat,
+#   data = dinc
+# )
+#
+#
+# modelsummary(
+#   list(minc[[12]], minc13),
+#   shape = term:component ~ model,
+#   coef_omit = ".*dispersion$",
+#   coef_rename = rearrange_coef_names,
+#   gof_omit = "F|Log.Lik",
+#   stars = TRUE,
+#   output = "markdown",
+#   metrics = c("AIC", "BIC", "RMSE"),
+#   estimator = "ML",
+# )
+
 modelsummary(
   minc[1:12],
   shape = term:component ~ model,
@@ -423,9 +444,30 @@ mht109 <- glmmTMB(
   dispformula = ~ spp * treat
 )
 
-mht10_list <- lst(
-  mht101, mht102, mht103, mht104, mht105, mht106, mht107, mht108, mht109
+mht1010 <- glmmTMB(
+  ht ~ treat + spp + (0 + spp | plot) + (1 | site),
+  family = gaussian(link = "log"),
+  data = dht10,
+  dispformula = ~ spp * treat
 )
+
+# # Here I'm testing if adding a random effect for site improves the model. It
+# # doesn't
+# mht10_list <- lst(
+#   mht101, mht102, mht103, mht104, mht105, mht106, mht107, mht108, mht109
+# )
+#
+# modelsummary(
+#   list(mht109, mht1010),
+#   stars = TRUE,
+#   output = "markdown",
+#   shape = term:component + statistic ~ model,
+#   coef_omit = ".*dispersion$",
+#   coef_rename = rearrange_coef_names, 
+#   metrics = c("AIC", "BIC", "RMSE"),
+#   estimator = "ML",
+#   gof_omit = "F|Log.Lik"
+# )
 
 modelsummary(
   mht10_list,

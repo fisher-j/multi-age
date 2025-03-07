@@ -2,19 +2,21 @@
 
 ## Site description
 
-The 20,000-ha Jackson Demonstration State Forest was established in 1947 after
-being cut over multiple times starting in 1862. The mission of the JDSF is to
-remain in timber production for research and demonstration purposes. The
-predominant cover type is redwood, tanoak, and Douglas-fir forest at elevations
-ranging from 20 m near the coast to 700 m as you move inland. The climate is
-Mediterranean with cool, wet winters and an average annual precipitation of about
-1150 mm. The sites that compose our experiment were all redwood dominated with
-significant components of tanoak and Douglas fir and were well stocked with
-trees 80 to 100 years old. All sites are between 13 and 16 km from the Pacific
-Ocean at elevations between 130 and 300 m, on well-drained, sandstone-derived
-soils. The sites are located on various aspects of mid to upper-slope positions
-(@fig-site-map). Site quality is classified as Site Class II
-[@lindquistEmpiricalYieldTables1963; @webbWhiskeySpringsLongterm2012].
+Situated within the unceded ancestral territory of the Northern Pomo, near the
+coast of Norther California, the 20,000-ha Jackson Demonstration State Forest
+was established in 1947 after being cut over multiple times starting in 1862.
+The mission of the JDSF is to remain in timber production for research and
+demonstration purposes. The predominant cover type is redwood, tanoak, and
+Douglas-fir forest at elevations ranging from 20 m near the coast to 700 m
+inland. The climate is Mediterranean with cool, wet winters and an average
+annual precipitation of about 1150 mm. The sites that compose our experiment
+were all redwood dominated with significant components of tanoak and Douglas fir
+and were well stocked with trees 80 to 100 years old. All of our study sites are
+between 13 and 16 km from the Pacific Ocean at elevations between 130 and 300 m,
+on well-drained, sandstone-derived soils. The sites are located on various
+aspects on mid to upper-slope positions (@fig-site-map), and the site quality is
+classified as Site Class II [@lindquistEmpiricalYieldTables1963;
+@webbWhiskeySpringsLongterm2012].
 
 ![The site locations and topography for our study plots. The red box delineates
 the area of the topographical map seen in the background. JDSF = Jackson
@@ -143,33 +145,74 @@ heights.
 
 ## Analysis
 
-The analysis was conducted in three stages, one for each of the three response
+An analysis was conducted in three stages, one for each of the three response
 categories: fuels, sprout size, and regeneration density. All analyses were
 conducted using R and attempts were made to document all data, decisions, and
 techniques within a Quarto notebook, which is published at
 https://fisher-j.github.io/multi-age. All response variables were analyzed using
-multi-level models to account for the inherent nesting structure of the data, as
-well as multiple measurements of individuals over time. Grouping levels were
-included in the models if their variance estiamte was non-zero. Because the
-overall objective was to detect differences between treatments, treatment was
-used as the primary independent variable. Model development and selection were
-carried out using Akaike information criterion, Bayesian information criterion,
-and visualization of (probability integral) transformed residuals
-[@hartigDHARMaResidualDiagnostics2022] using the R package GLMMtmb, which
-provides a consistent framework for exploring different response distributions
-and link functions [@brooksGlmmTMBBalancesSpeed2017]. This package also includes
-the ability to model variance as a function of predictors with a logit link and
-this option was used in fitting some of the models. The final model structures
-chosen are given in the results section.
+multi-level models to account for the inherent nesting structure of the data,
+including multiple measurements of individuals over time, where applicable.
+Grouping levels were included in the models if their variance estimate was
+determined to be significant based on the size of the variance and the magnitude
+that inclusion of that grouping level had on the estimates and their
+corresponding confidence
+levels. Because the overall objective was to detect differences between
+treatments, treatment was used as the primary independent variable. Model
+development and selection were carried out using Akaike information criterion,
+Bayesian information criterion, and visualization of (probability integral)
+transformed residuals [@hartigDHARMaResidualDiagnostics2022]. Models were built
+using the R package GLMMtmb, which provides a consistent framework for exploring
+different response distributions and link functions as well as the ability to
+model variance as a function of predictors [@brooksGlmmTMBBalancesSpeed2017].
+The final model structures chosen for each response are given in the results
+section.
 
-## Fuels
-
-TODO: add image of percent cover (live and dead).
+### Fuels
 
 Fuel load in Mg ha^-1^ was estimated for 1-hr, 10-hr, 100-hr, combined duff and
-litter ("duff/litter"), 1,000-hr, and live vegetation fuels. Fuel load for 1-
-thorugh 1,000-hr fuels were calculated using the method in
-@brownHandbookInventoryingDowned1974. The required size-class specific
-parameters (specific gravity, particle inclination, and average diameter) were
-derived from a previous study [@glebockiFuelLoadingMoisture2015].
+litter ("duff/litter"), 1,000-hr, and live vegetation fuels at the transect
+level. Any transect where a fuel type was not observed was assigned a value of
+zero for that class and transect. Fuel load for 1- through 1,000-hr fuels were
+calculated using the method in @brownHandbookInventoryingDowned1974. The
+required size-class specific parameters (specific gravity, particle inclination,
+and average diameter) were derived from a previous study where I used parameters
+averaged across all of the measured plots [@glebockiFuelLoadingMoisture2015].
+For 1,000-hr fuels, decay classes 1-3 were considered "sound" and decay classes
+4 and 5 were considered "rotten" for the purpose of calculating load and these
+loads were combined. Duff and litter were measured at two locations along each
+transect and these were averaged at the transect level. We did not measure the
+bulk density of duff and litter fuels, but based on findings in other studies in
+the redwood region, we opted to combine these classes into a single fuel class,
+using an average bulk density found across those studies of 7.73 Mg ha^-1^
+[@finneyFuelLoadingBulk1993;@stuartRedwoodFireEcology1985;@kittredgeComparisonForestFloors1940].
+Vegetation fuel load was calculated using bulk density constants of 8 Mg ha^-1^
+m^-1^ for herbaceous fuels and 18 Mg ha^-1^ m^-1^ for woody components
+[@gangiFIREMONDatabaseUser2006]. Live and dead components were combined to
+calculate herbaceous and woody loading and these loadings were combined and
+averaged at the transect level (again there were two measurements per transect)
+to determine total vegetation loading. Herbaceous fuel loading was generally
+very low.
+
+### Sprout heights
+
+Two metrics were analyzed from the sprout height data: height increment (m
+year^-1^), and total height (m) at year 10. For height increment, there were two
+measurements for each tree: increment for years 1 to 5 and increment for years 5
+to 10. Thus, analysis of this data included `tree` as a candidate random effect.
+While not making a difference for analysis results, it is worth noting that this
+data was structured differently from the other datasets in that `plot` was made
+a globally unique identifier, thus making explicit the nesting of plots within
+sites or treatments and eliminating the need to specify this nesting structure
+in the R code model formulas.
+
+### Regeneration density
+
+Sprout census data from our 4-meter-radius regeneration plots were converted to
+basal area per acre per species. Tallies of species by size class for sprouts
+less than 5 cm dbh were converted to diameters using the class midpoint (1.27 or
+3.81 cm) before calculating basal area per acre. Minor species (e.g., those
+other than redwood, tanoak, and Douglas-fir) were combined into an "other"
+category. Missing species on a plot were made explicit by assigning a value of 0
+m^2^ ha^-1^ for that species and plot. In addition to basal area, Douglas-fir
+stem counts (stems ha^-1^) were modeled separately.
 

@@ -1,5 +1,25 @@
 # Reading notes
 
+## 2025-02-28
+
+@cobbPromisePitfallsEndemic2019
+Hard to understand study about preventing spread of sudden oak death on tribal
+lands. I think it recommends a combination of approaches. They found a small
+proportion of resistant trees, but these were not associated with site
+conditions or plant characteristics. Resistance is always only partial. Lower
+density stands (70 tpa) are more resistant/immune.
+
+@bowcuttTanoakLandscapesTending2013
+Plethora of TEK regarding historical to present acorn harvest and processing
+
+@waringRedwoodTanoakStand2008
+Re-states little is known about tanoak development in mixed stands.
+
+@tappeineriiDevelopmentTanoakUnderstories1984
+Claims tanoak grow slowly and take up to 100 years to "develop" in the
+understory. Not sure if this study has any value. Recommends herbicide
+treatment.
+
 ## 2025-02-15
 
 @bowcuttTanoakTargetRise2011 

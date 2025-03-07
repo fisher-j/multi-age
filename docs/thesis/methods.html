@@ -88,6 +88,12 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
 
 
 </head>
@@ -177,8 +183,12 @@ div.csl-indent {
   <li><a href="#regeneration" id="toc-regeneration" class="nav-link" data-scroll-target="#regeneration"><span class="header-section-number">2.3.2</span> Regeneration</a></li>
   <li><a href="#fuels" id="toc-fuels" class="nav-link" data-scroll-target="#fuels"><span class="header-section-number">2.3.3</span> Fuels</a></li>
   </ul></li>
-  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis"><span class="header-section-number">2.4</span> Analysis</a></li>
-  <li><a href="#fuels-1" id="toc-fuels-1" class="nav-link" data-scroll-target="#fuels-1"><span class="header-section-number">2.5</span> Fuels</a></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis"><span class="header-section-number">2.4</span> Analysis</a>
+  <ul>
+  <li><a href="#fuels-1" id="toc-fuels-1" class="nav-link" data-scroll-target="#fuels-1"><span class="header-section-number">2.4.1</span> Fuels</a></li>
+  <li><a href="#sprout-heights" id="toc-sprout-heights" class="nav-link" data-scroll-target="#sprout-heights"><span class="header-section-number">2.4.2</span> Sprout heights</a></li>
+  <li><a href="#regeneration-density" id="toc-regeneration-density" class="nav-link" data-scroll-target="#regeneration-density"><span class="header-section-number">2.4.3</span> Regeneration density</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -206,7 +216,7 @@ div.csl-indent {
 
 <section id="site-description" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="site-description"><span class="header-section-number">2.1</span> Site description</h2>
-<p>The 20,000-ha Jackson Demonstration State Forest was established in 1947 after being cut over multiple times starting in 1862. The mission of the JDSF is to remain in timber production for research and demonstration purposes. The predominant cover type is redwood, tanoak, and Douglas-fir forest at elevations ranging from 20 m near the coast to 700 m as you move inland. The climate is Mediterranean with cool, wet winters and an average annual precipitation of about 1150 mm. The sites that compose our experiment were all redwood dominated with significant components of tanoak and Douglas fir and were well stocked with trees 80 to 100 years old. All sites are between 13 and 16 km from the Pacific Ocean at elevations between 130 and 300 m, on well-drained, sandstone-derived soils. The sites are located on various aspects of mid to upper-slope positions (<a href="#fig-site-map" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>). Site quality is classified as Site Class II <span class="citation" data-cites="lindquistEmpiricalYieldTables1963 webbWhiskeySpringsLongterm2012">(<a href="#ref-lindquistEmpiricalYieldTables1963" role="doc-biblioref">Lindquist &amp; Palley, 1963</a>; <a href="#ref-webbWhiskeySpringsLongterm2012" role="doc-biblioref">Webb et al., 2012</a>)</span>.</p>
+<p>Situated within the unceded ancestral territory of the Northern Pomo, near the coast of Norther California, the 20,000-ha Jackson Demonstration State Forest was established in 1947 after being cut over multiple times starting in 1862. The mission of the JDSF is to remain in timber production for research and demonstration purposes. The predominant cover type is redwood, tanoak, and Douglas-fir forest at elevations ranging from 20 m near the coast to 700 m inland. The climate is Mediterranean with cool, wet winters and an average annual precipitation of about 1150 mm. The sites that compose our experiment were all redwood dominated with significant components of tanoak and Douglas fir and were well stocked with trees 80 to 100 years old. All of our study sites are between 13 and 16 km from the Pacific Ocean at elevations between 130 and 300 m, on well-drained, sandstone-derived soils. The sites are located on various aspects on mid to upper-slope positions (<a href="#fig-site-map" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>), and the site quality is classified as Site Class II <span class="citation" data-cites="lindquistEmpiricalYieldTables1963 webbWhiskeySpringsLongterm2012">(<a href="#ref-lindquistEmpiricalYieldTables1963" role="doc-biblioref">Lindquist &amp; Palley, 1963</a>; <a href="#ref-webbWhiskeySpringsLongterm2012" role="doc-biblioref">Webb et al., 2012</a>)</span>.</p>
 <div id="fig-site-map" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-site-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -256,12 +266,18 @@ Figure&nbsp;2.2: A diagram of the fuel sampling design depicting a 0.2-hectare m
 </section>
 <section id="analysis" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="analysis"><span class="header-section-number">2.4</span> Analysis</h2>
-<p>The analysis was conducted in three stages, one for each of the three response categories: fuels, sprout size, and regeneration density. All analyses were conducted using R and attempts were made to document all data, decisions, and techniques within a Quarto notebook, which is published at https://fisher-j.github.io/multi-age. All response variables were analyzed using multi-level models to account for the inherent nesting structure of the data, as well as multiple measurements of individuals over time. Grouping levels were included in the models if their variance estiamte was non-zero. Because the overall objective was to detect differences between treatments, treatment was used as the primary independent variable. Model development and selection were carried out using Akaike information criterion, Bayesian information criterion, and visualization of (probability integral) transformed residuals <span class="citation" data-cites="hartigDHARMaResidualDiagnostics2022">(<a href="#ref-hartigDHARMaResidualDiagnostics2022" role="doc-biblioref">Hartig, 2022</a>)</span> using the R package GLMMtmb, which provides a consistent framework for exploring different response distributions and link functions <span class="citation" data-cites="brooksGlmmTMBBalancesSpeed2017">(<a href="#ref-brooksGlmmTMBBalancesSpeed2017" role="doc-biblioref">Brooks et al., 2017</a>)</span>. This package also includes the ability to model variance as a function of predictors with a logit link and this option was used in fitting some of the models. The final model structures chosen are given in the results section.</p>
+<p>An analysis was conducted in three stages, one for each of the three response categories: fuels, sprout size, and regeneration density. All analyses were conducted using R and attempts were made to document all data, decisions, and techniques within a Quarto notebook, which is published at https://fisher-j.github.io/multi-age. All response variables were analyzed using multi-level models to account for the inherent nesting structure of the data, including multiple measurements of individuals over time, where applicable. Grouping levels were included in the models if their variance estimate was determined to be significant based on the size of the variance and the magnitude that inclusion of that grouping level had on the estimates and their corresponding confidence levels. Because the overall objective was to detect differences between treatments, treatment was used as the primary independent variable. Model development and selection were carried out using Akaike information criterion, Bayesian information criterion, and visualization of (probability integral) transformed residuals <span class="citation" data-cites="hartigDHARMaResidualDiagnostics2022">(<a href="#ref-hartigDHARMaResidualDiagnostics2022" role="doc-biblioref">Hartig, 2022</a>)</span>. Models were built using the R package GLMMtmb, which provides a consistent framework for exploring different response distributions and link functions as well as the ability to model variance as a function of predictors <span class="citation" data-cites="brooksGlmmTMBBalancesSpeed2017">(<a href="#ref-brooksGlmmTMBBalancesSpeed2017" role="doc-biblioref">Brooks et al., 2017</a>)</span>. The final model structures chosen for each response are given in the results section.</p>
+<section id="fuels-1" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="fuels-1"><span class="header-section-number">2.4.1</span> Fuels</h3>
+<p>Fuel load in Mg ha<sup>-1</sup> was estimated for 1-hr, 10-hr, 100-hr, combined duff and litter (“duff/litter”), 1,000-hr, and live vegetation fuels at the transect level. Any transect where a fuel type was not observed was assigned a value of zero for that class and transect. Fuel load for 1- through 1,000-hr fuels were calculated using the method in <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. The required size-class specific parameters (specific gravity, particle inclination, and average diameter) were derived from a previous study where I used parameters averaged across all of the measured plots <span class="citation" data-cites="glebockiFuelLoadingMoisture2015">(<a href="#ref-glebockiFuelLoadingMoisture2015" role="doc-biblioref">Glebocki, 2015</a>)</span>. For 1,000-hr fuels, decay classes 1-3 were considered “sound” and decay classes 4 and 5 were considered “rotten” for the purpose of calculating load and these loads were combined. Duff and litter were measured at two locations along each transect and these were averaged at the transect level. We did not measure the bulk density of duff and litter fuels, but based on findings in other studies in the redwood region, we opted to combine these classes into a single fuel class, using an average bulk density found across those studies of 7.73 Mg ha<sup>-1</sup> <span class="citation" data-cites="finneyFuelLoadingBulk1993 stuartRedwoodFireEcology1985 kittredgeComparisonForestFloors1940">(<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">Finney &amp; Martin, 1993</a>; <a href="#ref-kittredgeComparisonForestFloors1940" role="doc-biblioref">Kittredge, 1940</a>; <a href="#ref-stuartRedwoodFireEcology1985" role="doc-biblioref">Stuart, 1985</a>)</span>. Vegetation fuel load was calculated using bulk density constants of 8 Mg ha<sup>-1</sup> m<sup>-1</sup> for herbaceous fuels and 18 Mg ha<sup>-1</sup> m<sup>-1</sup> for woody components <span class="citation" data-cites="gangiFIREMONDatabaseUser2006">(<a href="#ref-gangiFIREMONDatabaseUser2006" role="doc-biblioref">Gangi, 2006</a>)</span>. Live and dead components were combined to calculate herbaceous and woody loading and these loadings were combined and averaged at the transect level (again there were two measurements per transect) to determine total vegetation loading. Herbaceous fuel loading was generally very low.</p>
 </section>
-<section id="fuels-1" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="fuels-1"><span class="header-section-number">2.5</span> Fuels</h2>
-<p>TODO: add image of percent cover (live and dead).</p>
-<p>Fuel load in Mg ha<sup>-1</sup> was estimated for 1-hr, 10-hr, 100-hr, combined duff and litter (“duff/litter”), 1,000-hr, and live vegetation fuels. Fuel load for 1- thorugh 1,000-hr fuels were calculated using the method in <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. The required size-class specific parameters (specific gravity, particle inclination, and average diameter) were derived from a previous study <span class="citation" data-cites="glebockiFuelLoadingMoisture2015">(<a href="#ref-glebockiFuelLoadingMoisture2015" role="doc-biblioref">Glebocki, 2015</a>)</span>.</p>
+<section id="sprout-heights" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="sprout-heights"><span class="header-section-number">2.4.2</span> Sprout heights</h3>
+<p>Two metrics were analyzed from the sprout height data: height increment (m year<sup>-1</sup>), and total height (m) at year 10. For height increment, there were two measurements for each tree: increment for years 1 to 5 and increment for years 5 to 10. Thus, analysis of this data included <code>tree</code> as a candidate random effect. While not making a difference for analysis results, it is worth noting that this data was structured differently from the other datasets in that <code>plot</code> was made a globally unique identifier, thus making explicit the nesting of plots within sites or treatments and eliminating the need to specify this nesting structure in the R code model formulas.</p>
+</section>
+<section id="regeneration-density" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="regeneration-density"><span class="header-section-number">2.4.3</span> Regeneration density</h3>
+<p>Sprout census data from our 4-meter-radius regeneration plots were converted to basal area per acre per species. Tallies of species by size class for sprouts less than 5 cm dbh were converted to diameters using the class midpoint (1.27 or 3.81 cm) before calculating basal area per acre. Minor species (e.g., those other than redwood, tanoak, and Douglas-fir) were combined into an “other” category. Missing species on a plot were made explicit by assigning a value of 0 m<sup>2</sup> ha<sup>-1</sup> for that species and plot. In addition to basal area, Douglas-fir stem counts (stems ha<sup>-1</sup>) were modeled separately.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
@@ -274,6 +290,12 @@ Brooks, M. E., Kristensen, K., van Benthem, K. J., Magnusson, A. ni, Berg, C. W.
 <div id="ref-brownHandbookInventoryingDowned1974" class="csl-entry" role="listitem">
 Brown, J. K. (1974). Handbook for inventorying downed woody material. <em>Gen. Tech. Rep. INT-16. Ogden, UT: US Department of Agriculture, Forest Service, Intermountain Forest and Range Experiment Station. 24 p.</em>, <em>16</em>.
 </div>
+<div id="ref-finneyFuelLoadingBulk1993" class="csl-entry" role="listitem">
+Finney, M. A., &amp; Martin, R. E. (1993). Fuel loading, bulk density, and depth of forest floor in coast redwood stands. <em>Forest Science</em>, <em>39</em>(3), 617–622.
+</div>
+<div id="ref-gangiFIREMONDatabaseUser2006" class="csl-entry" role="listitem">
+Gangi, L. J. (2006). <em><span>FIREMON</span> database user manual</em> (RMRS-GTR-164; pp. RMRS-GTR-164). U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station. <a href="https://doi.org/10.2737/RMRS-GTR-164">https://doi.org/10.2737/RMRS-GTR-164</a>
+</div>
 <div id="ref-glebockiFuelLoadingMoisture2015" class="csl-entry" role="listitem">
 Glebocki, R. (2015). <em>Fuel loading and moisture dynamics in thinned coast redwood–<span class="nocase">Douglas-fir</span> forests in <span>Headwaters Forest Reserve</span>, <span>California</span></em> [Master’s thesis, Humboldt State University]. <a href="https://scholarworks.calstate.edu/concern/theses/ws859j014">https://scholarworks.calstate.edu/concern/theses/ws859j014</a>
 </div>
@@ -282,6 +304,9 @@ Graham, B. D. (2009). <em>Structure of downed woody and vegetative detritus in o
 </div>
 <div id="ref-hartigDHARMaResidualDiagnostics2022" class="csl-entry" role="listitem">
 Hartig, F. (2022). <em><span>DHARMa</span>: <span>Residual</span> diagnostics for hierarchical (multi-level / mixed) regression models</em> [Manual]. <a href="https://CRAN.R-project.org/package=DHARMa">https://CRAN.R-project.org/package=DHARMa</a>
+</div>
+<div id="ref-kittredgeComparisonForestFloors1940" class="csl-entry" role="listitem">
+Kittredge, J. (1940). A comparison of forest floors from plantations of the same age and environment. <em>Journal of Forestry</em>, <em>38</em>(9), 729–731. <a href="https://doi.org/10.1093/jof/38.9.729">https://doi.org/10.1093/jof/38.9.729</a>
 </div>
 <div id="ref-lindquistEmpiricalYieldTables1963" class="csl-entry" role="listitem">
 Lindquist, J. L., &amp; Palley, M. N. (1963). <em>Empirical yield tables for young-growth redwood</em>. Division of Agricultural Sciences, University of California. <a href="https://catalog.hathitrust.org/Record/010837951">https://catalog.hathitrust.org/Record/010837951</a>
@@ -292,10 +317,14 @@ Lutes, D. C., Keane, R. E., Caratti, J. F., Key, C. H., Benson, N. C., Sutherlan
 <div id="ref-reinekePerfectionStanddensityIndex1933" class="csl-entry" role="listitem">
 Reineke, L. H. (1933). Perfection a stand-density index for even-aged forest. <em>Journal of Agricultural Research</em>, <em>46</em>, 627–638. <a href="https://www.fs.usda.gov/treesearch/pubs/60134">https://www.fs.usda.gov/treesearch/pubs/60134</a>
 </div>
+<div id="ref-stuartRedwoodFireEcology1985" class="csl-entry" role="listitem">
+Stuart, J. (1985). <em>Redwood fire ecology: Final report submitted to <span>California Department</span> of <span>Parks</span> and <span>Recreation</span></em>. Forestry Department, Humboldt State University.
+</div>
 <div id="ref-webbWhiskeySpringsLongterm2012" class="csl-entry" role="listitem">
 Webb, L. A., Lindquist, J. L., Wahl, E., &amp; Hubb, A. (2012). Whiskey springs long-term coast redwood density management; final growth, sprout, and yield results. In R. B. Standiford, T. J. Weller, D. D. Piirto, &amp; J. D. Stuart (Eds.), <em>Proceedings of coast redwood forests in a changing <span>California</span>: <span>A</span> symposium for scientists and managers.</em> (Vol. 238, pp. 571–581). Pacific Southwest Research Station, Forest Service, U.S. Department of Agriculture. <a href="https://www.fs.usda.gov/research/treesearch/41828">https://www.fs.usda.gov/research/treesearch/41828</a>
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->
