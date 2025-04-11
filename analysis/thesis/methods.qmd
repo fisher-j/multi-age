@@ -167,6 +167,28 @@ model variance as a function of predictors [@brooksGlmmTMBBalancesSpeed2017].
 The final model structures chosen for each response are given in the results
 section.
 
+Models were interpreted using estimated marginal means calculated with the
+R package emmeans [@lenthEmmeansEstimatedMarginal2021].
+
+::: {.callout-caution}
+## TODO:
+
+* what kind of predictions am I using, are they unit level or population level
+  predictions?
+* How and when are predictions back-transformed to the response scale from the
+  link scale?
+* Are these conditional predictions? Conditioned on what? Or are they marginal
+  predictions? [@heissMarginalConditionalEffects]
+* I would like to write my models in formal notation similar to @heissMarginalConditionalEffects:
+  $$
+  \begin{aligned}
+  \text{lifeExp} &\sim \mathcal{N}(\mu_{i_j}, \sigma_y) & \text{Life expectancy within countries } j \\
+  \mu_{i_j} &= (\beta_0 + b_{0_j}) + \beta_1\, \text{gdpPercap}_{i_j} & \text{Model of within-country variation} \\
+  b_{0_j} &\sim \mathcal{N}(0, \sigma_0) & \text{Random country offsets from global average}
+  \end{aligned}
+  $$
+:::
+
 ### Fuels
 
 Fuel load in Mg ha^-1^ was estimated for 1-hr, 10-hr, 100-hr, combined duff and

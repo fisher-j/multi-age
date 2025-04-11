@@ -451,11 +451,12 @@ mht1010 <- glmmTMB(
   dispformula = ~ spp * treat
 )
 
+mht10_list <- lst(
+  mht101, mht102, mht103, mht104, mht105, mht106, mht107, mht108, mht109
+)
+
 # # Here I'm testing if adding a random effect for site improves the model. It
 # # doesn't
-# mht10_list <- lst(
-#   mht101, mht102, mht103, mht104, mht105, mht106, mht107, mht108, mht109
-# )
 #
 # modelsummary(
 #   list(mht109, mht1010),

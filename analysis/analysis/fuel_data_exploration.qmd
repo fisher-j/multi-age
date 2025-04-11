@@ -205,7 +205,7 @@ cleavland_plot <- function(data, title, load_var = load) {
 
 ```
 
-```{r outlier-plot-fwd-sep}
+```{r}
 #| echo: false
 #| label: fig-fwd
 #| fig-cap: >
@@ -224,7 +224,7 @@ fwd |>
 
 ```
 
-```{r outlier-plot-cwd}
+```{r}
 #| echo: false
 #| label: fig-cwd
 #| fig-cap: >
@@ -240,7 +240,7 @@ cwd |>
 
 ```
 
-```{r outlier-plot-dufflitter}
+```{r}
 #| echo: false
 #| label: fig-dufflitter
 #| fig-cap: >
@@ -252,7 +252,7 @@ dufflitter |>
 
 ```
 
-```{r outlier-plot-veg}
+```{r}
 #| echo: false
 #| label: fig-veg
 #| fig-cap: !expr caption
@@ -292,7 +292,7 @@ distributed. Unfortunately, it would appear that we have a probelem with
 normality. The raw data for each loading variable is clearly not normally
 distributed @fig-qqplot-naive.
 
-```{r qq-plot}
+```{r}
 #| label: fig-qqplot-naive
 #| fig-heigth: 8
 #| fig-cap: >
@@ -418,14 +418,14 @@ load2("long", "pre", all_of(treatment_load_vars)) |>
 ```
 
 While, this looks somewhat more normal, the zeros end up being a little strange.
-I applied a separte transformation for each fuel class, but all treatments
+I applied a separate transformation for each fuel class, but all treatments
 within a fuel class have the same transformation.
 
-For MANOVA we are concered with the within group multivariate normality, the
+For MANOVA we are concerned with the within group multivariate normality, the
 assumption does not appear to be met here either (@fig-qqplot-model). The code
 output below indicates the rows with the greatest deviation from normal.
 
-```{r qq-resid}
+```{r}
 #| label: fig-qqplot-model
 #| fig-cap: >
 #|   Plot A assessed the multivariate normality of residuals given the model
@@ -436,7 +436,8 @@ output below indicates the rows with the greatest deviation from normal.
 
 tl <- load2("wide", "pre", all_of(treatment_load_vars))
 load_mod <- lm(as.matrix(tl[-1]) ~ treatment, data = tl)
-m_dist <- heplots::cqplot(load_mod)
+
+m_dist <- heplots::Mahalanobis(resid(load_mod))
 
 load2("wide", "pre", everything())[order(m_dist, decreasing = TRUE)[1:10], ]
 
@@ -451,7 +452,7 @@ invisible(lapply(treatments,
 A number of different tests of multivariate normaliy also confirm the lack of
 evidence for meeting this assumption (@tbl-norm-test).
 
-```{r norm-test}
+```{r}
 #| label: tbl-norm-test
 #| tbl-cap: >
 #|   Several different tests of multivariate normality indicate a lack of

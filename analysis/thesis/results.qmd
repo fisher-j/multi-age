@@ -5,9 +5,12 @@ execute:
 
 # Results
 
-TODO: I've provided all the comparison results, most of which are not
+::: {.callout-caution}
+## TODO
+I've provided all the comparison results, most of which are not
 statistically significant. Maybe I should also provide grand mean, summary
 results.
+:::
 
 ```{r include=FALSE}
 load("./fuel_data_modeling.rda")
@@ -181,13 +184,26 @@ treatment compared to HA (p = 0.03).
 #|   the 95% confidence interval, black dots---the mean, and non-overlapping
 #|   blue arrows signify statistical significance (α = 0.05).
 
-emmeans(mba, "treat", by = "spp", type = "response") |> # pairs()
+emmeans(mba, "treat", by = "spp", component = "response", ) |>
  emm_to_df() |>
  ggplot(emm_mapping()) +
  facet_wrap(~ spp, ncol = 2, labeller = plot_labels, scales = "free") +
  draw_emm() +
  scale_x_discrete(labels = toupper) +
  labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2%.%ha^-1)))
+
+```
+
+```{r}
+#| label: tbl-regen-ba
+#| tbl-cap: >
+#|   Basal area (m^2^ ha^-1^) modeled at the vegetation plot level for four
+#|   harvest treatments and four species classes (n = 16).
+
+emmeans(mba, c("treat", "spp"), component = "response") |>
+  as_tibble() |>
+  dplyr::relocate(spp) |>
+  tinytable::tt(digits = 2)
 
 ```
 
@@ -215,7 +231,7 @@ emmeans(mba,
   "spp",
   by = "treat",
   at = list(spp = c("rw", "to")),
-  type = "response"
+  component = "response"
 ) |>  # pairs()
   emm_to_df() |>
   ggplot(emm_mapping(x = spp)) +
@@ -261,13 +277,27 @@ seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
 
 # predict(mdf_sel) |> mean() |> exp() * per_ha["corner"]
 
-emmeans(mdf, "treat", type = "response") |>
+emmeans(mdf, "treat", component = "response") |>
  emm_to_df() |>
  mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
  ggplot(emm_mapping()) +
  draw_emm() +
  scale_x_discrete(labels = toupper) +
  labs(x = "Treatment", y = expression(Stems%.%ha^-1))
+
+```
+
+```{r}
+#| label: tbl-df-counts
+#| tbl-cap: >
+#|   Vegetation plot level counts of regenerating Douglas-fir seedlings in four
+#|   harvest treatments 10 years after harvest (n = 16). Results have been
+#|   scaled to stems per hectare from 4-meter radium plots.
+
+emmeans(mdf, "treat", component = "response") |>
+  as_tibble() |>
+  mutate(treat = as.character(treat)) |>
+  tinytable::tt(digits = 2)
 
 ```
 
@@ -316,7 +346,7 @@ statistically distinguishable from the other treatments (0.13 < p < 0.28).
 #|   after harvest. Gray bars represent confidence intervals and statistical
 #|   significance (α = 0.05) is indicated by non-overlapping blue arrows.
 
-emmeans(minc_sel, "treat", by = "spp", type = "response") |> # pairs()
+emmeans(minc_sel, "treat", by = "spp", component = "response") |> # pairs()
   emm_to_df() |>
   ggplot(emm_mapping()) +
   draw_emm() +
@@ -343,7 +373,7 @@ increment (@fig-sprout-ht-inc-year).
 #|   data. Gray bars represent confidence intervals and statistical significance
 #|   (α = 0.05) is indicated by non-overlapping blue arrows.
 
-emmeans(minc_sel, c("year"), by = "spp", type = "response") |>
+emmeans(minc_sel, c("year"), by = "spp", component = "response") |>
   emm_to_df() |>
   ggplot(emm_mapping(x = year)) +
   draw_emm(position = position_nudge(x = -0.15)) +
@@ -387,7 +417,7 @@ followed the pattern GS > LD > HA > HD (@fig-sprout-ht-yr-10).
 #|   harvest treatments. Non-overlapping blue arrows indicate statistically
 #|   significant differences between treatments within a species.
 
-emmeans(ht10_sel, "treat", by = "spp", type = "response") |>
+emmeans(ht10_sel, "treat", by = "spp", component = "response") |>
   emm_to_df() |>
   ggplot(emm_mapping()) +
   draw_emm(position = position_nudge(x = -0.07)) +

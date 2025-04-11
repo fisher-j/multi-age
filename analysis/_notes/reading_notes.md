@@ -1,5 +1,15 @@
 # Reading notes
 
+## 2025-03-21
+
+I was trying to back up the claim that we don't understand crown fire initiation
+and spread well, and especially not in our less-studied fuel type. This led to
+discovering many mathematical models of crown fire spread and initiation mostly
+discovered through reading [@xanthopoulosCrownFire2020], but also @finneyWildlandFireBehaviour2021. These suggested reviews by Sullivan. 
+I also discovered that the manual for the Fuel Characteristic Classification System [@prichardFuelCharacteristicClassification2013]
+incorporates updates to the Rothermel model proposed by @wilsonReexaminationRothermelFire1990 and 
+@sandbergReformulationRothermelWildland2007
+
 ## 2025-02-28
 
 @cobbPromisePitfallsEndemic2019

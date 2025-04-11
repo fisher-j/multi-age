@@ -506,7 +506,7 @@ treatment and site here is analagous to a plot effect, of which there are 16.
 ## Trying glmmTMB
 
 
-This package also alows fitting flexible models, but unlike the Bayesian
+This package also allows fitting flexible models, but unlike the Bayesian
 approach, it is fast, and familiar as it works in the frequentist paradigm.
 
 ```{r}
@@ -526,7 +526,9 @@ run_glmmtmb_mod <- function(d, mods) {
   d |>
   mutate(
     mod = select_fuel_mod(class, data, mods),
-    .emmeans = list(emmeans::emmeans(mod, "treatment", type = "response")),
+    .emmeans = list(
+      emmeans::emmeans(mod, "treatment", type = "response", re.form = NA)
+    ),
     emmeans = list(as_tibble(.emmeans)),
     pairs = list(as_tibble(pairs(.emmeans, infer = TRUE))),
     aic = AIC(mod),
@@ -784,7 +786,7 @@ coefficients, and we would not want to contstrain our treatment effects to be
 positive, as they are centered around the mean and will be both positive and
 negative.
 
-```{r define-priors}
+```{r}
 #| label: fig-priors
 #| fig-cap: Normal priors for the intercept are centered at the median and sd of 
 #|   2.5 times the sd of the data. For the fixed effect treatment, they are 
@@ -1095,12 +1097,12 @@ lnp <- function(data) {
   mu    <- log(m / sqrt(s^2 / m^2 + 1))
   sigma <- sqrt(log(s^2 / m^2 + 1))
   # output mu and sigma on lognormals own scale
-  list(mu = round(mu, 2), sigma = round(sigma, 2))
+  list2env(list(mu = round(mu, 2), sigma = round(sigma, 2)))
 }
 
 ```
 
-```{r define-priors2}
+```{r}
 #| warning: false
 #| label: fig-priors2
 #| fig-cap: >

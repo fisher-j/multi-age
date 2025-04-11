@@ -1,5 +1,13 @@
 
+## 2025-03-07 
+ - mostly minor edits across several sections
+
+## 2025-02-16 
+ - one more file for JD
+
 ## 2025-02-07 
+ - put fuel export in right place
+ - add fuel transect data export
  - Another couple weeks of slow editing
 
 ## 2025-01-31 
