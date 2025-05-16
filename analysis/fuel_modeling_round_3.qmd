@@ -1,0 +1,436 @@
+---
+title: Fuel modeling round 3
+format:
+  html:
+    code-fold: true
+---
+
+# Setup
+
+```{r}
+#| warning: false
+#| message: false
+
+load("./calculate_fuel_load.rda")
+source("./scripts/get_fuel_data.r")
+transectid <- c("site", "treatment", "corner", "azi")
+
+library(glmmTMB)
+library(DHARMa)
+library(tidyverse)
+library(marginaleffects)
+```
+
+```{r init}
+#| echo: false
+
+fuel_class_labels <- c(
+  onehr = "1-hr",
+  tenhr = "10-hr",
+  hundhr = "100-hr",
+  thoushr = "1,000-hr",
+  dufflitter = "Duff & Litter",
+  veg = "Vegetation",
+  veg_diff = "Vegetation Difference"
+)
+
+fuel_class_labels2 <- imap(
+  fuel_class_labels,
+  \(x, i) eval(bquote(`~`(.(i), .(x))))
+)
+
+fuel_class_labeller <- labeller(
+  class = fuel_class_labels,
+  fuel_class = fuel_class_labels
+)
+```
+
+## Trying glmmTMB
+
+This package also allows fitting flexible models, such as zero-augmented models
+with a gamma response, but unlike the Bayesian approach, it is fast, and
+familiar as it works in the frequentist paradigm.
+
+The downside is that this package is somewhat less mature, and somewhat less
+supported than others, so bugs and quirks are to be expected, and the analysis
+of the results may be more complex.
+
+ I just realized that these two calls are the same, so I have a path forward
+ for calculating accurate predictions
+
+```
+emmeans::emmeans(onehr, "treatment", component = "response")
+predictions(onehr, newdata = "balanced", by = "treatment", re.form = NA, type = "response")
+```
+
+```{r}
+#| echo: false
+
+# helper function for selecting a model form from a list based on class
+# this allows me to use a default model form.
+select_fuel_mod <- function(class, data, mods) {
+  class <- as.character(class)
+  class_mod <- if_else(class %in% names(mods), class, "default")
+  class_print <- paste0(strrep(" ", 12 - nchar(class)), class)
+  cat(class_print, ": ", format(mods[[class_mod]]), "\n", sep = "")
+  list(eval(mods[[class_mod]]))
+}
+
+# this function will create the model output for each of the fuel classes
+run_glmmtmb_mod <- function(d, mods) {
+  d |>
+    mutate(
+      mod = select_fuel_mod(class, data, mods)
+    )
+}
+
+# get an emmobj from marginaleffects
+get_emmobj <- function(pred, comp, focal_var) {
+  contrast_ord <- correct_contrast_order(pred[[focal_var]], comp$contrast)
+  # print(paste(
+  #   "corrected contrast order:",
+  #   paste(
+  #     contrast_ord,
+  #     collapse = ", "
+  #   )
+  # ))
+  emmeans::emmobj(
+    bhat = pred$estimate,
+    se.bhat = pred$std.error,
+    se.diff = comp$std.error[contrast_ord],
+    levels = pred[[focal_var]],
+    df = Inf
+  )
+}
+
+# `combn` provides all pairwise combinations of the input in the order that I
+# need, but I need to find the correct order for the constrasts that I have. So
+# for each column in `combos`, find the index of `contrast_levels`
+# where that level matches both values in the column
+correct_contrast_order <- function(pred_levels, contrast_levels) {
+  # print(pred_levels)
+  # print(contrast_levels)
+  combos <- combn(pred_levels, 2)
+  purrr::map_int(
+    seq_len(ncol(combos)),
+    function(col) {
+      which(purrr::map_lgl(
+        contrast_levels,
+        function(contrast_level) {
+          all(stringr::str_detect(
+            contrast_level,
+            as.character(combos[, col])
+          ))
+        }
+      ))
+    }
+  )
+}
+```
+
+### Pre-pct
+
+```{r}
+
+# heres where I'll store model results
+fuel_tmb <- list()
+
+# The pre-pct data
+dpre <- load2("long", "pre", -c(phase, azi)) |>
+  mutate(
+    block = paste(site, treatment),
+    corner = paste(block, corner)
+  ) |>
+  nest(.by = class) |>
+  rowwise()
+
+# The general model formula including random effects
+formula <- load ~ treatment + (1 | site) + (1 | block) + (1 | corner)
+
+# Dufflitter doesn't have any zeros, so i'm using regular gamma. I'm assuming
+# gamma is a good model for all fuel classes (default)
+mods <- alist(
+  dufflitter = glmmTMB(formula, data, family = Gamma(link = "log")),
+  default = glmmTMB(
+    formula,
+    data,
+    family = ziGamma(link = "log"),
+    ziformula = ~1
+  ),
+  tenhr = glmmTMB(
+    formula,
+    data,
+    family = ziGamma(link = "log"),
+    ziformula = ~treatment,
+    dispformula = ~treatment
+  ),
+)
+
+fuel_tmb$pre <- run_glmmtmb_mod(dpre, mods)
+# select(fuel_tmb$pre, class, aic)
+```
+
+I think these residuals look OK
+
+```{r}
+#| fig-width: 9
+#| fig-height: 11
+
+par(mfrow = c(3, 2))
+fuel_tmb$pre |>
+  group_walk(\(x, ...) {
+    simulateResiduals(x$mod[[1]], allow.new.levels = TRUE) |>
+      plotResiduals(form = x$data[[1]]$treatment)
+    title(sub = x$class)
+  })
+```
+
+```{r}
+#| fig-width: 7
+#| fig-height: 9.5
+
+par(mfrow = c(3, 2))
+fuel_tmb$pre |>
+  group_walk(\(x, ...) {
+    simulateResiduals(x$mod[[1]], allow.new.levels = TRUE) |>
+      plotResiduals(form = x$data[[1]]$treatment)
+    title(sub = x$class)
+  })
+```
+
+For Duff & Litter, the largest difference was between the HD and HA treatments.
+The HD treatment had about 1.4 times more duff and litter (p = 0.07). Generally,
+all treatments were similar, with estimated loading of around 50 Mg ha^-1^.
+One-hour fuels were around 50% higher in the HA treatment compared to the LD and
+GS treatments (p = 0.07, and p = 0.01, respectively), with mean differences of
+around 0.5 Mg ha^-1^. Ten, hundred and thousand-hour fuels were statistically,
+very similar across treatments (p = 0.7 --- p = 1). Point esimates varied
+by about 1, 3, and <20 Mg ha^-1^ for ten, hundred, and thousand-hour fuels,
+respectively.
+
+```{r}
+#| fig-width: 8
+#| fig-cap: >
+#|   Estimated marginal means (black dots) confidence intervals (purple bands)
+#|   and comparisons (red arrows) of fuel loading across four treatments for six
+#|   different fuel-class models. Non-overlapping red arrows indicates
+#|   statistical significance at the α = 0.05 level.
+
+fuel_pre_summaries <- fuel_tmb$pre |>
+  mutate(
+    class = fuel_class_labels[as.character(class)],
+    pred = list(predictions(
+      mod,
+      by = "treatment",
+      re.form = NA
+    )),
+    comp = list(comparisons(
+      mod,
+      variables = list(treatment = "pairwise"),
+      by = "contrast",
+      re.form = NA
+    )),
+    emmobj = list(get_emmobj(pred, comp, "treatment"))
+  )
+
+fuel_pre_summaries |>
+  group_map(function(x, ...) {
+    x$emmobj[[1]] |>
+      plot(comparison = TRUE) +
+      labs(
+        title = x$class,
+        y = expression(Load ~ (Mg %.% ha^-1)),
+        x = "Treatment"
+      )
+  }) |>
+  patchwork::wrap_plots() +
+  patchwork::plot_layout(axes = "collect")
+```
+
+Here are the (nearly) significant (p <= 0.1) pairwise comparisons in table form
+
+```{r}
+
+mutate(fuel_pre_summaries, pairs = list(as_tibble(pairs(emmobj)))) |>
+  select(class, pairs) |>
+  unnest(pairs) |>
+  filter(p.value <= 0.1) |>
+  knitr::kable()
+```
+
+### Post-pct
+
+All fuel classes have zeros, except for dufflitter, but this fuel class is not
+really valid for post-pct data---we don't have a depth to load equation suitable
+for how litter depth was gathered.
+
+The veg_diff (pre-pct minus post-pct live vegetation) resulted in some negative
+values, these are mostly < 2.5 Mg/ha, and I think are attributable to
+measurement error. I'm simply converting negative values to zero.
+
+Including a model for dispersion (~treatment) only increases aic marginally and
+only for veg.
+
+```{r}
+
+dpost <- load2("long", "post", -c(phase, azi, dufflitter)) |>
+  mutate(load = if_else(class == "veg_diff" & load <= 0, 0, load)) |>
+  mutate(
+    block = paste(site, treatment),
+    corner = paste(block, corner)
+  ) |>
+  nest(.by = class) |>
+  rowwise()
+
+# same general formula as for pre-pct
+formula <- load ~ treatment + (1 | site) + (1 | block) + (1 | corner)
+mods <- alist(
+  default = glmmTMB(
+    formula,
+    data,
+    family = ziGamma(link = "log"),
+    ziformula = ~1
+  ),
+  onehr = glmmTMB(
+    formula,
+    data,
+    family = ziGamma(link = "log"),
+    ziformula = ~1,
+    dispformula = ~ treatment + site
+  ),
+  hundhr = glmmTMB(
+    formula,
+    data,
+    family = ziGamma(link = "log"),
+    ziformula = ~ treatment + site,
+    dispformula = ~ treatment + site
+  )
+)
+fuel_tmb$post <- run_glmmtmb_mod(dpost, mods)
+
+# AIC(
+#   glmmTMB(
+#     formula,
+#     dpost$data[[3]],
+#     family = ziGamma(link = "log"),
+#     ziformula = ~ treatment + site,
+#     dispformula = ~ treatment
+#   ),
+#   glmmTMB(
+#     formula,
+#     dpost$data[[3]],
+#     family = ziGamma(link = "log"),
+#     ziformula = ~ treatment + site,
+#     dispformula = ~ treatment + site
+#   )
+# )
+```
+
+Residuals looking pretty good.
+
+```{r}
+#| fig-width: 9
+#| fig-height: 11
+
+par(mfrow = c(3, 2))
+fuel_tmb$post |>
+  group_walk(\(x, ...) {
+    simulateResiduals(x$mod[[1]], allow.new.levels = TRUE) |>
+      plotResiduals(form = x$data[[1]]$treatment)
+    title(sub = x$class)
+  })
+```
+
+```{r}
+#| fig-width: 7
+#| fig-height: 9.5
+
+par(mfrow = c(3, 2))
+fuel_tmb$post |>
+  group_walk(function(x, ...) {
+    simulateResiduals(x$mod[[1]], allow.new.levels = TRUE) |>
+      plotQQunif(main = x$class)
+  })
+```
+
+Post-pct resulted in greater stratification of treatments. One-hour fuels were
+generally around 2.4 Mg ha^-1^, but the HA treatment had around half of that
+amount (p = 0.01 --- p = 0.02). The GS treatment had the greatest 10-hr fuel
+loading with 8.8 Mg ha^-1^, which was about 1.6, 2.3 and 2.9 times greater than
+the LD, HA, and HD treatments respectively (p = 0.03, p < 0.001, for the others,
+respectively). The LD treatment also had about 1.7 times more 10-hr fuels that
+the HD treatment (5.4 vs. 3 Mg ha^-1^, p = 0.001). Hundred-hour fuels were also
+greatest in the GS treatment, with an average of about 19 Mg ha^-1^, which was
+about 2.6 times greater than in the HD treatment (7 Mg ha^-1^, p < 0.001).
+Thousand-hour fuels were greatest in the HD treatment, with 80 Mg ha^-1^, which
+was about 2.7 times greater than the LD and HD treatments (p = 0.03 and p = 0.05,
+respectively). Fuel loading for live vegetation was similar across treatments at
+around 2.5 Mg ha^-1^. The pre-post vegetation difference was greatest in the GS
+treatment at about 31 Mg ha^-1^, which was 2.5 and 2.8 times the HD and HA
+treatments, respectively (p ≈ 0.01).
+
+```{r}
+#| fig-width: 8
+#| fig-cap: >
+#|   Estimated marginal means (black dots) confidence intervals (purple bands)
+#|   and comparisons (red arrows) of fuel loading across four treatments for six
+#|   different fuel-class models. Non-overlapping red arrows indicates
+#|   statistical significance at the α = 0.05 level.
+
+fuel_post_summaries <- fuel_tmb$post |>
+  mutate(
+    class = fuel_class_labels[as.character(class)],
+    pred = list(predictions(
+      mod,
+      by = "treatment",
+      re.form = NA
+    )),
+    comp = list(comparisons(
+      mod,
+      variables = list(treatment = "pairwise"),
+      by = "contrast",
+      re.form = NA
+    )),
+    emmobj = list(get_emmobj(pred, comp, "treatment"))
+  )
+
+fuel_post_summaries |>
+  group_map(function(x, ...) {
+    x$emmobj[[1]] |>
+      plot(comparison = TRUE) +
+      labs(
+        title = x$class,
+        y = expression(Load ~ (Mg %.% ha^-1)),
+        x = "Treatment"
+      )
+  }) |>
+  patchwork::wrap_plots() +
+  patchwork::plot_layout(axes = "collect")
+```
+
+Here are the (nearly) significant (p <= 0.1) pairwise comparisons in table form
+
+```{r}
+
+mutate(fuel_post_summaries, pairs = list(as_tibble(pairs(emmobj)))) |>
+  select(class, pairs) |>
+  unnest(pairs) |>
+  filter(p.value <= 0.1) |>
+  knitr::kable()
+```
+
+## Saved output
+
+```{r}
+
+save(
+  fuel_class_labeller,
+  fuel_class_labels,
+  fuel_class_labels2,
+  fuel_tmb,
+  get_emmobj,
+  correct_contrast_order,
+  file = "fuel_modeling_round_3.rda"
+)
+```
+

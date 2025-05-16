@@ -1,4 +1,7 @@
 
+## 2025-04-11 
+ - update packages, delete _freeze and re-render all, fix errors
+
 ## 2025-03-07 
  - mostly minor edits across several sections
 

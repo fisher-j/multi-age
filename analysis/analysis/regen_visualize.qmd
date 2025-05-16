@@ -13,6 +13,7 @@ source("./scripts/utils.r")
 ```{r}
 #| output: false
 
+library(marginaleffects)
 library(tidyr)
 library(tidyverse)
 library(ggdist)
@@ -36,7 +37,6 @@ species_labels <- c(
 plot_labels <- labeller(
   spp = species_labels
 )
-
 ```
 
 Some functions and constants that I need later on, these might should get moved
@@ -59,8 +59,6 @@ spp_col <- function(data, .palfun, ...) {
   spp <- unique(data$spp)
   purrr::set_names(pal(length(spp)), spp)
 }
-
-
 ```
 
 ## Objectives
@@ -96,7 +94,8 @@ per_ha <- c(
   treat = 1 / 16,
   plot = 1 / 4,
   corner = 1
-) * (10000 / (16 * pi))
+) *
+  (10000 / (16 * pi))
 
 p <- regen |>
   ggplot(aes(dbh, fill = spp)) +
@@ -104,7 +103,6 @@ p <- regen |>
   facet_wrap(vars(treat), nrow = 1) +
   labs(y = expr(trees %.% ha^-1))
 p
-
 ```
 
 Splitting the analysis at 5-cm-diameter stems shows a clear trend in treatments
@@ -122,10 +120,10 @@ correlation with available light.
 #|   five centimeters in diameter, and stems greater than five centimeters are
 #|   on the bottom.
 
-
 raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
   generate_facet_totals <- function(data) {
-    dplyr::summarize(data,
+    dplyr::summarize(
+      data,
       .by = treat,
       n = paste("Total: ", round(n() * per_ha["treat"])),
     )
@@ -134,7 +132,10 @@ raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
   regen |>
     filter({{ group }}) |>
     ggplot2::ggplot(aes(dbh, fill = forcats::fct_reorder(spp, spp, length))) +
-    stat_bin(aes(y = after_stat(count) * per_ha["treat"]), breaks = bin_breaks) +
+    stat_bin(
+      aes(y = after_stat(count) * per_ha["treat"]),
+      breaks = bin_breaks
+    ) +
     ggpp::geom_text_npc(
       data = generate_facet_totals,
       aes(npcx = "center", npcy = "top", label = n, fill = NULL)
@@ -148,8 +149,7 @@ raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
 }
 
 raw_hist2(dbh < 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
-raw_hist2(dbh >= 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(27, 600))
-
+  raw_hist2(dbh >= 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(27, 600))
 ```
 
 This is interesting, but I wonder what this would look like in terms of basal
@@ -161,14 +161,21 @@ local({
   bin_breaks <- seq(0, 17.5, 2.5)
   scale_breaks <- seq(0, 15, 5)
   facet_total_label <- function(data) {
-    summarize(data,
+    summarize(
+      data,
       .by = treat,
       ba_ha = round(sum(per_ha["treat"] * for_const(dbh)), 1)
     )
   }
   regen |>
-    ggplot(aes(dbh, fill = forcats::fct_reorder(spp, dbh, .fun = ~sum(.x^2)))) +
-    stat_bin(aes(weight = per_ha["treat"] * for_const(dbh)), breaks = bin_breaks) +
+    ggplot(aes(
+      dbh,
+      fill = forcats::fct_reorder(spp, dbh, .fun = ~ sum(.x^2))
+    )) +
+    stat_bin(
+      aes(weight = per_ha["treat"] * for_const(dbh)),
+      breaks = bin_breaks
+    ) +
     ggpp::geom_text_npc(
       data = facet_total_label,
       mapping = aes(npcx = "center", npcy = "top", label = ba_ha, fill = NULL)
@@ -182,7 +189,6 @@ local({
     ) +
     theme_bw()
 })
-
 ```
 
 # Community analysis: Species and abundance (BA)
@@ -213,9 +219,8 @@ regen |>
   complete(nesting(site, treat, plot), spp, fill = list(ba_ha = 0)) |>
   ggplot(aes(treat, ba_ha, fill = spp)) +
   geom_boxplot() +
-  facet_wrap(~ spp, scales = "free_y") +
+  facet_wrap(~spp, scales = "free_y") +
   scale_fill_manual(values = colors)
-
 ```
 
 Here is another plot to get a better sense of what the data within treatment blocks
@@ -254,7 +259,8 @@ the ld treatment.
 #| fig-height: 5
 
 total_ba_ha <- regen |>
-  summarize(.by = c(site, treat, plot),
+  summarize(
+    .by = c(site, treat, plot),
     ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
   )
 
@@ -264,11 +270,10 @@ dotplot(
   groups = site,
   type = c("p", "a"),
   xlab = "Treatment",
-  ylab = expression(m^2%.%ha^-1),
+  ylab = expression(m^2 %.% ha^-1),
   auto.key = list(columns = 2, lines = TRUE),
   jitter.x = TRUE
 )
-
 ```
 
 This figure shows that the site:treatment interaction is likely significant.
@@ -285,11 +290,10 @@ dotplot(
   groups = treat,
   type = c("p", "a"),
   xlab = "Site",
-  ylab = expression(m^2%.%ha^-1),
+  ylab = expression(m^2 %.% ha^-1),
   auto.key = list(columns = 2, lines = TRUE),
   jitter.x = TRUE
 )
-
 ```
 
 Next, I'll prepare the species data for analysis
@@ -303,7 +307,6 @@ ba_ha <- regen |>
   ) |>
   pivot_wider(names_from = spp, values_from = ba_ha) |>
   mutate(across(where(is.double), ~ replace_na(.x, 0)))
-
 ```
 
 I took these from the help for `adonis2`, I'm not quite sure what aspect of the
@@ -316,7 +319,6 @@ plot(mod)
 
 ordiellipse(mod, ba_ha$site, kind = "ehull", label = TRUE)
 ordispider(mod, ba_ha$site, lty = 3, col = "red")
-
 ```
 
 In the following models, the strata argument is used to: "Constrain perumtations
@@ -339,7 +341,6 @@ adonis2(
   data = ba_ha,
   permutations = perms
 )
-
 ```
 
 If I put site in `strata`, I get similar results.
@@ -351,7 +352,6 @@ adonis2(
   strata = ba_ha$site,
   permutations = perms
 )
-
 ```
 
 If I include the interaction of site:treatment as a fixed effect, it is not
@@ -359,12 +359,13 @@ significant.
 
 ```{r}
 
-with(ba_ha, adonis2(
-  cbind(rw, to, df, other) ~ site + site:treat + treat,
-  permutations = perms
-))
-
-
+with(
+  ba_ha,
+  adonis2(
+    cbind(rw, to, df, other) ~ site + site:treat + treat,
+    permutations = perms
+  )
+)
 ```
 
 I think we can safely conclude that ther are some significant differences in
@@ -390,16 +391,17 @@ Again, I'm making zero observations explicit, effectively making our data
 ```{r}
 
 regen_pa <- regen |>
-  summarize(.by = c(site, treat, plot, spp),
+  summarize(
+    .by = c(site, treat, plot, spp),
     ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
   ) |>
   complete(nesting(site, treat, plot), spp, fill = list(ba_ha = 0))
 
 regen_po <- regen |>
-  summarize(.by = c(site, treat, plot, spp),
+  summarize(
+    .by = c(site, treat, plot, spp),
     ba_ha = round(sum(per_ha["corner"] * for_const(dbh)), 2)
   )
-
 ```
 
 So, perhaps with our 16 observations per species/treatment, we can detect some
@@ -409,33 +411,33 @@ non-independence of our sampling design.
 ```{r}
 
 library(emmeans)
-m1 <- glmmTMB(ba_ha ~ treat * spp + (1 | site/treat/plot), regen_pa)
+m1 <- glmmTMB(ba_ha ~ treat * spp + (1 | site / treat / plot), regen_pa)
 res1 <- simulateResiduals(m1)
 plot(res1)
 
 m2 <- glmmTMB(
-  ba_ha ~ treat * spp + (1 | site/treat),
+  ba_ha ~ treat * spp + (1 | site / treat),
   regen_pa,
-  dispformula = ~ spp
+  dispformula = ~spp
 )
 res2 <- simulateResiduals(m2)
 plot(res2)
 
 m3 <- glmmTMB(
-  ba_ha ~ treat * spp + (1 | site/treat),
+  ba_ha ~ treat * spp + (1 | site / treat),
   regen_pa,
   family = ziGamma(link = "log"),
-  dispformula = ~ spp,
-  ziformula = ~ spp
+  dispformula = ~spp,
+  ziformula = ~spp
 )
 plot(simulateResiduals(m3))
 
 m4 <- glmmTMB(
-  ba_ha ~ treat * spp + (1 | site/treat),
+  ba_ha ~ treat * spp + (1 | site / treat),
   regen_pa,
   family = ziGamma(link = "log"),
   dispformula = ~ spp + treat,
-  ziformula = ~ spp
+  ziformula = ~spp
 )
 res4 <- simulateResiduals(m4)
 plot(res4)
@@ -447,21 +449,71 @@ m5 <- glmmTMB(
   ba_ha ~ treat * spp + (1 | site:spp),
   regen_pa,
   family = ziGamma(link = "log"),
-  dispformula = ~ spp,
-  ziformula = ~ spp
+  dispformula = ~spp,
+  ziformula = ~spp
 )
 plot(simulateResiduals(m5))
 
-AIC(m1, m2, m3, m4, m5)
+m6 <- glmmTMB(
+  ba_ha ~ treat * spp + (1 | site:spp) + (1 | site),
+  regen_pa,
+  family = ziGamma(link = "log"),
+  dispformula = ~spp,
+  ziformula = ~spp
+)
+plot(simulateResiduals(m6))
 
+m6a <- glmmTMB(
+  ba_ha ~ treat * spp + (1 | site:spp) + (1 | site) + (1 | spp),
+  regen_pa,
+  family = ziGamma(link = "log"),
+  dispformula = ~spp,
+  ziformula = ~spp
+)
+plot(simulateResiduals(m6))
+
+m7 <- glmmTMB(
+  ba_ha ~ treat * spp + (1 | site),
+  regen_pa,
+  family = ziGamma(link = "log"),
+  dispformula = ~spp,
+  ziformula = ~spp
+)
+plot(simulateResiduals(m7))
+
+AIC(m1, m2, m3, m4, m5, m6, m6a, m7)
+
+# vectorized function to calculate rmse from predicted and actual values for any
+# number of models provided as arguments. Models must have model.frame and
+# predict methods.
+# Output is a data frame with columns "model" and "rmse".
+#' @param ... models to calculate rmse for
+#' @return data frame with columns "model" and "rmse"
+rmse <- function(...) {
+  dots <- substitute(list(...))[-1]
+  arg_strings <- vapply(dots, deparse, character(1))
+  models <- list(...)
+  rmse <- sapply(models, function(model) {
+    actual <- model.response(model.frame(model))
+    pred <- predict(model)
+    sqrt(mean((pred - actual)^2))
+  })
+  rmse
+  arg_strings
+  data.frame(model = arg_strings, rmse = rmse)
+}
+
+rmse(m1, m2, m3, m4, m5, m6, m6a, m7)
+
+AIC(m1, m2, m3, m4, m5, m6, m6a, m7)
 ```
 **Select this model**
 
 ```{r}
-mba <- m3
+mba <- m5
 ```
 
-Model three is the simplest, has the lowest AIC and has well-behaved residuals.
+This model is the simplest, has the lowest AIC and has well-behaved residuals.
 
 Here I plot some simulations from this model to see if it generates plausible
 data.
@@ -473,69 +525,60 @@ regen_pa |>
   rename(obs = ba_ha) |>
   pivot_longer(where(is.double), names_to = "type", values_to = "ba_ha") |>
   ggplot(aes(
-    treat, ba_ha, # fill = type
+    treat,
+    ba_ha, # fill = type
     group = interaction(type, treat),
     fill = forcats::fct_collapse(type, sim = paste0("sim_", 1:5))
   )) +
   geom_boxplot() +
-  facet_wrap(~ spp, scales = "free_y") +
+  facet_wrap(~spp, scales = "free_y") +
   labs(fill = "obs/sim")
-
 ```
 
 Finally, significant differences?
 
-We'd expect 5 times as much basal area of other species in LD compared to HA, and
-interestingly, 6 times more other species basal area in HD compared to HA.
-
-We expect 5 times more redwood regen basal area in GS compared to HA, and 7
-times compared to HD.
-
-For tanoak, we expect about twice as much regeneration basal area in the GS treatment compared to HA.
-
 ```{r}
 #| label: fig-species-ba-model
-#| fig-cap: 
+#| fig-cap:
 
-emmeans(mba, c("spp", "treat"), by = "spp", type = "response") |>
-  plot(comparisons = TRUE, plotit = FALSE) |> as_tibble() |>
-  ggplot(aes(treat, the.emmean)) +
-  facet_wrap(~ spp, scales = "free", labeller = plot_labels) +
+avg_predictions(
+  mba,
+  newdata = datagrid(treat = unique, spp = unique, site = unique),
+  by = c("spp", "treat"),
+  re.form = NULL
+) |>
+  ggplot(aes(treat, estimate)) +
+  facet_wrap(~spp, scales = "free", labeller = plot_labels) +
   geom_linerange(
-    aes(ymin = asymp.LCL, ymax = asymp.UCL),
+    aes(ymin = conf.low, ymax = conf.high),
     color = "gray70",
     linewidth = 2.3,
     show.legend = FALSE
   ) +
-  geom_segment(
-    aes(xend = treat, yend = rcmpl),
-    color = "#4444d1",
-    lineend = "butt",
-    linejoin = "bevel",
-    arrow = arrow(length = grid::unit(2.5, "mm")),
-    linewidth = 1
-  ) +
-  geom_segment(
-    aes(xend = treat, yend = lcmpl),
-    color = "#4444d1",
-    lineend = "butt",
-    linejoin = "bevel",
-    arrow = arrow(length = grid::unit(2.5, "mm")),
-    linewidth = 1
-  ) +
   geom_point(color = "black", size = 2) +
-  labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2%.%ha^-1))) +
+  labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1))) +
   scale_x_discrete(labels = toupper)
-
 ```
+
+Here are the (would be) most significant contrasts between treatment, within
+species.
 
 ```{r}
 
-emmeans(mba, c("spp", "treat"), by = "spp", type = "response") |>
-contrast("pairwise") |>
-as_tibble() |>
-filter(p.value < 0.05) |>
-relocate(spp)
+comparisons(
+  mba,
+  newdata = datagrid(treat = unique, spp = unique, site = unique),
+  variables = list(treat = "pairwise"),
+  by = "spp",
+  re.form = NULL,
+) |>
+  as_tibble() |>
+  group_by(spp) |>
+  mutate(p.adjust = p.adjust(p.value)) |>
+  filter(p.value <= 0.1) |>
+  select(-c(term, s.value)) |>
+  tinytable::tt() |>
+  tinytable::format_tt(digits = 2, num_fmt = "decimal")
 ```
 
 ## Douglas-fir counts
@@ -562,7 +605,6 @@ regen_df |>
   ggplot(aes(treat, n * per_ha["corner"])) +
   geom_boxplot() +
   labs(x = "Treatment", y = expression(Stems %.% ha^-1))
-
 ```
 
 A negative binomial model seems to fit acceptably when modeling raw counts (not
@@ -579,7 +621,6 @@ m1 <- glmmTMB(
 
 res1 <- simulateResiduals(m1)
 plot(res1)
-
 ```
 
 **Select this model**
@@ -593,7 +634,6 @@ There are no statistically detectable differences
 ```{r}
 
 emmeans(m1, "treat")
-
 ```
 
 The model for Douglas-fir seedling counts does not result in any statistically
@@ -610,7 +650,6 @@ emmeans(m1, "treat") |>
   contrast("pairwise") |>
   as_tibble() |>
   tinytable::tt()
-
 ```
 
 Save data from this page for future use

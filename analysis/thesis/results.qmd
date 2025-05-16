@@ -13,7 +13,8 @@ results.
 :::
 
 ```{r include=FALSE}
-load("./fuel_data_modeling.rda")
+
+load("./fuel_modeling_round_3.rda")
 load("./sprout_modeling.rda")
 load("./regen_visualize.rda")
 
@@ -28,6 +29,7 @@ library(ggplot2)
 library(tibble)
 library(patchwork)
 library(tinytable)
+library(marginaleffects)
 ```
 
 ```{r}
@@ -35,7 +37,8 @@ library(tinytable)
 # Given a glmmTMB model and one of "cond", "disp", or "zi", print model formula
 # optionally including labels and link functions
 format_model_formula <- function(mod, component, label = FALSE) {
-  comp_label <- switch(component,
+  comp_label <- switch(
+    component,
     cond = c("Conditional:", ""),
     disp = c("Dispersion:", "(log)"),
     zi = c("Hurdle:", "(logit)")
@@ -43,7 +46,9 @@ format_model_formula <- function(mod, component, label = FALSE) {
   form <- format(formula(mod, component = component)) |>
     paste0(collapse = "") |>
     str_replace("\\s{2,}", " ")
-  if (label) return(paste(comp_label[1], form, comp_label[2]))
+  if (label) {
+    return(paste(comp_label[1], form, comp_label[2]))
+  }
   form
 }
 
@@ -52,44 +57,82 @@ format_model_formula <- function(mod, component, label = FALSE) {
 print_model_info <- function(mod, components = c("disp", "zi")) {
   comp <- c("cond", components)
   fam <- paste0(
-    "Family: ", mod$modelInfo$family$family,
-    " (", mod$modelInfo$family$link, ")"
+    "Family: ",
+    mod$modelInfo$family$family,
+    " (",
+    mod$modelInfo$family$link,
+    ")"
   )
   cat(fam, "\n")
   walk(comp, \(x) cat(format_model_formula(mod, x, label = TRUE), "\n"))
 }
 
 treat_labels <- c(gs = "GS", ld = "LD", ha = "HA", hd = "HD")
-species_labels <- c(LIDE = "Tanoak", SESE = "Redwood", other = "Other", df =
-  "Douglas-fir", rw = "Redwood", to = "Tanoak")
+species_labels <- c(
+  LIDE = "Tanoak",
+  SESE = "Redwood",
+  other = "Other",
+  df = "Douglas-fir",
+  rw = "Redwood",
+  to = "Tanoak"
+)
 year_labels <- c(`1` = "Year 1", `5` = "Year 5", `10` = "Year 10")
+
 plot_labels <- labeller(
   spp = species_labels,
-  year =  year_labels,
+  year = year_labels,
   treat = treat_labels
 )
 
 standard_model_col_names <- c(
-  LCL = "lower.CL", UCL = "upper.CL", LCL = "asymp.LCL", UCL = "asymp.UCL",
-  emmean = "response", emmean = "the.emmean", treat = "treatment"
+  LCL = "lower.CL",
+  UCL = "upper.CL",
+  LCL = "asymp.LCL",
+  UCL = "asymp.UCL",
+  emmean = "response",
+  emmean = "the.emmean",
+  treat = "treatment",
+  emmean = "estimate",
+  LCL = "conf.low",
+  UCL = "conf.high"
 )
 
+############### For package emmeans #################
 # produce comparisons of emmeans grid and convert to a data frame to plot the
 # results
-emm_to_df <- function(emm) {
+emm_to_df_emm <- function(emm) {
   plot(emm, comparisons = TRUE, plotit = FALSE) |>
-  as_tibble() |>
-  rename(any_of(standard_model_col_names))
+    as_tibble() |>
+    rename(any_of(standard_model_col_names))
 }
+
+
+############### For package marginaleffects ###############
+# convert predictions to a data frame to plot the
+# results
+emm_to_df <- function(emm) {
+  emm |>
+    as_tibble() |>
+    rename(any_of(standard_model_col_names))
+}
+############################################################
 
 # Common mapping for all plots, allows for specification of x-axis variable
 emm_mapping <- function(x = treat, group = NULL, color = NULL) {
-  aes({{x}}, emmean, ymin = LCL, ymax = UCL, xend = {{x}}, group = {{group}},
-  color = {{color}})
+  aes(
+    {{ x }},
+    emmean,
+    ymin = LCL,
+    ymax = UCL,
+    xend = {{ x }},
+    group = {{ group }},
+    color = {{ color }}
+  )
 }
 
-# Common elements of all plots: comparison arrows, and CI's 
-draw_emm <- function(data = ., position = "identity", show_legend = FALSE) {
+############### For package emmeans ###############
+# Common elements of all plots: comparison arrows, and CI's
+draw_emm_emm <- function(data = ., position = "identity", show_legend = FALSE) {
   list(
     geom_linerange(
       color = "gray70",
@@ -127,7 +170,33 @@ draw_emm <- function(data = ., position = "identity", show_legend = FALSE) {
   )
 }
 
-# Common elements of all plots: comparison arrows, and CI's 
+############### For package marginaleffects #################
+# Common elements of all plots: comparison arrows, and CI's
+draw_emm <- function(
+  data = .,
+  position = position_dodge(width = .7),
+  show_legend = FALSE
+) {
+  list(
+    geom_linerange(
+      color = "#a0a0d1",
+      linewidth = 2.3,
+      show.legend = show_legend,
+      position = position
+    ),
+    geom_point(
+      color = "white",
+      shape = "circle filled",
+      size = 2,
+      fill = "black",
+      position = position
+    )
+  )
+}
+
+############################################################
+
+# This is just for the last plot with combined pre and post treatments
 draw_emm2 <- function(data = ., position = position_dodge(width = .7)) {
   list(
     geom_linerange(
@@ -143,8 +212,6 @@ draw_emm2 <- function(data = ., position = position_dodge(width = .7)) {
     )
   )
 }
-
-
 ```
 
 ## Regeneration composition
@@ -181,17 +248,55 @@ treatment compared to HA (p = 0.03).
 #| fig-cap: >
 #|   Basal area (m^2^ ha^-1^) modeled at the vegetation plot level for four
 #|   harvest treatments and four species classes (n = 16). Gray bars represent
-#|   the 95% confidence interval, black dots---the mean, and non-overlapping
-#|   blue arrows signify statistical significance (α = 0.05).
+#|   the 95% confidence interval (α = 0.05), black dots indicate the mean, and
+#|   blue arrows provide a means of assessing the statistical significance of
+#|   pairwise differences among treatments. Arrows are drawn so that when two
+#|   arrows just meet, the p-value for that difference is 0.05 and overlapping
+#|   arrows indicate a p-values greater than 0.05.
 
-emmeans(mba, "treat", by = "spp", component = "response", ) |>
- emm_to_df() |>
- ggplot(emm_mapping()) +
- facet_wrap(~ spp, ncol = 2, labeller = plot_labels, scales = "free") +
- draw_emm() +
- scale_x_discrete(labels = toupper) +
- labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2%.%ha^-1)))
+make_emm_res <- function(model, newdata, x_var, by_var, contrast) {
+  newdata_sub <- rlang::enquo(newdata)
+  by <- c(by_var, x_var)
+  pred <- predictions(
+    model,
+    newdata = !!newdata_sub,
+    re.form = NULL,
+    by = by
+  ) |>
+    group_by(!!sym(by_var)) |>
+    tidyr::nest(.key = "pred")
+  pred
+  comp <- comparisons(
+    model,
+    newdata = !!newdata_sub,
+    variables = contrast,
+    by = c(by_var, "contrast"),
+    re.form = NULL
+  ) |>
+    group_by(!!sym(by_var)) |>
+    tidyr::nest(.key = "comp")
+  left_join(by = by_var, pred, comp) |>
+    rowwise() |>
+    mutate(emmobj = list(get_emmobj(pred, comp, x_var)))
+}
 
+regen_all <- make_emm_res(
+  mba,
+  datagrid(spp = unique, treat = unique, site = unique),
+  x_var = "treat",
+  by_var = "spp",
+  contrast = list(treat = "pairwise")
+)
+
+regen_all |>
+  mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
+  select(emm_df) |>
+  unnest(emm_df) |>
+  ggplot(emm_mapping(x = level)) +
+  facet_wrap(~spp, ncol = 2, labeller = plot_labels, scales = "free") +
+  draw_emm_emm() +
+  scale_x_discrete(labels = toupper) +
+  labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1)))
 ```
 
 ```{r}
@@ -200,11 +305,30 @@ emmeans(mba, "treat", by = "spp", component = "response", ) |>
 #|   Basal area (m^2^ ha^-1^) modeled at the vegetation plot level for four
 #|   harvest treatments and four species classes (n = 16).
 
-emmeans(mba, c("treat", "spp"), component = "response") |>
-  as_tibble() |>
-  dplyr::relocate(spp) |>
-  tinytable::tt(digits = 2)
+regen_all |>
+  mutate(emm = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
+  select(emm) |>
+  unnest(emm) |>
+  rename(treatment = level) |>
+  tinytable::tt() |>
+  tinytable::format_tt(digits = 2, num_fmt = "decimal")
+```
 
+```{r}
+#| label: tbl-regen-ba-compare
+#| tbl-cap: >
+#|   Pairwise comparisons of treatments within species. P-values are adjusted
+#|   using the Tukey method for comparing families of four estimates.
+
+regen_all |>
+  mutate(
+    emm = list(pairs(emmobj) |> as_tibble())
+  ) |>
+  select(emm) |>
+  unnest(emm) |>
+  select(-c(z.ratio)) |>
+  tinytable::tt() |>
+  tinytable::format_tt(digits = 2, num_fmt = "decimal")
 ```
 
 @fig-regen-ba-rw-to shows the same model as @fig-regen-ba, but with an emphasis
@@ -227,19 +351,46 @@ greater in GS and LD treatments than in the HA and HD treatments
 #|   the 95% confidence interval, black dots---the mean, and non-overlapping
 #|   blue arrows signify statistical significance (α = 0.05).
 
-emmeans(mba,
-  "spp",
-  by = "treat",
-  at = list(spp = c("rw", "to")),
-  component = "response"
-) |>  # pairs()
-  emm_to_df() |>
-  ggplot(emm_mapping(x = spp)) +
-  facet_wrap(~ treat, ncol = 2, labeller = plot_labels, scales = "free") +
-  draw_emm() +
-  scale_x_discrete(labels = species_labels) +
-  labs(x = "Species", y = expression(Basal ~ Area ~ (m^2%.%ha^-1)))
+pred <- predictions(
+  mba,
+  newdata = datagrid(spp = c("rw", "to"), treat = unique, site = unique),
+  re.form = NULL,
+  by = c("spp", "treat")
+) |>
+  group_by(treat) |>
+  nest(.key = "pred")
 
+comp <- comparisons(
+  mba,
+  newdata = datagrid(spp = c("rw", "to"), treat = unique, site = unique),
+  re.form = NULL,
+  variables = list(spp = c("to", "rw")),
+  by = c("treat", "contrast")
+) |>
+  group_by(treat) |>
+  nest(.key = "comp")
+
+res <- left_join(by = "treat", pred, comp) |>
+  rowwise() |>
+  mutate(emmobj = list(get_emmobj(pred, comp, "spp")))
+
+regen_rw_to <- make_emm_res(
+  mba,
+  datagrid(spp = c("rw", "to"), treat = unique, site = unique),
+  x_var = "spp",
+  by_var = "treat",
+  contrast = list(spp = c("to", "rw"))
+)
+
+regen_rw_to |>
+  mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
+  select(emm_df) |>
+  unnest(emm_df) |>
+  ggplot(emm_mapping(x = level)) +
+  facet_wrap(~treat, ncol = 2, labeller = plot_labels, scales = "free") +
+  draw_emm_emm() +
+  # scale_x_discrete(labels = toupper) +
+  labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1)))
 ```
 
 ### Other species
@@ -278,13 +429,12 @@ seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
 # predict(mdf_sel) |> mean() |> exp() * per_ha["corner"]
 
 emmeans(mdf, "treat", component = "response") |>
- emm_to_df() |>
- mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
- ggplot(emm_mapping()) +
- draw_emm() +
- scale_x_discrete(labels = toupper) +
- labs(x = "Treatment", y = expression(Stems%.%ha^-1))
-
+  emm_to_df() |>
+  mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
+  ggplot(emm_mapping()) +
+  draw_emm() +
+  scale_x_discrete(labels = toupper) +
+  labs(x = "Treatment", y = expression(Stems %.% ha^-1))
 ```
 
 ```{r}
@@ -298,7 +448,6 @@ emmeans(mdf, "treat", component = "response") |>
   as_tibble() |>
   mutate(treat = as.character(treat)) |>
   tinytable::tt(digits = 2)
-
 ```
 
 ## Sprout heights
@@ -350,9 +499,8 @@ emmeans(minc_sel, "treat", by = "spp", component = "response") |> # pairs()
   emm_to_df() |>
   ggplot(emm_mapping()) +
   draw_emm() +
-  facet_wrap(~ spp, labeller = plot_labels) +
-  labs(x = "Treatment", y = expression(Height~Increment~(m%.%yr^-1)))
-
+  facet_wrap(~spp, labeller = plot_labels) +
+  labs(x = "Treatment", y = expression(Height ~ Increment ~ (m %.% yr^-1)))
 ```
 
 Redwood growth slowed from 0.80 to 0.67 m yr^-1^ in the second period and tanoak
@@ -377,14 +525,17 @@ emmeans(minc_sel, c("year"), by = "spp", component = "response") |>
   emm_to_df() |>
   ggplot(emm_mapping(x = year)) +
   draw_emm(position = position_nudge(x = -0.15)) +
-  geom_dots(data = dinc, aes(year, ht_inc, ymin = NULL, ymax = NULL), alpha = 0.4) +
-  facet_wrap(~ spp, labeller = plot_labels) +
+  geom_dots(
+    data = dinc,
+    aes(year, ht_inc, ymin = NULL, ymax = NULL),
+    alpha = 0.4
+  ) +
+  facet_wrap(~spp, labeller = plot_labels) +
   scale_x_discrete(labels = c(`5` = "1 - 5", `10` = "5 - 10")) +
   labs(
     x = "Growth Period (years)",
     y = expression(Height ~ increment ~ (m %.% year^-1))
   )
-
 ```
 
 ### Height at year 10
@@ -426,9 +577,8 @@ emmeans(ht10_sel, "treat", by = "spp", component = "response") |>
     aes(x = treat, y = ht),
     inherit.aes = FALSE
   ) +
-  facet_wrap(~ spp, labeller = plot_labels) +
+  facet_wrap(~spp, labeller = plot_labels) +
   labs(x = "Treatment", y = "Height (m)")
-
 ```
 
 ## Fuels
@@ -459,7 +609,6 @@ fuel_tmb$pre |>
     "Hurdle (logit)" = format_model_formula(mod, "zi")
   ) |>
   tinytable::tt()
-
 ```
 
 For Duff & Litter, the largest difference was between the HD and HA treatments.
@@ -486,30 +635,34 @@ expected value of 28.5 Mg ha-1, which was about 2.7 times greater than in HA (p
 fuel_tmb$pre |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
   group_map(function(x, ...) {
-    emm_to_df(x$.emmeans[[1]]) |>
-    ggplot(emm_mapping()) +
-    draw_emm() +
-    scale_x_discrete(labels = toupper) +
-    labs(title = x$class, y = expression(Load~(Mg%.%ha^-1)), x = "Treatment")
+    emm_to_df(x$emmeans[[1]]) |>
+      ggplot(emm_mapping()) +
+      draw_emm() +
+      scale_x_discrete(labels = toupper) +
+      labs(
+        title = x$class,
+        y = expression(Load ~ (Mg %.% ha^-1)),
+        x = "Treatment"
+      )
   }) |>
-  patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
+  patchwork::wrap_plots() +
+  patchwork::plot_layout(axes = "collect")
 
 # inspect means and differences for vegetation fuels
 # fuel_tmb$pre$pairs[[6]]
 # fuel_tmb$pre$emmeans[[6]]
 # fuel_tmb$pre |> filter(class == "dufflitter") |> pluck("emmeans", 1)
-
 ```
 
 Here are the grand means, pre-PCT for each fuel type:
 
 ```{r}
 
-grand_mean <- fuel_tmb$pre |>
-  mutate(grand_mean = as_tibble(emmeans(.emmeans, ~1))) |>
-  select(c(class, grand_mean)) |>
-  unnest(grand_mean)
-grand_mean |> tinytable::tt()
+# grand_mean <- fuel_tmb$pre |>
+#   mutate(grand_mean = as_tibble(emmeans(.emmeans, ~1))) |>
+#   select(c(class, grand_mean)) |>
+#   unnest(grand_mean)
+# grand_mean |> tinytable::tt()
 
 ```
 
@@ -535,7 +688,7 @@ fuel_tmb$post |>
     Conditional = format_model_formula(mod, "cond"),
     "Dispersion (log)" = format_model_formula(mod, "disp"),
     "Hurdle (logit)" = format_model_formula(mod, "zi")
-  ) |> 
+  ) |>
   tinytable::tt()
 ```
 
@@ -572,25 +725,27 @@ fuel_tmb$post |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
   group_map(function(x, ...) {
     emm_to_df(x$.emmeans[[1]]) |>
-    ggplot(emm_mapping()) +
-    draw_emm() +
-    scale_x_discrete(labels = toupper) +
-    labs(title = x$class, y = expression(Load~(Mg%.%ha^-1)), x = "Treatment")
+      ggplot(emm_mapping()) +
+      draw_emm() +
+      scale_x_discrete(labels = toupper) +
+      labs(
+        title = x$class,
+        y = expression(Load ~ (Mg %.% ha^-1)),
+        x = "Treatment"
+      )
   }) |>
-  patchwork::wrap_plots() + patchwork::plot_layout(axes = "collect")
-
+  patchwork::wrap_plots() +
+  patchwork::plot_layout(axes = "collect")
 ```
 
 Here are the grand means post-PCT for each fuel type:
 
 ```{r}
-
 grand_mean <- fuel_tmb$pre |>
   mutate(grand_mean = as_tibble(emmeans(.emmeans, ~1))) |>
   select(c(class, grand_mean)) |>
   unnest(grand_mean)
 grand_mean |> tinytable::tt()
-
 ```
 
 Pre-commercial thinning led to a small increase in average 100-hr fuel loading,
@@ -623,31 +778,30 @@ fuel_tmb$pre |>
       ),
       .id = "phase"
     ) |>
-    ggplot(emm_mapping(
-      color = factor(phase, levels = c("pre", "post")),
-      group = factor(phase, levels = c("pre", "post"))
-    )) +
-    draw_emm2() +
-    scale_x_discrete(labels = toupper) +
-    scale_color_manual(
-      labels = c("Pre-PCT", "Post-PCT"),
-      values = c("#d17844", "#4444d1")
-    ) +
-    labs(
-      title = fuel_class_labels[as.character(x$class)],
-      y = expression(Load~(Mg%.%ha^-1)),
-      x = "Treatment",
-      color = "Phase"
-    )
+      ggplot(emm_mapping(
+        color = factor(phase, levels = c("pre", "post")),
+        group = factor(phase, levels = c("pre", "post"))
+      )) +
+      draw_emm2() +
+      scale_x_discrete(labels = toupper) +
+      scale_color_manual(
+        labels = c("Pre-PCT", "Post-PCT"),
+        values = c("#d17844", "#4444d1")
+      ) +
+      labs(
+        title = fuel_class_labels[as.character(x$class)],
+        y = expression(Load ~ (Mg %.% ha^-1)),
+        x = "Treatment",
+        color = "Phase"
+      )
   }) |>
   patchwork::wrap_plots() +
-    guide_area() +
-    patchwork::plot_layout(
-      axes = "collect_y",
-      axis_title = "collect",
-      guides = "collect"
-    )
-
+  guide_area() +
+  patchwork::plot_layout(
+    axes = "collect_y",
+    axis_title = "collect",
+    guides = "collect"
+  )
 ```
 
 
