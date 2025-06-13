@@ -344,24 +344,21 @@ intermediate.
 On average, for Douglas-fir, we expect about `r regen_grand$df$estimate` m^2^
 ha^-1^ of basal area across treatments. The greatest basal area of Douglas-fir
 was in the GS treatment which was `r abs(regen_pairs$df[["gs - ha"]]$estimate)`
-m^2^ ha^-1^ greater than in the HA treatment (p = `r pluck(regen_comp, "df", "gs - ha", "p.value")`). The LD, HA, and HD treatments were all comparatively
+m^2^ ha^-1^ greater than in the HA treatment (p = `r pluck(regen_pairs, "df", "gs - ha", "p.value")`). The LD, HA, and HD treatments were all comparatively
 similar.
 
 Redwood basal area regeneration showed the greatest treatment response. Where
-the GS treatment had the greatest basal area of redwood regeneration at `r
-regen_mean$rw$estimate` m^2^ ha^-1^, which was `r abs(regen_pairs$rw[["gs -
-hd"]]$estimate)` m^2^ ha^-1^ greater than in the HD treatment (p = `r
-pluck(regen_pairs, "rw", "gs - hd", "p.value")`). The LD and HD treatments were
-intermediate, with the HD treatment having `r abs(regen_pairs$rw[["gs -
-hd"]]$estimate` m^2^ ha^-1^ greater basal area than the HA treatment (p = `r
-pluck(regen_pairs, "rw", "ha - hd", "p.value")`).
+the GS treatment had the greatest basal area of redwood regeneration at `r regen_mean$rw$estimate` m^2^ ha^-1^, 
+which was `r abs(regen_pairs$rw[["gs - hd"]]$estimate)` m^2^ ha^-1^ greater than in the HD treatment 
+(p = `r pluck(regen_pairs, "rw", "gs - hd", "p.value")`). The LD and HD treatments were
+intermediate.
 
 Tanoak basal area regeneration was intermediate between that of redwood and
 Douglas-fir and other species. The GS and LD treatments had similar responses, as
-did the HA and HD treatments. The GS treatment resulted in `r
-regen_mean$to$gs$estimate` m^2^ ha^-1^ of tanoak basal area, which was `r
-regen_pairs$to[["gs - ha"]]$estimate` m^2^ ha^-1^ greater than in the HA
-treatment (p = `r pluck(regen_pairs, "to", "gs - ha", "p.value")`).
+did the HA and HD treatments. The GS treatment resulted in `r regen_mean$to$gs$estimate` 
+m^2^ ha^-1^ of tanoak basal area, which was `r regen_pairs$to[["gs - ha"]]$estimate`
+m^2^ ha^-1^ greater than in the HA treatment 
+(p = `r pluck(regen_pairs, "to", "gs - ha", "p.value")`).
 
 ```{r}
 #| label: tbl-regen-ba-grand-means
@@ -435,15 +432,49 @@ regen_rw_to <- marginaleffects_to_emmeans(
   by_var = "treat",
   contrast = list(spp = c("to", "rw"))
 )
+
+rw_to_pairs <-
+  regen_rw_to |>
+  mutate(
+    pairs = list(
+      pairs(emmobj) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = contrast) |>
+        deframe()
+    )
+  ) |>
+  select(pairs) |>
+  deframe()
+
+rw_to_mean <-
+  regen_rw_to |>
+  mutate(
+    emm = list(
+      emmeans(emmobj, ~level) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = level) |>
+        deframe()
+    )
+  ) |>
+  select(emm) |>
+  deframe()
 ```
 
 @fig-regen-ba-rw-to shows the same model as @fig-regen-ba, but with an emphasis
 on treatment comparisons between redwood and tanoak. 
-This shows that we expect on average, five times greater redwood basal area than tanoak basal area in the
-GS treatment (p < 0.001), and about 2.7 times in the LD treatment (p = 0.039).
-In the HA treatment, average redwood basal area is expected to be 2.5 times that
-of tanoak (p = 0.07). The two species were most similar in the HD treatment,
-where redwood basal area is expected to be 1.4 times that of tanoak (p = 0.56).
+This shows that we expect on average, 
+`r abs(rw_to_pairs$gs[[1]]$estimate)` m^2^ ha^-1^ greater redwood basal area
+than tanoak basal area in the GS treatment (p = `r
+rw_to_pairs$gs[[1]]$p.value`), about `r abs(rw_to_pairs$ld[[1]]$estimate)` m^2^
+ha^-1^ in the LD treatment (p = `r rw_to_pairs$ld[[1]]$p.value`), and about 
+`r abs(rw_to_pairs$ha[[1]]$estimate)` m^2^ ha^-1^ in the HA treatment 
+(p = `r rw_to_pairs$ha[[1]]$p.value`). In the HD treatment, we expect to see slightly
+higher tanoak basal area (`r abs(rw_to_pairs$hd[[1]]$p.value)`).
+
+TODO: I'm here
+
 Redwood variability, indicated by the size of 95% confidence intervals, is much
 greater than that of tanoak's across treatments, and redwood variability was
 greater in GS and LD treatments than in the HA and HD treatments
