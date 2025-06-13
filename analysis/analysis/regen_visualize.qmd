@@ -599,6 +599,7 @@ the number of Douglas-fir seedlings per plot.
 regen_df <- regen |>
   count(site, treat, plot, spp) |>
   complete(nesting(site, treat, plot), spp, fill = list(n = 0)) |>
+  # mutate(block = paste(site, treat)) |>
   filter(spp == "df")
 
 regen_df |>
@@ -608,16 +609,17 @@ regen_df |>
 ```
 
 A negative binomial model seems to fit acceptably when modeling raw counts (not
-TPH). I was not able to achive model convergence with the specification of zero
+TPH). I was not able to achieve model convergence with the specification of zero
 inflation or dispersion formulae.
 
 ```{r}
 
 m1 <- glmmTMB(
-  n ~ treat + (1 | site / treat),
+  n ~ treat + (1 | site) + (1 | site:treat),
   regen_df,
   family = nbinom1()
 )
+
 
 res1 <- simulateResiduals(m1)
 plot(res1)

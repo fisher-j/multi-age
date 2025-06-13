@@ -1,4 +1,7 @@
 
+## 2025-05-16 
+ - new workflow for interpreting models with `marginaleffects` and `emmeans`
+
 ## 2025-04-11 
  - update packages, delete _freeze and re-render all, fix errors
 

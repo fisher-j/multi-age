@@ -123,6 +123,10 @@ what would tanoak abundance be if they were not competing with redwood?
 
 ## Sprout height
 
+Marginalizing over plots was important and resulted in approximately 0.2 greater
+height increment on average, compared to predictions made for an "average" plot
+(one where all random effects were set to zero). 
+
 ## Fuel loading
 
 ### Pre-PCT 
@@ -364,25 +368,29 @@ a greater bearing on fire outcomes.
 #| eval: false
 
 grand_mean_table <- function(mods) {
-  dplyr::mutate(mods, grand_mean = tibble::as_tibble(emmeans::emmeans(.emmeans, ~1))) |>
-  dplyr::select(class, grand_mean) |> 
-  tidyr::unnest(grand_mean)
+  dplyr::mutate(
+    mods,
+    grand_mean = tibble::as_tibble(emmeans::emmeans(.emmeans, ~1))
+  ) |>
+    dplyr::select(class, grand_mean) |>
+    tidyr::unnest(grand_mean)
 }
 grand_mean_table(fuel_tmb$pre) |> tinytable::tt()
 grand_mean_table(fuel_tmb$post) |> tinytable::tt()
 
 # average grand mean differences
 bind_cols(
-   filter(grand_mean_table(fuel_tmb$pre), as.character(class) != "dufflitter"),
-   filter(grand_mean_table(fuel_tmb$post), as.character(class) != "veg_diff")
+  filter(grand_mean_table(fuel_tmb$pre), as.character(class) != "dufflitter"),
+  filter(grand_mean_table(fuel_tmb$post), as.character(class) != "veg_diff")
 ) |>
-mutate(
-  diff = response...10 - response...3
-)
+  mutate(
+    diff = response...10 - response...3
+  )
 
 # what is the by-treatment difference in the fine-fuel change vs. the vegetation
 # change, because most of the latter should be captured by the former.
-fuel_tmb |> bind_rows(.id = "phase") |>
+fuel_tmb |>
+  bind_rows(.id = "phase") |>
   unnest(emmeans) |>
   group_by(class, treatment) |>
   select(phase, response) |>
@@ -393,5 +401,4 @@ fuel_tmb |> bind_rows(.id = "phase") |>
   pivot_wider(names_from = class, values_from = diff) |>
   mutate(fine_dif = onehr + tenhr + hundhr, veg_dif = -veg, .keep = "unused") |>
   mutate(factor = veg_dif / fine_dif)
-
 ```

@@ -28,7 +28,6 @@ library(tidybayes)
 library(DHARMa)
 library(tidyverse)
 library(marginaleffects)
-
 ```
 
 ```{r init}
@@ -52,13 +51,15 @@ fuel_class_labels <- c(
   veg_diff = "Vegetation Difference"
 )
 
-fuel_class_labels2 <- imap(fuel_class_labels, \(x, i)  eval(bquote(`~`(.(i), .(x)))))
+fuel_class_labels2 <- imap(
+  fuel_class_labels,
+  \(x, i) eval(bquote(`~`(.(i), .(x))))
+)
 
 fuel_class_labeller <- labeller(
   class = fuel_class_labels,
   fuel_class = fuel_class_labels
 )
-
 ```
 
 ## Frequentist approach
@@ -82,7 +83,6 @@ tl <- load2("wide", "pre", treatment, all_of(load_vars))
 myexpr <- expr(cbind(!!!syms(load_vars)) ~ treatment)
 test1 <- do.call("manova", list(myexpr, data = quote(tl)))
 summary(test1)
-
 ```
 
 ### Multiple one-way anovas
@@ -104,17 +104,19 @@ but there isn't such evidence for the other fuel loading classes.
 
 d <- load2("long", "pre", treatment, all_of(load_vars)) |> group_by(class)
 
-d |> nest() |>
+d |>
+  nest() |>
   rowwise() |>
   transmute(
     levene = car::leveneTest(load ~ factor(treatment), data)[[3]][1],
     welch_uneq_var = oneway.test(load ~ treatment, data)$p.value,
     welch_eq_var = oneway.test(
-      load ~ treatment, var.equal = TRUE, data = data
+      load ~ treatment,
+      var.equal = TRUE,
+      data = data
     )$p.value,
   ) |>
   knitr::kable(digits = 3)
-  
 ```
 
 We can use the Games Howell test for pairwise comparisons to follow up on the
@@ -133,7 +135,8 @@ effective sample size is not what is assumed by this test.
 #|   assumption of independence, which is likely to have a significant effect on
 #|   our effective sample size.
 
-gh_test <- d |> rstatix::games_howell_test(load ~ treatment) |>
+gh_test <- d |>
+  rstatix::games_howell_test(load ~ treatment) |>
   filter(p.adj.signif != "ns") |>
   rstatix::add_y_position(scales = "free", step.increase = 0.5)
 
@@ -141,7 +144,6 @@ ggpubr::ggboxplot(d, x = "treatment", y = "load", facet.by = "class") +
   facet_wrap(~class, scales = "free") +
   ggpubr::stat_pvalue_manual(gh_test, label = "p.adj") +
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.1)))
-
 ```
 
 ### Multi-level model {#sec-multi-level-model}
@@ -153,8 +155,7 @@ model, I believe, captures this grouping structure.
 
 ```{r}
 
-form <- load ~ treatment + (1 | site/treatment/corner)
-
+form <- load ~ treatment + (1 | site / treatment / corner)
 ```
 
 This will estimate a group-wise intercept adjustments for each site, plot, and
@@ -162,16 +163,17 @@ corner, based on modeled variances for each of these grouping levels.
 
 ```{r}
 
-d <- load2("long", "pre", site, treatment, corner, all_of(load_vars)) |> 
+d <- load2("long", "pre", site, treatment, corner, all_of(load_vars)) |>
   group_by(class)
 
-m1 <- d |> nest() |> rowwise() |>
+m1 <- d |>
+  nest() |>
+  rowwise() |>
   transmute(
     mod = list(lme4::lmer(form, data = data)),
     emmeans = list(emmeans::emmeans(mod, "treatment")),
     pairs = list(as_tibble(pairs(emmeans, infer = TRUE)))
   )
-
 ```
 
 Pairwise comparisons with Tukey adjustment for each of 6 multilevel models
@@ -185,10 +187,10 @@ onehr fuels (@fig-multilevel-p-value).
 #| tbl-cap: Pairwise comparisons among treatments with p-values < 0.05 for 6
 #|   multilevel models. Only Veg, gs-ha comparison is statistically significant.
 
-select(m1, pairs) |> unnest(pairs) |>
+select(m1, pairs) |>
+  unnest(pairs) |>
   filter(p.value <= 0.05) |>
   knitr::kable(digits = 3)
-
 ```
 
 ```{r}
@@ -197,9 +199,11 @@ select(m1, pairs) |> unnest(pairs) |>
 #|   mixed models representing different fuel loading classes using package
 #|   emmeans.
 
-group_map(m1, ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
+group_map(
+  m1,
+  ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)
+) |>
   patchwork::wrap_plots()
-
 ```
 
 Hypothesis testing with multi-level models is not as straight forward with
@@ -253,15 +257,15 @@ d <- load2("long", "pre", all_of(c(transectid, load_vars)))
 dd <- ungroup(d) |> split(~class)
 
 
-if(file.exists("pmod.rda")) {
+if (file.exists("pmod.rda")) {
   load("pmod.rda")
 } else {
   cluster <- parallel::makeCluster(rep("localhost", parallel::detectCores()))
 
   pmod <- imap(dd, function(d, i) {
-    form <- load ~ treatment + (1 | site/treatment/corner)
+    form <- load ~ treatment + (1 | site / treatment / corner)
     amod <- lme4::lmer(form, d, REML = FALSE)
-    nmod <- update(amod, . ~ . -treatment)
+    nmod <- update(amod, . ~ . - treatment)
     krtest <- pbkrtest::KRmodcomp(amod, nmod) |>
       pluck("test", \(x) slice(x, 1)) |>
       rename(df = ndf) |>
@@ -272,16 +276,15 @@ if(file.exists("pmod.rda")) {
       bind_rows(krtest) |>
       mutate(class = i, .before = 1) |>
       relocate(c(df, ddf, F.scaling), .after = stat)
-  }) |> 
+  }) |>
     list_rbind() |>
     filter(test %in% c("LRT", "PBtest"))
- 
+
   parallel::stopCluster(cluster)
   save(pmod, file = "pmod.rda")
 }
 
 pmod |> knitr::kable(digits = c(NA, NA, 2, 1, 2, 1, 4))
-
 ```
 
 ### Model checking
@@ -318,8 +321,9 @@ resid_qq_plot <- function(data) {
 }
 
 d <- load2("long", "pre", all_of(c(transectid, load_vars))) |>
-  group_by(class) |> nest() |> rowwise()
-
+  group_by(class) |>
+  nest() |>
+  rowwise()
 ```
 
 ```{r}
@@ -330,7 +334,7 @@ d <- load2("long", "pre", all_of(c(transectid, load_vars))) |>
 #|   (random effects) for nested data. Fit using `lme4` The residuals are not
 #|   homogenous.
 
-form <- load ~ treatment + (1 | site/treatment/corner)
+form <- load ~ treatment + (1 | site / treatment / corner)
 
 mod1 <- d |>
   mutate(
@@ -338,10 +342,9 @@ mod1 <- d |>
     fitted = list(fitted(mod)),
     resid = list(resid(mod, type = "pearson", scaled = TRUE)),
     .keep = "unused"
-  ) 
-  
-resid_qq_plot(mod1) |> patchwork::wrap_plots(ncol = 1)
+  )
 
+resid_qq_plot(mod1) |> patchwork::wrap_plots(ncol = 1)
 ```
 
 I'll try to control the variance by refitting the model with `nlme::lme` and
@@ -368,7 +371,7 @@ mod2 <- d |>
   mutate(
     mod = list(nlme::lme(
       fixed = load ~ treatment,
-      random = ~ 1 | site/treatment/corner,
+      random = ~ 1 | site / treatment / corner,
       data = data,
       weights = nlme::varConstProp(),
       control = nlme::lmeControl(sigma = 1)
@@ -379,7 +382,6 @@ mod2 <- d |>
   )
 
 patchwork::wrap_plots(resid_qq_plot(mod2), ncol = 1)
-
 ```
 
 
@@ -394,7 +396,7 @@ d |>
     mod1 = list(lme4::lmer(form, data)),
     mod2 = list(nlme::lme(
       fixed = load ~ treatment,
-      random = ~ 1 | site/treatment/corner,
+      random = ~ 1 | site / treatment / corner,
       data = data
     )),
     .keep = "unused"
@@ -404,8 +406,8 @@ d |>
   mutate(s = list(broom.mixed::tidy(value, effect = "fixed"))) |>
   select(class, model, s) |>
   unnest(everything()) |>
-  arrange(class, term) |> print(n=48)
-
+  arrange(class, term) |>
+  print(n = 48)
 ```
 
 Now, lets compare the two `lme` models using AIC. I'm fitting with REML because
@@ -427,23 +429,24 @@ mod_c <- d |>
   mutate(
     unweighted = list(nlme::lme(
       fixed = load ~ treatment,
-      random = ~ 1 | site/treatment/corner,
+      random = ~ 1 | site / treatment / corner,
       data = data,
     )),
     weighted = list(nlme::lme(
       fixed = load ~ treatment,
-      random = ~ 1 | site/treatment/corner,
+      random = ~ 1 | site / treatment / corner,
       data = data,
       weights = nlme::varConstProp(),
       control = nlme::lmeControl(sigma = 1),
     )),
     .keep = "unused"
-  ) 
+  )
 
 mod_c |>
-  mutate(aic = list(across(matches("weight"), ~ AIC(.x))))|>
-  select(aic)|> unnest(aic) |> knitr::kable()
-
+  mutate(aic = list(across(matches("weight"), ~ AIC(.x)))) |>
+  select(aic) |>
+  unnest(aic) |>
+  knitr::kable()
 ```
 
 Does this change our conclusions about the effect of the treatment?
@@ -454,12 +457,15 @@ No, it doesn't seem to make much of a difference.
 
 d <- load2("long", "pre", site, treatment, corner, all_of(load_vars))
 
-m2 <- d |> group_by(class) |> nest() |> rowwise() |>
+m2 <- d |>
+  group_by(class) |>
+  nest() |>
+  rowwise() |>
   filter(class != "thoushr") |>
   transmute(
     mod = list(nlme::lme(
       fixed = load ~ treatment,
-      random = ~ 1 | site/treatment/corner,
+      random = ~ 1 | site / treatment / corner,
       data = data,
       weights = nlme::varConstProp(),
       control = nlme::lmeControl(sigma = 1),
@@ -467,20 +473,19 @@ m2 <- d |> group_by(class) |> nest() |> rowwise() |>
     emmeans = list(emmeans::emmeans(mod, "treatment")),
     pairs = list(as_tibble(pairs(emmeans, infer = TRUE)))
   )
-
 ```
 
 ```{r}
 #| label: tbl-multilevel-p-values2
 #| tbl-cap: >
-#|   Pairwise comparisons of treatments (four levels) with p-values 
-#|   < 0.05 for six multilevel models with variance modeled as a 
+#|   Pairwise comparisons of treatments (four levels) with p-values
+#|   < 0.05 for six multilevel models with variance modeled as a
 #|   linear relationsihp with the fitted value.
 
-select(m2, pairs) |> unnest(pairs) |>
+select(m2, pairs) |>
+  unnest(pairs) |>
   filter(p.value <= 0.05) |>
   knitr::kable(digits = 3)
-
 ```
 
 ```{r}
@@ -488,10 +493,12 @@ select(m2, pairs) |> unnest(pairs) |>
 #| fig-cap: 95% confidence intervals and pairwise comparisons of means for 6
 #|   mixed models representing different fuel loading classes using a model with
 #|   variance modeled as a linear relationsihp with the fitted value.
- 
-group_map(m2, ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)) |>
-  patchwork::wrap_plots()
 
+group_map(
+  m2,
+  ~ plot(.x$emmeans[[1]], comparisons = TRUE) + ggtitle(.x$class)
+) |>
+  patchwork::wrap_plots()
 ```
 
 ### Other random effects structures
@@ -524,8 +531,9 @@ look at the average loading to get an idea of the data.
 ```{r}
 
 d <- load2("long", "pre", all_of(c(transectid, load_vars))) |>
-  group_by(class) |> nest() |> rowwise()
-
+  group_by(class) |>
+  nest() |>
+  rowwise()
 ```
 
 ### Gaussian model
@@ -555,29 +563,31 @@ negative.
 
 ```{r}
 #| label: fig-priors
-#| fig-cap: Normal priors for the intercept are centered at the median and sd of 
-#|   2.5 times the sd of the data. For the fixed effect treatment, they are 
+#| fig-cap: Normal priors for the intercept are centered at the median and sd of
+#|   2.5 times the sd of the data. For the fixed effect treatment, they are
 #|   centered at zero with the a standard deviation equal to 1.5 sd of the data.
-#|   Fixed treatments are relative to the first treatment level (GS) which is 
-#|   used as the intercept. 
+#|   Fixed treatments are relative to the first treatment level (GS) which is
+#|   used as the intercept.
 
 # add calcualted priors to the data
 
-d <- mutate(d, 
+d <- mutate(
+  d,
   priors = list(
     brms::set_prior(
       str_glue(
         "normal( {round(median(data$load))}, {round(2.5 * sd(data$load))} )"
-      ), 
-      # lb = 0, 
-      class = "b", coef = "Intercept"
+      ),
+      # lb = 0,
+      class = "b",
+      coef = "Intercept"
     ) +
-    brms::set_prior(
-      str_glue(
-        "normal( 0, {round(1.5 * sd(data$load))} )"
-      ), 
-      class = "b"
-    )
+      brms::set_prior(
+        str_glue(
+          "normal( 0, {round(1.5 * sd(data$load))} )"
+        ),
+        class = "b"
+      )
     # brms::set_prior("student_t(3, 0, 2.5)",  lb = 0, class = "sd")
   )
 )
@@ -585,21 +595,25 @@ d <- mutate(d,
 # Plot the priors
 d |>
   mutate(
-    prior_dist = list(tidybayes::parse_dist(priors) |> 
-    rename(dist_class = class))
+    prior_dist = list(
+      tidybayes::parse_dist(priors) |>
+        rename(dist_class = class)
+    )
   ) |>
   unnest(prior_dist) |>
   ggplot(aes(ydist = .dist_obj, color = interaction(coef, dist_class))) +
-    stat_slab(normalize = "panels", fill = NA) +
-    stat_pointinterval(position = position_dodge(width = 0.3, preserve = "single")) +
-    geom_text(
-      aes(label = format(.dist_obj), y = mean(.dist_obj), x = 0.97, vjust = 0),
-      position = position_dodge(width = 0.3), show.legend = FALSE
-    ) +
-    coord_flip() +
-    facet_wrap(~ class, scales = "free_x") +
-    scale_color_hue(name = "prior", labels = c("treatment", "intercept", "sd"))
-
+  stat_slab(normalize = "panels", fill = NA) +
+  stat_pointinterval(
+    position = position_dodge(width = 0.3, preserve = "single")
+  ) +
+  geom_text(
+    aes(label = format(.dist_obj), y = mean(.dist_obj), x = 0.97, vjust = 0),
+    position = position_dodge(width = 0.3),
+    show.legend = FALSE
+  ) +
+  coord_flip() +
+  facet_wrap(~class, scales = "free_x") +
+  scale_color_hue(name = "prior", labels = c("treatment", "intercept", "sd"))
 ```
 
 #### Model fitting
@@ -609,10 +623,13 @@ Now we'll fit the model.
 ```{r model-spec}
 #| message: false
 
-form <- load ~  0 + Intercept + treatment + (1 | site/treatment/corner)
+form <- load ~ 0 + Intercept + treatment + (1 | site / treatment / corner)
 
-bf2 <- mutate(d,
-  mod = list(brms::brm(form, data,
+bf2 <- mutate(
+  d,
+  mod = list(brms::brm(
+    form,
+    data,
     warmup = 3000,
     iter = 4000,
     cores = 4,
@@ -622,7 +639,6 @@ bf2 <- mutate(d,
     file = paste0("fits/bf2_", class)
   ))
 )
-
 ```
 
 #### Prior check
@@ -634,30 +650,30 @@ bf2 <- mutate(d,
 
 plot_pri_post <- function(mod) {
   tidy_draws(mod) |>
-  select(c(matches("b_"), matches("sd"), matches("sigma"), matches("hu"))) |>
-  pivot_longer(everything()) |>
-  mutate(
-    name = if_else(
-      str_starts(name, "prior"),
+    select(c(matches("b_"), matches("sd"), matches("sigma"), matches("hu"))) |>
+    pivot_longer(everything()) |>
+    mutate(
+      name = if_else(
+        str_starts(name, "prior"),
+        name,
+        paste0("posterior_", name)
+      )
+    ) |>
+    separate_wider_regex(
       name,
-      paste0("posterior_", name)
-    )
-  ) |>
-  separate_wider_regex(name,
       c(phase = "prior|posterior", "_", name = ".*")
-  ) |>
-  mutate(name = str_remove(name, "__.*")) |>
-  ggplot(aes(x = value, color = phase, fill = phase)) +
-  stat_slab(normalize = "panels", alpha = 3/4) +
-  stat_pointinterval(
-    position = position_dodge(width = 0.3, preserve = "single")
-  ) +
-  facet_wrap(~ name, scales = "free", labeller = fuel_class_labeller) +
-  labs(x = "Parameter value", y = "Density") +
-  scale_fill_manual(values = c("gray60", "gray30")) +
-  scale_color_manual(values = c("gray60", "gray30"))
+    ) |>
+    mutate(name = str_remove(name, "__.*")) |>
+    ggplot(aes(x = value, color = phase, fill = phase)) +
+    stat_slab(normalize = "panels", alpha = 3 / 4) +
+    stat_pointinterval(
+      position = position_dodge(width = 0.3, preserve = "single")
+    ) +
+    facet_wrap(~name, scales = "free", labeller = fuel_class_labeller) +
+    labs(x = "Parameter value", y = "Density") +
+    scale_fill_manual(values = c("gray60", "gray30")) +
+    scale_color_manual(values = c("gray60", "gray30"))
 }
-
 ```
 
 ```{r}
@@ -682,7 +698,8 @@ plot_pri_post(bf2$mod[[1]]) + ggtitle("1-hr")
 ```{r posterior-check-func}
 
 posterior_predictive_check <- function(models) {
-  models <- mutate(models,
+  models <- mutate(
+    models,
     pred = list(tidybayes::add_predicted_draws(data, mod, ndraws = 15)),
     lims = list(tibble(
       xmin = min(
@@ -692,37 +709,38 @@ posterior_predictive_check <- function(models) {
       xmax = max(
         quantile(data$load, .999),
         quantile(pred$.prediction, .999)
-      ))
+      )
+    ))
+  )
+  ggplot() +
+    geom_line(
+      data = unnest(models, data),
+      aes(x = load),
+      stat = "density",
+      size = 1
+    ) +
+    geom_line(
+      data = unnest(models, pred),
+      aes(x = .prediction, group = .draw),
+      stat = "density",
+      alpha = 0.15,
+      size = 1
+    ) +
+    facet_wrap(~class, scales = "free", labeller = fuel_class_labeller) +
+    coord_cartesian_panels(
+      panel_limits = unnest(select(models, lims), lims)
     )
-  )
-  ggplot() + 
-  geom_line(
-    data = unnest(models, data),
-    aes(x = load),
-    stat = "density", size = 1
-  ) +
-  geom_line(
-    data = unnest(models, pred),
-    aes(x = .prediction, group = .draw),
-    stat = "density", alpha = 0.15, size = 1
-  ) +
-  facet_wrap(~class, scales = "free", labeller = fuel_class_labeller) +
-  coord_cartesian_panels(
-    panel_limits = unnest(select(models, lims), lims)
-  )
 }
-
 ```
 
 Here is a posterior predictive check.
 
 ```{r}
 #| label: fig-gaus-pp-check
-#| fig-cap: Density of the observed data (y) plotted against 10 random 
+#| fig-cap: Density of the observed data (y) plotted against 10 random
 #|   draws from the posterior predictive distribution.
 
 posterior_predictive_check(bf2)
-
 ```
 
 The Gaussian distribution is symmetric and doesn't capture well the peak near
@@ -854,26 +872,27 @@ use for our prior on the grand mean ($\bar{\alpha}$).
 ```{r convert-prior}
 
 d <- load2("long", "pre", all_of(c(transectid, load_vars))) |>
-  group_by(class) |> nest() |> rowwise()
+  group_by(class) |>
+  nest() |>
+  rowwise()
 
 lnp <- function(data) {
   # Desired values
   m <- mean(data)
   s <- 2.5 * sd(data)
   # use the equations
-  mu    <- log(m / sqrt(s^2 / m^2 + 1))
+  mu <- log(m / sqrt(s^2 / m^2 + 1))
   sigma <- sqrt(log(s^2 / m^2 + 1))
   # output mu and sigma on lognormals own scale
   list2env(list(mu = round(mu, 2), sigma = round(sigma, 2)))
 }
-
 ```
 
 ```{r}
 #| warning: false
 #| label: fig-priors2
 #| fig-cap: >
-#|   Normal priors for the grand mean (global intercept) centered at the median 
+#|   Normal priors for the grand mean (global intercept) centered at the median
 #|   and sd of 2.5 times the sd of the data.
 
 # data frame to plot the priors
@@ -905,10 +924,9 @@ ggplot(data = unnest(pd, prior_dist)) +
       hjust = 0
     )
   ) +
-  facet_wrap(~ fuel_class, scales = "free_x", labeller = fuel_class_labeller) +
+  facet_wrap(~fuel_class, scales = "free_x", labeller = fuel_class_labeller) +
   coord_cartesian_panels(panel_limits = unnest(select(pd, lims), lims)) +
   labs(x = expression(exp(bar(alpha))))
-
 ```
 
 #### Prior predictive check
@@ -925,9 +943,9 @@ I will though, sample from the priors while fitting the model in order to plot t
 
 ```{r}
 
-# prior_only_bf4a <- mutate(bf4a, 
-#   mod = list(update(mod, 
-#     sample_prior = "only", 
+# prior_only_bf4a <- mutate(bf4a,
+#   mod = list(update(mod,
+#     sample_prior = "only",
 #     cores = 4,
 #     warmup = 4000,
 #     iter = 5000,
@@ -946,24 +964,27 @@ model is the one described mathematically above.
 
 ```{r}
 
-bf4a <- mutate(d,
+bf4a <- mutate(
+  d,
   priors = list(
     set_prior(
       str_glue("normal({mu}, {sigma})", .envir = lnp(data$load)),
-      nlpar = "a", coef = "Intercept"
+      nlpar = "a",
+      coef = "Intercept"
     ) +
-    set_prior("normal(0, 1)", nlpar = "a", class = "sd") +
-    set_prior("normal(0, 1)", nlpar = "b", coef = "treatmentgs") +
-    set_prior("normal(0, 1)", nlpar = "b", coef = "treatmentha") +
-    set_prior("normal(0, 1)", nlpar = "b", coef = "treatmenthd") +
-    set_prior("normal(0, 1)", nlpar = "b", coef = "treatmentld")
+      set_prior("normal(0, 1)", nlpar = "a", class = "sd") +
+      set_prior("normal(0, 1)", nlpar = "b", coef = "treatmentgs") +
+      set_prior("normal(0, 1)", nlpar = "b", coef = "treatmentha") +
+      set_prior("normal(0, 1)", nlpar = "b", coef = "treatmenthd") +
+      set_prior("normal(0, 1)", nlpar = "b", coef = "treatmentld")
   ),
   mod = list(brms::brm(
     brms::bf(
       load ~ a + b,
-      a ~ 1 + (1 | site/treatment/corner),
+      a ~ 1 + (1 | site / treatment / corner),
       b ~ 0 + treatment,
-      nl = TRUE),
+      nl = TRUE
+    ),
     data,
     warmup = 4000,
     iter = 5000,
@@ -976,17 +997,19 @@ bf4a <- mutate(d,
     file = paste0("fits/bf4a_", class)
   ))
 )
-
 ```
 
 ```{r}
 #| message: false
 
-bf3 <- mutate(d,
+bf3 <- mutate(
+  d,
   priors = list(brms::set_prior(
     str_glue("normal({mu}, {sigma})", .envir = lnp(data$load))
   )),
-  mod = list(brms::brm(form, data,
+  mod = list(brms::brm(
+    form,
+    data,
     warmup = 5000,
     iter = 6000,
     cores = 4,
@@ -997,11 +1020,13 @@ bf3 <- mutate(d,
   ))
 )
 
-bf4 <- mutate(d,
+bf4 <- mutate(
+  d,
   priors = list(
     set_prior(
       str_glue("normal({mu}, {sigma})", .envir = lnp(data$load)),
-      nlpar = "a", coef = "Intercept"
+      nlpar = "a",
+      coef = "Intercept"
     ) +
       set_prior("student_t(3, 0, 0.35)", nlpar = "a", class = "sd") +
       set_prior("student_t(3, 0, 0.35)", nlpar = "b", coef = "treatmentgs") +
@@ -1029,12 +1054,15 @@ bf4 <- mutate(d,
 )
 
 
-bf5 <- mutate(d,
+bf5 <- mutate(
+  d,
   priors = list(brms::set_prior(
     str_glue("normal({mu}, {sigma})", .envir = lnp(data$load))
   )),
   mod = list(brms::brm(
-    brms::bf(load ~ 0 + Intercept + (1 | site / treatment / corner) + (1 | treatment)),
+    brms::bf(
+      load ~ 0 + Intercept + (1 | site / treatment / corner) + (1 | treatment)
+    ),
     data,
     warmup = 4000,
     iter = 5000,
@@ -1045,7 +1073,6 @@ bf5 <- mutate(d,
     file = paste0("fits/bf5_", class)
   ))
 )
-
 ```
 
 #### Model summaries
@@ -1062,7 +1089,10 @@ my_summary <- function(mod) {
   as_draws_df(mod) |>
     select(starts_with(c("b_", "sd_")), shape, hu) |>
     posterior::summarize_draws(
-      "mean", ~posterior::quantile2(.x, c(0.05, .5, .95)), "rhat", "ess_bulk",
+      "mean",
+      ~ posterior::quantile2(.x, c(0.05, .5, .95)),
+      "rhat",
+      "ess_bulk",
       "ess_tail"
     )
 }
@@ -1077,7 +1107,6 @@ bf4a |>
     variable = str_remove_all(variable, "b_._|_a_")
   ) |>
   knitr::kable(digits = c(NA, NA, 2, 2, 2, 2, 2, 0, 0))
-
 ```
 
 
@@ -1109,7 +1138,6 @@ plot_pri_post(bf4a$mod[[3]]) + ggtitle("100-hr")
 plot_pri_post(bf4a$mod[[4]]) + ggtitle("duff & litter")
 plot_pri_post(bf4a$mod[[5]]) + ggtitle("1000-hr")
 plot_pri_post(bf4a$mod[[6]]) + ggtitle("Vegetation")
-
 ```
 
 #### Posterior predictive check
@@ -1133,15 +1161,21 @@ with the observed data pretty well.
 
 ```{r predict-func}
 
-# get posterior predictions for treatments for models for all fuel classes, 
+# get posterior predictions for treatments for models for all fuel classes,
 # ignoring random effects. These are predictions for the expected value across
 # all sites.
 predict_posterior_expected <- function(data, plot = TRUE, re_formula = NA) {
   newdata <- tidyr::expand(data$data[[1]], nesting(treatment))
-  data <- mutate(data, .keep = "none",
+  data <- mutate(
+    data,
+    .keep = "none",
     pred = list(
-      tidybayes::epred_draws(mod, newdata, re_formula = re_formula,
-        value = "pred")
+      tidybayes::epred_draws(
+        mod,
+        newdata,
+        re_formula = re_formula,
+        value = "pred"
+      )
     ),
     lims = list(
       tibble(xmin = 0, xmax = quantile(pred$pred, .995))
@@ -1158,10 +1192,9 @@ plot_posterior_predicted <- function(data) {
     facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
     coord_cartesian_panels(panel_limits = unnest(select(data, lims), lims)) +
     scale_y_discrete(labels = toupper) +
-    labs(x = expression(Load~(Mg%.%ha^-1)), y = "Treatment")
+    labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Treatment")
   p
 }
-
 ```
 
 ```{r}
@@ -1175,7 +1208,6 @@ plot_posterior_predicted <- function(data) {
 
 expected_predictions <- predict_posterior_expected(bf4a)
 plot_posterior_predicted(expected_predictions)
-
 ```
 
 These are the expected predictions, or predictions for the mean. It only
@@ -1199,16 +1231,21 @@ discontinuous.
 expected_predictions |>
   mutate(
     summary = list(tidybayes::mode_hdci(pred))
-  ) |> select(summary) |> unnest(summary) |>
+  ) |>
+  select(summary) |>
+  unnest(summary) |>
   select(treatment, prediction = pred, lower = .lower, upper = .upper) |>
   knitr::kable(digits = 1)
-
 ```
 
 ```{r comparisons-func}
 
-predict_expected_contrasts <- function(data, rope_size, plot = TRUE,
-                                       re_formula = NA) {
+predict_expected_contrasts <- function(
+  data,
+  rope_size,
+  plot = TRUE,
+  re_formula = NA
+) {
   # Assume treatment levels are the same for all models: they are.
   newdata <- tidyr::expand(data$data[[1]], tidyr::nesting(treatment))
   d <- data |>
@@ -1220,40 +1257,41 @@ predict_expected_contrasts <- function(data, rope_size, plot = TRUE,
       ),
       rope = rope_size * sd(data$load),
       lims = list(
-        tibble(xmin = quantile(pred$pred, .001), xmax = quantile(pred$pred, .999))
+        tibble(
+          xmin = quantile(pred$pred, .001),
+          xmax = quantile(pred$pred, .999)
+        )
       ),
-    .keep = "none"
-  )
+      .keep = "none"
+    )
 }
 
-plot_expected_contrasts <- function(data){
-    p <- data |>
-      unnest(c(pred)) |>
-      ggplot(aes(x = pred, y = contrast)) +
-      tidybayes::stat_halfeye(normalize = "panels") +
-      geom_vline(aes(xintercept = rope)) +
-      geom_vline(aes(xintercept = -rope)) +
-      facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
-      coord_cartesian_panels(
-        panel_limits = unnest(dplyr::select(data, lims), lims)
-      ) +
-      scale_y_discrete(labels = toupper) +
-      labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Treatment")
-    p
+plot_expected_contrasts <- function(data) {
+  p <- data |>
+    unnest(c(pred)) |>
+    ggplot(aes(x = pred, y = contrast)) +
+    tidybayes::stat_halfeye(normalize = "panels") +
+    geom_vline(aes(xintercept = rope)) +
+    geom_vline(aes(xintercept = -rope)) +
+    facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
+    coord_cartesian_panels(
+      panel_limits = unnest(dplyr::select(data, lims), lims)
+    ) +
+    scale_y_discrete(labels = toupper) +
+    labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Treatment")
+  p
 }
-
 ```
 
 ```{r}
 #| label: fig-compare-expected
-#| fig-cap: 
+#| fig-cap:
 #|   Differences between expected values for each treatment, with 95% continuous
 #|   interval shown.
 #| echo: false
 
 expected_contrasts <- predict_expected_contrasts(bf4a, 0)
 plot_expected_contrasts(expected_contrasts)
-
 ```
 
 ```{r}
@@ -1271,17 +1309,16 @@ expected_contrasts |>
   mutate(
     summary = list(tidybayes::mode_hdci(pred)),
     pred = list(group_by(pred, contrast)),
-    prob = list(summarize(pred,
-      prob = if_else(median(pred) > 0, 
-        mean(pred > rope),
-        mean(pred < rope)
-      )
+    prob = list(summarize(
+      pred,
+      prob = if_else(median(pred) > 0, mean(pred > rope), mean(pred < rope))
     )),
     summary = list(left_join(summary, prob, by = "contrast"))
-  ) |> select(summary) |> unnest(c(summary)) |>
+  ) |>
+  select(summary) |>
+  unnest(c(summary)) |>
   select(contrast, prediction = pred, lower = .lower, upper = .upper, prob) |>
   knitr::kable(digits = 2)
-
 ```
 
 #### R squared
@@ -1294,13 +1331,12 @@ expected_contrasts |>
 #|   the expected variance of the errors.
 
 bf4a |>
-mutate(
-  R_squared = list(as_tibble(bayes_R2(mod)))
-) |>
-select(R_squared) |>
-unnest(R_squared) |>
-knitr::kable(digits = 2)
-
+  mutate(
+    R_squared = list(as_tibble(bayes_R2(mod)))
+  ) |>
+  select(R_squared) |>
+  unnest(R_squared) |>
+  knitr::kable(digits = 2)
 ```
 
 ## Final
@@ -1391,9 +1427,7 @@ save(
   fuel_class_labeller,
   fuel_class_labels,
   fuel_class_labels2,
-  fuel_tmb,
   file = "fuel_data_modeling.rda"
 )
-
 ```
 

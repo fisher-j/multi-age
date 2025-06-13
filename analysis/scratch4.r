@@ -105,3 +105,7 @@ comparisons(
   by = c("spp", "contrast")
   # by = TRUE
 )
+
+datagrid(model = mdf, treat = unique, site = unique)
+rlang::expr(NULL)
+rlang::quo(NULL)

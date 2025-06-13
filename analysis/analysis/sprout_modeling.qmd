@@ -87,15 +87,14 @@ trajectories.
 
 dht <- lengthen_data(sprouts, "ht")
 
-dht |> 
+dht |>
   ggplot(aes(year, ht, color = spp, group = tree)) +
   geom_line(alpha = 0.6) +
-  facet_wrap(~treat * site) +
+  facet_wrap(~ treat * site) +
   scale_color_brewer(palette = "Set2") +
   theme(
     legend.position = "bottom"
   )
-
 ```
 
 ```{r}
@@ -113,8 +112,8 @@ minc <- lst(
   minc6 = update(minc5, ~ . + spp:year),
   minc7 = update(minc6, ~ . + treat:year),
   minc8 = lmer(
-    ht_inc ~ treat + year + spp + treat:spp + spp:year + (1 | plot) +
-      (1 | tree),
+    ht_inc ~
+      treat + year + spp + treat:spp + spp:year + (1 | plot) + (1 | tree),
     dinc
   ),
   minc9 = update(minc8, ~ . + treat:year),
@@ -129,8 +128,8 @@ minc <- lst(
 
 format_model_formula <- function(mod) {
   form <- format(formula(mod)) |>
-  paste0(collapse = "") |>
-  str_replace("\\s{2,}", " ")
+    paste0(collapse = "") |>
+    str_replace("\\s{2,}", " ")
   form
 }
 
@@ -141,7 +140,6 @@ label_model_formula <- function(mod, name) {
 }
 
 # iwalk(minc, label_model_formula)
-
 ```
 
 For the most part, it looks like height increases linearly with year. Lets test
@@ -223,26 +221,26 @@ rearrange_coef_names <- function(x) {
     str_replace("dispersion|conditional", "")
 }
 
-# # This was to see if adding site made any difference. I probably tried this
+# This was to see if adding site made any difference. I probably tried this
 # previously but just didn't document it
-# minc13 <- glmmTMB(
-#   ht_inc ~ treat + year * spp + (1 | tree) + (0 + spp | plot) + (1 | site),
-#   dispformula = ~ spp * year * treat,
-#   data = dinc
-# )
-#
-#
-# modelsummary(
-#   list(minc[[12]], minc13),
-#   shape = term:component ~ model,
-#   coef_omit = ".*dispersion$",
-#   coef_rename = rearrange_coef_names,
-#   gof_omit = "F|Log.Lik",
-#   stars = TRUE,
-#   output = "markdown",
-#   metrics = c("AIC", "BIC", "RMSE"),
-#   estimator = "ML",
-# )
+
+minc13 <- glmmTMB(
+  ht_inc ~ treat + year * spp + (1 | tree) + (0 + spp | plot) + (1 | site),
+  dispformula = ~ spp * year * treat,
+  data = dinc
+)
+
+modelsummary(
+  list(minc[[12]], minc13),
+  shape = term:component ~ model,
+  coef_omit = ".*dispersion$",
+  coef_rename = rearrange_coef_names,
+  gof_omit = "F|Log.Lik",
+  stars = TRUE,
+  output = "markdown",
+  metrics = c("AIC", "BIC", "RMSE"),
+  estimator = "ML",
+)
 
 modelsummary(
   minc[1:12],
@@ -255,7 +253,6 @@ modelsummary(
   metrics = c("AIC", "BIC", "RMSE"),
   estimator = "ML",
 )
-
 ```
 
 ```{r}
@@ -342,15 +339,15 @@ minc11con |>
   ggplot(aes(spp, estimate, color = spp)) +
   geom_pointrange(
     aes(ymin = lower.CL, ymax = upper.CL),
-    linewidth = 1, size = 1
-    ) +
+    linewidth = 1,
+    size = 1
+  ) +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   labs(
     x = NULL,
     y = expression(Height ~ increment ~ change ~ (m %.% yr^-1)),
     color = "Species"
   )
-
 ```
 
 ```{r}
@@ -360,7 +357,6 @@ minc11con |>
 #|   significantly decreased in the second period for both species.
 
 minc11con |> knitr::kable(digits = 3)
-
 ```
 
 ```{r}
@@ -374,7 +370,8 @@ minc11cld |>
   geom_pointrange(
     aes(ymin = lower.CL, ymax = upper.CL),
     position = position_nudge(x = -0.15),
-    size = 0.9, linewidth = 1
+    size = 0.9,
+    linewidth = 1
   ) +
   geom_dots(data = dinc, aes(year, ht_inc), alpha = 0.4) +
   facet_grid(~spp, switch = "x") +
@@ -396,7 +393,6 @@ minc11cld |>
     fill = "Species"
   ) +
   scale_x_discrete(labels = c("1", "2"))
-
 ```
 
 ### Heights - year 10 only
@@ -423,13 +419,13 @@ mht106 <- glmmTMB(
   ht ~ treat * spp + (0 + spp | plot),
   family = Gamma(link = "log"),
   data = dht10,
-  dispformula = ~ spp
+  dispformula = ~spp
 )
 mht107 <- glmmTMB(
   ht ~ treat + spp + (0 + spp | plot),
   family = Gamma(link = "log"),
   data = dht10,
-  dispformula = ~ spp
+  dispformula = ~spp
 )
 mht108 <- glmmTMB(
   ht ~ treat + spp + (0 + spp | plot),
@@ -452,7 +448,15 @@ mht1010 <- glmmTMB(
 )
 
 mht10_list <- lst(
-  mht101, mht102, mht103, mht104, mht105, mht106, mht107, mht108, mht109
+  mht101,
+  mht102,
+  mht103,
+  mht104,
+  mht105,
+  mht106,
+  mht107,
+  mht108,
+  mht109
 )
 
 # # Here I'm testing if adding a random effect for site improves the model. It
@@ -464,7 +468,7 @@ mht10_list <- lst(
 #   output = "markdown",
 #   shape = term:component + statistic ~ model,
 #   coef_omit = ".*dispersion$",
-#   coef_rename = rearrange_coef_names, 
+#   coef_rename = rearrange_coef_names,
 #   metrics = c("AIC", "BIC", "RMSE"),
 #   estimator = "ML",
 #   gof_omit = "F|Log.Lik"
@@ -476,12 +480,11 @@ modelsummary(
   output = "markdown",
   shape = term:component + statistic ~ model,
   coef_omit = ".*dispersion$",
-  coef_rename = rearrange_coef_names, 
+  coef_rename = rearrange_coef_names,
   metrics = c("AIC", "BIC", "RMSE"),
   estimator = "ML",
   gof_omit = "F|Log.Lik"
 )
-
 ```
 
 We can see the residuals are not perfect, but nor are they very offensive.
@@ -489,7 +492,6 @@ We can see the residuals are not perfect, but nor are they very offensive.
 ```{r}
 
 plot(simulateResiduals(mht109))
-
 ```
 
 ### Here I make my selection
@@ -497,7 +499,6 @@ plot(simulateResiduals(mht109))
 ```{r}
 
 ht10_sel <- mht109
-
 ```
 
 ### Year 10 only Results
@@ -518,10 +519,9 @@ suggests that treatments do not affect species differentially.
 
 (ht10emm <- emmeans(ht10_sel, "treat", by = c("spp"), type = "response"))
 
-( ht10comp <- pairs(ht10emm) )
+(ht10comp <- pairs(ht10emm))
 
 emmcomp <- plot(ht10emm, comparisons = TRUE, plotit = FALSE) |> as_tibble()
-
 ```
 
 Because the best model did not contain a species x treatment interaction,
@@ -543,10 +543,11 @@ followed the pattern GS > LD > HA > HD.
 dht10 |>
   ggplot(aes(treat, ht, color = spp, fill = spp)) +
   facet_grid(~spp, switch = "x") +
-  theme(panel.spacing = unit(0, "lines"),
-        strip.background = element_blank(),
-        strip.text = element_blank(),
-        ) +
+  theme(
+    panel.spacing = unit(0, "lines"),
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+  ) +
   geom_dots() +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   geom_pointrange(
@@ -578,7 +579,6 @@ dht10 |>
     position = position_nudge(x = -0.07),
     linewidth = 1
   )
-
 ```
 
 ### Heights - multiple years
@@ -621,7 +621,10 @@ dht <- lengthen_data(sprouts, "ht")
 
 mht2 <- lm(ht ~ treat * spp * year, data = dht)
 
-mht3 <- lm(ht ~ treat + spp + year + treat:year + spp:year + treat:spp, data = dht)
+mht3 <- lm(
+  ht ~ treat + spp + year + treat:year + spp:year + treat:spp,
+  data = dht
+)
 
 mht4 <- lmer(
   ht ~ treat * spp * year + (1 | site) + (1 | plot) + (1 | tree),
@@ -629,20 +632,36 @@ mht4 <- lmer(
 )
 
 mht5 <- lmer(
-  ht ~ treat * spp * year + (0 + spp | site) + (0 + spp | plot) + 
-    (0 + spp | tree),
+  ht ~
+    treat * spp * year + (0 + spp | site) + (0 + spp | plot) + (0 + spp | tree),
   data = dht
 )
 
 mht6 <- lmer(
-  ht ~ treat + spp + year + treat:spp + year:spp + treat:year +
-    (0 + spp | site) + (0 + spp | plot) + (0 + spp | tree),
+  ht ~
+    treat +
+      spp +
+      year +
+      treat:spp +
+      year:spp +
+      treat:year +
+      (0 + spp | site) +
+      (0 + spp | plot) +
+      (0 + spp | tree),
   data = dht
 )
 
 mht7 <- lmer(
-  ht ~ treat + spp + year + treat:spp + year:spp + treat:year + (1 | site:spp) +
-    (1 | plot:spp) + (1 | tree:spp),
+  ht ~
+    treat +
+      spp +
+      year +
+      treat:spp +
+      year:spp +
+      treat:year +
+      (1 | site:spp) +
+      (1 | plot:spp) +
+      (1 | tree:spp),
   data = dht
 )
 
@@ -667,8 +686,14 @@ mht10 <- lmer(
 
 modelsummary(
   list(
-    "Model 2" = mht2, "Model 3" = mht3, "Model 4" = mht4, "Model 5" = mht5,
-    "Model 6" = mht6, "Model 7" = mht7, "Model 8" = mht8, "Model 9" = mht9,
+    "Model 2" = mht2,
+    "Model 3" = mht3,
+    "Model 4" = mht4,
+    "Model 5" = mht5,
+    "Model 6" = mht6,
+    "Model 7" = mht7,
+    "Model 8" = mht8,
+    "Model 9" = mht9,
     "Model 10" = mht10
   ),
   stars = TRUE,
@@ -677,7 +702,6 @@ modelsummary(
   estimator = "ML",
   gof_omit = "F|Log.Lik"
 )
-
 ```
 
 ### Multi-year heights V2
@@ -705,52 +729,99 @@ dispersion can be modeled as a function of covariates.
 
 mht11 <- glmmTMB(
   ht ~ treat * spp * year + (1 | plot) + (1 | tree),
-  data = dht, family = Gamma(link = "log")
+  data = dht,
+  family = Gamma(link = "log")
 )
 
 mht12 <- glmmTMB(
-  ht ~ treat + spp + year + treat:spp + treat:year + spp:year + (1 | plot) + 
-  (1 | tree),
-  data = dht, family = Gamma(link = "log")
+  ht ~
+    treat +
+      spp +
+      year +
+      treat:spp +
+      treat:year +
+      spp:year +
+      (1 | plot) +
+      (1 | tree),
+  data = dht,
+  family = Gamma(link = "log")
 )
 
 mht13 <- glmmTMB(
-  ht ~ treat + spp + year + treat:spp + treat:year + spp:year + 
-  (0 + spp | plot) + (0 + spp | tree),
-  data = dht, family = Gamma(link = "log")
+  ht ~
+    treat +
+      spp +
+      year +
+      treat:spp +
+      treat:year +
+      spp:year +
+      (0 + spp | plot) +
+      (0 + spp | tree),
+  data = dht,
+  family = Gamma(link = "log")
 )
 
 mht14 <- glmmTMB(
-  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
-  (1 | plot) + (1 | tree),
-  data = mutate(dht, year = factor(year)), family = Gamma(link = "log")
+  ht ~
+    treat +
+      spp +
+      year +
+      treat:spp +
+      treat:year +
+      spp:year +
+      (1 | plot) +
+      (1 | tree),
+  data = mutate(dht, year = factor(year)),
+  family = Gamma(link = "log")
 )
 
 mht15 <- glmmTMB(
-  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
-  (1 | plot) + (1 | tree),
-  dispformula = ~ year,
-  data = mutate(dht, year = factor(year)), family = Gamma(link = "log")
+  ht ~
+    treat +
+      spp +
+      year +
+      treat:spp +
+      treat:year +
+      spp:year +
+      (1 | plot) +
+      (1 | tree),
+  dispformula = ~year,
+  data = mutate(dht, year = factor(year)),
+  family = Gamma(link = "log")
 )
 
 mht16 <- glmmTMB(
-  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
-  (1 | plot) + (1 | tree),
+  ht ~
+    treat +
+      spp +
+      year +
+      treat:spp +
+      treat:year +
+      spp:year +
+      (1 | plot) +
+      (1 | tree),
   dispformula = ~ year * spp,
   data = mutate(dht, year = factor(year)),
   family = Gamma(link = "log")
 )
 
 mht17 <- glmmTMB(
-  ht ~ treat + spp + year + treat:spp + treat:year + spp:year +
-  (1 | plot) + (1 | tree),
+  ht ~
+    treat +
+      spp +
+      year +
+      treat:spp +
+      treat:year +
+      spp:year +
+      (1 | plot) +
+      (1 | tree),
   dispformula = ~ year * spp + treat + treat:spp,
-  data = mutate(dht, year = factor(year)), family = Gamma(link = "log")
+  data = mutate(dht, year = factor(year)),
+  family = Gamma(link = "log")
 )
 
 mht18 <- glmmTMB(
-  ht ~ treat + spp + year + treat:year + spp:year +
-  (1 | plot) + (1 | tree),
+  ht ~ treat + spp + year + treat:year + spp:year + (1 | plot) + (1 | tree),
   dispformula = ~ year + spp + treat + treat:spp,
   data = mutate(dht, year = factor(year)),
   family = gaussian(link = "log")
@@ -769,11 +840,15 @@ do_model_summary_table <- function(model_list) {
 }
 
 do_model_summary_table(list(
-    "Model 11" = mht11, "Model 12" = mht12, "Model 13" = mht13,
-    "Model 14" = mht14, "Model 15" = mht15, "Model 16" = mht16,
-    "Model 17" = mht17, "Model 18" = mht18
+  "Model 11" = mht11,
+  "Model 12" = mht12,
+  "Model 13" = mht13,
+  "Model 14" = mht14,
+  "Model 15" = mht15,
+  "Model 16" = mht16,
+  "Model 17" = mht17,
+  "Model 18" = mht18
 ))
-
 ```
 
 The model with the lowest AIC is model 18.
@@ -788,7 +863,6 @@ The model with the lowest AIC is model 18.
 
 res <- simulateResiduals(mht18)
 plot(res)
-
 ```
 
 ### Multi-year results
@@ -817,17 +891,16 @@ mht18emmeans |>
   ) |>
   rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL"))) |>
   ggplot(aes(year, response, color = spp, fill = spp, group = spp)) +
-    geom_line() +
-    facet_wrap(~ treat) +
-    geom_ribbon(
-      aes(ymin = lower.CL, ymax = upper.CL, color = NULL),
-      alpha = .2
-    ) +
-    stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
-    scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
-    theme(legend.position = "bottom") +
-    labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species")
-
+  geom_line() +
+  facet_wrap(~treat) +
+  geom_ribbon(
+    aes(ymin = lower.CL, ymax = upper.CL, color = NULL),
+    alpha = .2
+  ) +
+  stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  theme(legend.position = "bottom") +
+  labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species")
 ```
 
 ```{r}
@@ -843,7 +916,7 @@ mht18_compare <- emmeans(
   by = c("spp"),
   at = list(year = "10"),
   type = "response"
-) |> 
+) |>
   cld(Letters = letters) |>
   as_tibble() |>
   mutate(
@@ -855,16 +928,18 @@ mht18_compare <- emmeans(
 multiple_years_plot <- filter(dht, year == 10) |>
   ggplot(aes(treat, ht, color = spp, fill = spp)) +
   facet_grid(~spp, switch = "x") +
-  theme(panel.spacing = unit(0, "lines"),
-        strip.background = element_blank(),
-        strip.text = element_blank(),
-        ) +
+  theme(
+    panel.spacing = unit(0, "lines"),
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+  ) +
   geom_dots() +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   geom_pointrange(
     aes(y = response, ymin = lower.CL, ymax = upper.CL),
     data = mht18_compare,
-    color = "gray50", position = position_nudge(x = -0.07),
+    color = "gray50",
+    position = position_nudge(x = -0.07),
     size = 0.7,
     linewidth = 1,
     show.legend = FALSE
@@ -879,7 +954,6 @@ multiple_years_plot <- filter(dht, year == 10) |>
   theme(legend.position = "bottom")
 
 multiple_years_plot
-
 ```
 
 ### Multi-year vs. year 10 only
@@ -887,8 +961,12 @@ multiple_years_plot
 ```{r}
 
 standard_model_col_names <- c(
-  LCL = "lower.CL",  UCL = "upper.CL",  LCL = "asymp.LCL", UCL = "asymp.UCL",
-  emmean = "response", emmean = "the.emmean"
+  LCL = "lower.CL",
+  UCL = "upper.CL",
+  LCL = "asymp.LCL",
+  UCL = "asymp.UCL",
+  emmean = "response",
+  emmean = "the.emmean"
 )
 
 list("year 10 only" = emmcomp, "multi-year" = mht18_compare) |>
@@ -903,15 +981,18 @@ list("year 10 only" = emmcomp, "multi-year" = mht18_compare) |>
     linewidth = 1
   ) +
   geom_dots(
-    data = dht10, color = "gray50", fill = "gray70",
-    position = position_nudge(x = 0.2), scale = 0.7, binwidth = 0.18
+    data = dht10,
+    color = "gray50",
+    fill = "gray70",
+    position = position_nudge(x = 0.2),
+    scale = 0.7,
+    binwidth = 0.18
   ) +
-  theme(legend.position = "bottom") + 
+  theme(legend.position = "bottom") +
   scale_color_manual(
-    values = rnd_color_brewer("Set2", c(1,4)),
+    values = rnd_color_brewer("Set2", c(1, 4)),
     aesthetics = c("color", "fill")
   )
-
 ```
 
 This plot attempts to demonstrate the model fit by showing observed and
@@ -927,7 +1008,8 @@ predictied height distributions for our observed dataset.
 sprouts |>
   lengthen_data("ht") |>
   mutate(
-    Predicted = predict(mht18,
+    Predicted = predict(
+      mht18,
       lst(site, plot, tree, treat, spp, year),
       type = "response"
     ),
@@ -940,7 +1022,6 @@ sprouts |>
   labs(x = "Height (m)", y = "Treatment") +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   theme(legend.position = "bottom", legend.title = element_blank())
-
 ```
 
 ```{r}
@@ -955,7 +1036,8 @@ sprouts |>
   lengthen_data("ht") |>
   filter(year == "10") |>
   mutate(
-    Predicted = predict(ht10_sel,
+    Predicted = predict(
+      ht10_sel,
       lst(site, plot, tree, treat, spp, year),
       type = "response"
     ),
@@ -968,7 +1050,6 @@ sprouts |>
   labs(x = "Height (m)", y = "Treatment") +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   theme(legend.position = "bottom", legend.title = element_blank())
-
 ```
 
 ## Output
@@ -978,5 +1059,4 @@ saved data for later use
 ```{r}
 
 save(ht10_sel, minc_sel, dht, dinc, dht10, mht18, file = "sprout_modeling.rda")
-
 ```

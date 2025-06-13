@@ -81,7 +81,7 @@ the height of the sprout. Sprout DBH for only redwood was collected in year 10.
 Ten years after the initial harvest, four four-meter-radius regeneration plots
 were established within each macro plot (@fig-plot-layout). All regenerating
 trees (sprouts and seedlings) within the plot were recorded. Regenerating trees
-less than 2.54 cm at breast height (1.4 m) were tallied by 2.5 cm size classes and the
+less than 5 cm at breast height (1.4 m) were tallied by 2.5 cm size classes and the
 actual DBH of all other regenerating trees were recorded. This allowed for an
 estimation of sprout and seedling density. 
 
@@ -167,8 +167,20 @@ model variance as a function of predictors [@brooksGlmmTMBBalancesSpeed2017].
 The final model structures chosen for each response are given in the results
 section.
 
-Models were interpreted using estimated marginal means calculated with the
-R package emmeans [@lenthEmmeansEstimatedMarginal2021].
+Models were interpreted using estimated marginal means calculated with the  R
+packages `marginaleffects` and `emmeans` [@lenthEmmeansEstimatedMarginal2021;
+@arel-bundockHowInterpretStatistical2024]. Predictions incorporating the effects
+of all model components were made on the response scale for a grid of predictors
+consisting of all unique combinations of factors in the data that were used in
+at least one component of a given model (we didn't have numeric predictors)
+except in the case of tree heights where predictions were made for each
+observation in the data set. Standard errors for the predictions were calculated
+using the delta method. Predictions were averaged across non-focal predictors
+(especially "random" effects) to obtain the population estimates of marginal
+means. These means are expected to be applicable to other treatments when
+conducted across equal proportions of sites with conditions similar to those
+used in our study. Notably, our population estimates assume equal proportions of
+north and south facing aspects.
 
 ::: {.callout-caution}
 ## TODO:

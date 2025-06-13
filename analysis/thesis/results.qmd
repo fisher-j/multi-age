@@ -161,9 +161,10 @@ draw_emm_emm <- function(data = ., position = "identity", show_legend = FALSE) {
       position = position
     ),
     geom_point(
-      color = "white",
+      color = "gray95",
       shape = "circle filled",
       size = 2,
+      stroke = 1.2,
       fill = "black",
       position = position
     )
@@ -212,6 +213,53 @@ draw_emm2 <- function(data = ., position = position_dodge(width = .7)) {
     )
   )
 }
+
+# This is a wrapper function to get the emmeans object from the marginaleffects
+# if a by_var is specified, it will return a nested tibble of emmeans objects
+# for each level of the by_var. Otherwise, it will return a single emmeans
+# object.
+marginaleffects_to_emmeans <- function(
+  model,
+  newdata,
+  x_var,
+  by_var,
+  contrast
+) {
+  # accept a list of argument to datagrid
+  if (is.list(newdata) && !is.data.frame(newdata)) {
+    newdata$model <- model
+    newdata <- do.call(datagrid, newdata)
+  }
+  # handle multiple groups if by_var is specified
+  if (is.null(by_var)) by <- x_var else by <- c(by_var, x_var)
+  pred <- predictions(
+    model,
+    newdata = newdata,
+    re.form = NULL,
+    by = by
+  )
+  comp <- comparisons(
+    model,
+    newdata = newdata,
+    variables = contrast,
+    by = c(by_var, "contrast"),
+    re.form = NULL
+  )
+  # return a single emmobj if by_var is NULL, otherwise return a nested tibble
+  if (!is.null(by_var)) {
+    pred <- pred |>
+      group_by(!!sym(by_var)) |>
+      tidyr::nest(.key = "pred")
+    comp <- comp |>
+      group_by(!!sym(by_var)) |>
+      tidyr::nest(.key = "comp")
+    left_join(by = by_var, pred, comp) |>
+      rowwise() |>
+      mutate(emmobj = list(get_emmobj(pred, comp, x_var)))
+  } else {
+    get_emmobj(pred, comp, x_var)
+  }
+}
 ```
 
 ## Regeneration composition
@@ -232,16 +280,98 @@ print_model_info(mba)
 ```
 ::: 
 
-According to this model, we would expect five times as much basal area of other
-species in LD compared to HA (p = 0.034), and six times more other species
-basal area in HD compared to HA (p = 0.014), but the presence of other species
-was generally less than 0.75 m^2^ ha^-1^.
 
-We expect 5 times more redwood regeneration basal area in the GS treatment
-compared to HA (p = 0.03), and 7 times compared to HD (p = 0.02).
+```{r}
+regen_all <- marginaleffects_to_emmeans(
+  mba,
+  list(spp = unique, treat = unique, site = unique),
+  x_var = "treat",
+  by_var = "spp",
+  contrast = list(treat = "pairwise")
+) |>
+  mutate(emm = list(emmeans::emmeans(emmobj, ~level) |> as_tibble()))
 
-For tanoak, we expect about twice as much regeneration basal area in the GS
-treatment compared to HA (p = 0.03).
+regen_grand_means <- regen_all |>
+  mutate(
+    grand_mean = list(
+      emmeans(emmobj, ~1) |>
+        as_tibble() |>
+        mutate(across(where(is.double), ~ round(.x, 2)))
+    )
+  ) |>
+  select(grand_mean)
+
+# make data easier to work with by recursively converting nested tibbles to
+# named lists. I'm using emmeans::pairs() to get the pairwise comparisons
+# because it incorporates a tukey adjustment for multiple comparisons.
+regen_pairs <-
+  regen_all |>
+  mutate(
+    pairs = list(
+      pairs(emmobj) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = contrast) |>
+        deframe()
+    )
+  ) |>
+  select(pairs) |>
+  deframe()
+
+regen_mean <-
+  regen_all |>
+  mutate(
+    emm = list(
+      mutate(emm, across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = level) |>
+        deframe()
+    )
+  ) |>
+  select(emm) |>
+  deframe()
+
+regen_grand <- deframe(regen_grand_means)
+```
+
+According to predictions made from this model,
+there was not enough evidence to confirm a statistically significant difference between treatments. 
+On average, we expect about `r regen_grand$other$estimate` m^2^ ha^-1^ of basal area across treatments.
+The greatest basal area of other species was in the HD treatment
+which was `r abs(pluck(regen_pairs, "other", "ha - hd", "estimate"))` m^2^ ha^-1^ greater than in the HA
+treatment (p = `r pluck(regen_pairs, "other", "ha - hd", "p.value")`). The GS and LD treatments were
+intermediate.
+
+On average, for Douglas-fir, we expect about `r regen_grand$df$estimate` m^2^
+ha^-1^ of basal area across treatments. The greatest basal area of Douglas-fir
+was in the GS treatment which was `r abs(regen_pairs$df[["gs - ha"]]$estimate)`
+m^2^ ha^-1^ greater than in the HA treatment (p = `r pluck(regen_comp, "df", "gs - ha", "p.value")`). The LD, HA, and HD treatments were all comparatively
+similar.
+
+Redwood basal area regeneration showed the greatest treatment response. Where
+the GS treatment had the greatest basal area of redwood regeneration at `r
+regen_mean$rw$estimate` m^2^ ha^-1^, which was `r abs(regen_pairs$rw[["gs -
+hd"]]$estimate)` m^2^ ha^-1^ greater than in the HD treatment (p = `r
+pluck(regen_pairs, "rw", "gs - hd", "p.value")`). The LD and HD treatments were
+intermediate, with the HD treatment having `r abs(regen_pairs$rw[["gs -
+hd"]]$estimate` m^2^ ha^-1^ greater basal area than the HA treatment (p = `r
+pluck(regen_pairs, "rw", "ha - hd", "p.value")`).
+
+Tanoak basal area regeneration was intermediate between that of redwood and
+Douglas-fir and other species. The GS and LD treatments had similar responses, as
+did the HA and HD treatments. The GS treatment resulted in `r
+regen_mean$to$gs$estimate` m^2^ ha^-1^ of tanoak basal area, which was `r
+regen_pairs$to[["gs - ha"]]$estimate` m^2^ ha^-1^ greater than in the HA
+treatment (p = `r pluck(regen_pairs, "to", "gs - ha", "p.value")`).
+
+```{r}
+#| label: tbl-regen-ba-grand-means
+#| tbl-cap: >
+#|   Grand means (m^2^ ha^-1^) for basal area of regeneration of each species
+#|   across treatments 10 years after the initiation of a multi-age redwood
+#|   forest.
+
+regen_grand_means |> unnest(grand_mean) |> tinytable::tt()
+```
 
 ```{r}
 #| label: fig-regen-ba
@@ -253,40 +383,6 @@ treatment compared to HA (p = 0.03).
 #|   pairwise differences among treatments. Arrows are drawn so that when two
 #|   arrows just meet, the p-value for that difference is 0.05 and overlapping
 #|   arrows indicate a p-values greater than 0.05.
-
-make_emm_res <- function(model, newdata, x_var, by_var, contrast) {
-  newdata_sub <- rlang::enquo(newdata)
-  by <- c(by_var, x_var)
-  pred <- predictions(
-    model,
-    newdata = !!newdata_sub,
-    re.form = NULL,
-    by = by
-  ) |>
-    group_by(!!sym(by_var)) |>
-    tidyr::nest(.key = "pred")
-  pred
-  comp <- comparisons(
-    model,
-    newdata = !!newdata_sub,
-    variables = contrast,
-    by = c(by_var, "contrast"),
-    re.form = NULL
-  ) |>
-    group_by(!!sym(by_var)) |>
-    tidyr::nest(.key = "comp")
-  left_join(by = by_var, pred, comp) |>
-    rowwise() |>
-    mutate(emmobj = list(get_emmobj(pred, comp, x_var)))
-}
-
-regen_all <- make_emm_res(
-  mba,
-  datagrid(spp = unique, treat = unique, site = unique),
-  x_var = "treat",
-  by_var = "spp",
-  contrast = list(treat = "pairwise")
-)
 
 regen_all |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -306,9 +402,8 @@ regen_all |>
 #|   harvest treatments and four species classes (n = 16).
 
 regen_all |>
-  mutate(emm = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
   select(emm) |>
-  unnest(emm) |>
+  unnest(everything()) |>
   rename(treatment = level) |>
   tinytable::tt() |>
   tinytable::format_tt(digits = 2, num_fmt = "decimal")
@@ -331,9 +426,20 @@ regen_all |>
   tinytable::format_tt(digits = 2, num_fmt = "decimal")
 ```
 
+```{r}
+
+regen_rw_to <- marginaleffects_to_emmeans(
+  mba,
+  list(spp = c("rw", "to"), treat = unique, site = unique),
+  x_var = "spp",
+  by_var = "treat",
+  contrast = list(spp = c("to", "rw"))
+)
+```
+
 @fig-regen-ba-rw-to shows the same model as @fig-regen-ba, but with an emphasis
-on treatment comparisons between redwood and tanoak. This shows that we expect
-on average, five times greater redwood basal area than tanoak basal area in the
+on treatment comparisons between redwood and tanoak. 
+This shows that we expect on average, five times greater redwood basal area than tanoak basal area in the
 GS treatment (p < 0.001), and about 2.7 times in the LD treatment (p = 0.039).
 In the HA treatment, average redwood basal area is expected to be 2.5 times that
 of tanoak (p = 0.07). The two species were most similar in the HD treatment,
@@ -351,37 +457,6 @@ greater in GS and LD treatments than in the HA and HD treatments
 #|   the 95% confidence interval, black dots---the mean, and non-overlapping
 #|   blue arrows signify statistical significance (α = 0.05).
 
-pred <- predictions(
-  mba,
-  newdata = datagrid(spp = c("rw", "to"), treat = unique, site = unique),
-  re.form = NULL,
-  by = c("spp", "treat")
-) |>
-  group_by(treat) |>
-  nest(.key = "pred")
-
-comp <- comparisons(
-  mba,
-  newdata = datagrid(spp = c("rw", "to"), treat = unique, site = unique),
-  re.form = NULL,
-  variables = list(spp = c("to", "rw")),
-  by = c("treat", "contrast")
-) |>
-  group_by(treat) |>
-  nest(.key = "comp")
-
-res <- left_join(by = "treat", pred, comp) |>
-  rowwise() |>
-  mutate(emmobj = list(get_emmobj(pred, comp, "spp")))
-
-regen_rw_to <- make_emm_res(
-  mba,
-  datagrid(spp = c("rw", "to"), treat = unique, site = unique),
-  x_var = "spp",
-  by_var = "treat",
-  contrast = list(spp = c("to", "rw"))
-)
-
 regen_rw_to |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
   select(emm_df) |>
@@ -389,13 +464,13 @@ regen_rw_to |>
   ggplot(emm_mapping(x = level)) +
   facet_wrap(~treat, ncol = 2, labeller = plot_labels, scales = "free") +
   draw_emm_emm() +
-  # scale_x_discrete(labels = toupper) +
-  labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1)))
+  scale_x_discrete(labels = species_labels) +
+  labs(x = "Species", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1)))
 ```
 
 ### Other species
 
-Other speceis included grand fir, madrone, and California wax-myrtle, of which
+Other species included grand fir, madrone, and California wax-myrtle, of which
 there was a total of 23, 28, and 16 observations across our 16 macro plots
 (comprising 64 tree density plots). Generally, each plot had between 0 and 9
 observations of other species, except for one macro plot with the LD treatment,
@@ -428,13 +503,35 @@ seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
 
 # predict(mdf_sel) |> mean() |> exp() * per_ha["corner"]
 
-emmeans(mdf, "treat", component = "response") |>
-  emm_to_df() |>
+# pred <- predictions(
+#   mdf,
+#   newdata = datagrid(treat = unique, site = unique),
+#   re.form = NULL,
+#   by = "treat"
+# )
+#
+# comp <- comparisons(
+#   mdf,
+#   newdata = datagrid(treat = unique, site = unique),
+#   variables = list(treat = "pairwise"),
+#   by = "contrast",
+#   re.form = NULL
+# )
+#
+# emmobj <- get_emmobj(pred, comp, "treat")
+
+df_counts <- marginaleffects_to_emmeans(
+  model = mdf,
+  newdata = list(treat = unique, site = unique),
+  x_var = "treat",
+  by_var = NULL,
+  contrast = list(treat = "pairwise")
+)
+
+emm_to_df_emm(df_counts) |>
   mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
-  ggplot(emm_mapping()) +
-  draw_emm() +
-  scale_x_discrete(labels = toupper) +
-  labs(x = "Treatment", y = expression(Stems %.% ha^-1))
+  ggplot(emm_mapping(x = level)) +
+  draw_emm_emm()
 ```
 
 ```{r}
@@ -444,9 +541,11 @@ emmeans(mdf, "treat", component = "response") |>
 #|   harvest treatments 10 years after harvest (n = 16). Results have been
 #|   scaled to stems per hectare from 4-meter radium plots.
 
-emmeans(mdf, "treat", component = "response") |>
+emmeans(df_counts, "level") |>
   as_tibble() |>
-  mutate(treat = as.character(treat)) |>
+  mutate(level = as.character(level)) |>
+  mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
+  select(Treatment = level, !c(SE, df)) |>
   tinytable::tt(digits = 2)
 ```
 
@@ -495,11 +594,21 @@ statistically distinguishable from the other treatments (0.13 < p < 0.28).
 #|   after harvest. Gray bars represent confidence intervals and statistical
 #|   significance (α = 0.05) is indicated by non-overlapping blue arrows.
 
-emmeans(minc_sel, "treat", by = "spp", component = "response") |> # pairs()
-  emm_to_df() |>
-  ggplot(emm_mapping()) +
-  draw_emm() +
-  facet_wrap(~spp, labeller = plot_labels) +
+ht_inc_treat <- marginaleffects_to_emmeans(
+  model = minc_sel,
+  newdata = NULL,
+  x_var = "treat",
+  by_var = "spp",
+  contrast = list(treat = "pairwise")
+)
+
+ht_inc_treat |>
+  mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
+  select(emm_df) |>
+  unnest(emm_df) |>
+  ggplot(emm_mapping(x = level)) +
+  facet_wrap(~spp, ncol = 2, labeller = plot_labels) +
+  draw_emm_emm() +
   labs(x = "Treatment", y = expression(Height ~ Increment ~ (m %.% yr^-1)))
 ```
 
@@ -521,13 +630,23 @@ increment (@fig-sprout-ht-inc-year).
 #|   data. Gray bars represent confidence intervals and statistical significance
 #|   (α = 0.05) is indicated by non-overlapping blue arrows.
 
-emmeans(minc_sel, c("year"), by = "spp", component = "response") |>
-  emm_to_df() |>
-  ggplot(emm_mapping(x = year)) +
-  draw_emm(position = position_nudge(x = -0.15)) +
+ht_inc_year <- marginaleffects_to_emmeans(
+  model = minc_sel,
+  newdata = NULL,
+  x_var = "year",
+  by_var = "spp",
+  contrast = list(year = "pairwise")
+)
+
+ht_inc_year |>
+  mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
+  select(emm_df) |>
+  unnest(emm_df) |>
+  ggplot(emm_mapping(x = level)) +
+  draw_emm_emm(position = position_nudge(x = -0.15)) +
   geom_dots(
     data = dinc,
-    aes(year, ht_inc, ymin = NULL, ymax = NULL),
+    mapping = aes(x = year, y = ht_inc, xend = NULL, ymin = NULL, ymax = NULL),
     alpha = 0.4
   ) +
   facet_wrap(~spp, labeller = plot_labels) +
@@ -568,13 +687,25 @@ followed the pattern GS > LD > HA > HD (@fig-sprout-ht-yr-10).
 #|   harvest treatments. Non-overlapping blue arrows indicate statistically
 #|   significant differences between treatments within a species.
 
-emmeans(ht10_sel, "treat", by = "spp", component = "response") |>
-  emm_to_df() |>
-  ggplot(emm_mapping()) +
-  draw_emm(position = position_nudge(x = -0.07)) +
+ht_year_10 <- marginaleffects_to_emmeans(
+  model = ht10_sel,
+  newdata = list(spp = unique, treat = unique, plot = unique),
+  x_var = "treat",
+  by_var = "spp",
+  contrast = list(treat = "pairwise")
+)
+ht_year_10
+
+ht_year_10 |>
+  mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
+  select(emm_df) |>
+  unnest(emm_df) |>
+  ggplot(emm_mapping(x = level)) +
+  draw_emm_emm(position = position_nudge(x = -0.15)) +
   geom_dots(
     data = filter(dht, year == 10),
     aes(x = treat, y = ht),
+    alpha = 0.4,
     inherit.aes = FALSE
   ) +
   facet_wrap(~spp, labeller = plot_labels) +
@@ -632,12 +763,29 @@ expected value of 28.5 Mg ha-1, which was about 2.7 times greater than in HA (p
 #|   different fuel-class models. Non-overlapping blue arrows indicates
 #|   statistical significance at the α = 0.05 level.
 
+# Newdata in this case is repeating all combinations of random effects *found in
+# the data* for each level of treatment. This should be the same approach as
+# above but arrived at differently because above we have implicit grouping and
+# nested variable coding, where as here we have explicit grouping, so when
+# creating the we need to be explicit about the grouping.
+fuel_tmb$pre <- mutate(
+  fuel_tmb$pre,
+  newdata = list(tidyr::expand(data, treatment, nesting(site, block, corner))),
+  emmobj = list(marginaleffects_to_emmeans(
+    model = mod,
+    newdata = newdata,
+    x_var = "treatment",
+    by_var = NULL,
+    contrast = list(treatment = "pairwise")
+  ))
+)
+
 fuel_tmb$pre |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
   group_map(function(x, ...) {
-    emm_to_df(x$emmeans[[1]]) |>
-      ggplot(emm_mapping()) +
-      draw_emm() +
+    emm_to_df_emm(x$emmobj[[1]]) |>
+      ggplot(emm_mapping(x = level)) +
+      draw_emm_emm() +
       scale_x_discrete(labels = toupper) +
       labs(
         title = x$class,
@@ -654,18 +802,32 @@ fuel_tmb$pre |>
 # fuel_tmb$pre |> filter(class == "dufflitter") |> pluck("emmeans", 1)
 ```
 
-Here are the grand means, pre-PCT for each fuel type:
-
 ```{r}
+#| label: tbl-fuel-pre-pct-means
+#| tbl-cap: >
+#|  Estimated marginal means (Mg ha^-1^) for six fuel classes and four overstory
+#|  treatments before pct
 
-# grand_mean <- fuel_tmb$pre |>
-#   mutate(grand_mean = as_tibble(emmeans(.emmeans, ~1))) |>
-#   select(c(class, grand_mean)) |>
-#   unnest(grand_mean)
-# grand_mean |> tinytable::tt()
-
+fuel_tmb$pre |>
+  mutate(emmeans = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
+  select(class, emmeans) |>
+  unnest(emmeans) |>
+  rename(treatment = level) |>
+  tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
 
+
+```{r}
+#| label: tbl-fuel-pre-pct-grand-means
+#| tbl-cap: >
+#|   Grand means (Mg ha^-1^) for six fuel classes before pct.
+
+fuel_tmb$pre |>
+  mutate(grand_mean = as_tibble(emmeans(emmobj, ~1))) |>
+  select(c(class, grand_mean)) |>
+  unnest(grand_mean) |>
+  tinytable::tt(digits = 2, num_fmt = "decimal")
+```
 
 ### Post-pct
 
@@ -715,18 +877,30 @@ respectively (p ≈ 0.01).
 #| fig-cap: >
 #|   Estimated marginal means (black dots) confidence intervals (gray bars) and
 #|   comparisons (blue arrows) of fuel loading across four treatments for six
-#|   different fuel-class models. Non-overlapping red arrows indicates
+#|   different fuel-class models. Non-overlapping blue arrows indicates
 #|   statistical significance at the α = 0.05 level. Vegetation difference
 #|   equals the transect level difference in vegetation load in the pre and
 #|   post-pct conditions. This represents slash fuels recruited to the forest
 #|   floor following the pre-commercial thinning.
 
+fuel_tmb$post <- mutate(
+  fuel_tmb$post,
+  newdata = list(tidyr::expand(data, treatment, nesting(site, block, corner))),
+  emmobj = list(marginaleffects_to_emmeans(
+    model = mod,
+    newdata = newdata,
+    x_var = "treatment",
+    by_var = NULL,
+    contrast = list(treatment = "pairwise")
+  ))
+)
+
 fuel_tmb$post |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
   group_map(function(x, ...) {
-    emm_to_df(x$.emmeans[[1]]) |>
-      ggplot(emm_mapping()) +
-      draw_emm() +
+    emm_to_df_emm(x$emmobj[[1]]) |>
+      ggplot(emm_mapping(x = level)) +
+      draw_emm_emm() +
       scale_x_discrete(labels = toupper) +
       labs(
         title = x$class,
@@ -738,15 +912,34 @@ fuel_tmb$post |>
   patchwork::plot_layout(axes = "collect")
 ```
 
-Here are the grand means post-PCT for each fuel type:
+```{r}
+#| label: tbl-fuel-post-pct-means
+#| tbl-cap: >
+#|  Estimated marginal means (Mg ha^-1^) for six fuel classes and four overstory
+#|  treatments before pct
+
+fuel_tmb$post |>
+  mutate(emmeans = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
+  select(class, emmeans) |>
+  unnest(emmeans) |>
+  rename(treatment = level) |>
+  tinytable::tt(digits = 2, num_fmt = "decimal")
+```
+
 
 ```{r}
-grand_mean <- fuel_tmb$pre |>
-  mutate(grand_mean = as_tibble(emmeans(.emmeans, ~1))) |>
+#| label: tbl-fuel-post-pct-grand-means
+#| tbl-cap: >
+#|   Grand means (Mg ha^-1^) for six fuel classes after pct.
+
+fuel_tmb$post |>
+  mutate(grand_mean = as_tibble(emmeans(emmobj, ~1))) |>
   select(c(class, grand_mean)) |>
-  unnest(grand_mean)
-grand_mean |> tinytable::tt()
+  unnest(grand_mean) |>
+  tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
+
+### Pre-post commercial thinning comparison
 
 Pre-commercial thinning led to a small increase in average 100-hr fuel loading,
 only for the GS treatment, increased 10-hr fuels in the GS and LD treatments,
@@ -772,13 +965,14 @@ fuel_tmb$pre |>
     # for each row in pre-treatment, get the pre-treatment data and the
     # corresponding data for post-treatment
     bind_rows(
-      pre = emm_to_df(x$.emmeans[[1]]),
+      pre = emm_to_df_emm(x$emmobj[[1]]),
       post = emm_to_df(
-        pluck(filter(fuel_tmb$post, class == x$class), ".emmeans", 1)
+        pluck(filter(fuel_tmb$post, class == x$class), "emmobj", 1)
       ),
       .id = "phase"
     ) |>
       ggplot(emm_mapping(
+        x = level,
         color = factor(phase, levels = c("pre", "post")),
         group = factor(phase, levels = c("pre", "post"))
       )) +
