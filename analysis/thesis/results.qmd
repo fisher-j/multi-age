@@ -5,13 +5,6 @@ execute:
 
 # Results
 
-::: {.callout-caution}
-## TODO
-I've provided all the comparison results, most of which are not
-statistically significant. Maybe I should also provide grand mean, summary
-results.
-:::
-
 ```{r include=FALSE}
 
 load("./fuel_modeling_round_3.rda")
@@ -268,18 +261,16 @@ marginaleffects_to_emmeans <- function(
 
 Composition of regeneration in terms of basal area per acre represented by each
 species in a 4-meter radius vegetation plot was modeled as a gamma distribution
-with a log link with fixed effects for treatment, species, and their interaction
-and random effects for sites and macro-plots (4 vegetation plots per
-macro-plot). Dispersion was modeled separately as a function of species, using a
-log link and the rate of zeros was modeled using the logit link, for each
-species (@lst-regen-ba).
+with a log link with fixed effects for treatment and species, and random
+intercepts for site x species interaction. Dispersion was modeled separately as
+a function of species, using a log link and the rate of zeros was modeled using
+the logit link, for each species as well (@lst-regen-ba).
 
 ::: {#lst-regen-ba}
 ```{r}
 print_model_info(mba)
 ```
 ::: 
-
 
 ```{r}
 regen_all <- marginaleffects_to_emmeans(
@@ -433,6 +424,8 @@ regen_rw_to <- marginaleffects_to_emmeans(
   contrast = list(spp = c("to", "rw"))
 )
 
+# get contrasts in a format that is easy to work with: lists instead of grouped
+# tibbles
 rw_to_pairs <-
   regen_rw_to |>
   mutate(
@@ -466,18 +459,17 @@ rw_to_mean <-
 on treatment comparisons between redwood and tanoak. 
 This shows that we expect on average, 
 `r abs(rw_to_pairs$gs[[1]]$estimate)` m^2^ ha^-1^ greater redwood basal area
-than tanoak basal area in the GS treatment (p = `r
-rw_to_pairs$gs[[1]]$p.value`), about `r abs(rw_to_pairs$ld[[1]]$estimate)` m^2^
+than tanoak basal area in the GS treatment (p = `r rw_to_pairs$gs[[1]]$p.value`), 
+about `r abs(rw_to_pairs$ld[[1]]$estimate)` m^2^
 ha^-1^ in the LD treatment (p = `r rw_to_pairs$ld[[1]]$p.value`), and about 
 `r abs(rw_to_pairs$ha[[1]]$estimate)` m^2^ ha^-1^ in the HA treatment 
 (p = `r rw_to_pairs$ha[[1]]$p.value`). In the HD treatment, we expect to see slightly
 higher tanoak basal area (`r abs(rw_to_pairs$hd[[1]]$p.value)`).
 
-TODO: I'm here
-
-Redwood variability, indicated by the size of 95% confidence intervals, is much
-greater than that of tanoak's across treatments, and redwood variability was
-greater in GS and LD treatments than in the HA and HD treatments
+Uncertainty in average Redwood basal area across sites, indicated by the size of 95% confidence intervals, is much
+greater than that of tanoak in the GS treatment, but this difference
+diminishes such that GS > LD > HA > HD. In the HD treatment redwood and tanoak
+average basal area uncertainty across sites is very similar. 
 (@fig-regen-ba).
 
 ```{r}
@@ -512,7 +504,7 @@ which had 16 observations (data not shown).
 Counts of regenerating Douglas-fir seedlings per vegetation plot (n = 16) were
 analyzed for differences between harvest treatments using a negative binomial
 response with a log link, fixed effects for treatment, random effects for site
-and macro-plot (@lst-df-counts).
+and site x treatment interaction (@lst-df-counts).
 
 ::: {#lst-df-counts}
 ```{r}
@@ -520,7 +512,7 @@ print_model_info(mdf, NULL)
 ```
 :::
 
-This model for Douglas-fir counts does not result in any statistically
+This model for Douglas-fir counts does not indicate any statistically
 significant differences between treatments. Generally, we expect about 2
 seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
 (@fig-df-counts).
@@ -587,10 +579,11 @@ emmeans(df_counts, "level") |>
 The selected height increment model used a normal response distribution on the
 identity link. It included treatment, growth period, species, and the
 interaction of species and growth period as fixed effects. A random intercept
-was included for tree (multiple observations) and macro-plot, and a random slope
-was included for species. The dispersion parameter for the response was modeled
-(with a log link) as a function of treatment, growth period, species and all
-three-way interactions (@lst-sprout-ht-inc).  
+was included for tree (multiple observations) and macro-plot, and an another
+random effect allowed the response to vary by species differently for each macro
+plot. The dispersion parameter for the response was modeled (with a log link) as
+a function of treatment, growth period, species and all three-way interactions
+(@lst-sprout-ht-inc).  
 
 ::: {#lst-sprout-ht-inc}
 ```{r}
@@ -598,32 +591,7 @@ print_model_info(minc_sel, "disp")
 ```
 :::
 
-The model selected based on AIC lacks a treatment x species interaction,
-suggesting that there is not evidence that treatments affected species
-differentially. It also lacks a treatment x year interaction. This means that
-there was not enough evidence to support that treatment was related to changes
-in growth rate.
-
-The presence of treatment in the model (0.001 ≤ p < 0.03) suggests that
-the levels of treatment were associated with different growth rates across
-species and years. And the species x year interaction (p < 0.001) suggests
-changes in growth rates are different for redwood and tanoak
-(@fig-sprout-ht-inc-treat).
-
-Averaging over growth periods, treatment specific height increments for redwood
-ranged from 0.66 to 0.86 m yr^-1^, and for tanoak, from 0.29 to 0.49, with the
-slowest growth in the HD treatment and the fastest in the GS treatment. Height
-increment was greater in the GS treatment than the HA and HD treatments by about
-0.19 m yr^-1^ (p < 0.001). The LD treatment was intermediate, but not
-statistically distinguishable from the other treatments (0.13 < p < 0.28).
-
 ```{r}
-#| label: fig-sprout-ht-inc-treat
-#| fig-cap: >
-#|   Estimated marginal means for the effect of harvest treatment on redwood and
-#|   tanoak sprout height increment, averaged over two growth periods, ten years
-#|   after harvest. Gray bars represent confidence intervals and statistical
-#|   significance (α = 0.05) is indicated by non-overlapping blue arrows.
 
 ht_inc_treat <- marginaleffects_to_emmeans(
   model = minc_sel,
@@ -632,6 +600,73 @@ ht_inc_treat <- marginaleffects_to_emmeans(
   by_var = "spp",
   contrast = list(treat = "pairwise")
 )
+
+# extract contrasts for each species into nested lists
+rw_to_ht_pairs <-
+  ht_inc_treat |>
+  mutate(
+    pairs = list(
+      pairs(emmobj) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = contrast) |>
+        deframe()
+    )
+  ) |>
+  select(pairs) |>
+  deframe()
+
+rw_to_ht_mean <-
+  ht_inc_treat |>
+  mutate(
+    emm = list(
+      emmeans(emmobj, ~level) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = level) |>
+        deframe()
+    )
+  ) |>
+  select(emm) |>
+  deframe()
+```
+
+The model selected based on AIC lacks a treatment x species interaction,
+suggesting that there is not evidence that treatments affected species
+differentially. It also lacks a treatment x year interaction. This means that
+there was not enough evidence to support that treatment was related to changes
+in growth rate.
+
+The inclusion of treatment factors in the model (0.001 ≤ p < 0.03) suggests that
+the levels of treatment were associated with different growth rates across
+species and years. And the species x year interaction (p < 0.001) suggests
+changes in growth rates are different for redwood and tanoak
+(@fig-sprout-ht-inc-treat).
+
+For tanoak, height increment was greatest in the GS treatment at 
+`r rw_to_ht_mean$LIDE$GS$estimate` m yr^-1^. 
+This was about `r rw_to_ht_pairs$LIDE[["GS - HA"]]$estimate` m yr^-1^ 
+more than in the HA and HD treatments,
+which were very similar at about `r rw_to_ht_mean$LIDE$HA` m yr^-1^.
+
+Redwood followed a similar pattern but with more pronounced differences between
+treatments. Height increment for redwood in the GS treatment was 
+`r rw_to_ht_mean$SESE$GS$estimate` m yr^-1^, 
+which was about `r rw_to_ht_pairs$SESE[["GS - HD"]]$estimate` m yr^-1^ greater than in the HD
+treatment (p = `r rw_to_ht_pairs$SESE[["GS - HD"]]$p.value`). 
+Additionally, there was evidence that the GS treatment led to greater height increment than
+the LD treatment by about `r rw_to_ht_pairs$SESE[["GS - LD"]]$estimate` m yr^-1^
+(p = `r rw_to_ht_pairs$SESE[["GS - LD"]]$p.value`). And the LD treatment was
+higher than the HA treatment by about `r rw_to_ht_pairs$SESE[["LD - HA"]]$estimate` m yr^-1^ 
+(p = `r rw_to_ht_pairs$SESE[["LD - HA"]]$p.value`).
+
+```{r}
+#| label: fig-sprout-ht-inc-treat
+#| fig-cap: >
+#|   Estimated marginal means for the effect of harvest treatment on redwood and
+#|   tanoak sprout height increment, averaged over two growth periods, ten years
+#|   after harvest. Gray bars represent confidence intervals and statistical
+#|   significance (α = 0.05) is indicated by non-overlapping blue arrows.
 
 ht_inc_treat |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -643,13 +678,73 @@ ht_inc_treat |>
   labs(x = "Treatment", y = expression(Height ~ Increment ~ (m %.% yr^-1)))
 ```
 
+```{r}
+#| label: tbl-sprout-ht-inc-treat
+#| tbl-cap: >
+#|  Estimated marginal means for the effect of harvest treatment on redwood and
+#|  tanoak sprout height increment, averaged over two growth periods, ten years
+#|  after harvest.
+
+ht_inc_treat |>
+  mutate(emm = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
+  select(emm) |>
+  unnest(everything()) |>
+  rename(treatment = level) |>
+  tinytable::tt(digits = 2) |>
+  tinytable::format_tt(num_fmt = "decimal")
+```
+
+
+```{r}
+
+ht_inc_year <- marginaleffects_to_emmeans(
+  model = minc_sel,
+  newdata = NULL,
+  x_var = "year",
+  by_var = "spp",
+  contrast = list(year = "pairwise")
+)
+
+# extract contrasts for each species into nested lists
+ht_inc_year_pairs <-
+  ht_inc_year |>
+  mutate(
+    pairs = list(
+      pairs(emmobj) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = contrast) |>
+        deframe()
+    )
+  ) |>
+  select(pairs) |>
+  deframe()
+
+ht_inc_year_mean <-
+  ht_inc_year |>
+  mutate(
+    emm = list(
+      emmeans(emmobj, ~level) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = level) |>
+        deframe()
+    )
+  ) |>
+  select(emm) |>
+  deframe()
+
+# ht_inc_year_mean$LIDE$`5`$estimate
+# ht_inc_year_pairs$SESE$`level5 - level10`$estimate |> names()
+```
+
 Redwood growth slowed from 0.80 to 0.67 m yr^-1^ in the second period and tanoak
 slowed from 0.39  to 0.34 m yr^-1^.
 
 Redwood grew faster than tanoak, but slowed down more relative to it in the
-second period. Height increment for redwood was 0.42 m yr^-1^ greater in the
-first period and 0.33 m yr^-1^ greater in the second period than tanoak height
-increment (@fig-sprout-ht-inc-year).
+second period. Height increment for redwood was 0.42 m yr^-1^ greater than
+tanoak in the first period and 0.33 m yr^-1^ greater than tanoak in the second
+period (@fig-sprout-ht-inc-year).
 
 
 ```{r}
@@ -660,14 +755,6 @@ increment (@fig-sprout-ht-inc-year).
 #|   years 1 to 5, and years 5 to 10 after harvest, plotted alongside actual
 #|   data. Gray bars represent confidence intervals and statistical significance
 #|   (α = 0.05) is indicated by non-overlapping blue arrows.
-
-ht_inc_year <- marginaleffects_to_emmeans(
-  model = minc_sel,
-  newdata = NULL,
-  x_var = "year",
-  by_var = "spp",
-  contrast = list(year = "pairwise")
-)
 
 ht_inc_year |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -688,13 +775,30 @@ ht_inc_year |>
   )
 ```
 
+```{r}
+#| label: tbl-sprout-ht-inc-year
+#| tbl-cap: >
+#|   Estimated marginal means for the effect of growth period on redwood and
+#|   tanoak sprout height increment, averaged over four harvest treatments, from
+#|   years 1 to 5, and years 5 to 10 after harvest.
+
+ht_inc_year |>
+  mutate(emm = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
+  select(emm) |>
+  unnest(everything()) |>
+  rename(year = level) |>
+  tinytable::tt(digits = 2) |>
+  tinytable::format_tt(num_fmt = "decimal")
+```
+
 ### Height at year 10
 
 Sprout heights at year 10 were modeled with a normal response and a log link.
 The best model included species and treatment, but no interactions in the fixed
-effects. This suggests that treatments do not affect species differentially. It
-also included a model for dispersion (log link) that had species, treatment, and
-their interaction as predictors (@lst-sprout-ht-yr-10).
+effects. This suggests that treatments do not affect species differentially in
+terms of the mean response (height at year 10). It also included a model for
+dispersion (log link) with predictors species, treatment, and their interaction
+(@lst-sprout-ht-yr-10).
 
 ::: {#lst-sprout-ht-yr-10}
 ```{r}
@@ -702,13 +806,54 @@ print_model_info(ht10_sel, "disp")
 ```
 :::
 
-Because the best model did not contain a species x treatment interaction,
-comparisons between treatments is the same for both species. The GS treatment
-resulted in greater heights in year 10 than the other treatments (0.001 < p <
-0.04). Predicted mean height for redwood ranged from 10.29 m in the GS treatment
-to 6.16 m in the HD treatment. For tanoak, predicted mean height ranged from
-5.12 in the GS treatment to 3.04 in the HD treatment. Predicted mean heights
-followed the pattern GS > LD > HA > HD (@fig-sprout-ht-yr-10).
+```{r}
+ht_year_10 <- marginaleffects_to_emmeans(
+  model = ht10_sel,
+  newdata = list(spp = unique, treat = unique, plot = unique),
+  x_var = "treat",
+  by_var = "spp",
+  contrast = list(treat = "pairwise")
+)
+
+# extract contrasts for each species into nested lists
+ht_year_10_pairs <-
+  ht_year_10 |>
+  mutate(
+    pairs = list(
+      pairs(emmobj) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = contrast) |>
+        deframe()
+    )
+  ) |>
+  select(pairs) |>
+  deframe()
+
+ht_year_10_mean <-
+  ht_year_10 |>
+  mutate(
+    emm = list(
+      emmeans(emmobj, ~level) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = level) |>
+        deframe()
+    )
+  ) |>
+  select(emm) |>
+  deframe()
+```
+
+Because the best model did not contain a species x treatment interaction for the
+mean response, treatment comparisons are parallel between species. The GS
+treatment resulted in greater heights in year 10 than the other treatments
+(0.001 < p < 0.05). Predicted mean height for redwood ranged from 
+`r ht_year_10_mean$SESE$GS$estimate` m in the GS treatment to 
+`r ht_year_10_mean$SESE$HD$estimate` m in the HD treatment. For tanoak, predicted mean height
+ranged from `r ht_year_10_mean$LIDE$GS$estimate` in the GS treatment to 
+`r ht_year_10_mean$LIDE$HD$estimate` in the HD treatment. Predicted mean
+heights followed the pattern GS > LD > HA > HD (@fig-sprout-ht-yr-10).
 
 ```{r}
 #| label: fig-sprout-ht-yr-10
@@ -717,15 +862,6 @@ followed the pattern GS > LD > HA > HD (@fig-sprout-ht-yr-10).
 #|   and tanoak stump sprouts 10 years after harvest using four different
 #|   harvest treatments. Non-overlapping blue arrows indicate statistically
 #|   significant differences between treatments within a species.
-
-ht_year_10 <- marginaleffects_to_emmeans(
-  model = ht10_sel,
-  newdata = list(spp = unique, treat = unique, plot = unique),
-  x_var = "treat",
-  by_var = "spp",
-  contrast = list(treat = "pairwise")
-)
-ht_year_10
 
 ht_year_10 |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -743,6 +879,38 @@ ht_year_10 |>
   labs(x = "Treatment", y = "Height (m)")
 ```
 
+```{r}
+#| label: tbl-ht-year-10
+#| tbl-cap: >
+#|   Height (m) of measured redwood and tanaok sprouts 10 years after harvest
+#|   treatments with four different over-story densities.
+
+ht_year_10 |>
+  mutate(emm = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
+  select(emm) |>
+  unnest(everything()) |>
+  rename(year = level) |>
+  tinytable::tt(digits = 2) |>
+  tinytable::format_tt(num_fmt = "decimal")
+```
+
+```{r}
+#| label: tbl-ht-year-10-compare
+#| tbl-cap: >
+#|  Pairwise comparisons of treatments within species for height (m) of
+#|  measured redwood and tanoak sprouts 10 years after harvest.
+
+ht_year_10 |>
+  mutate(
+    pairs = list(pairs(emmobj) |> as_tibble())
+  ) |>
+  select(pairs) |>
+  unnest(pairs) |>
+  select(-c(z.ratio)) |>
+  tinytable::tt() |>
+  tinytable::format_tt(digits = 2, num_fmt = "decimal")
+```
+
 ## Fuels
 
 ### Pre-pct
@@ -755,10 +923,10 @@ zero, which was modeled with a logit link. For the 10-hr fuel model, the hurdle
 portion was modeled as a function of treatment, and for the others, it was
 modeled as a single rate for all observations. The 10-hr fuel model also
 included a dispersion model, which was modeled with a log link, using treatment
-as a predictor (@tbl-fuel-pre-pct).
+as a predictor (@tbl-fuel-pre-pct-mod).
 
 ```{r}
-#| label: tbl-fuel-pre-pct
+#| label: tbl-fuel-pre-pct-mod
 #| tbl-cap: Model specifications for six fuel classes before pct.
 
 fuel_tmb$pre |>
@@ -772,6 +940,63 @@ fuel_tmb$pre |>
   ) |>
   tinytable::tt()
 ```
+
+```{r}
+
+# Newdata in this case is repeating all combinations of random effects *found in
+# the data* for each level of treatment. This should be the same approach as
+# above but arrived at differently because above we have implicit grouping and
+# nested variable coding, where as here we have explicit grouping, so when
+# creating the we need to be explicit about the grouping.
+fuel_tmb$pre <- mutate(
+  fuel_tmb$pre,
+  newdata = list(tidyr::expand(data, treatment, nesting(site, block, corner))),
+  emmobj = list(marginaleffects_to_emmeans(
+    model = mod,
+    newdata = newdata,
+    x_var = "treatment",
+    by_var = NULL,
+    contrast = list(treatment = "pairwise")
+  ))
+)
+
+# extract contrasts for each species into nested lists for inline use
+fuel_pre_means <-
+  fuel_tmb$pre |>
+  mutate(
+    pairs = list(
+      pairs(emmobj) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = contrast) |>
+        deframe()
+    )
+  ) |>
+  select(class, pairs) |>
+  deframe()
+
+fuel_pre_compare <-
+  fuel_tmb$pre |>
+  mutate(
+    emm = list(
+      emmeans(emmobj, ~level) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = level) |>
+        deframe()
+    )
+  ) |>
+  select(class, emm) |>
+  deframe()
+
+# fuel_pre_compare |> names()
+# # [1] "dufflitter" "onehr"      "tenhr"      "hundhr"     "thoushr"    "veg"
+# fuel_pre_compare$dufflitter |> names()
+# # [1] "gs" "ld" "ha" "hd"
+# fuel_pre_compare$dufflitter$gs |> names()
+# # [1] "estimate"  "SE"        "df"        "asymp.LCL" "asymp.UCL"
+```
+TODO: I'm here
 
 For Duff & Litter, the largest difference was between the HD and HA treatments.
 The HD treatment had about 1.4 times more duff and litter (p = 0.07). Generally,
@@ -793,23 +1018,6 @@ expected value of 28.5 Mg ha-1, which was about 2.7 times greater than in HA (p
 #|   comparisons (blue arrows) of fuel loading across four treatments for six
 #|   different fuel-class models. Non-overlapping blue arrows indicates
 #|   statistical significance at the α = 0.05 level.
-
-# Newdata in this case is repeating all combinations of random effects *found in
-# the data* for each level of treatment. This should be the same approach as
-# above but arrived at differently because above we have implicit grouping and
-# nested variable coding, where as here we have explicit grouping, so when
-# creating the we need to be explicit about the grouping.
-fuel_tmb$pre <- mutate(
-  fuel_tmb$pre,
-  newdata = list(tidyr::expand(data, treatment, nesting(site, block, corner))),
-  emmobj = list(marginaleffects_to_emmeans(
-    model = mod,
-    newdata = newdata,
-    x_var = "treatment",
-    by_var = NULL,
-    contrast = list(treatment = "pairwise")
-  ))
-)
 
 fuel_tmb$pre |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
