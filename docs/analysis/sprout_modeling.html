@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Multiaged experiment – 10-year analysis - 8&nbsp; Sprout data modeling</title>
+<title>Multiaged experiment – 10-year analysis - 9&nbsp; Sprout data modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../analysis/sprouts_import_data.html">Sprout height</a></li><li class="breadcrumb-item"><a href="../analysis/sprout_modeling.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Sprout data modeling</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../analysis/sprouts_import_data.html">Sprout height</a></li><li class="breadcrumb-item"><a href="../analysis/sprout_modeling.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Sprout data modeling</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -185,6 +185,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fuel modeling</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../analysis/fuel_modeling_round_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Fuel modeling round 3</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -199,19 +205,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../analysis/sprouts_import_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sprout height data description</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Sprout height data description</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../analysis/sprout_data_exploration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Sprout data exploration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Sprout data exploration</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../analysis/sprout_modeling.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Sprout data modeling</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Sprout data modeling</span></span></a>
   </div>
 </li>
       </ul>
@@ -228,13 +234,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../analysis/regen_data_import.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Import and wrangle regeneration data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Import and wrangle regeneration data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../analysis/regen_visualize.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Reneration data summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Reneration data summary</span></span></a>
   </div>
 </li>
       </ul>
@@ -249,34 +255,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives"><span class="header-section-number">8.1</span> Objectives</a></li>
-  <li><a href="#modeling" id="toc-modeling" class="nav-link" data-scroll-target="#modeling"><span class="header-section-number">8.2</span> Modeling</a>
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives"><span class="header-section-number">9.1</span> Objectives</a></li>
+  <li><a href="#modeling" id="toc-modeling" class="nav-link" data-scroll-target="#modeling"><span class="header-section-number">9.2</span> Modeling</a>
   <ul>
-  <li><a href="#height-increment" id="toc-height-increment" class="nav-link" data-scroll-target="#height-increment"><span class="header-section-number">8.2.1</span> Height increment</a></li>
-  <li><a href="#height-increment-results" id="toc-height-increment-results" class="nav-link" data-scroll-target="#height-increment-results"><span class="header-section-number">8.2.2</span> Height increment results</a></li>
-  <li><a href="#heights---year-10-only" id="toc-heights---year-10-only" class="nav-link" data-scroll-target="#heights---year-10-only"><span class="header-section-number">8.2.3</span> Heights - year 10 only</a></li>
-  <li><a href="#here-i-make-my-selection" id="toc-here-i-make-my-selection" class="nav-link" data-scroll-target="#here-i-make-my-selection"><span class="header-section-number">8.2.4</span> Here I make my selection</a></li>
-  <li><a href="#year-10-only-results" id="toc-year-10-only-results" class="nav-link" data-scroll-target="#year-10-only-results"><span class="header-section-number">8.2.5</span> Year 10 only Results</a>
+  <li><a href="#height-increment" id="toc-height-increment" class="nav-link" data-scroll-target="#height-increment"><span class="header-section-number">9.2.1</span> Height increment</a></li>
+  <li><a href="#height-increment-results" id="toc-height-increment-results" class="nav-link" data-scroll-target="#height-increment-results"><span class="header-section-number">9.2.2</span> Height increment results</a></li>
+  <li><a href="#heights---year-10-only" id="toc-heights---year-10-only" class="nav-link" data-scroll-target="#heights---year-10-only"><span class="header-section-number">9.2.3</span> Heights - year 10 only</a></li>
+  <li><a href="#here-i-make-my-selection" id="toc-here-i-make-my-selection" class="nav-link" data-scroll-target="#here-i-make-my-selection"><span class="header-section-number">9.2.4</span> Here I make my selection</a></li>
+  <li><a href="#year-10-only-results" id="toc-year-10-only-results" class="nav-link" data-scroll-target="#year-10-only-results"><span class="header-section-number">9.2.5</span> Year 10 only Results</a>
   <ul class="collapse">
-  <li><a href="#random-effects" id="toc-random-effects" class="nav-link" data-scroll-target="#random-effects"><span class="header-section-number">8.2.5.1</span> Random effects</a></li>
-  <li><a href="#fixed-effects" id="toc-fixed-effects" class="nav-link" data-scroll-target="#fixed-effects"><span class="header-section-number">8.2.5.2</span> Fixed effects</a></li>
+  <li><a href="#random-effects" id="toc-random-effects" class="nav-link" data-scroll-target="#random-effects"><span class="header-section-number">9.2.5.1</span> Random effects</a></li>
+  <li><a href="#fixed-effects" id="toc-fixed-effects" class="nav-link" data-scroll-target="#fixed-effects"><span class="header-section-number">9.2.5.2</span> Fixed effects</a></li>
   </ul></li>
-  <li><a href="#heights---multiple-years" id="toc-heights---multiple-years" class="nav-link" data-scroll-target="#heights---multiple-years"><span class="header-section-number">8.2.6</span> Heights - multiple years</a></li>
-  <li><a href="#multi-year-heights-v2" id="toc-multi-year-heights-v2" class="nav-link" data-scroll-target="#multi-year-heights-v2"><span class="header-section-number">8.2.7</span> Multi-year heights V2</a></li>
-  <li><a href="#multi-year-model-checking" id="toc-multi-year-model-checking" class="nav-link" data-scroll-target="#multi-year-model-checking"><span class="header-section-number">8.2.8</span> Multi-year model checking</a></li>
-  <li><a href="#multi-year-results" id="toc-multi-year-results" class="nav-link" data-scroll-target="#multi-year-results"><span class="header-section-number">8.2.9</span> Multi-year results</a></li>
-  <li><a href="#multi-year-vs.-year-10-only" id="toc-multi-year-vs.-year-10-only" class="nav-link" data-scroll-target="#multi-year-vs.-year-10-only"><span class="header-section-number">8.2.10</span> Multi-year vs.&nbsp;year 10 only</a></li>
+  <li><a href="#heights---multiple-years" id="toc-heights---multiple-years" class="nav-link" data-scroll-target="#heights---multiple-years"><span class="header-section-number">9.2.6</span> Heights - multiple years</a></li>
+  <li><a href="#multi-year-heights-v2" id="toc-multi-year-heights-v2" class="nav-link" data-scroll-target="#multi-year-heights-v2"><span class="header-section-number">9.2.7</span> Multi-year heights V2</a></li>
+  <li><a href="#multi-year-model-checking" id="toc-multi-year-model-checking" class="nav-link" data-scroll-target="#multi-year-model-checking"><span class="header-section-number">9.2.8</span> Multi-year model checking</a></li>
+  <li><a href="#multi-year-results" id="toc-multi-year-results" class="nav-link" data-scroll-target="#multi-year-results"><span class="header-section-number">9.2.9</span> Multi-year results</a></li>
+  <li><a href="#multi-year-vs.-year-10-only" id="toc-multi-year-vs.-year-10-only" class="nav-link" data-scroll-target="#multi-year-vs.-year-10-only"><span class="header-section-number">9.2.10</span> Multi-year vs.&nbsp;year 10 only</a></li>
   </ul></li>
-  <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output"><span class="header-section-number">8.3</span> Output</a></li>
+  <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output"><span class="header-section-number">9.3</span> Output</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../analysis/sprouts_import_data.html">Sprout height</a></li><li class="breadcrumb-item"><a href="../analysis/sprout_modeling.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Sprout data modeling</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../analysis/sprouts_import_data.html">Sprout height</a></li><li class="breadcrumb-item"><a href="../analysis/sprout_modeling.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Sprout data modeling</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Sprout data modeling</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Sprout data modeling</span></h1>
 </div>
 
 
@@ -316,8 +322,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"./scripts/rnd_color_brewer.r"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="objectives" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">8.1</span> Objectives</h2>
+<section id="objectives" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">9.1</span> Objectives</h2>
 <ol type="1">
 <li>Summarize differences in species response</li>
 <li>For each species, is there a difference in height increment between treatments?</li>
@@ -325,15 +331,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Is there a treatment difference in redwood or tanoak sprout heights at year 10, if so, what is the magnitude of the difference?</li>
 </ol>
 </section>
-<section id="modeling" class="level2 page-columns page-full" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="modeling"><span class="header-section-number">8.2</span> Modeling</h2>
+<section id="modeling" class="level2 page-columns page-full" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="modeling"><span class="header-section-number">9.2</span> Modeling</h2>
 <p>We have nested data where we have multiple observations within trees (over time), trees within plots and plots within sites. Any of these levels of nesting might result in correlations between observations, which violates the assumption of independence for OLS models, but can be accounted for using multi-level models.</p>
 <p>I may want to include a categorical variable (spp) as a random slope (on the LHS of the random parts) to allow random effects to be estimated for each species separately. Michael Clark <a href="https://m-clark.github.io/posts/2020-03-01-random-categorical">explores this scenario</a>, with some simpler data.</p>
 <p>My approach will be to start with a simple model and build towards more complex models.</p>
-<section id="height-increment" class="level3 page-columns page-full" data-number="8.2.1">
-<h3 data-number="8.2.1" class="anchored" data-anchor-id="height-increment"><span class="header-section-number">8.2.1</span> Height increment</h3>
+<section id="height-increment" class="level3 page-columns page-full" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="height-increment"><span class="header-section-number">9.2.1</span> Height increment</h3>
 <p>By starting with height increment modeling, I will be able to answer question 1 in the objectives. This conclusion may be helpful for informing total height modeling. I am curious whether height in the first 10 years increases linearly with age. Is there a growth slow down in year 5-10 compared to years 1-5?</p>
-<p>We saw in <a href="sprout_data_exploration.html#fig-data-summary-ht-inc-year" class="quarto-xref">Figure&nbsp;<span>7.6</span></a> that increment does slow down somewhat in the second measurement period (year 5-10), at least for redwoods, but we may be justified in overlooking this. Lets look at individual tree’s height trajectories.</p>
+<p>We saw in <a href="sprout_data_exploration.html#fig-data-summary-ht-inc-year" class="quarto-xref">Figure&nbsp;<span>8.6</span></a> that increment does slow down somewhat in the second measurement period (year 5-10), at least for redwoods, but we may be justified in overlooking this. Lets look at individual tree’s height trajectories.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -355,7 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <img src="sprout_modeling_files/figure-html/fig-linear-ht-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-linear-ht-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.1: Data plot showing trajectory of individual tree heights across the three measurements. Height increase appears fairly linear with year.
+Figure&nbsp;9.1: Data plot showing trajectory of individual tree heights across the three measurements. Height increase appears fairly linear with year.
 </figcaption>
 </figure>
 </div>
@@ -1545,8 +1551,8 @@ Figure&nbsp;8.1: Data plot showing trajectory of individual tree heights across 
 </div>
 </div>
 </section>
-<section id="height-increment-results" class="level3" data-number="8.2.2">
-<h3 data-number="8.2.2" class="anchored" data-anchor-id="height-increment-results"><span class="header-section-number">8.2.2</span> Height increment results</h3>
+<section id="height-increment-results" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="height-increment-results"><span class="header-section-number">9.2.2</span> Height increment results</h3>
 <p>The final selected model, based on AIC and examination of residuals had the form:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -1569,7 +1575,7 @@ Figure&nbsp;8.1: Data plot showing trajectory of individual tree heights across 
 <img src="sprout_modeling_files/figure-html/fig-sprout-inc-treat-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sprout-inc-treat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.2: Estimated marginal means for the effect of harvest treatment on redwood and tanoak sprout height increment, averaged over two growth periods, ten years after harvest. Purple bars represent confidence intervals and statistical significance (α = 0.05) is indicated by non-overlaping red arrows.
+Figure&nbsp;9.2: Estimated marginal means for the effect of harvest treatment on redwood and tanoak sprout height increment, averaged over two growth periods, ten years after harvest. Purple bars represent confidence intervals and statistical significance (α = 0.05) is indicated by non-overlaping red arrows.
 </figcaption>
 </figure>
 </div>
@@ -1589,7 +1595,7 @@ Figure&nbsp;8.2: Estimated marginal means for the effect of harvest treatment on
 <img src="sprout_modeling_files/figure-html/fig-sprout-inc-year-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sprout-inc-year-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.3: Estimated marginal means for the effect of growth period on redwood and tanoak sprout height increment, averaged over four harvest treatments, ten years after harvest. Purple bars represent confidence intervals and statistical significance (α = 0.05) is indicated by non-overlaping red arrows.
+Figure&nbsp;9.3: Estimated marginal means for the effect of growth period on redwood and tanoak sprout height increment, averaged over four harvest treatments, ten years after harvest. Purple bars represent confidence intervals and statistical significance (α = 0.05) is indicated by non-overlaping red arrows.
 </figcaption>
 </figure>
 </div>
@@ -1695,15 +1701,15 @@ Figure&nbsp;8.3: Estimated marginal means for the effect of growth period on red
 <img src="sprout_modeling_files/figure-html/fig-ht-inc-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ht-inc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.4: There was a significant difference in height increment between period 1 and 2 for both species.
+Figure&nbsp;9.4: There was a significant difference in height increment between period 1 and 2 for both species.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="heights---year-10-only" class="level3" data-number="8.2.3">
-<h3 data-number="8.2.3" class="anchored" data-anchor-id="heights---year-10-only"><span class="header-section-number">8.2.3</span> Heights - year 10 only</h3>
+<section id="heights---year-10-only" class="level3" data-number="9.2.3">
+<h3 data-number="9.2.3" class="anchored" data-anchor-id="heights---year-10-only"><span class="header-section-number">9.2.3</span> Heights - year 10 only</h3>
 <p>The simplest model that I’m willing to look at includes a treatment/species interaction, and no random effects. It will serve as a baseline for comparison.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I'm calling the height data "d"</span></span>
@@ -2228,8 +2234,8 @@ Figure&nbsp;8.4: There was a significant difference in height increment between 
 </div>
 </div>
 </section>
-<section id="here-i-make-my-selection" class="level3" data-number="8.2.4">
-<h3 data-number="8.2.4" class="anchored" data-anchor-id="here-i-make-my-selection"><span class="header-section-number">8.2.4</span> Here I make my selection</h3>
+<section id="here-i-make-my-selection" class="level3" data-number="9.2.4">
+<h3 data-number="9.2.4" class="anchored" data-anchor-id="here-i-make-my-selection"><span class="header-section-number">9.2.4</span> Here I make my selection</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -2237,14 +2243,14 @@ Figure&nbsp;8.4: There was a significant difference in height increment between 
 </details>
 </div>
 </section>
-<section id="year-10-only-results" class="level3" data-number="8.2.5">
-<h3 data-number="8.2.5" class="anchored" data-anchor-id="year-10-only-results"><span class="header-section-number">8.2.5</span> Year 10 only Results</h3>
-<section id="random-effects" class="level4" data-number="8.2.5.1">
-<h4 data-number="8.2.5.1" class="anchored" data-anchor-id="random-effects"><span class="header-section-number">8.2.5.1</span> Random effects</h4>
+<section id="year-10-only-results" class="level3" data-number="9.2.5">
+<h3 data-number="9.2.5" class="anchored" data-anchor-id="year-10-only-results"><span class="header-section-number">9.2.5</span> Year 10 only Results</h3>
+<section id="random-effects" class="level4" data-number="9.2.5.1">
+<h4 data-number="9.2.5.1" class="anchored" data-anchor-id="random-effects"><span class="header-section-number">9.2.5.1</span> Random effects</h4>
 <p>The best model according to AIC includes a random intercept for plot and a random slope for spp. Because spp is a factor, this effectively estimates a species specific intercept, but also takes into account the covariance of the species plot effect.</p>
 </section>
-<section id="fixed-effects" class="level4" data-number="8.2.5.2">
-<h4 data-number="8.2.5.2" class="anchored" data-anchor-id="fixed-effects"><span class="header-section-number">8.2.5.2</span> Fixed effects</h4>
+<section id="fixed-effects" class="level4" data-number="9.2.5.2">
+<h4 data-number="9.2.5.2" class="anchored" data-anchor-id="fixed-effects"><span class="header-section-number">9.2.5.2</span> Fixed effects</h4>
 <p>The best model included speceis and treatment, but no interactions. This suggests that treatments do not affect species differentially.</p>
 <p>Because the best model did not contain a species x treatment interaction, comparisons between treatments is the same for both species. The GS treatment resulted in greater heights in year 10 than the other treatments (0.001 &lt; p &lt; 0.04). Predicted mean height for redwood ranged from 10.29 m in the GS treatment to 6.16 m in the HD treatment. For tanoak, predicted mean height ranged from 5.12 in the GS treatment to 3.04 in the HD treatment. Predicted mean heights followed the pattern GS &gt; LD &gt; HA &gt; HD.</p>
 <div class="cell">
@@ -2307,7 +2313,7 @@ Removed 1 row containing missing values or values outside the scale range
 <img src="sprout_modeling_files/figure-html/fig-year-10-only-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-year-10-only-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.5: Predicted mean height and 95% confidence intervals (gray bars) for redwood and tanoak stump sprouts 10 years after harvest using four different harvest treatments. Non-overlaping blue arrows indicate statistically significant differences between treatments within a species.
+Figure&nbsp;9.5: Predicted mean height and 95% confidence intervals (gray bars) for redwood and tanoak stump sprouts 10 years after harvest using four different harvest treatments. Non-overlaping blue arrows indicate statistically significant differences between treatments within a species.
 </figcaption>
 </figure>
 </div>
@@ -2315,10 +2321,10 @@ Figure&nbsp;8.5: Predicted mean height and 95% confidence intervals (gray bars) 
 </div>
 </section>
 </section>
-<section id="heights---multiple-years" class="level3 page-columns page-full" data-number="8.2.6">
-<h3 data-number="8.2.6" class="anchored" data-anchor-id="heights---multiple-years"><span class="header-section-number">8.2.6</span> Heights - multiple years</h3>
+<section id="heights---multiple-years" class="level3 page-columns page-full" data-number="9.2.6">
+<h3 data-number="9.2.6" class="anchored" data-anchor-id="heights---multiple-years"><span class="header-section-number">9.2.6</span> Heights - multiple years</h3>
 <p>By including year as a numeric variable, we are assuming a liner relationship between year and height. This term (and it’s interactions) can than be interpreted as a modeled growth increment, and although we only have observations at years 1, 5, and 10, other years predictions will be linearly interpolated.</p>
-<p>The following models were fit, and are summarized in <a href="#tbl-model-summaries" class="quarto-xref">Table&nbsp;<span>8.1</span></a>.</p>
+<p>The following models were fit, and are summarized in <a href="#tbl-model-summaries" class="quarto-xref">Table&nbsp;<span>9.1</span></a>.</p>
 <ol start="2" type="1">
 <li>OLS linear model including year in a 3-way interaction.</li>
 <li>Eliminate the 3-way interaction (<code>spp:treat:year</code>), keeping others. This results in a significantly lower AIC.</li>
@@ -2431,7 +2437,7 @@ Figure&nbsp;8.5: Predicted mean height and 95% confidence intervals (gray bars) 
 <div id="tbl-model-summaries" class="cell quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model-summaries-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;8.1: Summary table for models 2-10, described above. Standard error in parantheses.
+Table&nbsp;9.1: Summary table for models 2-10, described above. Standard error in parantheses.
 </figcaption>
 <div aria-describedby="tbl-model-summaries-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <div class="cell-output-display column-body-outset">
@@ -3172,8 +3178,8 @@ Table&nbsp;8.1: Summary table for models 2-10, described above. Standard error i
 </div>
 </div>
 </section>
-<section id="multi-year-heights-v2" class="level3 page-columns page-full" data-number="8.2.7">
-<h3 data-number="8.2.7" class="anchored" data-anchor-id="multi-year-heights-v2"><span class="header-section-number">8.2.7</span> Multi-year heights V2</h3>
+<section id="multi-year-heights-v2" class="level3 page-columns page-full" data-number="9.2.7">
+<h3 data-number="9.2.7" class="anchored" data-anchor-id="multi-year-heights-v2"><span class="header-section-number">9.2.7</span> Multi-year heights V2</h3>
 <p>The problem with all of the above models is (a) a normal distribution is not a good fit for the data because it results in negative height predictions for small trees (year 1) and (b) variance is not constant. Finally, we are fitting year as a linear effect because fitting it as a factor with 3 levels led to model convergence problems, but ideally, we would like to allow different relationships between height and year, because, as we saw in the previous section, height growth is not constant in the first 10 years.</p>
 <p>For these reasons it makes sense to try another modeling framework, particularly, a gamma distributed model, with a modeled dispersion parameter. It allows only positive predictions, can right skewed distributions, and the dispersion can be modeled as a function of covariates.</p>
 <div class="cell page-columns page-full">
@@ -3302,7 +3308,7 @@ Table&nbsp;8.1: Summary table for models 2-10, described above. Standard error i
 <div id="tbl-model-summaries-v2" class="cell quarto-float anchored page-columns page-full">
 <figure class="quarto-float quarto-float-tbl figure page-columns page-full">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model-summaries-v2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;8.2: Summary table for models 2-10, described above. Standard error in parantheses.
+Table&nbsp;9.2: Summary table for models 2-10, described above. Standard error in parantheses.
 </figcaption>
 <div aria-describedby="tbl-model-summaries-v2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <div class="cell-output-display column-body-outset">
@@ -4387,8 +4393,8 @@ Table&nbsp;8.2: Summary table for models 2-10, described above. Standard error i
 </div>
 <p>The model with the lowest AIC is model 18.</p>
 </section>
-<section id="multi-year-model-checking" class="level3" data-number="8.2.8">
-<h3 data-number="8.2.8" class="anchored" data-anchor-id="multi-year-model-checking"><span class="header-section-number">8.2.8</span> Multi-year model checking</h3>
+<section id="multi-year-model-checking" class="level3" data-number="9.2.8">
+<h3 data-number="9.2.8" class="anchored" data-anchor-id="multi-year-model-checking"><span class="header-section-number">9.2.8</span> Multi-year model checking</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -4402,15 +4408,15 @@ Table&nbsp;8.2: Summary table for models 2-10, described above. Standard error i
 <img src="sprout_modeling_files/figure-html/fig-multi-year-resid-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multi-year-resid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.6: Residual vs fitted plot for the selected multi-year linear regression model for heights.
+Figure&nbsp;9.6: Residual vs fitted plot for the selected multi-year linear regression model for heights.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="multi-year-results" class="level3" data-number="8.2.9">
-<h3 data-number="8.2.9" class="anchored" data-anchor-id="multi-year-results"><span class="header-section-number">8.2.9</span> Multi-year results</h3>
+<section id="multi-year-results" class="level3" data-number="9.2.9">
+<h3 data-number="9.2.9" class="anchored" data-anchor-id="multi-year-results"><span class="header-section-number">9.2.9</span> Multi-year results</h3>
 <p>Using model 18, we can now answer the questions we posed in the Objectives section.</p>
 <div class="cell">
 <details class="code-fold">
@@ -4446,7 +4452,7 @@ Figure&nbsp;8.6: Residual vs fitted plot for the selected multi-year linear regr
 <img src="sprout_modeling_files/figure-html/fig-multi-year-growth-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multi-year-growth-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.7: Average species and treatment specific height as a linear function of year. Density distributions represent the raw data associated with the estimate at that point. The grey line is the OLS fit for reference.
+Figure&nbsp;9.7: Average species and treatment specific height as a linear function of year. Density distributions represent the raw data associated with the estimate at that point. The grey line is the OLS fit for reference.
 </figcaption>
 </figure>
 </div>
@@ -4507,15 +4513,15 @@ Figure&nbsp;8.7: Average species and treatment specific height as a linear funct
 <img src="sprout_modeling_files/figure-html/fig-multi-year-at-10-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multi-year-at-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.8: Marginal means at year 10 based on height data collected three times over 10 years. The same letter within a species indicates that there was not enough evidence to differentiate those treatments.
+Figure&nbsp;9.8: Marginal means at year 10 based on height data collected three times over 10 years. The same letter within a species indicates that there was not enough evidence to differentiate those treatments.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="multi-year-vs.-year-10-only" class="level3" data-number="8.2.10">
-<h3 data-number="8.2.10" class="anchored" data-anchor-id="multi-year-vs.-year-10-only"><span class="header-section-number">8.2.10</span> Multi-year vs.&nbsp;year 10 only</h3>
+<section id="multi-year-vs.-year-10-only" class="level3" data-number="9.2.10">
+<h3 data-number="9.2.10" class="anchored" data-anchor-id="multi-year-vs.-year-10-only"><span class="header-section-number">9.2.10</span> Multi-year vs.&nbsp;year 10 only</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -4593,7 +4599,7 @@ Figure&nbsp;8.8: Marginal means at year 10 based on height data collected three 
 <img src="sprout_modeling_files/figure-html/fig-height-pred-fit-all-years-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-height-pred-fit-all-years-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.9: Oberved and predicted height distribution of our observed dataset using the final, chosen, multi-year model. Predictions were made using all random effects.
+Figure&nbsp;9.9: Oberved and predicted height distribution of our observed dataset using the final, chosen, multi-year model. Predictions were made using all random effects.
 </figcaption>
 </figure>
 </div>
@@ -4637,8 +4643,8 @@ Figure&nbsp;8.9: Oberved and predicted height distribution of our observed datas
 </div>
 </section>
 </section>
-<section id="output" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="output"><span class="header-section-number">8.3</span> Output</h2>
+<section id="output" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="output"><span class="header-section-number">9.3</span> Output</h2>
 <p>saved data for later use</p>
 <div class="cell">
 <details class="code-fold">
@@ -5041,12 +5047,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../analysis/sprout_data_exploration.html" class="pagination-link  aria-label=" &lt;span="" data="" exploration&lt;="" span&gt;"="">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Sprout data exploration</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Sprout data exploration</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../analysis/regen_data_import.html" class="pagination-link" aria-label="<span class='chapter-number'>9</span>&nbsp; <span class='chapter-title'>Import and wrangle regeneration data</span>">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Import and wrangle regeneration data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../analysis/regen_data_import.html" class="pagination-link" aria-label="<span class='chapter-number'>10</span>&nbsp; <span class='chapter-title'>Import and wrangle regeneration data</span>">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Import and wrangle regeneration data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

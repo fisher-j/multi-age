@@ -290,7 +290,7 @@ regen_grand_means <- regen_all |>
         mutate(across(where(is.double), ~ round(.x, 2)))
     )
   ) |>
-  select(grand_mean)
+  select(spp, grand_mean)
 
 # make data easier to work with by recursively converting nested tibbles to
 # named lists. I'm using emmeans::pairs() to get the pairwise comparisons
@@ -306,7 +306,7 @@ regen_pairs <-
         deframe()
     )
   ) |>
-  select(pairs) |>
+  select(spp, pairs) |>
   deframe()
 
 regen_mean <-
@@ -318,7 +318,7 @@ regen_mean <-
         deframe()
     )
   ) |>
-  select(emm) |>
+  select(spp, emm) |>
   deframe()
 
 regen_grand <- deframe(regen_grand_means)
@@ -374,7 +374,7 @@ regen_grand_means |> unnest(grand_mean) |> tinytable::tt()
 
 regen_all |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
-  select(emm_df) |>
+  select(spp, emm_df) |>
   unnest(emm_df) |>
   ggplot(emm_mapping(x = level)) +
   facet_wrap(~spp, ncol = 2, labeller = plot_labels, scales = "free") +
@@ -390,7 +390,7 @@ regen_all |>
 #|   harvest treatments and four species classes (n = 16).
 
 regen_all |>
-  select(emm) |>
+  select(spp, emm) |>
   unnest(everything()) |>
   rename(treatment = level) |>
   tinytable::tt() |>
@@ -407,7 +407,7 @@ regen_all |>
   mutate(
     emm = list(pairs(emmobj) |> as_tibble())
   ) |>
-  select(emm) |>
+  select(spp, emm) |>
   unnest(emm) |>
   select(-c(z.ratio)) |>
   tinytable::tt() |>
@@ -437,7 +437,7 @@ rw_to_pairs <-
         deframe()
     )
   ) |>
-  select(pairs) |>
+  select(treat, pairs) |>
   deframe()
 
 rw_to_mean <-
@@ -451,7 +451,7 @@ rw_to_mean <-
         deframe()
     )
   ) |>
-  select(emm) |>
+  select(treat, emm) |>
   deframe()
 ```
 
@@ -464,7 +464,7 @@ about `r abs(rw_to_pairs$ld[[1]]$estimate)` m^2^
 ha^-1^ in the LD treatment (p = `r rw_to_pairs$ld[[1]]$p.value`), and about 
 `r abs(rw_to_pairs$ha[[1]]$estimate)` m^2^ ha^-1^ in the HA treatment 
 (p = `r rw_to_pairs$ha[[1]]$p.value`). In the HD treatment, we expect to see slightly
-higher tanoak basal area (`r abs(rw_to_pairs$hd[[1]]$p.value)`).
+higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`).
 
 Uncertainty in average Redwood basal area across sites, indicated by the size of 95% confidence intervals, is much
 greater than that of tanoak in the GS treatment, but this difference
@@ -482,7 +482,7 @@ average basal area uncertainty across sites is very similar.
 
 regen_rw_to |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
-  select(emm_df) |>
+  select(treat, emm_df) |>
   unnest(emm_df) |>
   ggplot(emm_mapping(x = level)) +
   facet_wrap(~treat, ncol = 2, labeller = plot_labels, scales = "free") +
@@ -613,7 +613,7 @@ rw_to_ht_pairs <-
         deframe()
     )
   ) |>
-  select(pairs) |>
+  select(spp, pairs) |>
   deframe()
 
 rw_to_ht_mean <-
@@ -627,7 +627,7 @@ rw_to_ht_mean <-
         deframe()
     )
   ) |>
-  select(emm) |>
+  select(spp, emm) |>
   deframe()
 ```
 
@@ -670,7 +670,7 @@ higher than the HA treatment by about `r rw_to_ht_pairs$SESE[["LD - HA"]]$estima
 
 ht_inc_treat |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
-  select(emm_df) |>
+  select(spp, emm_df) |>
   unnest(emm_df) |>
   ggplot(emm_mapping(x = level)) +
   facet_wrap(~spp, ncol = 2, labeller = plot_labels) +
@@ -687,7 +687,7 @@ ht_inc_treat |>
 
 ht_inc_treat |>
   mutate(emm = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
-  select(emm) |>
+  select(spp, emm) |>
   unnest(everything()) |>
   rename(treatment = level) |>
   tinytable::tt(digits = 2) |>
@@ -717,7 +717,7 @@ ht_inc_year_pairs <-
         deframe()
     )
   ) |>
-  select(pairs) |>
+  select(spp, pairs) |>
   deframe()
 
 ht_inc_year_mean <-
@@ -731,7 +731,7 @@ ht_inc_year_mean <-
         deframe()
     )
   ) |>
-  select(emm) |>
+  select(spp, emm) |>
   deframe()
 
 # ht_inc_year_mean$LIDE$`5`$estimate
@@ -758,7 +758,7 @@ period (@fig-sprout-ht-inc-year).
 
 ht_inc_year |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
-  select(emm_df) |>
+  select(spp, emm_df) |>
   unnest(emm_df) |>
   ggplot(emm_mapping(x = level)) +
   draw_emm_emm(position = position_nudge(x = -0.15)) +
@@ -784,7 +784,7 @@ ht_inc_year |>
 
 ht_inc_year |>
   mutate(emm = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
-  select(emm) |>
+  select(spp, emm) |>
   unnest(everything()) |>
   rename(year = level) |>
   tinytable::tt(digits = 2) |>
@@ -827,7 +827,7 @@ ht_year_10_pairs <-
         deframe()
     )
   ) |>
-  select(pairs) |>
+  select(spp, pairs) |>
   deframe()
 
 ht_year_10_mean <-
@@ -841,7 +841,7 @@ ht_year_10_mean <-
         deframe()
     )
   ) |>
-  select(emm) |>
+  select(spp, emm) |>
   deframe()
 ```
 
@@ -865,7 +865,7 @@ heights followed the pattern GS > LD > HA > HD (@fig-sprout-ht-yr-10).
 
 ht_year_10 |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
-  select(emm_df) |>
+  select(spp, emm_df) |>
   unnest(emm_df) |>
   ggplot(emm_mapping(x = level)) +
   draw_emm_emm(position = position_nudge(x = -0.15)) +
@@ -887,7 +887,7 @@ ht_year_10 |>
 
 ht_year_10 |>
   mutate(emm = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
-  select(emm) |>
+  select(spp, emm) |>
   unnest(everything()) |>
   rename(year = level) |>
   tinytable::tt(digits = 2) |>
@@ -904,7 +904,7 @@ ht_year_10 |>
   mutate(
     pairs = list(pairs(emmobj) |> as_tibble())
   ) |>
-  select(pairs) |>
+  select(spp, pairs) |>
   unnest(pairs) |>
   select(-c(z.ratio)) |>
   tinytable::tt() |>
@@ -961,7 +961,7 @@ fuel_tmb$pre <- mutate(
 )
 
 # extract contrasts for each species into nested lists for inline use
-fuel_pre_means <-
+fuel_pre_compare <-
   fuel_tmb$pre |>
   mutate(
     pairs = list(
@@ -975,7 +975,7 @@ fuel_pre_means <-
   select(class, pairs) |>
   deframe()
 
-fuel_pre_compare <-
+fuel_pre_means <-
   fuel_tmb$pre |>
   mutate(
     emm = list(
@@ -992,23 +992,40 @@ fuel_pre_compare <-
 # fuel_pre_compare |> names()
 # # [1] "dufflitter" "onehr"      "tenhr"      "hundhr"     "thoushr"    "veg"
 # fuel_pre_compare$dufflitter |> names()
-# # [1] "gs" "ld" "ha" "hd"
-# fuel_pre_compare$dufflitter$gs |> names()
+# # [1] "gs - ld" "gs - ha" "gs - hd" "ld - ha" "ld - hd" "ha - hd"
+# fuel_pre_means$dufflitter$gs |> names()
 # # [1] "estimate"  "SE"        "df"        "asymp.LCL" "asymp.UCL"
+
+# pvalue for the difference between HD and GS for duff & litter
+# fuel_pre_compare$onehr[["gs - ld"]]$p.value
 ```
 TODO: I'm here
 
 For Duff & Litter, the largest difference was between the HD and HA treatments.
-The HD treatment had about 1.4 times more duff and litter (p = 0.07). Generally,
-all treatments were similar, with estimated loading of around 50 Mg ha-1.
-One-hour fuels were around 50% higher in the HA treatment compared to the LD and
-GS treatments (p = 0.07, and p = 0.01, respectively), with mean differences of
-around 0.5 Mg ha-1. Ten, hundred and thousand-hour fuels were statistically,
-very similar across treatments (p = 0.7 — p = 1). Point estimates varied by
-about 1, 3, and <20 Mg ha-1 for ten, hundred, and thousand-hour fuels,
-respectively. Vegetative fuel loading was greatest in the GS treatment, with an
-expected value of 28.5 Mg ha-1, which was about 2.7 times greater than in HA (p
-= 0.01) (@fig-fuel-pre-pct).
+The HD treatment had about `r fuel_pre_means$dufflitter$hd$estimate` Mg ha^-1^,
+and was about `r fuel_pre_compare$dufflitter[["hd - ha"]]$estimate` Mg ha^-1^
+greater than the HA treatment (p = `r fuel_pre_compare$dufflitter[["ha - hd"]]$p.value`).
+Generally, all treatments were similar, with estimated loading of around 
+`r round(mean(map_dbl(fuel_pre_means$dufflitter, ~pluck(.x, "estimate"))), 0)` Mg ha^-1^.
+
+One-hour fuels were highest in the HA treatment, with an expected value of 
+`r fuel_pre_means$onehr$ha$estimate` Mg ha^-1^, which was about `r
+fuel_pre_compare$onehr[["ha - gs"]]$estimate` Mg ha^-1^ greater than in the GS
+treatment (p = `r fuel_pre_compare$onehr[["ha - gs"]]$p.value`). One-hour fuels
+in the LD and HD treatments were intermediate but the LD was more similar to the
+GS and the HD was more similar to the HA treatment.
+
+Ten, hundred and thousand-hour fuels were statistically,
+very similar across treatments (p = 0.7 — p = 1). Treatment averages had 
+maximum differences of around 1, 3, and 10 Mg ha^-1^ for ten, hundred, and thousand-hour fuels,
+respectively. 
+
+Vegetative fuel loading was greatest in the GS treatment, with an
+expected value of `r fuel_pre_means$veg$gs$estimate` Mg ha^-1^, which was about  
+`r fuel_pre_compare$veg[["gs - ha"]]$estimate` Mg ha^-1^ greater than in the HA
+treatment (p = `r fuel_pre_compare$veg[["gs - ha"]]$p.value`) and LD and HD
+treatments were intermediate. 
+(@fig-fuel-pre-pct).
 
 ```{r}
 #| label: fig-fuel-pre-pct
@@ -1045,7 +1062,7 @@ fuel_tmb$pre |>
 #| label: tbl-fuel-pre-pct-means
 #| tbl-cap: >
 #|  Estimated marginal means (Mg ha^-1^) for six fuel classes and four overstory
-#|  treatments before pct
+#|  treatments before pre-commercial thinning (pct).
 
 fuel_tmb$pre |>
   mutate(emmeans = list(emmeans::emmeans(emmobj, ~level) |> as_tibble())) |>
@@ -1055,6 +1072,20 @@ fuel_tmb$pre |>
   tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
 
+```{r}
+#| label: tbl-fuel-pre-pct-compare
+#| tbl-cap: >
+#|   Pairwise comparisons of treatments for six fuel classes before pct.
+#|   P-values are adjusted for multiple comparisons using the Tukey method.
+
+fuel_tmb$pre |>
+  mutate(pairs = list(pairs(emmobj) |> as_tibble())) |>
+  select(class, pairs) |>
+  unnest(pairs) |>
+  select(-c(z.ratio)) |>
+  arrange(p.value) |>
+  tinytable::tt(digits = 2, num_fmt = "decimal")
+```
 
 ```{r}
 #| label: tbl-fuel-pre-pct-grand-means
@@ -1074,8 +1105,8 @@ The response for all six, post-pct fuel classes were modeled with a gamma
 distribution and a log link, and included the same multi-level random effects as
 for the pre-pct models. Dispersion models with treatment as the only predictor
 were included for 1-hr and 100-hr fuel classes. All models included a hurdle
-portion to model zeros using a logit link. For 100-hr fuels, this model included
-treatment and site as predictors, and for the rest, a constant rate for all
+portion to model zeros using a logit link. For 100-hr fuels, the hurdle portion included
+treatment and site as predictors. For the rest, a constant rate of zeros for all
 observations was used (@tbl-fuel-post-pct).
 
 ```{r}
@@ -1093,35 +1124,7 @@ fuel_tmb$post |>
   tinytable::tt()
 ```
 
-Post-pct resulted in greater stratification of treatments (@fig-fuel-post-pct).
-One-hour fuels for most treatments were around 2.4 Mg ha^-1^, but the HA
-treatment had around half of that amount (p = 0.01 to p = 0.02). The GS
-treatment had the greatest 10-hr fuel loading with 8.8 Mg ha^-1^, which was
-about 1.6, 2.3 and 2.9 times greater than the LD, HA, and HD treatments
-respectively (p = 0.03, p < 0.001, for the others, respectively). The LD
-treatment also had about 1.7 times more 10-hr fuels that the HD treatment (5.4
-vs. 3 Mg ha^-1^, p = 0.001). Hundred-hour fuels were also greatest in the GS
-treatment, with an average of about 19 Mg ha^-1^, which was about 2.6 times
-greater than in the HD treatment (7 Mg ha^-1^, p < 0.001). Thousand-hour fuels
-were greatest in the HD treatment, with 80 Mg ha^-1^, which was about 2.7 times
-greater than the LD and HD treatments (p = 0.03 and p = 0.05, respectively).
-Fuel loading for live vegetation was similar across treatments at around 2.5 Mg
-ha^-1^. The pre-post vegetation difference was greatest in the GS treatment at
-about 31 Mg ha^-1^, which was 2.5 and 2.8 times the HD and HA treatments,
-respectively (p ≈ 0.01).
-
 ```{r}
-#| label: fig-fuel-post-pct
-#| fig-width: 8
-#| fig-cap: >
-#|   Estimated marginal means (black dots) confidence intervals (gray bars) and
-#|   comparisons (blue arrows) of fuel loading across four treatments for six
-#|   different fuel-class models. Non-overlapping blue arrows indicates
-#|   statistical significance at the α = 0.05 level. Vegetation difference
-#|   equals the transect level difference in vegetation load in the pre and
-#|   post-pct conditions. This represents slash fuels recruited to the forest
-#|   floor following the pre-commercial thinning.
-
 fuel_tmb$post <- mutate(
   fuel_tmb$post,
   newdata = list(tidyr::expand(data, treatment, nesting(site, block, corner))),
@@ -1131,8 +1134,99 @@ fuel_tmb$post <- mutate(
     x_var = "treatment",
     by_var = NULL,
     contrast = list(treatment = "pairwise")
-  ))
+  )),
+  emmeans = list(emmeans::emmeans(emmobj, ~level) |> as_tibble()),
+  pairs = list(pairs(emmobj) |> as_tibble())
 )
+
+# extract contrasts for each species into nested lists for inline use
+fuel_post_compare <-
+  fuel_tmb$post |>
+  mutate(
+    pairs = list(
+      pairs(emmobj) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = contrast) |>
+        deframe()
+    )
+  ) |>
+  select(class, pairs) |>
+  deframe()
+
+fuel_post_means <-
+  fuel_tmb$post |>
+  mutate(
+    emm = list(
+      emmeans(emmobj, ~level) |>
+        as_tibble() |>
+        mutate(across(where(is.double), \(x) round(x, 2))) |>
+        nest(.by = level) |>
+        deframe()
+    )
+  ) |>
+  select(class, emm) |>
+  deframe()
+
+# [1] "onehr"    "tenhr"    "hundhr"   "thoushr"  "veg"      "veg_diff"
+# [1] "gs - ld" "gs - ha" "gs - hd" "ld - ha" "ld - hd" "ha - hd"
+# [1] "estimate"  "SE"        "df"        "asymp.LCL" "asymp.UCL"
+```
+
+Pre-commercial thinning resulted in greater stratification of treatments
+(@fig-fuel-post-pct). One-hour fuels for most treatments were around 
+`r round(mean(map_dbl(discard_at(fuel_post_means$onehr, "ha"), ~pluck(.x, "estimate"))), 1)`
+Mg ha^-1^, but the HA treatment was lower than these at about
+`r fuel_post_means$onehr$ha$estimate` Mg ha^-1^ 
+(p <= `r fuel_post_compare$onehr[["ha - gs"]]$p.value`).
+
+The GS treatment had the greatest 10-hr fuel loading with 
+`r fuel_post_means$tenhr$gs$estimate` Mg ha^-1^, which was
+greater than the LD, HA, and HD treatments by  
+`r fuel_post_compare$tenhr[["gs - ld"]]$estimate`,
+`r fuel_post_compare$tenhr[["gs - ha"]]$estimate`, and
+`r fuel_post_compare$tenhr[["gs - hd"]]$estimate` Mg ha^-1^, respectively (
+p = `r fuel_post_compare$tenhr[["gs - ld"]]$p.value`, 
+p  < 0.001, and
+p = `r fuel_post_compare$tenhr[["gs - hd"]]$p.value`).
+The LD treatment also had about `r fuel_post_compare$tenhr[["ld - hd"]]$estimate` 
+Mg ha^-1^ more 10-hr fuels that the HD treatment 
+(p = `r fuel_post_compare$tenhr[["ld - hd"]]p.value`). 
+
+Hundred-hour fuels followed a similar trend as the 10-hr fuels. They were greatest in the GS
+treatment, with an average of about `r fuel_post_means$hundhr$gs$estimate` Mg ha^-1^, 
+which was about `r fuel_post_compare$hundhr[["gs - hd"]]$estimate` Mg ha^-1^ 
+greater than the HD treatment (p = `r fuel_post_compare$hundhr[["gs - hd"]]$p.value`).
+
+Thousand-hour fuels
+were greatest in the HD treatment, with an average of about `r
+fuel_post_means$thoushr$hd$estimate` Mg ha^-1^, which was about
+`r abs(fuel_post_compare$thoushr[["ld - hd"]]$estimate)` Mg ha^-1^ greater than the
+LD and HA treatments (p <= `r fuel_post_compare$thoushr[["ha - hd"]]$p.value`).
+The GS treatment was intermediate.
+
+Fuel loading for live vegetation was similar across treatments at around `r round(mean(map_dbl(fuel_post_means$onehr, ~pluck(.x, "estimate"))), 1)`  Mg
+ha^-1^.  
+
+The difference in vegetation loading before and after PCT was greatest in the GS treatment at
+about `r fuel_post_means$veg_diff$gs$estimate` Mg ha^-1^, which was 
+greater than the HA and HD treatments by about 
+`r round(mean(map_dbl(keep_at(fuel_post_compare$veg_diff, c("gs - ha", "gs - hd")), "estimate")), 0)` 
+Mg ha^-1^ (p = `r fuel_post_compare$veg_diff[["gs - hd"]]$p.value` and 
+p = `r fuel_post_compare$veg_diff[["gs - ha"]]$p.value`, respectively). 
+The LD treatment was intermediate.
+
+```{r}
+#| label: fig-fuel-post-pct
+#| fig-width: 8
+#| fig-cap: >
+#|   Estimated marginal means (black dots) confidence intervals (gray bars) and
+#|   statistical comparisons (blue arrows) of fuel loading across four
+#|   treatments for six different fuel-class models. Non-overlapping blue arrows
+#|   indicates statistical significance at the α = 0.05 level. Vegetation
+#|   difference equals the transect level difference in vegetation load in the
+#|   pre and post-pct conditions. This represents slash fuels recruited to the
+#|   forest floor following the pre-commercial thinning.
 
 fuel_tmb$post |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
@@ -1165,6 +1259,23 @@ fuel_tmb$post |>
   tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
 
+
+```{r}
+#| label: tbl-fuel-post-pct-compare
+#| tbl-cap: >
+#|   Pairwise comparisons of treatments for six fuel classes after pct. P-values
+#|   are adjusted for multiple comparisons using the Tukey method. Sorted
+#|   ascending by p-value.
+
+fuel_tmb$post |>
+  mutate(pairs = list(pairs(emmobj) |> as_tibble())) |>
+  select(class, pairs) |>
+  unnest(pairs) |>
+  select(-c(z.ratio)) |>
+  arrange(p.value) |>
+  tinytable::tt(digits = 2) |>
+  tinytable::format_tt(num_fmt = "significant_cell")
+```
 
 ```{r}
 #| label: tbl-fuel-post-pct-grand-means
