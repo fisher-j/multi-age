@@ -158,8 +158,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#regeneration-composition" id="toc-regeneration-composition" class="nav-link active" data-scroll-target="#regeneration-composition"><span class="header-section-number">3.1</span> Regeneration composition</a>
   <ul>
   <li><a href="#basal-area" id="toc-basal-area" class="nav-link" data-scroll-target="#basal-area"><span class="header-section-number">3.1.1</span> Basal area</a></li>
-  <li><a href="#other-species" id="toc-other-species" class="nav-link" data-scroll-target="#other-species"><span class="header-section-number">3.1.2</span> Other species</a></li>
-  <li><a href="#douglas-fir-counts" id="toc-douglas-fir-counts" class="nav-link" data-scroll-target="#douglas-fir-counts"><span class="header-section-number">3.1.3</span> Douglas-fir counts</a></li>
+  <li><a href="#douglas-fir-counts" id="toc-douglas-fir-counts" class="nav-link" data-scroll-target="#douglas-fir-counts"><span class="header-section-number">3.1.2</span> Douglas-fir counts</a></li>
   </ul></li>
   <li><a href="#sprout-heights" id="toc-sprout-heights" class="nav-link" data-scroll-target="#sprout-heights"><span class="header-section-number">3.2</span> Sprout heights</a>
   <ul>
@@ -219,7 +218,8 @@ Hurdle: ~spp (logit) </code></pre>
 </div>
 </figure>
 </div>
-<p>According to predictions made from this model, there was not enough evidence to confirm a statistically significant difference between treatments. On average, we expect about 0.11 m<sup>2</sup> ha<sup>-1</sup> of basal area across treatments. The greatest basal area of other species was in the HD treatment which was 0.12 m<sup>2</sup> ha<sup>-1</sup> greater than in the HA treatment (p = 0.26). The GS and LD treatments were intermediate.</p>
+<p>Focal species for this model included redwood, tanaok, Douglas-fir, and other species. Other species included grand fir, madrone, and California wax-myrtle, of which there was a total of 23, 28, and 16 observations across our 16 macro plots (comprising 64 tree density plots). Generally, each plot had between 0 and 9 observations of other species, except for one macro plot with the LD treatment, which had 16 observations (data not shown).</p>
+<p>According to predictions made from this model for other species, there was not enough evidence to confirm a statistically significant difference between treatments. On average, we expect about 0.11 m<sup>2</sup> ha<sup>-1</sup> of basal area across treatments. The greatest basal area of other species was in the HD treatment which was 0.12 m<sup>2</sup> ha<sup>-1</sup> greater than in the HA treatment (p = 0.26). The GS and LD treatments were intermediate.</p>
 <p>On average, for Douglas-fir, we expect about 0.17 m<sup>2</sup> ha<sup>-1</sup> of basal area across treatments. The greatest basal area of Douglas-fir was in the GS treatment which was 0.12 m<sup>2</sup> ha<sup>-1</sup> greater than in the HA treatment (p = 0.76). The LD, HA, and HD treatments were all comparatively similar.</p>
 <p>Redwood basal area regeneration showed the greatest treatment response. Where the GS treatment had the greatest basal area of redwood regeneration at m<sup>2</sup> ha<sup>-1</sup>, which was 9.28 m<sup>2</sup> ha<sup>-1</sup> greater than in the HD treatment (p = 0.19). The LD and HD treatments were intermediate.</p>
 <p>Tanoak basal area regeneration was intermediate between that of redwood and Douglas-fir and other species. The GS and LD treatments had similar responses, as did the HA and HD treatments. The GS treatment resulted in 2.24 m<sup>2</sup> ha<sup>-1</sup> of tanoak basal area, which was 1.33 m<sup>2</sup> ha<sup>-1</sup> greater than in the HA treatment (p = 0.18).</p>
@@ -235,8 +235,8 @@ Table&nbsp;3.1: Grand means (m<sup>2</sup> ha<sup>-1</sup>) for basal area of re
 
     <script>
 
-      function styleCell_i5f993b3888dylhjt3nd(i, j, css_id) {
-          var table = document.getElementById("tinytable_i5f993b3888dylhjt3nd");
+      function styleCell_j9er0m6tudrq49qytk0f(i, j, css_id) {
+          var table = document.getElementById("tinytable_j9er0m6tudrq49qytk0f");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -246,7 +246,7 @@ Table&nbsp;3.1: Grand means (m<sup>2</sup> ha<sup>-1</sup>) for basal area of re
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_i5f993b3888dylhjt3nd');
+        var table = document.getElementById('tinytable_j9er0m6tudrq49qytk0f');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -254,8 +254,8 @@ Table&nbsp;3.1: Grand means (m<sup>2</sup> ha<sup>-1</sup>) for basal area of re
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_i5f993b3888dylhjt3nd(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_i5f993b3888dylhjt3nd");
+      function spanCell_j9er0m6tudrq49qytk0f(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_j9er0m6tudrq49qytk0f");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -285,14 +285,14 @@ Table&nbsp;3.1: Grand means (m<sup>2</sup> ha<sup>-1</sup>) for basal area of re
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 }, { i: 4, j: 5 }, { i: 4, j: 6 },  ], css_id: 'tinytable_css_y56dojxmblpgkbev48do',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_jn6pjk21b8id1fxaf0ov',}, 
+          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 }, { i: 4, j: 5 }, { i: 4, j: 6 },  ], css_id: 'tinytable_css_s2ot0db45folrdyasbxg',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_jik7a5fpy97lihf9ktj3',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_i5f993b3888dylhjt3nd(cell.i, cell.j, group.css_id);
+                  styleCell_j9er0m6tudrq49qytk0f(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -300,11 +300,11 @@ Table&nbsp;3.1: Grand means (m<sup>2</sup> ha<sup>-1</sup>) for basal area of re
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_y56dojxmblpgkbev48do, .table th.tinytable_css_y56dojxmblpgkbev48do { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_jn6pjk21b8id1fxaf0ov, .table th.tinytable_css_jn6pjk21b8id1fxaf0ov { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_s2ot0db45folrdyasbxg, .table th.tinytable_css_s2ot0db45folrdyasbxg { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_jik7a5fpy97lihf9ktj3, .table th.tinytable_css_jik7a5fpy97lihf9ktj3 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_i5f993b3888dylhjt3nd" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_j9er0m6tudrq49qytk0f" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -390,8 +390,8 @@ Table&nbsp;3.2: Basal area (m<sup>2</sup> ha<sup>-1</sup>) modeled at the vegeta
 
     <script>
 
-      function styleCell_aww1wr9uuw08rdjsggaz(i, j, css_id) {
-          var table = document.getElementById("tinytable_aww1wr9uuw08rdjsggaz");
+      function styleCell_jzeptizglvuqwaeziwwf(i, j, css_id) {
+          var table = document.getElementById("tinytable_jzeptizglvuqwaeziwwf");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -401,7 +401,7 @@ Table&nbsp;3.2: Basal area (m<sup>2</sup> ha<sup>-1</sup>) modeled at the vegeta
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_aww1wr9uuw08rdjsggaz');
+        var table = document.getElementById('tinytable_jzeptizglvuqwaeziwwf');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -409,8 +409,8 @@ Table&nbsp;3.2: Basal area (m<sup>2</sup> ha<sup>-1</sup>) modeled at the vegeta
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_aww1wr9uuw08rdjsggaz(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_aww1wr9uuw08rdjsggaz");
+      function spanCell_jzeptizglvuqwaeziwwf(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_jzeptizglvuqwaeziwwf");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -440,14 +440,14 @@ Table&nbsp;3.2: Basal area (m<sup>2</sup> ha<sup>-1</sup>) modeled at the vegeta
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 16, j: 0 }, { i: 16, j: 1 }, { i: 16, j: 2 }, { i: 16, j: 3 }, { i: 16, j: 4 }, { i: 16, j: 5 }, { i: 16, j: 6 },  ], css_id: 'tinytable_css_alpd6fq8wxm679a6zfjk',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_ndohng96n9efl7rwzkqo',}, 
+          { positions: [ { i: 16, j: 0 }, { i: 16, j: 1 }, { i: 16, j: 2 }, { i: 16, j: 3 }, { i: 16, j: 4 }, { i: 16, j: 5 }, { i: 16, j: 6 },  ], css_id: 'tinytable_css_ck7jeew751exs4e8435h',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_bqm8jl2biikepi0hpby2',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_aww1wr9uuw08rdjsggaz(cell.i, cell.j, group.css_id);
+                  styleCell_jzeptizglvuqwaeziwwf(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -455,11 +455,11 @@ Table&nbsp;3.2: Basal area (m<sup>2</sup> ha<sup>-1</sup>) modeled at the vegeta
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_alpd6fq8wxm679a6zfjk, .table th.tinytable_css_alpd6fq8wxm679a6zfjk { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_ndohng96n9efl7rwzkqo, .table th.tinytable_css_ndohng96n9efl7rwzkqo { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ck7jeew751exs4e8435h, .table th.tinytable_css_ck7jeew751exs4e8435h { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_bqm8jl2biikepi0hpby2, .table th.tinytable_css_bqm8jl2biikepi0hpby2 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_aww1wr9uuw08rdjsggaz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_jzeptizglvuqwaeziwwf" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -639,8 +639,8 @@ Table&nbsp;3.3: Pairwise comparisons of treatments within species. P-values are 
 
     <script>
 
-      function styleCell_xgccw5s365abp9lje9bg(i, j, css_id) {
-          var table = document.getElementById("tinytable_xgccw5s365abp9lje9bg");
+      function styleCell_m605vv1ji1s1zkcliz4d(i, j, css_id) {
+          var table = document.getElementById("tinytable_m605vv1ji1s1zkcliz4d");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -650,7 +650,7 @@ Table&nbsp;3.3: Pairwise comparisons of treatments within species. P-values are 
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_xgccw5s365abp9lje9bg');
+        var table = document.getElementById('tinytable_m605vv1ji1s1zkcliz4d');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -658,8 +658,8 @@ Table&nbsp;3.3: Pairwise comparisons of treatments within species. P-values are 
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_xgccw5s365abp9lje9bg(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_xgccw5s365abp9lje9bg");
+      function spanCell_m605vv1ji1s1zkcliz4d(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_m605vv1ji1s1zkcliz4d");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -689,14 +689,14 @@ Table&nbsp;3.3: Pairwise comparisons of treatments within species. P-values are 
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 24, j: 0 }, { i: 24, j: 1 }, { i: 24, j: 2 }, { i: 24, j: 3 }, { i: 24, j: 4 }, { i: 24, j: 5 },  ], css_id: 'tinytable_css_zdfo8e49tj33tbkebela',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_g5lsowlesgmw9ktqndju',}, 
+          { positions: [ { i: 24, j: 0 }, { i: 24, j: 1 }, { i: 24, j: 2 }, { i: 24, j: 3 }, { i: 24, j: 4 }, { i: 24, j: 5 },  ], css_id: 'tinytable_css_x5akjqydzmr0pzxfrvrr',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_j5m6zv8en9zx4cbpqo80',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_xgccw5s365abp9lje9bg(cell.i, cell.j, group.css_id);
+                  styleCell_m605vv1ji1s1zkcliz4d(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -704,11 +704,11 @@ Table&nbsp;3.3: Pairwise comparisons of treatments within species. P-values are 
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_zdfo8e49tj33tbkebela, .table th.tinytable_css_zdfo8e49tj33tbkebela { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_g5lsowlesgmw9ktqndju, .table th.tinytable_css_g5lsowlesgmw9ktqndju { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_x5akjqydzmr0pzxfrvrr, .table th.tinytable_css_x5akjqydzmr0pzxfrvrr { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_j5m6zv8en9zx4cbpqo80, .table th.tinytable_css_j5m6zv8en9zx4cbpqo80 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_xgccw5s365abp9lje9bg" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_m605vv1ji1s1zkcliz4d" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -940,12 +940,8 @@ Figure&nbsp;3.2: Basal area (m<sup>2</sup> ha<sup>-1</sup>) modeled at the veget
 </div>
 </div>
 </section>
-<section id="other-species" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="other-species"><span class="header-section-number">3.1.2</span> Other species</h3>
-<p>Other species included grand fir, madrone, and California wax-myrtle, of which there was a total of 23, 28, and 16 observations across our 16 macro plots (comprising 64 tree density plots). Generally, each plot had between 0 and 9 observations of other species, except for one macro plot with the LD treatment, which had 16 observations (data not shown).</p>
-</section>
-<section id="douglas-fir-counts" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="douglas-fir-counts"><span class="header-section-number">3.1.3</span> Douglas-fir counts</h3>
+<section id="douglas-fir-counts" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="douglas-fir-counts"><span class="header-section-number">3.1.2</span> Douglas-fir counts</h3>
 <p>Counts of regenerating Douglas-fir seedlings per vegetation plot (n = 16) were analyzed for differences between harvest treatments using a negative binomial response with a log link, fixed effects for treatment, random effects for site and site x treatment interaction (<a href="#lst-df-counts" class="quarto-xref">Listing&nbsp;<span>3.2</span></a>).</p>
 <div id="lst-df-counts" class="listing quarto-float">
 <figure class="quarto-float quarto-float-lst figure">
@@ -989,8 +985,8 @@ Table&nbsp;3.4: Vegetation plot level counts of regenerating Douglas-fir seedlin
 
     <script>
 
-      function styleCell_53jwh2jp43pf1zdaqc1c(i, j, css_id) {
-          var table = document.getElementById("tinytable_53jwh2jp43pf1zdaqc1c");
+      function styleCell_6m9u4v96aru1vyxbhaj0(i, j, css_id) {
+          var table = document.getElementById("tinytable_6m9u4v96aru1vyxbhaj0");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1000,7 +996,7 @@ Table&nbsp;3.4: Vegetation plot level counts of regenerating Douglas-fir seedlin
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_53jwh2jp43pf1zdaqc1c');
+        var table = document.getElementById('tinytable_6m9u4v96aru1vyxbhaj0');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1008,8 +1004,8 @@ Table&nbsp;3.4: Vegetation plot level counts of regenerating Douglas-fir seedlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_53jwh2jp43pf1zdaqc1c(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_53jwh2jp43pf1zdaqc1c");
+      function spanCell_6m9u4v96aru1vyxbhaj0(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_6m9u4v96aru1vyxbhaj0");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1039,14 +1035,14 @@ Table&nbsp;3.4: Vegetation plot level counts of regenerating Douglas-fir seedlin
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 },  ], css_id: 'tinytable_css_n9afzv9yd4n479h70rhw',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 },  ], css_id: 'tinytable_css_nfcakb0rxgqkq3l9fevq',}, 
+          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 },  ], css_id: 'tinytable_css_yln0usjcb7eq7d97fnty',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 },  ], css_id: 'tinytable_css_onir2i8k5xtd984filqs',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_53jwh2jp43pf1zdaqc1c(cell.i, cell.j, group.css_id);
+                  styleCell_6m9u4v96aru1vyxbhaj0(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1054,11 +1050,11 @@ Table&nbsp;3.4: Vegetation plot level counts of regenerating Douglas-fir seedlin
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_n9afzv9yd4n479h70rhw, .table th.tinytable_css_n9afzv9yd4n479h70rhw { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_nfcakb0rxgqkq3l9fevq, .table th.tinytable_css_nfcakb0rxgqkq3l9fevq { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_yln0usjcb7eq7d97fnty, .table th.tinytable_css_yln0usjcb7eq7d97fnty { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_onir2i8k5xtd984filqs, .table th.tinytable_css_onir2i8k5xtd984filqs { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_53jwh2jp43pf1zdaqc1c" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_6m9u4v96aru1vyxbhaj0" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1156,8 +1152,8 @@ Table&nbsp;3.5: Estimated marginal means for the effect of harvest treatment on 
 
     <script>
 
-      function styleCell_10inpeqlubk3ootonbkz(i, j, css_id) {
-          var table = document.getElementById("tinytable_10inpeqlubk3ootonbkz");
+      function styleCell_ir1fkm0g6znyo60d1i7a(i, j, css_id) {
+          var table = document.getElementById("tinytable_ir1fkm0g6znyo60d1i7a");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1167,7 +1163,7 @@ Table&nbsp;3.5: Estimated marginal means for the effect of harvest treatment on 
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_10inpeqlubk3ootonbkz');
+        var table = document.getElementById('tinytable_ir1fkm0g6znyo60d1i7a');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1175,8 +1171,8 @@ Table&nbsp;3.5: Estimated marginal means for the effect of harvest treatment on 
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_10inpeqlubk3ootonbkz(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_10inpeqlubk3ootonbkz");
+      function spanCell_ir1fkm0g6znyo60d1i7a(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_ir1fkm0g6znyo60d1i7a");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1206,14 +1202,14 @@ Table&nbsp;3.5: Estimated marginal means for the effect of harvest treatment on 
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 8, j: 0 }, { i: 8, j: 1 }, { i: 8, j: 2 }, { i: 8, j: 3 }, { i: 8, j: 4 }, { i: 8, j: 5 }, { i: 8, j: 6 },  ], css_id: 'tinytable_css_wz87conlbw5fyb50v201',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_busur39cd6zkzrlaxwqk',}, 
+          { positions: [ { i: 8, j: 0 }, { i: 8, j: 1 }, { i: 8, j: 2 }, { i: 8, j: 3 }, { i: 8, j: 4 }, { i: 8, j: 5 }, { i: 8, j: 6 },  ], css_id: 'tinytable_css_hfaezneq7321wrc75oi1',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_xa561tlhi9kgx0nmdx7d',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_10inpeqlubk3ootonbkz(cell.i, cell.j, group.css_id);
+                  styleCell_ir1fkm0g6znyo60d1i7a(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1221,11 +1217,11 @@ Table&nbsp;3.5: Estimated marginal means for the effect of harvest treatment on 
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_wz87conlbw5fyb50v201, .table th.tinytable_css_wz87conlbw5fyb50v201 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_busur39cd6zkzrlaxwqk, .table th.tinytable_css_busur39cd6zkzrlaxwqk { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_hfaezneq7321wrc75oi1, .table th.tinytable_css_hfaezneq7321wrc75oi1 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_xa561tlhi9kgx0nmdx7d, .table th.tinytable_css_xa561tlhi9kgx0nmdx7d { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_10inpeqlubk3ootonbkz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_ir1fkm0g6znyo60d1i7a" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1349,8 +1345,8 @@ Table&nbsp;3.6: Estimated marginal means for the effect of growth period on redw
 
     <script>
 
-      function styleCell_qh0xbs4mx52c8lcfd02q(i, j, css_id) {
-          var table = document.getElementById("tinytable_qh0xbs4mx52c8lcfd02q");
+      function styleCell_b7d52qzxboltxiybmzm9(i, j, css_id) {
+          var table = document.getElementById("tinytable_b7d52qzxboltxiybmzm9");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1360,7 +1356,7 @@ Table&nbsp;3.6: Estimated marginal means for the effect of growth period on redw
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_qh0xbs4mx52c8lcfd02q');
+        var table = document.getElementById('tinytable_b7d52qzxboltxiybmzm9');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1368,8 +1364,8 @@ Table&nbsp;3.6: Estimated marginal means for the effect of growth period on redw
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_qh0xbs4mx52c8lcfd02q(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_qh0xbs4mx52c8lcfd02q");
+      function spanCell_b7d52qzxboltxiybmzm9(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_b7d52qzxboltxiybmzm9");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1399,14 +1395,14 @@ Table&nbsp;3.6: Estimated marginal means for the effect of growth period on redw
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 }, { i: 4, j: 5 }, { i: 4, j: 6 },  ], css_id: 'tinytable_css_4iijbnwh80d4euzzwaaa',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_1jel02udvuxrhq1pwyne',}, 
+          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 }, { i: 4, j: 5 }, { i: 4, j: 6 },  ], css_id: 'tinytable_css_897ur1xhd20qztv228zr',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_wuh5frd0onmxgbbbe9ym',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_qh0xbs4mx52c8lcfd02q(cell.i, cell.j, group.css_id);
+                  styleCell_b7d52qzxboltxiybmzm9(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1414,11 +1410,11 @@ Table&nbsp;3.6: Estimated marginal means for the effect of growth period on redw
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_4iijbnwh80d4euzzwaaa, .table th.tinytable_css_4iijbnwh80d4euzzwaaa { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_1jel02udvuxrhq1pwyne, .table th.tinytable_css_1jel02udvuxrhq1pwyne { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_897ur1xhd20qztv228zr, .table th.tinytable_css_897ur1xhd20qztv228zr { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_wuh5frd0onmxgbbbe9ym, .table th.tinytable_css_wuh5frd0onmxgbbbe9ym { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_qh0xbs4mx52c8lcfd02q" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_b7d52qzxboltxiybmzm9" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1525,8 +1521,8 @@ Table&nbsp;3.7: Height (m) of measured redwood and tanaok sprouts 10 years after
 
     <script>
 
-      function styleCell_2lt28wwxtgbskf06exau(i, j, css_id) {
-          var table = document.getElementById("tinytable_2lt28wwxtgbskf06exau");
+      function styleCell_r5uz65gds7ybw7poj4x2(i, j, css_id) {
+          var table = document.getElementById("tinytable_r5uz65gds7ybw7poj4x2");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1536,7 +1532,7 @@ Table&nbsp;3.7: Height (m) of measured redwood and tanaok sprouts 10 years after
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_2lt28wwxtgbskf06exau');
+        var table = document.getElementById('tinytable_r5uz65gds7ybw7poj4x2');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1544,8 +1540,8 @@ Table&nbsp;3.7: Height (m) of measured redwood and tanaok sprouts 10 years after
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_2lt28wwxtgbskf06exau(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_2lt28wwxtgbskf06exau");
+      function spanCell_r5uz65gds7ybw7poj4x2(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_r5uz65gds7ybw7poj4x2");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1575,14 +1571,14 @@ Table&nbsp;3.7: Height (m) of measured redwood and tanaok sprouts 10 years after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 8, j: 0 }, { i: 8, j: 1 }, { i: 8, j: 2 }, { i: 8, j: 3 }, { i: 8, j: 4 }, { i: 8, j: 5 }, { i: 8, j: 6 },  ], css_id: 'tinytable_css_4czehnqxcnt3fmtppjps',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_5dnq360bymaabap4uygb',}, 
+          { positions: [ { i: 8, j: 0 }, { i: 8, j: 1 }, { i: 8, j: 2 }, { i: 8, j: 3 }, { i: 8, j: 4 }, { i: 8, j: 5 }, { i: 8, j: 6 },  ], css_id: 'tinytable_css_r1link7bvg35kt7zj8k1',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_cypuq4428pc39mqaryrw',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_2lt28wwxtgbskf06exau(cell.i, cell.j, group.css_id);
+                  styleCell_r5uz65gds7ybw7poj4x2(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1590,11 +1586,11 @@ Table&nbsp;3.7: Height (m) of measured redwood and tanaok sprouts 10 years after
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_4czehnqxcnt3fmtppjps, .table th.tinytable_css_4czehnqxcnt3fmtppjps { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_5dnq360bymaabap4uygb, .table th.tinytable_css_5dnq360bymaabap4uygb { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_r1link7bvg35kt7zj8k1, .table th.tinytable_css_r1link7bvg35kt7zj8k1 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_cypuq4428pc39mqaryrw, .table th.tinytable_css_cypuq4428pc39mqaryrw { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_2lt28wwxtgbskf06exau" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_r5uz65gds7ybw7poj4x2" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1702,8 +1698,8 @@ Table&nbsp;3.8: Pairwise comparisons of treatments within species for height (m)
 
     <script>
 
-      function styleCell_ifsr03fxxf1nece6bqol(i, j, css_id) {
-          var table = document.getElementById("tinytable_ifsr03fxxf1nece6bqol");
+      function styleCell_6c2m032h4chjvhukin51(i, j, css_id) {
+          var table = document.getElementById("tinytable_6c2m032h4chjvhukin51");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1713,7 +1709,7 @@ Table&nbsp;3.8: Pairwise comparisons of treatments within species for height (m)
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_ifsr03fxxf1nece6bqol');
+        var table = document.getElementById('tinytable_6c2m032h4chjvhukin51');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1721,8 +1717,8 @@ Table&nbsp;3.8: Pairwise comparisons of treatments within species for height (m)
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_ifsr03fxxf1nece6bqol(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_ifsr03fxxf1nece6bqol");
+      function spanCell_6c2m032h4chjvhukin51(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_6c2m032h4chjvhukin51");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1752,14 +1748,14 @@ Table&nbsp;3.8: Pairwise comparisons of treatments within species for height (m)
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 12, j: 0 }, { i: 12, j: 1 }, { i: 12, j: 2 }, { i: 12, j: 3 }, { i: 12, j: 4 }, { i: 12, j: 5 },  ], css_id: 'tinytable_css_aedwyh8aar4sixf76g2s',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_wcymphtla98zx7b3n6f6',}, 
+          { positions: [ { i: 12, j: 0 }, { i: 12, j: 1 }, { i: 12, j: 2 }, { i: 12, j: 3 }, { i: 12, j: 4 }, { i: 12, j: 5 },  ], css_id: 'tinytable_css_lihpjceqgpwu1v43c91t',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_jlnnih593d23ysxceenv',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_ifsr03fxxf1nece6bqol(cell.i, cell.j, group.css_id);
+                  styleCell_6c2m032h4chjvhukin51(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1767,11 +1763,11 @@ Table&nbsp;3.8: Pairwise comparisons of treatments within species for height (m)
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_aedwyh8aar4sixf76g2s, .table th.tinytable_css_aedwyh8aar4sixf76g2s { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_wcymphtla98zx7b3n6f6, .table th.tinytable_css_wcymphtla98zx7b3n6f6 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_lihpjceqgpwu1v43c91t, .table th.tinytable_css_lihpjceqgpwu1v43c91t { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_jlnnih593d23ysxceenv, .table th.tinytable_css_jlnnih593d23ysxceenv { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_ifsr03fxxf1nece6bqol" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_6c2m032h4chjvhukin51" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1909,8 +1905,8 @@ Table&nbsp;3.9: Model specifications for six fuel classes before pct.
 
     <script>
 
-      function styleCell_xc63twn6931kjp5kw49i(i, j, css_id) {
-          var table = document.getElementById("tinytable_xc63twn6931kjp5kw49i");
+      function styleCell_dyu3dhvdxspk83aktnrm(i, j, css_id) {
+          var table = document.getElementById("tinytable_dyu3dhvdxspk83aktnrm");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1920,7 +1916,7 @@ Table&nbsp;3.9: Model specifications for six fuel classes before pct.
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_xc63twn6931kjp5kw49i');
+        var table = document.getElementById('tinytable_dyu3dhvdxspk83aktnrm');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1928,8 +1924,8 @@ Table&nbsp;3.9: Model specifications for six fuel classes before pct.
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_xc63twn6931kjp5kw49i(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_xc63twn6931kjp5kw49i");
+      function spanCell_dyu3dhvdxspk83aktnrm(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_dyu3dhvdxspk83aktnrm");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1959,14 +1955,14 @@ Table&nbsp;3.9: Model specifications for six fuel classes before pct.
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 }, { i: 6, j: 3 }, { i: 6, j: 4 }, { i: 6, j: 5 },  ], css_id: 'tinytable_css_lr0km3vftmdbw3f3b0ep',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_o6ost58ia5hw5km301h6',}, 
+          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 }, { i: 6, j: 3 }, { i: 6, j: 4 }, { i: 6, j: 5 },  ], css_id: 'tinytable_css_f191pmmfa3m88cmn3li7',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_a5fidbf3fl44oaox9tye',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_xc63twn6931kjp5kw49i(cell.i, cell.j, group.css_id);
+                  styleCell_dyu3dhvdxspk83aktnrm(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1974,11 +1970,11 @@ Table&nbsp;3.9: Model specifications for six fuel classes before pct.
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_lr0km3vftmdbw3f3b0ep, .table th.tinytable_css_lr0km3vftmdbw3f3b0ep { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_o6ost58ia5hw5km301h6, .table th.tinytable_css_o6ost58ia5hw5km301h6 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_f191pmmfa3m88cmn3li7, .table th.tinytable_css_f191pmmfa3m88cmn3li7 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_a5fidbf3fl44oaox9tye, .table th.tinytable_css_a5fidbf3fl44oaox9tye { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_xc63twn6931kjp5kw49i" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_dyu3dhvdxspk83aktnrm" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -2081,8 +2077,8 @@ Table&nbsp;3.10: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
 
     <script>
 
-      function styleCell_84uqpi3z8hw27xrji2mi(i, j, css_id) {
-          var table = document.getElementById("tinytable_84uqpi3z8hw27xrji2mi");
+      function styleCell_30ae6j8q41v025fc6kjb(i, j, css_id) {
+          var table = document.getElementById("tinytable_30ae6j8q41v025fc6kjb");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2092,7 +2088,7 @@ Table&nbsp;3.10: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_84uqpi3z8hw27xrji2mi');
+        var table = document.getElementById('tinytable_30ae6j8q41v025fc6kjb');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -2100,8 +2096,8 @@ Table&nbsp;3.10: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_84uqpi3z8hw27xrji2mi(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_84uqpi3z8hw27xrji2mi");
+      function spanCell_30ae6j8q41v025fc6kjb(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_30ae6j8q41v025fc6kjb");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -2131,14 +2127,14 @@ Table&nbsp;3.10: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 24, j: 0 }, { i: 24, j: 1 }, { i: 24, j: 2 }, { i: 24, j: 3 }, { i: 24, j: 4 }, { i: 24, j: 5 }, { i: 24, j: 6 },  ], css_id: 'tinytable_css_tf1wz56xgoffhb50fkqv',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_c1i9fyj8glnb6yejrndg',}, 
+          { positions: [ { i: 24, j: 0 }, { i: 24, j: 1 }, { i: 24, j: 2 }, { i: 24, j: 3 }, { i: 24, j: 4 }, { i: 24, j: 5 }, { i: 24, j: 6 },  ], css_id: 'tinytable_css_bmme34dv46vfzub22dch',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_ame5qmxq66gty7edmquz',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_84uqpi3z8hw27xrji2mi(cell.i, cell.j, group.css_id);
+                  styleCell_30ae6j8q41v025fc6kjb(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2146,11 +2142,11 @@ Table&nbsp;3.10: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_tf1wz56xgoffhb50fkqv, .table th.tinytable_css_tf1wz56xgoffhb50fkqv { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_c1i9fyj8glnb6yejrndg, .table th.tinytable_css_c1i9fyj8glnb6yejrndg { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_bmme34dv46vfzub22dch, .table th.tinytable_css_bmme34dv46vfzub22dch { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_ame5qmxq66gty7edmquz, .table th.tinytable_css_ame5qmxq66gty7edmquz { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_84uqpi3z8hw27xrji2mi" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_30ae6j8q41v025fc6kjb" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -2402,8 +2398,8 @@ Table&nbsp;3.11: Pairwise comparisons of treatments for six fuel classes before 
 
     <script>
 
-      function styleCell_1pti0nf86neu2uz5ppko(i, j, css_id) {
-          var table = document.getElementById("tinytable_1pti0nf86neu2uz5ppko");
+      function styleCell_gyinivts4u45ustkuwel(i, j, css_id) {
+          var table = document.getElementById("tinytable_gyinivts4u45ustkuwel");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2413,7 +2409,7 @@ Table&nbsp;3.11: Pairwise comparisons of treatments for six fuel classes before 
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_1pti0nf86neu2uz5ppko');
+        var table = document.getElementById('tinytable_gyinivts4u45ustkuwel');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -2421,8 +2417,8 @@ Table&nbsp;3.11: Pairwise comparisons of treatments for six fuel classes before 
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_1pti0nf86neu2uz5ppko(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_1pti0nf86neu2uz5ppko");
+      function spanCell_gyinivts4u45ustkuwel(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_gyinivts4u45ustkuwel");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -2452,14 +2448,14 @@ Table&nbsp;3.11: Pairwise comparisons of treatments for six fuel classes before 
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 36, j: 0 }, { i: 36, j: 1 }, { i: 36, j: 2 }, { i: 36, j: 3 }, { i: 36, j: 4 }, { i: 36, j: 5 },  ], css_id: 'tinytable_css_ajd84agayo8k6hqthba1',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_p6spzuc8u804rpmgdr7u',}, 
+          { positions: [ { i: 36, j: 0 }, { i: 36, j: 1 }, { i: 36, j: 2 }, { i: 36, j: 3 }, { i: 36, j: 4 }, { i: 36, j: 5 },  ], css_id: 'tinytable_css_a5fgfgtfriigaa2tmpz9',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_j5jpiird8n120lme58gf',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_1pti0nf86neu2uz5ppko(cell.i, cell.j, group.css_id);
+                  styleCell_gyinivts4u45ustkuwel(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2467,11 +2463,11 @@ Table&nbsp;3.11: Pairwise comparisons of treatments for six fuel classes before 
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_ajd84agayo8k6hqthba1, .table th.tinytable_css_ajd84agayo8k6hqthba1 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_p6spzuc8u804rpmgdr7u, .table th.tinytable_css_p6spzuc8u804rpmgdr7u { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_a5fgfgtfriigaa2tmpz9, .table th.tinytable_css_a5fgfgtfriigaa2tmpz9 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_j5jpiird8n120lme58gf, .table th.tinytable_css_j5jpiird8n120lme58gf { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_1pti0nf86neu2uz5ppko" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_gyinivts4u45ustkuwel" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -2794,8 +2790,8 @@ Table&nbsp;3.12: Grand means (Mg ha<sup>-1</sup>) for six fuel classes before pc
 
     <script>
 
-      function styleCell_580kips2nkp1fg30av05(i, j, css_id) {
-          var table = document.getElementById("tinytable_580kips2nkp1fg30av05");
+      function styleCell_4q7ed07de3nyupu4adgp(i, j, css_id) {
+          var table = document.getElementById("tinytable_4q7ed07de3nyupu4adgp");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2805,7 +2801,7 @@ Table&nbsp;3.12: Grand means (Mg ha<sup>-1</sup>) for six fuel classes before pc
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_580kips2nkp1fg30av05');
+        var table = document.getElementById('tinytable_4q7ed07de3nyupu4adgp');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -2813,8 +2809,8 @@ Table&nbsp;3.12: Grand means (Mg ha<sup>-1</sup>) for six fuel classes before pc
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_580kips2nkp1fg30av05(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_580kips2nkp1fg30av05");
+      function spanCell_4q7ed07de3nyupu4adgp(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_4q7ed07de3nyupu4adgp");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -2844,14 +2840,14 @@ Table&nbsp;3.12: Grand means (Mg ha<sup>-1</sup>) for six fuel classes before pc
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 }, { i: 6, j: 3 }, { i: 6, j: 4 }, { i: 6, j: 5 }, { i: 6, j: 6 },  ], css_id: 'tinytable_css_tpdopzkluxkpz0dmnnso',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_0cexrgqo716rml7nlnn0',}, 
+          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 }, { i: 6, j: 3 }, { i: 6, j: 4 }, { i: 6, j: 5 }, { i: 6, j: 6 },  ], css_id: 'tinytable_css_etf5w6pn1gzf1nc3ha0p',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_bmm391omarb1je3sima7',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_580kips2nkp1fg30av05(cell.i, cell.j, group.css_id);
+                  styleCell_4q7ed07de3nyupu4adgp(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2859,11 +2855,11 @@ Table&nbsp;3.12: Grand means (Mg ha<sup>-1</sup>) for six fuel classes before pc
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_tpdopzkluxkpz0dmnnso, .table th.tinytable_css_tpdopzkluxkpz0dmnnso { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_0cexrgqo716rml7nlnn0, .table th.tinytable_css_0cexrgqo716rml7nlnn0 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_etf5w6pn1gzf1nc3ha0p, .table th.tinytable_css_etf5w6pn1gzf1nc3ha0p { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_bmm391omarb1je3sima7, .table th.tinytable_css_bmm391omarb1je3sima7 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_580kips2nkp1fg30av05" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_4q7ed07de3nyupu4adgp" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -2957,8 +2953,8 @@ Table&nbsp;3.13: Model specifications for six fuel classes after pct.
 
     <script>
 
-      function styleCell_chxp0ib4z27oau3qlpxj(i, j, css_id) {
-          var table = document.getElementById("tinytable_chxp0ib4z27oau3qlpxj");
+      function styleCell_0caemzfy8qbobrvm0pcz(i, j, css_id) {
+          var table = document.getElementById("tinytable_0caemzfy8qbobrvm0pcz");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2968,7 +2964,7 @@ Table&nbsp;3.13: Model specifications for six fuel classes after pct.
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_chxp0ib4z27oau3qlpxj');
+        var table = document.getElementById('tinytable_0caemzfy8qbobrvm0pcz');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -2976,8 +2972,8 @@ Table&nbsp;3.13: Model specifications for six fuel classes after pct.
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_chxp0ib4z27oau3qlpxj(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_chxp0ib4z27oau3qlpxj");
+      function spanCell_0caemzfy8qbobrvm0pcz(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_0caemzfy8qbobrvm0pcz");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -3007,14 +3003,14 @@ Table&nbsp;3.13: Model specifications for six fuel classes after pct.
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 }, { i: 6, j: 3 }, { i: 6, j: 4 }, { i: 6, j: 5 },  ], css_id: 'tinytable_css_yd00c0ejjld0fjfqxmna',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_3ehju0ozkg0rmlr985nv',}, 
+          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 }, { i: 6, j: 3 }, { i: 6, j: 4 }, { i: 6, j: 5 },  ], css_id: 'tinytable_css_ghjf9hg3n6dcvob3xm4w',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_3s6t1i8y151zqz4wpb50',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_chxp0ib4z27oau3qlpxj(cell.i, cell.j, group.css_id);
+                  styleCell_0caemzfy8qbobrvm0pcz(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -3022,11 +3018,11 @@ Table&nbsp;3.13: Model specifications for six fuel classes after pct.
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_yd00c0ejjld0fjfqxmna, .table th.tinytable_css_yd00c0ejjld0fjfqxmna { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_3ehju0ozkg0rmlr985nv, .table th.tinytable_css_3ehju0ozkg0rmlr985nv { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ghjf9hg3n6dcvob3xm4w, .table th.tinytable_css_ghjf9hg3n6dcvob3xm4w { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_3s6t1i8y151zqz4wpb50, .table th.tinytable_css_3s6t1i8y151zqz4wpb50 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_chxp0ib4z27oau3qlpxj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_0caemzfy8qbobrvm0pcz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -3130,8 +3126,8 @@ Table&nbsp;3.14: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
 
     <script>
 
-      function styleCell_t68jxcf59u90qgzlm6gm(i, j, css_id) {
-          var table = document.getElementById("tinytable_t68jxcf59u90qgzlm6gm");
+      function styleCell_xzznaox9qntd28m1dw96(i, j, css_id) {
+          var table = document.getElementById("tinytable_xzznaox9qntd28m1dw96");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -3141,7 +3137,7 @@ Table&nbsp;3.14: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_t68jxcf59u90qgzlm6gm');
+        var table = document.getElementById('tinytable_xzznaox9qntd28m1dw96');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -3149,8 +3145,8 @@ Table&nbsp;3.14: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_t68jxcf59u90qgzlm6gm(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_t68jxcf59u90qgzlm6gm");
+      function spanCell_xzznaox9qntd28m1dw96(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_xzznaox9qntd28m1dw96");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -3180,14 +3176,14 @@ Table&nbsp;3.14: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 24, j: 0 }, { i: 24, j: 1 }, { i: 24, j: 2 }, { i: 24, j: 3 }, { i: 24, j: 4 }, { i: 24, j: 5 }, { i: 24, j: 6 },  ], css_id: 'tinytable_css_8patbdjgw85m911h605y',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_vyogvuzosl4exr3wy2ow',}, 
+          { positions: [ { i: 24, j: 0 }, { i: 24, j: 1 }, { i: 24, j: 2 }, { i: 24, j: 3 }, { i: 24, j: 4 }, { i: 24, j: 5 }, { i: 24, j: 6 },  ], css_id: 'tinytable_css_7e9h80860zgig05z6yhr',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_iq7fwo2mftlthq5mdcy8',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_t68jxcf59u90qgzlm6gm(cell.i, cell.j, group.css_id);
+                  styleCell_xzznaox9qntd28m1dw96(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -3195,11 +3191,11 @@ Table&nbsp;3.14: Estimated marginal means (Mg ha<sup>-1</sup>) for six fuel clas
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_8patbdjgw85m911h605y, .table th.tinytable_css_8patbdjgw85m911h605y { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_vyogvuzosl4exr3wy2ow, .table th.tinytable_css_vyogvuzosl4exr3wy2ow { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_7e9h80860zgig05z6yhr, .table th.tinytable_css_7e9h80860zgig05z6yhr { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_iq7fwo2mftlthq5mdcy8, .table th.tinytable_css_iq7fwo2mftlthq5mdcy8 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_t68jxcf59u90qgzlm6gm" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_xzznaox9qntd28m1dw96" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -3451,8 +3447,8 @@ Table&nbsp;3.15: Pairwise comparisons of treatments for six fuel classes after p
 
     <script>
 
-      function styleCell_gnbo0oev0hf9ld0mz5pn(i, j, css_id) {
-          var table = document.getElementById("tinytable_gnbo0oev0hf9ld0mz5pn");
+      function styleCell_x57j85ooqijpkt3j6h77(i, j, css_id) {
+          var table = document.getElementById("tinytable_x57j85ooqijpkt3j6h77");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -3462,7 +3458,7 @@ Table&nbsp;3.15: Pairwise comparisons of treatments for six fuel classes after p
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_gnbo0oev0hf9ld0mz5pn');
+        var table = document.getElementById('tinytable_x57j85ooqijpkt3j6h77');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -3470,8 +3466,8 @@ Table&nbsp;3.15: Pairwise comparisons of treatments for six fuel classes after p
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_gnbo0oev0hf9ld0mz5pn(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_gnbo0oev0hf9ld0mz5pn");
+      function spanCell_x57j85ooqijpkt3j6h77(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_x57j85ooqijpkt3j6h77");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -3501,14 +3497,14 @@ Table&nbsp;3.15: Pairwise comparisons of treatments for six fuel classes after p
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 36, j: 0 }, { i: 36, j: 1 }, { i: 36, j: 2 }, { i: 36, j: 3 }, { i: 36, j: 4 }, { i: 36, j: 5 },  ], css_id: 'tinytable_css_53ad7bhjzzvwxlzmuznb',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_rznbajt6y5qfcvffc5gr',}, 
+          { positions: [ { i: 36, j: 0 }, { i: 36, j: 1 }, { i: 36, j: 2 }, { i: 36, j: 3 }, { i: 36, j: 4 }, { i: 36, j: 5 },  ], css_id: 'tinytable_css_275r9hk3e2h18mb5nulg',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_7k1oz4wolvqkakr00o1r',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_gnbo0oev0hf9ld0mz5pn(cell.i, cell.j, group.css_id);
+                  styleCell_x57j85ooqijpkt3j6h77(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -3516,11 +3512,11 @@ Table&nbsp;3.15: Pairwise comparisons of treatments for six fuel classes after p
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_53ad7bhjzzvwxlzmuznb, .table th.tinytable_css_53ad7bhjzzvwxlzmuznb { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_rznbajt6y5qfcvffc5gr, .table th.tinytable_css_rznbajt6y5qfcvffc5gr { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_275r9hk3e2h18mb5nulg, .table th.tinytable_css_275r9hk3e2h18mb5nulg { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_7k1oz4wolvqkakr00o1r, .table th.tinytable_css_7k1oz4wolvqkakr00o1r { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_gnbo0oev0hf9ld0mz5pn" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_x57j85ooqijpkt3j6h77" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -3843,8 +3839,8 @@ Table&nbsp;3.16: Grand means (Mg ha<sup>-1</sup>) for six fuel classes after pct
 
     <script>
 
-      function styleCell_6orhrfittc64w83otips(i, j, css_id) {
-          var table = document.getElementById("tinytable_6orhrfittc64w83otips");
+      function styleCell_czhxw5vioyzgimfc1mgx(i, j, css_id) {
+          var table = document.getElementById("tinytable_czhxw5vioyzgimfc1mgx");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -3854,7 +3850,7 @@ Table&nbsp;3.16: Grand means (Mg ha<sup>-1</sup>) for six fuel classes after pct
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_6orhrfittc64w83otips');
+        var table = document.getElementById('tinytable_czhxw5vioyzgimfc1mgx');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -3862,8 +3858,8 @@ Table&nbsp;3.16: Grand means (Mg ha<sup>-1</sup>) for six fuel classes after pct
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_6orhrfittc64w83otips(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_6orhrfittc64w83otips");
+      function spanCell_czhxw5vioyzgimfc1mgx(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_czhxw5vioyzgimfc1mgx");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -3893,14 +3889,14 @@ Table&nbsp;3.16: Grand means (Mg ha<sup>-1</sup>) for six fuel classes after pct
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 }, { i: 6, j: 3 }, { i: 6, j: 4 }, { i: 6, j: 5 }, { i: 6, j: 6 },  ], css_id: 'tinytable_css_m4gqrop74rpqjs3hy00n',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_cdh4croy37e6h6xowpsv',}, 
+          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 }, { i: 6, j: 3 }, { i: 6, j: 4 }, { i: 6, j: 5 }, { i: 6, j: 6 },  ], css_id: 'tinytable_css_fsoowdq8zllng4ra4l09',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_dx68f0w260qiwtkyjaej',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_6orhrfittc64w83otips(cell.i, cell.j, group.css_id);
+                  styleCell_czhxw5vioyzgimfc1mgx(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -3908,11 +3904,11 @@ Table&nbsp;3.16: Grand means (Mg ha<sup>-1</sup>) for six fuel classes after pct
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_m4gqrop74rpqjs3hy00n, .table th.tinytable_css_m4gqrop74rpqjs3hy00n { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_cdh4croy37e6h6xowpsv, .table th.tinytable_css_cdh4croy37e6h6xowpsv { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_fsoowdq8zllng4ra4l09, .table th.tinytable_css_fsoowdq8zllng4ra4l09 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_dx68f0w260qiwtkyjaej, .table th.tinytable_css_dx68f0w260qiwtkyjaej { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_6orhrfittc64w83otips" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_czhxw5vioyzgimfc1mgx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>

@@ -324,25 +324,35 @@ regen_mean <-
 regen_grand <- deframe(regen_grand_means)
 ```
 
-According to predictions made from this model,
-there was not enough evidence to confirm a statistically significant difference between treatments. 
-On average, we expect about `r regen_grand$other$estimate` m^2^ ha^-1^ of basal area across treatments.
-The greatest basal area of other species was in the HD treatment
-which was `r abs(pluck(regen_pairs, "other", "ha - hd", "estimate"))` m^2^ ha^-1^ greater than in the HA
-treatment (p = `r pluck(regen_pairs, "other", "ha - hd", "p.value")`). The GS and LD treatments were
-intermediate.
+Focal species for this model included redwood, tanaok, Douglas-fir, and other
+species. Other species included grand fir, madrone, and California wax-myrtle,
+of which there was a total of 23, 28, and 16 observations across our 16 macro
+plots (comprising 64 tree density plots). Generally, each plot had between 0 and
+9 observations of other species, except for one macro plot with the LD
+treatment, which had 16 observations (data not shown).
+
+According to predictions made from this model for other species, there was not
+enough evidence to confirm a statistically significant difference between
+treatments. On average, we expect about `r regen_grand$other$estimate` m^2^
+ha^-1^ of basal area across treatments. The greatest basal area of other species
+was in the HD treatment which was `r abs(pluck(regen_pairs, "other", "ha - hd", "estimate"))`
+m^2^ ha^-1^ greater than in the HA treatment 
+(p = `r pluck(regen_pairs, "other", "ha - hd", "p.value")`). The GS and LD
+treatments were intermediate.
 
 On average, for Douglas-fir, we expect about `r regen_grand$df$estimate` m^2^
 ha^-1^ of basal area across treatments. The greatest basal area of Douglas-fir
 was in the GS treatment which was `r abs(regen_pairs$df[["gs - ha"]]$estimate)`
-m^2^ ha^-1^ greater than in the HA treatment (p = `r pluck(regen_pairs, "df", "gs - ha", "p.value")`). The LD, HA, and HD treatments were all comparatively
-similar.
+m^2^ ha^-1^ greater than in the HA treatment 
+(p = `r pluck(regen_pairs, "df", "gs - ha", "p.value")`). The LD, HA, and HD
+treatments were all comparatively similar.
 
 Redwood basal area regeneration showed the greatest treatment response. Where
-the GS treatment had the greatest basal area of redwood regeneration at `r regen_mean$rw$estimate` m^2^ ha^-1^, 
-which was `r abs(regen_pairs$rw[["gs - hd"]]$estimate)` m^2^ ha^-1^ greater than in the HD treatment 
-(p = `r pluck(regen_pairs, "rw", "gs - hd", "p.value")`). The LD and HD treatments were
-intermediate.
+the GS treatment had the greatest basal area of redwood regeneration at 
+`r regen_mean$rw$estimate` m^2^ ha^-1^, which was 
+`r abs(regen_pairs$rw[["gs - hd"]]$estimate)` m^2^ ha^-1^ greater than in the HD
+treatment (p = `r pluck(regen_pairs, "rw", "gs - hd", "p.value")`). The LD and
+HD treatments were intermediate.
 
 Tanoak basal area regeneration was intermediate between that of redwood and
 Douglas-fir and other species. The GS and LD treatments had similar responses, as
@@ -459,18 +469,18 @@ rw_to_mean <-
 on treatment comparisons between redwood and tanoak. 
 This shows that we expect on average, 
 `r abs(rw_to_pairs$gs[[1]]$estimate)` m^2^ ha^-1^ greater redwood basal area
-than tanoak basal area in the GS treatment (p = `r rw_to_pairs$gs[[1]]$p.value`), 
+than tanoak basal area in the GS treatment (p = `r rw_to_pairs$gs[[1]]$p.value`),
 about `r abs(rw_to_pairs$ld[[1]]$estimate)` m^2^
 ha^-1^ in the LD treatment (p = `r rw_to_pairs$ld[[1]]$p.value`), and about 
 `r abs(rw_to_pairs$ha[[1]]$estimate)` m^2^ ha^-1^ in the HA treatment 
-(p = `r rw_to_pairs$ha[[1]]$p.value`). In the HD treatment, we expect to see slightly
-higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`).
+(p = `r rw_to_pairs$ha[[1]]$p.value`). In the HD treatment, we expect to see
+slightly higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`).
 
-Uncertainty in average Redwood basal area across sites, indicated by the size of 95% confidence intervals, is much
-greater than that of tanoak in the GS treatment, but this difference
-diminishes such that GS > LD > HA > HD. In the HD treatment redwood and tanoak
-average basal area uncertainty across sites is very similar. 
-(@fig-regen-ba).
+Uncertainty in average Redwood basal area across sites, indicated by the size of
+95% confidence intervals, is much greater than that of tanoak in the GS
+treatment, but this difference diminishes such that GS > LD > HA > HD. In the HD
+treatment redwood and tanoak average basal area uncertainty across sites is very
+similar. (@fig-regen-ba).
 
 ```{r}
 #| label: fig-regen-ba-rw-to
@@ -490,14 +500,6 @@ regen_rw_to |>
   scale_x_discrete(labels = species_labels) +
   labs(x = "Species", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1)))
 ```
-
-### Other species
-
-Other species included grand fir, madrone, and California wax-myrtle, of which
-there was a total of 23, 28, and 16 observations across our 16 macro plots
-(comprising 64 tree density plots). Generally, each plot had between 0 and 9
-observations of other species, except for one macro plot with the LD treatment,
-which had 16 observations (data not shown).
 
 ### Douglas-fir counts
 
