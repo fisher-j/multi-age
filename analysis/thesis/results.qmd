@@ -1001,21 +1001,22 @@ fuel_pre_means <-
 # pvalue for the difference between HD and GS for duff & litter
 # fuel_pre_compare$onehr[["gs - ld"]]$p.value
 ```
-TODO: I'm here
 
 For Duff & Litter, the largest difference was between the HD and HA treatments.
 The HD treatment had about `r fuel_pre_means$dufflitter$hd$estimate` Mg ha^-1^,
-and was about `r fuel_pre_compare$dufflitter[["hd - ha"]]$estimate` Mg ha^-1^
-greater than the HA treatment (p = `r fuel_pre_compare$dufflitter[["ha - hd"]]$p.value`).
-Generally, all treatments were similar, with estimated loading of around 
-`r round(mean(map_dbl(fuel_pre_means$dufflitter, ~pluck(.x, "estimate"))), 0)` Mg ha^-1^.
+and was about `r abs(fuel_pre_compare$dufflitter[["ha - hd"]]$estimate)` Mg
+ha^-1^ greater than the HA treatment (p = 
+`r fuel_pre_compare$dufflitter[["ha - hd"]]$p.value`). Generally, all treatments
+were similar, with estimated loading of around 
+`r round(mean(map_dbl(fuel_pre_means$dufflitter, ~pluck(.x, "estimate"))), 0)`
+Mg ha^-1^.
 
 One-hour fuels were highest in the HA treatment, with an expected value of 
-`r fuel_pre_means$onehr$ha$estimate` Mg ha^-1^, which was about `r
-fuel_pre_compare$onehr[["ha - gs"]]$estimate` Mg ha^-1^ greater than in the GS
-treatment (p = `r fuel_pre_compare$onehr[["ha - gs"]]$p.value`). One-hour fuels
-in the LD and HD treatments were intermediate but the LD was more similar to the
-GS and the HD was more similar to the HA treatment.
+`r fuel_pre_means$onehr$ha$estimate` Mg ha^-1^, which was about 
+`r fuel_pre_compare$onehr[["ha - gs"]]$estimate` Mg ha^-1^ greater than in the
+GS treatment (p = `r fuel_pre_compare$onehr[["gs - ha"]]$p.value`). One-hour
+fuels in the LD and HD treatments were intermediate but the LD was more similar
+to the GS and the HD was more similar to the HA treatment.
 
 Ten, hundred and thousand-hour fuels were statistically,
 very similar across treatments (p = 0.7 — p = 1). Treatment averages had 
