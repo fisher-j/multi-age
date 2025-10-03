@@ -1,4 +1,23 @@
 
+## 2025-07-18 
+ - editing fuels discussion, minor fixes to fuels results
+
+## 2025-07-17 
+ - Continuing with revising discussion to reflect results: finished basal area
+
+## 2025-07-16 
+ - Began refining discussion text
+
+## 2025-07-04 
+ - finised working through revised results, inline values reference data
+
+## 2025-06-29 
+ - Continuing to redo results now working on fuels
+
+## 2025-06-13 
+ - almost done with regen results narrative
+ - Some past work plus implemented data structure to extract result values inline
+
 ## 2025-05-16 
  - new workflow for interpreting models with `marginaleffects` and `emmeans`
 

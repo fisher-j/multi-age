@@ -15,12 +15,13 @@ source("./scripts/utils.r")
 
 library(marginaleffects)
 library(tidyr)
-library(tidyverse)
 library(ggdist)
 library(patchwork)
 library(vegan)
 library(glmmTMB)
 library(DHARMa)
+library(ggplot2)
+library(dplyr)
 
 load("regen_wrangled.rda")
 ```
@@ -526,7 +527,7 @@ regen_pa |>
   pivot_longer(where(is.double), names_to = "type", values_to = "ba_ha") |>
   ggplot(aes(
     treat,
-    ba_ha, # fill = type
+    ba_ha,
     group = interaction(type, treat),
     fill = forcats::fct_collapse(type, sim = paste0("sim_", 1:5))
   )) +
@@ -539,7 +540,6 @@ Finally, significant differences?
 
 ```{r}
 #| label: fig-species-ba-model
-#| fig-cap:
 
 avg_predictions(
   mba,
@@ -599,7 +599,6 @@ the number of Douglas-fir seedlings per plot.
 regen_df <- regen |>
   count(site, treat, plot, spp) |>
   complete(nesting(site, treat, plot), spp, fill = list(n = 0)) |>
-  # mutate(block = paste(site, treat)) |>
   filter(spp == "df")
 
 regen_df |>

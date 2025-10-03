@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Multiaged experiment – 10-year analysis - 4&nbsp; Fuel data exploration</title>
+<title>4&nbsp; Fuel data exploration – Multiaged experiment -- 10-year analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,8 +21,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -86,15 +87,17 @@ div.csl-indent {
 <meta name="quarto:offset" content="../">
 <link href="../analysis/fuel_data_modeling.html" rel="next">
 <link href="../analysis/calculate_fuel_loading.html" rel="prev">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d9ea66fcd6c317012447f26e9c021348.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -126,19 +129,19 @@ div.csl-indent {
 
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../analysis/fuel_data_description.html">Fuels</a></li><li class="breadcrumb-item"><a href="../analysis/fuel_data_exploration.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Fuel data exploration</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -148,7 +151,9 @@ div.csl-indent {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Multiaged experiment – 10-year analysis</a> 
     </div>
@@ -168,9 +173,9 @@ div.csl-indent {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Fuels</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -215,9 +220,9 @@ div.csl-indent {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Sprout height</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -244,9 +249,9 @@ div.csl-indent {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Regeneration</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -340,7 +345,7 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to access mostly raw data, but with combined veg and thoushr fuels.</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to access mostly raw data, but with combined veg and thoushr fuels.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and select the output variables (`...`)</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>load2 <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">shape =</span> <span class="st">"wide"</span>, <span class="at">pct =</span> <span class="fu">c</span>(<span class="st">"pre"</span>, <span class="st">"post"</span>, <span class="st">"both"</span>), ...) {</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  pct <span class="ot">&lt;-</span> pct[<span class="dv">1</span>]</span>
@@ -362,7 +367,7 @@ div.csl-indent {
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(load))</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  tl</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>These plots seem to indicate that, pre-pct, there is slightly higher 1-hr fuel load for HA and HD, compared to GS and LD. Ten years after harvest, we would expect 1-hr fuels to be dominated by twigs and branches falling from live crowns and there is ostensibly a greater crown volume in the HA and HD treatments. Duff and litter may be slightly higher in the HD treatment, compared to the others. For live fuels, there appears to be a decreasing trend from GS &gt; LD &gt; HA &amp; HD. Most of live fuel is due to regenerating sprouts. The difference in sprout growth in high vs.&nbsp;low light environments was readily apparent in the field.</p>
@@ -370,15 +375,15 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, load)) <span class="sc">+</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))) <span class="sc">+</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> toupper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="fu">expression</span>(Load <span class="sc">~</span> (Mg <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>))) <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> toupper)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-raw-fuel-boxplot-pre" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-raw-fuel-boxplot-pre" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-raw-fuel-boxplot-pre-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-raw-fuel-boxplot-pre-1.png" class="img-fluid figure-img" width="672">
@@ -393,15 +398,15 @@ Figure&nbsp;4.1: Boxplots of fuels data summarized for six fuel classes across f
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"post"</span>, <span class="sc">-</span>dufflitter) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"post"</span>, <span class="sc">-</span>dufflitter) <span class="sc">|&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, load)) <span class="sc">+</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">labeller =</span> fuel_class_labeller) <span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>))) <span class="sc">+</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> toupper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Treatment"</span>, <span class="at">y =</span> <span class="fu">expression</span>(Load <span class="sc">~</span> (Mg <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>))) <span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> toupper)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-raw-fuel-boxplot-post" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-raw-fuel-boxplot-post" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-raw-fuel-boxplot-post-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-raw-fuel-boxplot-post-1.png" class="img-fluid figure-img" width="672">
@@ -417,7 +422,7 @@ Figure&nbsp;4.2: Boxplots of transect level fuels data summarized for six fuel c
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>spf <span class="ot">&lt;-</span> <span class="st">"%.1f"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>spf <span class="ot">&lt;-</span> <span class="st">"%.1f"</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
@@ -429,20 +434,20 @@ Figure&nbsp;4.2: Boxplots of transect level fuels data summarized for six fuel c
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.keep =</span> <span class="st">"unused"</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> treatment, <span class="at">values_from =</span> load) <span class="sc">|&gt;</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'class'. You can override using the
 `.groups` argument.</code></pre>
 </div>
-<div id="tbl-raw-data" class="cell quarto-float anchored">
+<div id="tbl-raw-data" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-raw-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;4.1: Average (sd) transect level load (Mg ha<sup>-1</sup>) for six fuel class categories in four different overstory harvest techniques.
 </figcaption>
 <div aria-describedby="tbl-raw-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">class</th>
@@ -508,32 +513,32 @@ Table&nbsp;4.1: Average (sd) transect level load (Mg ha<sup>-1</sup>) for six fu
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cleavland_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, title, <span class="at">load_var =</span> load) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cleavland_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, title, <span class="at">load_var =</span> load) {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(site, treatment) <span class="sc">|&gt;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">replicate_mean_load =</span> <span class="fu">mean</span>({{load_var}}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(site, treatment) <span class="sc">|&gt;</span> <span class="co"># nolint</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">replicate_mean_load =</span> <span class="fu">mean</span>({{ load_var }}, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        {{load_var}},</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        {{ load_var }},</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">fct_reorder</span>(</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>          <span class="fu">interaction</span>(site, treatment, <span class="at">sep =</span> <span class="st">" "</span>),</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>          {{load_var}},</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>          {{ load_var }},</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">.na_rm =</span> <span class="cn">TRUE</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        ),</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> treatment</span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>      )</span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load<span class="sc">~</span>(Mg<span class="sc">%.%</span>ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Data order"</span>, <span class="at">title =</span> title)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(Load <span class="sc">~</span> (Mg <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>)), <span class="at">y =</span> <span class="st">"Data order"</span>, <span class="at">title =</span> title)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<div id="fig-fwd" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-fwd" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fwd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="fig-fwd-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-fwd-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-fwd-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-fwd-1.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672">
@@ -545,7 +550,7 @@ Table&nbsp;4.1: Average (sd) transect level load (Mg ha<sup>-1</sup>) for six fu
 </div>
 </div>
 <div class="cell-output-display">
-<div id="fig-fwd-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-fwd-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-fwd-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-fwd-2.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672">
@@ -557,7 +562,7 @@ Table&nbsp;4.1: Average (sd) transect level load (Mg ha<sup>-1</sup>) for six fu
 </div>
 </div>
 <div class="cell-output-display">
-<div id="fig-fwd-3" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-fwd-3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-fwd-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-fwd-3.png" class="img-fluid figure-img" data-ref-parent="fig-fwd" width="672">
@@ -577,7 +582,7 @@ Figure&nbsp;4.3: Data distribution of loading for fine woody debris classes. Dat
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-cwd" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-cwd" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-cwd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-cwd-1.png" class="img-fluid figure-img" width="672">
@@ -591,7 +596,7 @@ Figure&nbsp;4.4: Sum of coarse woody (&gt;7.64 cm, sound and rotten wood combine
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-dufflitter" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-dufflitter" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-dufflitter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-dufflitter-1.png" class="img-fluid figure-img" width="672">
@@ -610,11 +615,11 @@ Figure&nbsp;4.5: Combined duff and litter loading at each station along trancect
 Removed 1 row containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 </div>
-<div id="fig-veg" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-veg" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-veg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="fig-veg-1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-veg-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-veg-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-veg-1.png" class="img-fluid figure-img" data-ref-parent="fig-veg" width="672">
@@ -626,7 +631,7 @@ Removed 1 row containing missing values or values outside the scale range
 </div>
 </div>
 <div class="cell-output-display">
-<div id="fig-veg-2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-veg-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-veg-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-veg-2.png" class="img-fluid figure-img" data-ref-parent="fig-veg" width="672">
@@ -660,23 +665,24 @@ Figure&nbsp;4.6: Vegetation fuel loading for each station along transects, inclu
 <div class="cell" data-fig-heigth="8">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>myqqplot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, var) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>myqqplot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, var) {</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> {{ var }})) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(class <span class="sc">~</span> treatment, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Theoretical quantiles"</span>, <span class="at">y =</span> <span class="st">"Sample quantiles"</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Normal Q-Q Plot"</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">myqqplot</span>(load)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> {{ var }})) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(class <span class="sc">~</span> treatment, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">"Theoretical quantiles"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Sample quantiles"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Normal Q-Q Plot"</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">myqqplot</span>(load)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-qqplot-naive" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-qqplot-naive" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-naive-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-qqplot-naive-1.png" class="img-fluid figure-img" width="672">
@@ -691,7 +697,7 @@ Figure&nbsp;4.7: Naive qq plot of loading variables. This doesn’t take into th
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This code creates a dataframe with nested columns that include the original</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This code creates a dataframe with nested columns that include the original</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># data and calculated coordinates of a superimposed normal distribution.</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: why does this inlcude site corner azi?</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>bins <span class="ot">&lt;-</span> <span class="dv">16</span></span>
@@ -720,47 +726,47 @@ Figure&nbsp;4.7: Naive qq plot of loading variables. This doesn’t take into th
 <span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># scale curve to expected binwidth based on plot layout (same x scale across</span></span>
 <span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># all fuel classes) multiplied by the number of observations. The histogram</span></span>
 <span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and normal curve should represent the same total area.</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">norm_y =</span> <span class="fu">map</span>(data, <span class="cf">function</span> (d) {</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">norm_y =</span> <span class="fu">map</span>(data, <span class="cf">function</span>(d) {</span>
 <span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>      dens <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">unlist</span>(norm_x), <span class="at">mean =</span> <span class="fu">mean</span>(d<span class="sc">$</span>load), <span class="at">sd =</span> <span class="fu">sd</span>(d<span class="sc">$</span>load))</span>
 <span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>      dens <span class="sc">*</span> ((xmax <span class="sc">-</span> xmin) <span class="sc">/</span> bins) <span class="sc">*</span> <span class="fu">nrow</span>(d)</span>
 <span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    })</span>
 <span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co"># # here is the code to plot the above data. I decided not to use this after all,</span></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co"># # but it was a lot of work, so I'm keeping it for posterity</span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(filter(hist_dat, class %in% load_vars[1:3] )) +</span></span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +</span></span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +</span></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#   facet_grid(treatment ~ class, scales = "free") +</span></span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(y = "count", x = "Load Mg/ha")</span></span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(filter(hist_dat, class %in% load_vars[4:6] )) +</span></span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +</span></span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +</span></span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="co">#   facet_grid(treatment ~ class, scales = "free") +</span></span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(y = "count", x = "Load Mg/ha")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co"># here is the code to plot the above data. I decided not to use this after all,</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co"># but it was a lot of work, so I'm keeping it for posterity</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co"># nolint start</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(filter(hist_dat, class %in% load_vars[1:3] )) +</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co">#   facet_grid(treatment ~ class, scales = "free") +</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(y = "count", x = "Load Mg/ha")</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(filter(hist_dat, class %in% load_vars[4:6] )) +</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="co">#   facet_grid(treatment ~ class, scales = "free") +</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(y = "count", x = "Load Mg/ha")</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="co"># nolint end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>)),</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) {</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(class <span class="sc">%in%</span> load_vars[x]) <span class="sc">|&gt;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(load)) <span class="sc">+</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_grid</span>(treatment <span class="sc">~</span> class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"count"</span>, <span class="at">x =</span> <span class="st">"Load Mg/ha"</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(p)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>)), <span class="cf">function</span>(x) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(class <span class="sc">%in%</span> load_vars[x]) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(load)) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(treatment <span class="sc">~</span> class, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"count"</span>, <span class="at">x =</span> <span class="st">"Load Mg/ha"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(p)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="fig-hist" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-hist" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="fig-hist-1" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<div id="fig-hist-1" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-hist-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-hist-1.png" id="fig-hist-1" class="img-fluid figure-img" data-ref-parent="fig-hist" width="672">
@@ -772,7 +778,7 @@ Figure&nbsp;4.7: Naive qq plot of loading variables. This doesn’t take into th
 </div>
 </div>
 <div class="cell-output-display">
-<div id="fig-hist-2" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<div id="fig-hist-2" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-hist-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-hist-2.png" id="fig-hist-2" class="img-fluid figure-img" data-ref-parent="fig-hist" width="672">
@@ -796,7 +802,7 @@ Figure&nbsp;4.8: Histotrams for the fuel loading response variables.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>boxcox <span class="ot">&lt;-</span> <span class="cf">function</span>(y, lambda1, lambda2) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>boxcox <span class="ot">&lt;-</span> <span class="cf">function</span>(y, lambda1, lambda2) {</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (lambda1 <span class="sc">==</span> <span class="dv">0</span>) {</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(y <span class="sc">+</span> lambda2)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
@@ -805,13 +811,18 @@ Figure&nbsp;4.8: Histotrams for the fuel loading response variables.
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>, <span class="fu">all_of</span>(treatment_load_vars)) <span class="sc">|&gt;</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span> <span class="fu">nest</span>() <span class="sc">|&gt;</span> <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">lambda =</span> <span class="fu">list</span>(<span class="fu">suppressMessages</span>(geoR<span class="sc">::</span><span class="fu">boxcoxfit</span>(data<span class="sc">$</span>load, <span class="at">lambda2 =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>lambda)),</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">load_bc =</span> <span class="fu">list</span>(<span class="fu">boxcox</span>(data<span class="sc">$</span>load, lambda[<span class="dv">1</span>], lambda[<span class="dv">2</span>]))</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="fu">c</span>(data, load_bc)) <span class="sc">|&gt;</span> <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">myqqplot</span>(load_bc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">|&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">lambda =</span> <span class="fu">list</span>(<span class="fu">suppressMessages</span>(</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>      geoR<span class="sc">::</span><span class="fu">boxcoxfit</span>(data<span class="sc">$</span>load, <span class="at">lambda2 =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>lambda</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    )),</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">load_bc =</span> <span class="fu">list</span>(<span class="fu">boxcox</span>(data<span class="sc">$</span>load, lambda[<span class="dv">1</span>], lambda[<span class="dv">2</span>]))</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="fu">c</span>(data, load_bc)) <span class="sc">|&gt;</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">myqqplot</span>(load_bc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -826,12 +837,12 @@ Figure&nbsp;4.8: Histotrams for the fuel loading response variables.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="st">"pre"</span>, <span class="fu">all_of</span>(treatment_load_vars))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="st">"pre"</span>, <span class="fu">all_of</span>(treatment_load_vars))</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>load_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.matrix</span>(tl[<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">~</span> treatment, <span class="at">data =</span> tl)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>m_dist <span class="ot">&lt;-</span> heplots<span class="sc">::</span><span class="fu">Mahalanobis</span>(<span class="fu">resid</span>(load_mod))</span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="st">"pre"</span>, <span class="fu">everything</span>())[<span class="fu">order</span>(m_dist, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="st">"pre"</span>, <span class="fu">everything</span>())[<span class="fu">order</span>(m_dist, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 12
@@ -851,17 +862,17 @@ Figure&nbsp;4.8: Histotrams for the fuel loading response variables.
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>treatments <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gs"</span>, <span class="st">"ha"</span>, <span class="st">"ld"</span>, <span class="st">"hd"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>treatments <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gs"</span>, <span class="st">"ha"</span>, <span class="st">"ld"</span>, <span class="st">"hd"</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(treatments, </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  \(x) heplots<span class="sc">::</span><span class="fu">cqplot</span>(<span class="fu">filter</span>(tl, treatment <span class="sc">==</span> x)[<span class="sc">-</span><span class="dv">1</span>], <span class="at">main =</span> x)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(treatments, \(x) {</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  heplots<span class="sc">::</span><span class="fu">cqplot</span>(<span class="fu">filter</span>(tl, treatment <span class="sc">==</span> x)[<span class="sc">-</span><span class="dv">1</span>], <span class="at">main =</span> x)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>}))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="fig-qqplot-model" class="cell quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-qqplot-model" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qqplot-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="fig-qqplot-model" class="quarto-figure quarto-figure-center quarto-float anchored" width="672">
+<div id="fig-qqplot-model" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-qqplot-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-qqplot-model-1.png" id="fig-qqplot-model" class="img-fluid figure-img" data-ref-parent="fig-qqplot-model" width="672">
@@ -883,29 +894,29 @@ Figure&nbsp;4.9: Plot A assessed the multivariate normality of residuals given t
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>all_mvn_tests <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"mardia"</span>, <span class="st">"hz"</span>, <span class="st">"royston"</span>, <span class="st">"dh"</span>, <span class="st">"energy"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) MVN<span class="sc">::</span><span class="fu">mvn</span>(<span class="at">data =</span> data, <span class="at">subset =</span> <span class="st">"treatment"</span>, <span class="at">mvnTest =</span> x)) <span class="sc">|&gt;</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) x<span class="sc">$</span>multivariateNormality) <span class="sc">|&gt;</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(\(x) <span class="fu">bind_rows</span>(x, <span class="at">.id =</span> <span class="st">"treatment"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(\(x) </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(x, Test <span class="sc">!=</span> <span class="st">"MVN"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>( <span class="fu">across</span>(<span class="fu">where</span>(is.factor), \(f) <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(f)))) <span class="sc">|&gt;</span> </span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">statistic =</span> <span class="dv">3</span>, <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">Result =</span> <span class="fu">last_col</span>())</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(\(x) MVN<span class="sc">::</span><span class="fu">mvn</span>(<span class="at">data =</span> data, <span class="at">subset =</span> <span class="st">"treatment"</span>, <span class="at">mvnTest =</span> x)) <span class="sc">|&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(\(x) x<span class="sc">$</span>multivariateNormality) <span class="sc">|&gt;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(\(x) <span class="fu">bind_rows</span>(x, <span class="at">.id =</span> <span class="st">"treatment"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map_dfr</span>(\(x) {</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(x, Test <span class="sc">!=</span> <span class="st">"MVN"</span>) <span class="sc">|&gt;</span> <span class="co"># nolint</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.factor), \(f) <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(f)))) <span class="sc">|&gt;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">statistic =</span> <span class="dv">3</span>, <span class="st">`</span><span class="at">p value</span><span class="st">`</span>, <span class="at">Result =</span> <span class="fu">last_col</span>()) <span class="co"># nolint</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    })</span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">all_mvn_tests</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="st">"pre"</span>, <span class="fu">all_of</span>(treatment_load_vars))) <span class="sc">|&gt;</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-norm-test" class="cell quarto-float anchored">
+<div id="tbl-norm-test" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-norm-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;4.2: Several different tests of multivariate normality indicate a lack of evidence to support this assumption.
 </figcaption>
 <div aria-describedby="tbl-norm-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">treatment</th>
@@ -1100,22 +1111,18 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 <p>The following show where our data lies in terms of kurtosis and skewness compared to other common distributions. It looks somewhat Gamma-ish?</p>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(<span class="sc">~</span>class) <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span><span class="fu">split</span>(.x, <span class="sc">~</span>treatment))</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># imap_dfr(d, \(x, y) tibble(class = y, treatment = names(x) )) |&gt;</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   with(paste0("Treatment ", treatment, ", fuel class ", class)) |&gt;</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   cat(sep = "\n")</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># par(mfrow = c(2,2))</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(d, <span class="sc">~</span> <span class="fu">walk</span>(.x, \(x) fitdistrplus<span class="sc">::</span><span class="fu">descdist</span>(x<span class="sc">$</span>load, <span class="at">boot =</span> <span class="dv">111</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>, treatment, <span class="fu">all_of</span>(load_vars)) <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(<span class="sc">~</span>class) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">split</span>(.x, <span class="sc">~</span>treatment))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(d, <span class="sc">~</span> <span class="fu">walk</span>(.x, \(x) fitdistrplus<span class="sc">::</span><span class="fu">descdist</span>(x<span class="sc">$</span>load, <span class="at">boot =</span> <span class="dv">111</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div id="fig-skew-kurt" class="quarto-layout-panel page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-1" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-1" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-1.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1127,7 +1134,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-2" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-2" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-2.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1139,9 +1146,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-3" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-3" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-3.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1153,7 +1160,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-4" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-4" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-4.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1165,9 +1172,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-5" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-5" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-5.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1179,7 +1186,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-6" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-6" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-6.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1191,9 +1198,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-7" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-7" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-7.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1205,7 +1212,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-8" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-8" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-8.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1217,9 +1224,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-9" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-9" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-9.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1231,7 +1238,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-10" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-10" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-10.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1243,9 +1250,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-11" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-11" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-11.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1257,7 +1264,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-12" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-12" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-12.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1269,9 +1276,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-13" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-13" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-13.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1283,7 +1290,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-14" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-14" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-14.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1295,9 +1302,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-15" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-15" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-15.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1309,7 +1316,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-16" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-16" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-16.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1321,9 +1328,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-17" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-17" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-17.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1335,7 +1342,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-18" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-18" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-18.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1347,9 +1354,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-19" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-19" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-19.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1361,7 +1368,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-20" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-20" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-20.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1373,9 +1380,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-21" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-21" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-21.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1387,7 +1394,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-22" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-22" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-22.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1399,9 +1406,9 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 </div>
-<div class="quarto-layout-row page-columns page-full">
+<div class="quarto-layout-row page-full">
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-23" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-23" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-23.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1413,7 +1420,7 @@ Table&nbsp;4.2: Several different tests of multivariate normality indicate a lac
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell page-columns page-full" data-ref-parent="fig-skew-kurt" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-skew-kurt-24" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
+<div id="fig-skew-kurt-24" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-subfloat-fig figure page-columns page-full">
 <div aria-describedby="fig-skew-kurt-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
 <img src="fuel_data_exploration_files/figure-html/fig-skew-kurt-24.png" class="img-fluid figure-img column-page" data-ref-parent="fig-skew-kurt" width="480">
@@ -1439,25 +1446,30 @@ Figure&nbsp;4.10: Skewness and kurtosis for fuel classes within treatments.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zero adjusted Gamma distribution fit to histograms</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zero adjusted Gamma distribution fit to histograms</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>plot_zaga <span class="ot">&lt;-</span> <span class="cf">function</span>(i, d) {</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> gamlss<span class="sc">::</span><span class="fu">gamlssML</span>(d, <span class="at">family =</span> gamlss.dist<span class="sc">::</span><span class="fu">ZAGA</span>())</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(d, <span class="at">prob =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> i, <span class="at">breaks =</span> <span class="dv">20</span>)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">curve</span>(gamlss.dist<span class="sc">::</span><span class="fu">dZAGA</span>(x, <span class="at">mu =</span> m1<span class="sc">$</span>mu, <span class="at">sigma =</span> m1<span class="sc">$</span>sigma, <span class="at">nu =</span> m1<span class="sc">$</span>nu), <span class="at">from =</span> <span class="fu">min</span>(d), <span class="at">to =</span> <span class="fu">max</span>(d), <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>plot_zaga_class <span class="ot">&lt;-</span> <span class="cf">function</span>(data, class_name) {</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">missing</span>(class_name)) {</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    class_name <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="fu">substitute</span>(data))</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    class_name <span class="ot">&lt;-</span> class_name[<span class="fu">length</span>(class_name)]</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">iwalk</span>(data, <span class="sc">~</span><span class="fu">plot_zaga</span>(.y, .x))</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtext</span>(class_name, <span class="at">cex =</span> <span class="fl">1.6</span>, <span class="at">side =</span> <span class="dv">3</span>, <span class="at">line =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">outer =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">map</span>(.x, <span class="st">"load"</span>))</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">iwalk</span>(d2, <span class="sc">~</span><span class="fu">plot_zaga_class</span>(.x, .y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">curve</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    gamlss.dist<span class="sc">::</span><span class="fu">dZAGA</span>(x, <span class="at">mu =</span> m1<span class="sc">$</span>mu, <span class="at">sigma =</span> m1<span class="sc">$</span>sigma, <span class="at">nu =</span> m1<span class="sc">$</span>nu), <span class="co"># nolint</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">from =</span> <span class="fu">min</span>(d),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">to =</span> <span class="fu">max</span>(d),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">add =</span> <span class="cn">TRUE</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>plot_zaga_class <span class="ot">&lt;-</span> <span class="cf">function</span>(data, class_name) {</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">missing</span>(class_name)) {</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    class_name <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="fu">substitute</span>(data))</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    class_name <span class="ot">&lt;-</span> class_name[<span class="fu">length</span>(class_name)]</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">iwalk</span>(data, <span class="sc">~</span> <span class="fu">plot_zaga</span>(.y, .x))</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtext</span>(class_name, <span class="at">cex =</span> <span class="fl">1.6</span>, <span class="at">side =</span> <span class="dv">3</span>, <span class="at">line =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">outer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">map</span>(.x, <span class="st">"load"</span>))</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="fu">iwalk</span>(d2, <span class="sc">~</span> <span class="fu">plot_zaga_class</span>(.x, .y))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1510,18 +1522,18 @@ Figure&nbsp;4.10: Skewness and kurtosis for fuel classes within treatments.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cwd_counts <span class="ot">&lt;-</span> cwd <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cwd_counts <span class="ot">&lt;-</span> cwd <span class="sc">|&gt;</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, treatment, corner, azi) <span class="sc">|&gt;</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">sum</span>(count), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>cwd_counts <span class="sc">|&gt;</span></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_walk</span>( <span class="cf">function</span> (data, group) {</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_walk</span>(<span class="cf">function</span>(data, group) {</span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> data<span class="sc">$</span>count</span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hist</span>(n, <span class="at">main =</span> group, <span class="at">prob =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="fu">max</span>(n), <span class="fu">dpois</span>(<span class="dv">0</span><span class="sc">:</span><span class="fu">max</span>(n), <span class="fu">mean</span>(n)))</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  })</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1535,14 +1547,16 @@ Figure&nbsp;4.10: Skewness and kurtosis for fuel classes within treatments.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>cwd_counts <span class="sc">|&gt;</span> </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span> <span class="fu">nest</span>() <span class="sc">|&gt;</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma =</span> <span class="fu">map_dbl</span>(data, </span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span>gamlss<span class="sc">::</span><span class="fu">gamlssML</span>(.x<span class="sc">$</span>count, <span class="at">family =</span> gamlss.dist<span class="sc">::</span><span class="fu">ZIP</span>())<span class="sc">$</span>sigma</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>cwd_counts <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>() <span class="sc">|&gt;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma =</span> <span class="fu">map_dbl</span>(</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>      data,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span> gamlss<span class="sc">::</span><span class="fu">gamlssML</span>(.x<span class="sc">$</span>count, <span class="at">family =</span> gamlss.dist<span class="sc">::</span><span class="fu">ZIP</span>())<span class="sc">$</span>sigma</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 2
@@ -1563,18 +1577,21 @@ Figure&nbsp;4.10: Skewness and kurtosis for fuel classes within treatments.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>max_var <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>max_var <span class="ot">&lt;-</span> <span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">var =</span> <span class="fu">sd</span>(load)<span class="sc">^</span><span class="dv">2</span>, <span class="at">load =</span> <span class="fu">max</span>(load), <span class="at">.groups =</span> <span class="st">"drop_last"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_var_rat =</span> <span class="fu">paste</span>(<span class="st">"Max. var. ratio: "</span>, <span class="fu">round</span>(<span class="fu">max</span>(var) <span class="sc">/</span> <span class="fu">min</span>(var))),</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">1.1</span>, <span class="at">y =</span> <span class="fu">max</span>(load) <span class="sc">*</span> <span class="fl">1.1</span>, <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, load)) <span class="sc">+</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> max_var, <span class="fu">aes</span>(x, y, <span class="at">label =</span> max_var_rat, <span class="at">hjust =</span> <span class="st">"inward"</span>)) <span class="sc">+</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">1.1</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">max</span>(load) <span class="sc">*</span> <span class="fl">1.1</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, load)) <span class="sc">+</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> max_var, <span class="fu">aes</span>(x, y, <span class="at">label =</span> max_var_rat, <span class="at">hjust =</span> <span class="st">"inward"</span>)) <span class="sc">+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1591,17 +1608,18 @@ Figure&nbsp;4.10: Skewness and kurtosis for fuel classes within treatments.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load2</span>(<span class="st">"long"</span>, <span class="st">"pre"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, treatment) <span class="sc">|&gt;</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">zeros =</span> <span class="fu">sum</span>(load <span class="sc">==</span> <span class="dv">0</span>), <span class="at">percent =</span> zeros <span class="sc">/</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(treatment, percent)) <span class="sc">+</span></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">if_else</span>(zeros <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">NA</span>, zeros), <span class="at">y =</span> percent <span class="sc">/</span> <span class="dv">2</span>),</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray70"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class) <span class="sc">+</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray70"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>class) <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1618,10 +1636,10 @@ Figure&nbsp;4.10: Skewness and kurtosis for fuel classes within treatments.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(GGally<span class="sc">::</span><span class="fu">ggpairs</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="st">"pre"</span>, <span class="fu">all_of</span>(load_vars))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(GGally<span class="sc">::</span><span class="fu">ggpairs</span>(<span class="fu">load2</span>(<span class="st">"wide"</span>, <span class="st">"pre"</span>, <span class="fu">all_of</span>(load_vars))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="fig-response-corr" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-response-corr" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-response-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="fuel_data_exploration_files/figure-html/fig-response-corr-1.png" class="img-fluid figure-img" width="672">
@@ -1649,43 +1667,58 @@ Zuur, A. F., Ieno, E. N., &amp; Elphick, C. S. (2010). A protocol for data explo
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -1693,162 +1726,184 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1856,193 +1911,169 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../analysis/calculate_fuel_loading.html" class="pagination-link  aria-label=" &lt;span="" fuel="" loading&lt;="" span&gt;"="">
+      <a href="../analysis/calculate_fuel_loading.html" class="pagination-link" aria-label="Calculate fuel loading">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Calculate fuel loading</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../analysis/fuel_data_modeling.html" class="pagination-link" aria-label="<span class='chapter-number'>5</span>&nbsp; <span class='chapter-title'>Fuel modeling</span>">
+      <a href="../analysis/fuel_data_modeling.html" class="pagination-link" aria-label="Fuel modeling">
         <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fuel modeling</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

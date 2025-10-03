@@ -12,10 +12,11 @@ Load those libraries
 ```{r}
 #| output: false
 
-library(tidyverse)
 library(readxl)
-
-
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(stringr)
 ```
 
 Load those data, new names.
@@ -24,12 +25,17 @@ Load those data, new names.
 
 regen_0 <- local({
   col_names <- c(
-    "site", "treat", "plot", "spp", "dbh_lt1", "dbh_lt2", "lcbh_gte2",
+    "site",
+    "treat",
+    "plot",
+    "spp",
+    "dbh_lt1",
+    "dbh_lt2",
+    "lcbh_gte2",
     paste0("dbh", 1:28)
   )
   read_excel("../data/Regen10yr.xlsx", skip = 2, col_names = col_names)
 })
-
 ```
 
 ## Clean labels
@@ -40,7 +46,6 @@ First, I'll take a look at the character type columns.
 
 select(regen_0, where(is.character)) |>
   map(unique)
-
 ```
 
 I'll take the following steps to clean up this data:
@@ -58,7 +63,6 @@ regen_1 <- regen_0 |>
   mutate(spp = if_else(str_detect(spp, "qumu"), "gc", spp)) |>
   filter(treat != "hd -2a", spp != "ca nettle") |>
   mutate(treat = str_extract(treat, "gs|ld|ha|hd"))
-   
 ```
 
 This resulted in the removal of `r nrow(regen_0) - nrow(regen_1)` rows.
@@ -103,8 +107,6 @@ regen_2 <- local({
     arrange(site, treat, plot, spp, dbh) |>
     mutate(treat = factor(treat, c("gs", "ld", "ha", "hd")))
 })
-
-
 ```
 
 We decided that the minor species are not that interesting here, we are
@@ -114,11 +116,11 @@ will aid in plotting.
 ```{r}
 
 # Reduce number of species
-regen_3 <- mutate(regen_2,
+regen_3 <- mutate(
+  regen_2,
   spp = if_else(spp %in% c("rw", "to", "df"), spp, "other"),
   spp = forcats::fct_reorder(spp, spp, length),
 )
-
 ```
 
 ```{r}
@@ -135,7 +137,6 @@ regen_3 |>
   filter(spp == "other") |>
   count(site, treat) |>
   complete(site, treat, fill = list(n = 0))
-
 ```
 
 Save this data for summary, visualization, and potentially, modeling.
@@ -144,7 +145,6 @@ Save this data for summary, visualization, and potentially, modeling.
 
 regen <- regen_3
 save(regen, regen_lcbh, file = "regen_wrangled.rda")
-
 ```
 
 :::

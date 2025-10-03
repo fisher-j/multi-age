@@ -8,7 +8,13 @@ format:
 
 ```{r init}
 #| echo: false
-suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+#| warning: false
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(forcats)
+library(purrr)
+
 load("./calculate_fuel_load.rda")
 transectid <- c("site", "treatment", "corner", "azi")
 load_vars <- c("onehr", "tenhr", "hundhr", "dufflitter", "thoushr", "veg")
@@ -29,7 +35,7 @@ class_labels <- c(
   veg_diff = "Live Vegetation Difference"
 )
 
-class_labels2 <- imap(class_labels, \(x, i)  eval(bquote(`~`(.(i), .(x)))))
+class_labels2 <- imap(class_labels, \(x, i) eval(bquote(`~`(.(i), .(x)))))
 
 fuel_class_labeller <- labeller(class = class_labels, fuel_class = class_labels)
 ```
@@ -102,7 +108,9 @@ analysis.
 ```{r load2}
 #| code-fold: true
 #| file: ./scripts/get_fuel_data.r
-if(interactive()) source("./scripts/get_fuel_data.r")
+if (interactive()) {
+  source("./scripts/get_fuel_data.r")
+}
 ```
 
 These plots seem to indicate that, pre-pct, there is slightly higher 1-hr fuel
@@ -130,9 +138,8 @@ load2("long", "pre") |>
   ggplot(aes(treatment, load)) +
   geom_boxplot() +
   facet_wrap(~class, scales = "free", labeller = fuel_class_labeller) +
-  labs(x = "Treatment", y = expression(Load~(Mg%.%ha^-1))) +
+  labs(x = "Treatment", y = expression(Load ~ (Mg %.% ha^-1))) +
   scale_x_discrete(labels = toupper)
-
 ```
 
 ```{r}
@@ -151,9 +158,8 @@ load2("long", "post", -dufflitter) |>
   ggplot(aes(treatment, load)) +
   geom_boxplot() +
   facet_wrap(~class, scales = "free", labeller = fuel_class_labeller) +
-  labs(x = "Treatment", y = expression(Load~(Mg%.%ha^-1))) +
+  labs(x = "Treatment", y = expression(Load ~ (Mg %.% ha^-1))) +
   scale_x_discrete(labels = toupper)
-
 ```
 
 Here is a table summary of our raw data.
@@ -177,7 +183,6 @@ load2("long", "pre") |>
   ) |>
   pivot_wider(names_from = treatment, values_from = load) |>
   knitr::kable()
-
 ```
 
 ## Outliers
@@ -186,23 +191,22 @@ load2("long", "pre") |>
 
 cleavland_plot <- function(data, title, load_var = load) {
   data |>
-    group_by(site, treatment) |>
-    mutate(replicate_mean_load = mean({{load_var}}, na.rm = TRUE)) |>
+    group_by(site, treatment) |> # nolint
+    mutate(replicate_mean_load = mean({{ load_var }}, na.rm = TRUE)) |>
     ggplot(
       aes(
-        {{load_var}},
+        {{ load_var }},
         fct_reorder(
           interaction(site, treatment, sep = " "),
-          {{load_var}},
+          {{ load_var }},
           .na_rm = TRUE
         ),
         color = treatment
       )
     ) +
     geom_jitter(width = 0, height = 0.2) +
-    labs(x = expression(Load~(Mg%.%ha^-1)), y = "Data order", title = title)
+    labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Data order", title = title)
 }
-
 ```
 
 ```{r}
@@ -219,9 +223,8 @@ cleavland_plot <- function(data, title, load_var = load) {
 
 fwd |>
   mutate(class = factor(class, levels = c("onehr", "tenhr", "hundhr"))) |>
-  group_by(class) |> 
+  group_by(class) |>
   group_walk(\(data, groups) print(cleavland_plot(data, groups$class)))
-
 ```
 
 ```{r}
@@ -232,12 +235,11 @@ fwd |>
 #|   for transects. The y-axis is sorted by mean CWD loading for each replicate.
 
 cwd |>
-  summarize( 
+  summarize(
     load = sum(load, na.rm = TRUE),
     .by = all_of(transectid)
-  ) |> 
+  ) |>
   cleavland_plot("CWD")
-
 ```
 
 ```{r}
@@ -249,7 +251,6 @@ cwd |>
 
 dufflitter |>
   cleavland_plot("Duff/litter")
-
 ```
 
 ```{r}
@@ -270,7 +271,6 @@ veg |>
   group_walk(
     \(data, groups) print(cleavland_plot(data, paste(groups$class, "veg")))
   )
-
 ```
 
 ## Normality {#sec-Normality}
@@ -302,19 +302,19 @@ distributed @fig-qqplot-naive.
 
 myqqplot <- function(data, var) {
   data |>
-  ggplot(aes(sample = {{ var }})) +
-  stat_qq() +
-  stat_qq_line() +
-  facet_grid(class ~ treatment, scales = "free") +
-  labs(
-    x = "Theoretical quantiles", y = "Sample quantiles",
-    title = "Normal Q-Q Plot"
-  )
+    ggplot(aes(sample = {{ var }})) +
+    stat_qq() +
+    stat_qq_line() +
+    facet_grid(class ~ treatment, scales = "free") +
+    labs(
+      x = "Theoretical quantiles",
+      y = "Sample quantiles",
+      title = "Normal Q-Q Plot"
+    )
 }
 
 load2("long", "pre") |>
   myqqplot(load)
-
 ```
 
 ```{r hist-data}
@@ -348,14 +348,15 @@ hist_dat <- load2("long", "pre", all_of(treatment_load_vars)) |>
     # scale curve to expected binwidth based on plot layout (same x scale across
     # all fuel classes) multiplied by the number of observations. The histogram
     # and normal curve should represent the same total area.
-    norm_y = map(data, function (d) {
+    norm_y = map(data, function(d) {
       dens <- dnorm(unlist(norm_x), mean = mean(d$load), sd = sd(d$load))
       dens * ((xmax - xmin) / bins) * nrow(d)
     })
   )
 
-# # here is the code to plot the above data. I decided not to use this after all,
-# # but it was a lot of work, so I'm keeping it for posterity
+# here is the code to plot the above data. I decided not to use this after all,
+# but it was a lot of work, so I'm keeping it for posterity
+# nolint start
 # ggplot(filter(hist_dat, class %in% load_vars[1:3] )) +
 #   geom_histogram(data = \(x) unnest(x, data), aes(x = load), bins = bins) +
 #   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +
@@ -367,7 +368,7 @@ hist_dat <- load2("long", "pre", all_of(treatment_load_vars)) |>
 #   geom_line(data = \(x) unnest(x, c(norm_x, norm_y)), aes(norm_x, norm_y)) +
 #   facet_grid(treatment ~ class, scales = "free") +
 #   labs(y = "count", x = "Load Mg/ha")
-
+# nolint end
 ```
 
 ```{r}
@@ -378,18 +379,15 @@ hist_dat <- load2("long", "pre", all_of(treatment_load_vars)) |>
 #|   - ""
 #|   - ""
 
-walk(list(c(1:3), c(4:6)),
-  function(x) {
-    p <- load2("long", "pre") |>
-      filter(class %in% load_vars[x]) |>
-      ggplot(aes(load)) +
-      geom_histogram(bins = 16) +
-      facet_grid(treatment ~ class, scales = "free") +
-      labs(y = "count", x = "Load Mg/ha")
-    print(p)
-  }
-)
-
+walk(list(c(1:3), c(4:6)), function(x) {
+  p <- load2("long", "pre") |>
+    filter(class %in% load_vars[x]) |>
+    ggplot(aes(load)) +
+    geom_histogram(bins = 16) +
+    facet_grid(treatment ~ class, scales = "free") +
+    labs(y = "count", x = "Load Mg/ha")
+  print(p)
+})
 ```
 
 ### Box-Cox transformation {#sec-box-cox-transformation}
@@ -407,14 +405,18 @@ boxcox <- function(y, lambda1, lambda2) {
 }
 
 load2("long", "pre", all_of(treatment_load_vars)) |>
-  group_by(class) |> nest() |> rowwise() |>
+  group_by(class) |>
+  nest() |>
+  rowwise() |>
   mutate(
-    lambda = list(suppressMessages(geoR::boxcoxfit(data$load, lambda2 = TRUE)$lambda)),
+    lambda = list(suppressMessages(
+      geoR::boxcoxfit(data$load, lambda2 = TRUE)$lambda
+    )),
     load_bc = list(boxcox(data$load, lambda[1], lambda[2]))
   ) |>
-  unnest(c(data, load_bc)) |> ungroup() |>
+  unnest(c(data, load_bc)) |>
+  ungroup() |>
   myqqplot(load_bc)
-
 ```
 
 While, this looks somewhat more normal, the zeros end up being a little strange.
@@ -443,10 +445,9 @@ load2("wide", "pre", everything())[order(m_dist, decreasing = TRUE)[1:10], ]
 
 treatments <- c("gs", "ha", "ld", "hd")
 par(mfrow = c(2, 2))
-invisible(lapply(treatments, 
-  \(x) heplots::cqplot(filter(tl, treatment == x)[-1], main = x)
-))
-
+invisible(lapply(treatments, \(x) {
+  heplots::cqplot(filter(tl, treatment == x)[-1], main = x)
+}))
 ```
 
 A number of different tests of multivariate normaliy also confirm the lack of
@@ -460,19 +461,18 @@ evidence for meeting this assumption (@tbl-norm-test).
 
 all_mvn_tests <- function(data) {
   c("mardia", "hz", "royston", "dh", "energy") |>
-  map(\(x) MVN::mvn(data = data, subset = "treatment", mvnTest = x)) |>
-  map(\(x) x$multivariateNormality) |>
-  map(\(x) bind_rows(x, .id = "treatment")) |>
-  map_dfr(\(x) 
-    filter(x, Test != "MVN") |> 
-    mutate( across(where(is.factor), \(f) as.numeric(as.character(f)))) |> 
-    select(1:2, statistic = 3, `p value`, Result = last_col())
-  )
+    map(\(x) MVN::mvn(data = data, subset = "treatment", mvnTest = x)) |>
+    map(\(x) x$multivariateNormality) |>
+    map(\(x) bind_rows(x, .id = "treatment")) |>
+    map_dfr(\(x) {
+      filter(x, Test != "MVN") |> # nolint
+        mutate(across(where(is.factor), \(f) as.numeric(as.character(f)))) |>
+        select(1:2, statistic = 3, `p value`, Result = last_col()) # nolint
+    })
 }
 
 all_mvn_tests(load2("wide", "pre", all_of(treatment_load_vars))) |>
   knitr::kable(digits = 4)
-
 ```
 
 ### Other distributions {#sec-other-distributions}
@@ -526,15 +526,10 @@ compared to other common distributions. It looks somewhat Gamma-ish?
 #| column: page
 
 d <- load2("long", "pre", treatment, all_of(load_vars)) |>
-  split(~class) |> map(~split(.x, ~treatment))
+  split(~class) |>
+  map(~ split(.x, ~treatment))
 
-# imap_dfr(d, \(x, y) tibble(class = y, treatment = names(x) )) |>
-#   with(paste0("Treatment ", treatment, ", fuel class ", class)) |>
-#   cat(sep = "\n")
-
-# par(mfrow = c(2,2))
 walk(d, ~ walk(.x, \(x) fitdistrplus::descdist(x$load, boot = 111)))
-
 ```
 
 ### Zero-adjusted Gamma
@@ -554,22 +549,26 @@ density curve over a histrogram (scaled to density). This looks promising to me.
 plot_zaga <- function(i, d) {
   m1 <- gamlss::gamlssML(d, family = gamlss.dist::ZAGA())
   hist(d, prob = TRUE, main = i, breaks = 20)
-  curve(gamlss.dist::dZAGA(x, mu = m1$mu, sigma = m1$sigma, nu = m1$nu), from = min(d), to = max(d), add = TRUE)
+  curve(
+    gamlss.dist::dZAGA(x, mu = m1$mu, sigma = m1$sigma, nu = m1$nu), # nolint
+    from = min(d),
+    to = max(d),
+    add = TRUE
+  )
 }
 
 plot_zaga_class <- function(data, class_name) {
-  if(missing(class_name)) {
+  if (missing(class_name)) {
     class_name <- as.character(substitute(data))
     class_name <- class_name[length(class_name)]
   }
-  par(mfrow = c(2,2))
-  iwalk(data, ~plot_zaga(.y, .x))
+  par(mfrow = c(2, 2))
+  iwalk(data, ~ plot_zaga(.y, .x))
   mtext(class_name, cex = 1.6, side = 3, line = -2, outer = TRUE)
 }
 
 d2 <- d |> map(~ map(.x, "load"))
-iwalk(d2, ~plot_zaga_class(.x, .y))
-
+iwalk(d2, ~ plot_zaga_class(.x, .y))
 ```
 
 ### Poisson fit of count data {#sec-poisson-fit-of-count-data}
@@ -582,19 +581,18 @@ I wonder If I can model these counts as a Poisson process.
 
 ```{r}
 
-cwd_counts <- cwd |> 
+cwd_counts <- cwd |>
   group_by(site, treatment, corner, azi) |>
   summarize(count = sum(count), .groups = "drop")
 
-par(mfrow = c(2,2))
+par(mfrow = c(2, 2))
 cwd_counts |>
   group_by(treatment) |>
-  group_walk( function (data, group) {
+  group_walk(function(data, group) {
     n <- data$count
     hist(n, main = group, prob = TRUE)
     lines(0:max(n), dpois(0:max(n), mean(n)))
   })
-
 ```
 
 That didn't look so great, so I also tried using a Zero-inflated Poisson
@@ -604,15 +602,16 @@ effectively the same as the Poisson fit.
 
 ```{r}
 
-par(mfrow = c(2,2))
-cwd_counts |> 
-  group_by(treatment) |> nest() |>
+par(mfrow = c(2, 2))
+cwd_counts |>
+  group_by(treatment) |>
+  nest() |>
   transmute(
-    sigma = map_dbl(data, 
-      ~gamlss::gamlssML(.x$count, family = gamlss.dist::ZIP())$sigma
+    sigma = map_dbl(
+      data,
+      ~ gamlss::gamlssML(.x$count, family = gamlss.dist::ZIP())$sigma
     )
   )
-
 ```
 
 ## Homogeneity of variance {#sec-homogeneity-of-variance}
@@ -628,14 +627,16 @@ max_var <- load2("long", "pre") |>
   summarize(var = sd(load)^2, load = max(load), .groups = "drop_last") |>
   summarize(
     max_var_rat = paste("Max. var. ratio: ", round(max(var) / min(var))),
-    x = 1.1, y = max(load) * 1.1, .groups = "drop")
+    x = 1.1,
+    y = max(load) * 1.1,
+    .groups = "drop"
+  )
 
 load2("long", "pre") |>
   ggplot(aes(treatment, load)) +
   geom_boxplot() +
   geom_text(data = max_var, aes(x, y, label = max_var_rat, hjust = "inward")) +
   facet_wrap(~class, scales = "free")
-
 ```
 
 ## Zeros
@@ -652,11 +653,11 @@ load2("long", "pre") |>
   geom_col() +
   geom_text(
     aes(label = if_else(zeros == 0, NA, zeros), y = percent / 2),
-    color = "gray70", na.rm = TRUE
+    color = "gray70",
+    na.rm = TRUE
   ) +
   facet_wrap(~class) +
   scale_y_continuous(labels = scales::percent)
-
 ```
 
 ## Correlation of response variables
@@ -670,7 +671,6 @@ given treatment.
 #| fig-cap: Correlation among the response variables (fuel classes).
 
 suppressMessages(GGally::ggpairs(load2("wide", "pre", all_of(load_vars))))
-
 ```
 
 ## Independence

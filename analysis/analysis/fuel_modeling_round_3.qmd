@@ -17,8 +17,11 @@ transectid <- c("site", "treatment", "corner", "azi")
 
 library(glmmTMB)
 library(DHARMa)
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(purrr)
 library(marginaleffects)
+library(ggplot2)
 ```
 
 ```{r init}
@@ -101,8 +104,6 @@ get_emmobj <- function(pred, comp, focal_var) {
 # for each column in `combos`, find the index of `contrast_levels`
 # where that level matches both values in the column
 correct_contrast_order <- function(pred_levels, contrast_levels) {
-  # print(pred_levels)
-  # print(contrast_levels)
   combos <- combn(pred_levels, 2)
   purrr::map_int(
     seq_len(ncol(combos)),
@@ -160,7 +161,6 @@ mods <- alist(
 )
 
 fuel_tmb$pre <- run_glmmtmb_mod(dpre, mods)
-# select(fuel_tmb$pre, class, aic)
 ```
 
 I think these residuals look OK
@@ -301,6 +301,7 @@ mods <- alist(
 )
 fuel_tmb$post <- run_glmmtmb_mod(dpost, mods)
 
+# nolint start
 # AIC(
 #   glmmTMB(
 #     formula,
@@ -317,6 +318,7 @@ fuel_tmb$post <- run_glmmtmb_mod(dpost, mods)
 #     dispformula = ~ treatment + site
 #   )
 # )
+# nolint end
 ```
 
 Residuals looking pretty good.

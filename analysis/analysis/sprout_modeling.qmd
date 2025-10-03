@@ -18,26 +18,19 @@ library(ggridges)
 library(emmeans)
 library(multcomp)
 library(multcompView)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(purrr)
 library(patchwork)
 library(DHARMa)
 library(glmmTMB)
 library(ggeffects)
 library(DHARMa)
+library(stringr)
 
 load("wrangled_sprouts.rda")
 source("./scripts/rnd_color_brewer.r")
-```
-
-
-```{r}
-#| include: false
-
-# ggplot2::theme_update(
-#   panel.grid.major = ggplot2::element_blank(),
-#   panel.grid.minor = ggplot2::element_blank()
-# )
-
 ```
 
 ## Objectives
@@ -139,7 +132,7 @@ label_model_formula <- function(mod, name) {
   cat(paste(name, form, sep = ": "), "\n\n")
 }
 
-# iwalk(minc, label_model_formula)
+# nolint iwalk(minc, label_model_formula)
 ```
 
 For the most part, it looks like height increases linearly with year. Lets test
@@ -382,7 +375,6 @@ minc11cld |>
   ) +
   geom_text(
     aes(y = upper.CL, label = .group),
-    # color = "black",
     position = position_nudge(x = -0.15, y = 0.1)
   ) +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
@@ -459,9 +451,9 @@ mht10_list <- lst(
   mht109
 )
 
+# nolint start
 # # Here I'm testing if adding a random effect for site improves the model. It
 # # doesn't
-#
 # modelsummary(
 #   list(mht109, mht1010),
 #   stars = TRUE,
@@ -473,6 +465,7 @@ mht10_list <- lst(
 #   estimator = "ML",
 #   gof_omit = "F|Log.Lik"
 # )
+# nolint end
 
 modelsummary(
   mht10_list,
@@ -920,7 +913,6 @@ mht18_compare <- emmeans(
   cld(Letters = letters) |>
   as_tibble() |>
   mutate(
-    # year = as.numeric(levels(year))[year],
     .group = str_replace_all(.group, " ", "")
   ) |>
   rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL")))

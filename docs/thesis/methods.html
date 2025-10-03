@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Regeneration and Fuel Loading with Varying Overstory Retention in Redwood Stands 10 Years after Transformation to Multiaged Management - 2&nbsp; Methods</title>
+<title>2&nbsp; Methods – Regeneration and Fuel Loading with Varying Overstory Retention in Redwood Stands 10 Years after Transformation to Multiaged Management</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -52,15 +52,17 @@ div.csl-indent {
 <meta name="quarto:offset" content="../">
 <link href="../thesis/results.html" rel="next">
 <link href="../thesis/introduction.html" rel="prev">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d9ea66fcd6c317012447f26e9c021348.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -95,7 +97,7 @@ div.csl-indent {
   });
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -109,7 +111,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -127,19 +129,19 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../thesis/methods.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Methods</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -149,7 +151,9 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Regeneration and Fuel Loading with Varying Overstory Retention in Redwood Stands 10 Years after Transformation to Multiaged Management</a> 
         <div class="sidebar-tools-main">
@@ -208,15 +212,15 @@ window.Quarto = {
   <li><a href="#study-design" id="toc-study-design" class="nav-link" data-scroll-target="#study-design"><span class="header-section-number">2.2</span> Study design</a></li>
   <li><a href="#data-collection" id="toc-data-collection" class="nav-link" data-scroll-target="#data-collection"><span class="header-section-number">2.3</span> Data collection</a>
   <ul>
-  <li><a href="#sprout-size" id="toc-sprout-size" class="nav-link" data-scroll-target="#sprout-size"><span class="header-section-number">2.3.1</span> Sprout size</a></li>
-  <li><a href="#regeneration" id="toc-regeneration" class="nav-link" data-scroll-target="#regeneration"><span class="header-section-number">2.3.2</span> Regeneration</a></li>
+  <li><a href="#regeneration" id="toc-regeneration" class="nav-link" data-scroll-target="#regeneration"><span class="header-section-number">2.3.1</span> Regeneration</a></li>
+  <li><a href="#sprout-size" id="toc-sprout-size" class="nav-link" data-scroll-target="#sprout-size"><span class="header-section-number">2.3.2</span> Sprout size</a></li>
   <li><a href="#fuels" id="toc-fuels" class="nav-link" data-scroll-target="#fuels"><span class="header-section-number">2.3.3</span> Fuels</a></li>
   </ul></li>
   <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis"><span class="header-section-number">2.4</span> Analysis</a>
   <ul>
-  <li><a href="#fuels-1" id="toc-fuels-1" class="nav-link" data-scroll-target="#fuels-1"><span class="header-section-number">2.4.1</span> Fuels</a></li>
+  <li><a href="#regeneration-1" id="toc-regeneration-1" class="nav-link" data-scroll-target="#regeneration-1"><span class="header-section-number">2.4.1</span> Regeneration</a></li>
   <li><a href="#sprout-heights" id="toc-sprout-heights" class="nav-link" data-scroll-target="#sprout-heights"><span class="header-section-number">2.4.2</span> Sprout heights</a></li>
-  <li><a href="#regeneration-density" id="toc-regeneration-density" class="nav-link" data-scroll-target="#regeneration-density"><span class="header-section-number">2.4.3</span> Regeneration density</a></li>
+  <li><a href="#fuels-1" id="toc-fuels-1" class="nav-link" data-scroll-target="#fuels-1"><span class="header-section-number">2.4.3</span> Fuels</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -245,8 +249,8 @@ window.Quarto = {
 
 <section id="site-description" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="site-description"><span class="header-section-number">2.1</span> Site description</h2>
-<p>Situated within the unceded ancestral territory of the Northern Pomo, near the coast of Norther California, the 20,000-ha Jackson Demonstration State Forest was established in 1947 after being cut over multiple times starting in 1862. The mission of the JDSF is to remain in timber production for research and demonstration purposes. The predominant cover type is redwood, tanoak, and Douglas-fir forest at elevations ranging from 20 m near the coast to 700 m inland. The climate is Mediterranean with cool, wet winters and an average annual precipitation of about 1150 mm. The sites that compose our experiment were all redwood dominated with significant components of tanoak and Douglas fir and were well stocked with trees 80 to 100 years old. All of our study sites are between 13 and 16 km from the Pacific Ocean at elevations between 130 and 300 m, on well-drained, sandstone-derived soils. The sites are located on various aspects on mid to upper-slope positions (<a href="#fig-site-map" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>), and the site quality is classified as Site Class II <span class="citation" data-cites="lindquistEmpiricalYieldTables1963 webbWhiskeySpringsLongterm2012">(<a href="#ref-lindquistEmpiricalYieldTables1963" role="doc-biblioref">Lindquist &amp; Palley, 1963</a>; <a href="#ref-webbWhiskeySpringsLongterm2012" role="doc-biblioref">Webb et al., 2012</a>)</span>.</p>
-<div id="fig-site-map" class="quarto-figure quarto-figure-center quarto-float anchored">
+<p>Situated within the unceded ancestral territory of the Northern Pomo, near the coast of Northern California, the 20,000-ha Jackson Demonstration State Forest (JDSF) was established in 1947 after being cut over multiple times starting in 1862. The mission of the JDSF is to remain in timber production for research and demonstration purposes. The predominant cover type is redwood, tanoak, and Douglas-fir forest at elevations ranging from 20 m near the coast to 700 m inland. The climate is Mediterranean with cool, wet winters and an average annual precipitation of about 1150 mm. The sites that compose our experiment were all redwood dominated with significant components of tanoak and Douglas-fir and were well stocked with trees 80 to 100 years old. All of our study sites are between 13 and 16 km from the Pacific Ocean at elevations between 130 and 300 m, on well-drained, sandstone-derived soils. The sites are located on various aspects on mid to upper-slope positions (<a href="#fig-site-map" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>), and the site quality is classified as Site Class II <span class="citation" data-cites="lindquistEmpiricalYieldTables1963 webbWhiskeySpringsLongterm2012">(<a href="#ref-lindquistEmpiricalYieldTables1963" role="doc-biblioref">Lindquist &amp; Palley, 1963</a>; <a href="#ref-webbWhiskeySpringsLongterm2012" role="doc-biblioref">Webb et al., 2012</a>)</span>.</p>
+<div id="fig-site-map" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-site-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../figures/site_map_2.png" class="img-fluid figure-img">
@@ -259,11 +263,11 @@ Figure&nbsp;2.1: The site locations and topography for our study plots. The red 
 </section>
 <section id="study-design" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="study-design"><span class="header-section-number">2.2</span> Study design</h2>
-<p>In 2012, four treatments were replicated at four different sites. The treatments were: group selection (GS), high-density dispersed retention (HD), high-density aggregated retention (HA), and low-density dispersed retention (LD). The GS treatment is composed of a circular 1-ha opening in which all trees were removed, surrounded by a 50-meter buffer of light thinning in which less than 1/3 of the basal area was removed. The remaining treatments were applied over 2-hectare treatment units. The target post-harvest density was specified in terms of relative stand density index (SDI) using an assumed upper SDI limit for redwood of 2,470 stems ha<sup>-1</sup> <span class="citation" data-cites="reinekePerfectionStanddensityIndex1933">(<a href="#ref-reinekePerfectionStanddensityIndex1933" role="doc-biblioref">Reineke, 1933</a>)</span>. The target residual relative density for the HA and HD treatments was 21% (SDI = 520), and the for the LD treatment it was 13% (SDI = 320). These densities were chosen to balance the objectives of stand volume productions and individual tree growth assuming a subsequent, similar harvest after 20 years <span class="citation" data-cites="berrillSimulatingMultiagedCoast2009">(<a href="#ref-berrillSimulatingMultiagedCoast2009" role="doc-biblioref">Berrill &amp; O’Hara, 2009</a>)</span>.</p>
-<p>After harvesting, 0.2-hectare square macro plot was established in the center of each treatment unit. Approximately 25 redwood and 25 tanoak sprout clumps that were well distributed across the plot, were selected for measurement. Additionally, for redwood, sprout clumps were selected evenly from those with, and without residual standing trees.</p>
-<p>Ten years after the initial harvest regeneration plots and fuel transects were established within the macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). Circular regeneration plots with a 4-meter radius were established 10 meters from each macro plot corner, towards the plot center. Terminating at the center of each of these regeneration plots, 10-meter fuel transects were established parallel to the macro plot edges. Live fuels were estimated in 1-meter radius “sampling cylinders” at the five-, and nine-meter locations along each transect.</p>
+<p>In 2012, four treatments were replicated at four different sites. The treatments were: group selection (GS), high-density dispersed retention (HD), high-density aggregated retention (HA), and low-density dispersed retention (LD). The GS treatment is composed of a circular 1-ha opening in which all trees were removed, surrounded by a 50-meter buffer of light thinning in which less than 1/3 of the basal area was removed. The remaining treatments were applied over 2-hectare treatment units. The target post-harvest density was specified in terms of relative stand density index (SDI) using an assumed upper SDI limit for redwood of 2,470 stems ha<sup>-1</sup> <span class="citation" data-cites="reinekePerfectionStanddensityIndex1933">(<a href="#ref-reinekePerfectionStanddensityIndex1933" role="doc-biblioref">Reineke, 1933</a>)</span>. The target residual relative density for the HA and HD treatments was 21% (SDI = 520), and the for the LD treatment it was 13% (SDI = 320). These densities were chosen to balance the objectives of stand volume production and individual tree growth assuming a subsequent, similar harvest after 20 years <span class="citation" data-cites="berrillSimulatingMultiagedCoast2009">(<a href="#ref-berrillSimulatingMultiagedCoast2009" role="doc-biblioref">Berrill &amp; O’Hara, 2009</a>)</span>.</p>
+<p>After harvesting, a single 0.2-hectare square macro plot was established in the center of each treatment unit. Approximately 25 redwood and 25 tanoak sprout clumps that were well distributed across the plot, were selected for measurement. Additionally, for redwood, sprout clumps were selected evenly from those with, and without residual standing trees.</p>
+<p>Ten years after the initial harvest, regeneration plots and fuel transects were established within the macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). Circular regeneration plots with a 4-meter radius were established 10 meters from each macro plot corner, towards the plot center. Terminating at the center of each of these regeneration plots, 10-meter fuel transects were established parallel to the macro plot edges. Live fuels were estimated in 1-meter radius “sampling cylinders” at the five-, and nine-meter locations along each transect.</p>
 <p>Following year 10 measurements, all plots received a pre-commercial thinning treatment where the objective was to release merchantable conifers such as redwood and Douglas-fir from competition. Competing trees and shrubs were cut, lopped, and scattered within the measurement plots and fuel transects were re-measured.</p>
-<div id="fig-plot-layout" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-plot-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-plot-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../figures/fuel_sampling_layout.png" class="img-fluid figure-img">
@@ -276,26 +280,26 @@ Figure&nbsp;2.2: A diagram of the fuel sampling design depicting a 0.2-hectare m
 </section>
 <section id="data-collection" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="data-collection"><span class="header-section-number">2.3</span> Data collection</h2>
-<section id="sprout-size" class="level3" data-number="2.3.1">
-<h3 data-number="2.3.1" class="anchored" data-anchor-id="sprout-size"><span class="header-section-number">2.3.1</span> Sprout size</h3>
-<p>Sprout height data were collected during the winter at years 1, 5, and 10 following the initial harvest. Sprout heights at each period were based on the tallest individual within a clump at the time of measurement with a height pole placed at the same location on the ground at each measurement period. The observer eliminated parallax by observing from a location up-slope, level with the height of the sprout. Sprout DBH for only redwood was collected in year 10.</p>
+<section id="regeneration" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="regeneration"><span class="header-section-number">2.3.1</span> Regeneration</h3>
+<p>Ten years after the initial harvest, four four-meter-radius regeneration plots were established within each macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). All regenerating trees (sprouts and seedlings) within the plot were recorded. Regenerating trees less than 5 cm at breast height (1.4 m) were tallied by 2.5 cm size classes and the actual DBH of all other regenerating trees were recorded. This allowed for an estimation of sprout and seedling density by species.</p>
 </section>
-<section id="regeneration" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2" class="anchored" data-anchor-id="regeneration"><span class="header-section-number">2.3.2</span> Regeneration</h3>
-<p>Ten years after the initial harvest, four four-meter-radius regeneration plots were established within each macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). All regenerating trees (sprouts and seedlings) within the plot were recorded. Regenerating trees less than 5 cm at breast height (1.4 m) were tallied by 2.5 cm size classes and the actual DBH of all other regenerating trees were recorded. This allowed for an estimation of sprout and seedling density.</p>
+<section id="sprout-size" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="sprout-size"><span class="header-section-number">2.3.2</span> Sprout size</h3>
+<p>Sprout height data were collected during the winter at years 1, 5, and 10 following the initial harvest. Sprout heights at each period were based on the tallest individual within the selected redwood and tanoak clumps at the time of measurement with a height pole placed at the same location on the ground at each measurement period. The observer eliminated parallax by observing from a location up-slope, level with the height of the sprout. Sprout DBH for only redwood was collected in year 10.</p>
 </section>
 <section id="fuels" class="level3" data-number="2.3.3">
 <h3 data-number="2.3.3" class="anchored" data-anchor-id="fuels"><span class="header-section-number">2.3.3</span> Fuels</h3>
-<p>Also at 10 years after the initial harvest, fuel transects were established and sampled according to the FIREMON protocol <span class="citation" data-cites="lutesFIREMONFireEffects2006">(<a href="#ref-lutesFIREMONFireEffects2006" role="doc-biblioref">Lutes et al., 2006</a>)</span>, with some adaptations that were unique to this project. This protocol is very similar to that of <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. One-, 10-, 100-hr, and 1000-hr (or coarse woody) fuels were those less than 0.635 cm, 0.635 to 2.54 cm, 2.54 to 7.62 cm and those 7.62 cm and greater, respectively and included only dead and downed woody fuels (not those attached to live vegetation, or standing dead). Transect lengths for 1-, 10-, and 100-hr fuels were one, two, and four meters, respectively. Coarse woody fuels were measured along the entire 10-meter transect.</p>
-<p>Redwoods, like other species in Cupressaceae, shed branchlets instead of individual leaves. This leads to difficulty in distinguishing “litter” from 1-hr fuels. We chose to use an estimated cutoff of about 2 mm for redwoods sprays where larger pieces were considered 1-hr fuel and smaller pieces were considered part of the litter layer. We did not distinguish between “leafy” and “awl like” leaf shapes <span class="citation" data-cites="grahamStructureDownedWoody2009">(<a href="#ref-grahamStructureDownedWoody2009" role="doc-biblioref">Graham, 2009</a>)</span>.</p>
-<p>Live vegetation percent cover and average height were estimated in 1-meter-radius “sampling cylinders” as described in the FIREMON protocol <span class="citation" data-cites="lutesFIREMONFireEffects2006">(<a href="#ref-lutesFIREMONFireEffects2006" role="doc-biblioref">Lutes et al., 2006</a>)</span>. A notable exception is that the sampling cylinders were allowed to extend to the (average) top height of the live fuels that were continuous within less than a meter of the ground. This resulted in average live vegetation heights that could sometimes reach near the height of the sprouts and average heights above two meters were estimated with the help of a clinometer. This decision makes explicit instances when when fuels are vertically continuous with the ground. Live vegetation percent cover was estimated for four vegetation classes: live woody fuels, dead woody fuels, live herbaceous fuels, and dead herbaceous fuels. Dead “live” fuels includes dead fuels attached to live plants, or those still rooted in the ground. Particles in these conditions are not counted as downed woody fuels when tallying fine and coarse woody fuels along fuel transects. These fuels are, though, expected to behave differently during combustion than live “live” fuels. Average vegetation height was recorded for two classes: the average height of all woody fuels and the average height of all herbaceous fuels. These estimates pertain to the particles present in the sampling cylinder, and not the area-average, thus a cylinder with only one percent cover, could still have an average height of two meters, i.e., the empty space within the cylinder does not affect the average height. The average height and percent-cover estimates are visual estimations and efforts were made to discuss these frequently to ensure that estimates among observers were consistent. Percent cover estimates were discrete, rounded to the nearest class in the set: 0.5, 3, 10, and all subsequent 10 percent increments up to 100 percent.</p>
+<p>Also at 10 years after the initial harvest, fuel transects were established and sampled according to the FIREMON protocol <span class="citation" data-cites="lutesFIREMONFireEffects2006">(<a href="#ref-lutesFIREMONFireEffects2006" role="doc-biblioref">Lutes et al., 2006</a>)</span>, with some adaptations that were unique to this project. This protocol is very similar to that of <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. One-, 10-, 100-hr, and 1000-hr (or coarse woody) fuels were those less than 0.635 cm, 0.635 to 2.54 cm, 2.54 to 7.62 cm and those 7.62 cm and greater, respectively and included only dead and downed woody fuels (not those attached to live vegetation, or standing dead). Transect lengths for 1-, 10-, and 100-hr fuels were two, two, and four meters, respectively during pre-pct measurements. During post-pct measurement, the length of the 1-hr fuel transect was reduced to one meter because of he dramatic increase in these fuels. Coarse woody fuels were measured along the entire 10-meter transect.</p>
+<p>Redwoods, like other species in Cupressaceae, shed branchlets instead of individual leaves. This leads to difficulty in distinguishing “litter” from 1-hr fuels. We chose to use an estimated cutoff of about 2 mm for redwood branchlets, where larger pieces were considered 1-hr fuel and smaller pieces were considered part of the litter layer. We did not distinguish between “leafy” and “awl like” leaf shapes <span class="citation" data-cites="grahamStructureDownedWoody2009">(<a href="#ref-grahamStructureDownedWoody2009" role="doc-biblioref">Graham, 2009</a>)</span>.</p>
+<p>Live vegetation percent cover and average height were estimated in 1-meter-radius “sampling cylinders” as described in the FIREMON protocol <span class="citation" data-cites="lutesFIREMONFireEffects2006">(<a href="#ref-lutesFIREMONFireEffects2006" role="doc-biblioref">Lutes et al., 2006</a>)</span>. A notable exception is that the sampling cylinders were allowed to extend to the (average) top height of the live fuels that were continuous within less than a meter of the ground. This resulted in average live vegetation heights that could sometimes reach near the height of the sprouts and average heights above two meters were estimated with the help of a clinometer. This decision makes explicit instances when when fuels are vertically continuous with the ground. Live vegetation percent cover was estimated for four vegetation classes: live woody fuels, dead woody fuels, live herbaceous fuels, and dead herbaceous fuels. Dead “live” fuels includes dead fuels attached to live plants, or those still rooted in the ground. Pahttps://meet.google.com/puj-snfv-sojrticles in these conditions are not counted as downed woody fuels when tallying fine and coarse woody fuels along fuel transects. These fuels are, though, expected to behave differently during combustion than live “live” fuels. Average vegetation height was recorded for two classes: the average height of all woody fuels and the average height of all herbaceous fuels. These estimates pertain to the particles present in the sampling cylinder, and not the area-average, thus a cylinder with only one percent cover, could still have an average height of two meters, i.e., the empty space within the cylinder does not affect the average height. The average height and percent-cover estimates are visual estimations and efforts were made to compare these frequently to ensure that estimates among observers were consistent. Percent cover estimates were discrete, rounded to the nearest class in the set: 0.5, 3, 10, and all subsequent 10 percent increments up to 100 percent.</p>
 <p>The depth of duff and litter was measured at one representative location within each of the two, 1-meter-radius sampling cylinders along each transect. When duff and litter conditions varied greatly in a single sampling cylinder, a location was chosen to represent the average of conditions within the cylinder.</p>
 <p>Fuel bed depth was estimated as the average height of the fine and coarse woody debris components within each sampling cylinder. Theoretically, this included litter, but now duff. This estimate was not described in the FIREMON protocol, but it was designed to be made in a similar manner as described for vegetation heights.</p>
 </section>
 </section>
 <section id="analysis" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="analysis"><span class="header-section-number">2.4</span> Analysis</h2>
-<p>An analysis was conducted in three stages, one for each of the three response categories: fuels, sprout size, and regeneration density. All analyses were conducted using R and attempts were made to document all data, decisions, and techniques within a Quarto notebook, which is published at https://fisher-j.github.io/multi-age. All response variables were analyzed using multi-level models to account for the inherent nesting structure of the data, including multiple measurements of individuals over time, where applicable. Grouping levels were included in the models if their variance estimate was determined to be significant based on the size of the variance and the magnitude that inclusion of that grouping level had on the estimates and their corresponding confidence levels. Because the overall objective was to detect differences between treatments, treatment was used as the primary independent variable. Model development and selection were carried out using Akaike information criterion, Bayesian information criterion, and visualization of (probability integral) transformed residuals <span class="citation" data-cites="hartigDHARMaResidualDiagnostics2022">(<a href="#ref-hartigDHARMaResidualDiagnostics2022" role="doc-biblioref">Hartig, 2022</a>)</span>. Models were built using the R package GLMMtmb, which provides a consistent framework for exploring different response distributions and link functions as well as the ability to model variance as a function of predictors <span class="citation" data-cites="brooksGlmmTMBBalancesSpeed2017">(<a href="#ref-brooksGlmmTMBBalancesSpeed2017" role="doc-biblioref">Brooks et al., 2017</a>)</span>. The final model structures chosen for each response are given in the results section.</p>
+<p>An analysis was conducted in three stages, one for each of the three response categories: fuels, sprout size, and regeneration density. All analyses were conducted using R and attempts were made to document all data, decisions, and techniques within a Quarto notebook, which is published at https://fisher-j.github.io/multi-age. All response variables were analyzed using multi-level models to account for the inherent nesting structure of the data, including multiple measurements of sprouts over time, where applicable. Grouping levels were included in the models if their variance estimate was determined to be significant based on the size of the variance and the magnitude that inclusion of that grouping level had on the estimates and their corresponding confidence levels. Because the overall objective was to detect differences between treatments, treatment was used as the primary independent variable. Model development and selection were carried out using Akaike information criterion, Bayesian information criterion, and visualization of (probability integral) transformed residuals <span class="citation" data-cites="hartigDHARMaResidualDiagnostics2022">(<a href="#ref-hartigDHARMaResidualDiagnostics2022" role="doc-biblioref">Hartig, 2022</a>)</span>. Models were built using the R package GLMMtmb, which provides a consistent framework for exploring different response distributions and link functions as well as the ability to model variance as a function of predictors <span class="citation" data-cites="brooksGlmmTMBBalancesSpeed2017">(<a href="#ref-brooksGlmmTMBBalancesSpeed2017" role="doc-biblioref">Brooks et al., 2017</a>)</span>. The final model structures chosen for each response are given in the results section.</p>
 <p>Models were interpreted using estimated marginal means calculated with the R packages <code>marginaleffects</code> and <code>emmeans</code> <span class="citation" data-cites="lenthEmmeansEstimatedMarginal2021 arel-bundockHowInterpretStatistical2024">(<a href="#ref-arel-bundockHowInterpretStatistical2024" role="doc-biblioref">Arel-Bundock et al., 2024</a>; <a href="#ref-lenthEmmeansEstimatedMarginal2021" role="doc-biblioref">Lenth, 2021</a>)</span>. Predictions incorporating the effects of all model components were made on the response scale for a grid of predictors consisting of all unique combinations of factors in the data that were used in at least one component of a given model (we didn’t have numeric predictors) except in the case of tree heights where predictions were made for each observation in the data set. Standard errors for the predictions were calculated using the delta method. Predictions were averaged across non-focal predictors (especially “random” effects) to obtain the population estimates of marginal means. These means are expected to be applicable to other treatments when conducted across equal proportions of sites with conditions similar to those used in our study. Notably, our population estimates assume equal proportions of north and south facing aspects.</p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -303,12 +307,13 @@ Figure&nbsp;2.2: A diagram of the fuel sampling design depicting a 0.2-hectare m
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-TODO:
+Caution
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<p>TODO:</p>
 <ul>
-<li>Are these conditional predictions? Conditioned on what? Or are they marginal predictions? <span class="citation" data-cites="heissMarginalConditionalEffects2022">(<a href="#ref-heissMarginalConditionalEffects2022" role="doc-biblioref">Heiss, 2022</a>)</span></li>
+<li>Try to use terminology for conditional and marginal predictions described in <span class="citation" data-cites="heissMarginalConditionalEffects2022">Heiss (<a href="#ref-heissMarginalConditionalEffects2022" role="doc-biblioref">2022</a>)</span></li>
 <li>I would like to write my models in formal notation similar to <span class="citation" data-cites="heissMarginalConditionalEffects2022">Heiss (<a href="#ref-heissMarginalConditionalEffects2022" role="doc-biblioref">2022</a>)</span>: <span class="math display">\[
 \begin{aligned}
 \text{lifeExp} &amp;\sim \mathcal{N}(\mu_{i_j}, \sigma_y) &amp; \text{Life expectancy within countries } j \\
@@ -319,17 +324,17 @@ b_{0_j} &amp;\sim \mathcal{N}(0, \sigma_0) &amp; \text{Random country offsets fr
 </ul>
 </div>
 </div>
-<section id="fuels-1" class="level3" data-number="2.4.1">
-<h3 data-number="2.4.1" class="anchored" data-anchor-id="fuels-1"><span class="header-section-number">2.4.1</span> Fuels</h3>
-<p>Fuel load in Mg ha<sup>-1</sup> was estimated for 1-hr, 10-hr, 100-hr, combined duff and litter (“duff/litter”), 1,000-hr, and live vegetation fuels at the transect level. Any transect where a fuel type was not observed was assigned a value of zero for that class and transect. Fuel load for 1- through 1,000-hr fuels were calculated using the method in <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. The required size-class specific parameters (specific gravity, particle inclination, and average diameter) were derived from a previous study where I used parameters averaged across all of the measured plots <span class="citation" data-cites="glebockiFuelLoadingMoisture2015">(<a href="#ref-glebockiFuelLoadingMoisture2015" role="doc-biblioref">Glebocki, 2015</a>)</span>. For 1,000-hr fuels, decay classes 1-3 were considered “sound” and decay classes 4 and 5 were considered “rotten” for the purpose of calculating load and these loads were combined. Duff and litter were measured at two locations along each transect and these were averaged at the transect level. We did not measure the bulk density of duff and litter fuels, but based on findings in other studies in the redwood region, we opted to combine these classes into a single fuel class, using an average bulk density found across those studies of 7.73 Mg ha<sup>-1</sup> <span class="citation" data-cites="finneyFuelLoadingBulk1993 stuartRedwoodFireEcology1985 kittredgeComparisonForestFloors1940">(<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">Finney &amp; Martin, 1993</a>; <a href="#ref-kittredgeComparisonForestFloors1940" role="doc-biblioref">Kittredge, 1940</a>; <a href="#ref-stuartRedwoodFireEcology1985" role="doc-biblioref">Stuart, 1985</a>)</span>. Vegetation fuel load was calculated using bulk density constants of 8 Mg ha<sup>-1</sup> m<sup>-1</sup> for herbaceous fuels and 18 Mg ha<sup>-1</sup> m<sup>-1</sup> for woody components <span class="citation" data-cites="gangiFIREMONDatabaseUser2006">(<a href="#ref-gangiFIREMONDatabaseUser2006" role="doc-biblioref">Gangi, 2006</a>)</span>. Live and dead components were combined to calculate herbaceous and woody loading and these loadings were combined and averaged at the transect level (again there were two measurements per transect) to determine total vegetation loading. Herbaceous fuel loading was generally very low.</p>
+<section id="regeneration-1" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="regeneration-1"><span class="header-section-number">2.4.1</span> Regeneration</h3>
+<p>Sprout census data from our 4-meter-radius regeneration plots were converted to basal area per acre per species. Tallies of species by size class for sprouts less than 5 cm dbh were converted to diameters using the class midpoint (1.27 or 3.81 cm) before calculating basal area per acre. Minor species (e.g., those other than redwood, tanoak, and Douglas-fir) were combined into an “other” category. Missing species on a plot were made explicit by assigning a value of 0 m<sup>2</sup> ha<sup>-1</sup> for that species and plot. In addition to basal area, Douglas-fir stem counts (stems ha<sup>-1</sup>) were modeled separately.</p>
 </section>
 <section id="sprout-heights" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="sprout-heights"><span class="header-section-number">2.4.2</span> Sprout heights</h3>
-<p>Two metrics were analyzed from the sprout height data: height increment (m year<sup>-1</sup>), and total height (m) at year 10. For height increment, there were two measurements for each tree: increment for years 1 to 5 and increment for years 5 to 10. Thus, analysis of this data included <code>tree</code> as a candidate random effect. While not making a difference for analysis results, it is worth noting that this data was structured differently from the other datasets in that <code>plot</code> was made a globally unique identifier, thus making explicit the nesting of plots within sites or treatments and eliminating the need to specify this nesting structure in the R code model formulas.</p>
+<p>Two metrics were analyzed from the sprout height data: height increment (m year<sup>-1</sup>), and total height (m) at year 10. For height increment, there were two measurements for each tree: increment for years 1 to 5 and increment for years 5 to 10. Thus, analysis of these data included <code>tree</code> as a candidate random effect. While not making a difference for analysis results, it is worth noting that these data were structured differently from the other datasets in that <code>plot</code> was made a globally unique identifier, thus making explicit the nesting of plots within sites or treatments and eliminating the need to specify this nesting structure in the R code model formulas.</p>
 </section>
-<section id="regeneration-density" class="level3" data-number="2.4.3">
-<h3 data-number="2.4.3" class="anchored" data-anchor-id="regeneration-density"><span class="header-section-number">2.4.3</span> Regeneration density</h3>
-<p>Sprout census data from our 4-meter-radius regeneration plots were converted to basal area per acre per species. Tallies of species by size class for sprouts less than 5 cm dbh were converted to diameters using the class midpoint (1.27 or 3.81 cm) before calculating basal area per acre. Minor species (e.g., those other than redwood, tanoak, and Douglas-fir) were combined into an “other” category. Missing species on a plot were made explicit by assigning a value of 0 m<sup>2</sup> ha<sup>-1</sup> for that species and plot. In addition to basal area, Douglas-fir stem counts (stems ha<sup>-1</sup>) were modeled separately.</p>
+<section id="fuels-1" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="fuels-1"><span class="header-section-number">2.4.3</span> Fuels</h3>
+<p>Fuel load in Mg ha<sup>-1</sup> was estimated for 1-hr, 10-hr, 100-hr, combined duff and litter (“duff/litter”), 1,000-hr, and live vegetation fuels at the transect level. Any transect where a fuel type was not observed was assigned a value of zero for that class and transect. Fuel load for 1- through 1,000-hr fuels were calculated using the method in <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. The required size-class specific parameters (specific gravity, particle inclination, and average diameter) were derived from a previous study where I used parameters averaged across all of the measured plots <span class="citation" data-cites="glebockiFuelLoadingMoisture2015">(<a href="#ref-glebockiFuelLoadingMoisture2015" role="doc-biblioref">Glebocki, 2015</a>)</span>. For 1,000-hr fuels, decay classes 1-3 were considered “sound” and decay classes 4 and 5 were considered “rotten” for the purpose of calculating load and these loads were combined. Duff and litter were measured at two locations along each transect and these were averaged at the transect level. We did not measure the bulk density of duff and litter fuels, but based on findings in other studies in the redwood region, we opted to combine these classes into a single fuel class, using an average bulk density found across those studies of 7.73 Mg ha<sup>-1</sup> <span class="citation" data-cites="finneyFuelLoadingBulk1993 stuartRedwoodFireEcology1985 kittredgeComparisonForestFloors1940">(<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">Finney &amp; Martin, 1993</a>; <a href="#ref-kittredgeComparisonForestFloors1940" role="doc-biblioref">Kittredge, 1940</a>; <a href="#ref-stuartRedwoodFireEcology1985" role="doc-biblioref">Stuart, 1985</a>)</span>. Vegetation fuel load was calculated using bulk density constants of 8 Mg ha<sup>-1</sup> m<sup>-1</sup> for herbaceous fuels and 18 Mg ha<sup>-1</sup> m<sup>-1</sup> for woody components <span class="citation" data-cites="gangiFIREMONDatabaseUser2006">(<a href="#ref-gangiFIREMONDatabaseUser2006" role="doc-biblioref">Gangi, 2006</a>)</span>. Live and dead components were combined to calculate herbaceous and woody loading. Herbaceous and woody fuel loads were then combined and averaged at the transect level (two measurements per transect) to determine total vegetation loading.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
@@ -390,43 +395,58 @@ Webb, L. A., Lindquist, J. L., Wahl, E., &amp; Hubb, A. (2012). Whiskey springs 
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -434,162 +454,184 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -597,193 +639,169 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../thesis/introduction.html" class="pagination-link  aria-label=" &lt;span="">
+      <a href="../thesis/introduction.html" class="pagination-link" aria-label="Introduction">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../thesis/results.html" class="pagination-link" aria-label="<span class='chapter-number'>3</span>&nbsp; <span class='chapter-title'>Results</span>">
+      <a href="../thesis/results.html" class="pagination-link" aria-label="Results">
         <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Results</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

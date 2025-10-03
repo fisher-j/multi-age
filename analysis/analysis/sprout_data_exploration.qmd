@@ -14,22 +14,14 @@ First, we'll load some libraries and our data.
 
 library(ggdist)
 library(ggridges)
-library(tidyverse)
 library(patchwork)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(forcats)
 
 load("wrangled_sprouts.rda")
 source("./scripts/rnd_color_brewer.r")
-
-```
-
-```{r}
-#| include: false
-
-# ggplot2::theme_update(
-#   panel.grid.major = ggplot2::element_blank(),
-#   panel.grid.minor = ggplot2::element_blank()
-# )
-
 ```
 
 ## Objectives
@@ -73,7 +65,7 @@ species_labels <- c(LIDE = "Tanoak", SESE = "Redwood")
 year_labels <- c(`1` = "Year 1", `5` = "Year 5", `10` = "Year 10")
 plot_labels <- labeller(
   spp = species_labels,
-  year =  year_labels
+  year = year_labels
 )
 
 
@@ -88,8 +80,6 @@ sprouts |>
   labs(x = "Height (m)", y = "Treatment") +
   scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
   theme(legend.position = "bottom")
-
-
 ```
 
 This plot shows the raw data collected for ~100 redwood and tanoak sprout clumps
@@ -120,8 +110,11 @@ sprouts |>
   geom_density_ridges(alpha = .3, size = 1) +
   facet_grid(year ~ ., labeller = plot_labels) +
   labs(x = "Height (m)", y = "Treatment") +
-  scale_color_brewer(palette = "Set2", name = "Species", labels = species_labels)
-
+  scale_color_brewer(
+    palette = "Set2",
+    name = "Species",
+    labels = species_labels
+  )
 ```
 
 #### Species/year/SDI
@@ -167,14 +160,12 @@ they respond differentially to certain plots.
 #|   Distribution of heights at year 10 at each site for two species. Slabs are
 #|   normalized by sample size to reflect the raw data, plotted as dots below.
 
-
 sprouts |>
   ggplot(aes(ht10, site, fill = spp)) +
   stat_slab(aes(thickness = after_stat(pdf * n)), alpha = 0.6, scale = 0.7) +
   stat_dotsinterval(side = "bottom", scale = 0.7, slab_color = NA) +
   scale_fill_brewer(palette = "Set2") +
   labs(x = "year 10 height (m)", y = NULL, fill = "species")
-
 ```
 
 ```{r}
@@ -192,12 +183,13 @@ sprouts |>
     fill = treat,
   )) +
   stat_slab(aes(thickness = after_stat(pdf * n)), alpha = 0.5, scale = 0.7) +
-  stat_pointinterval(position = position_dodge(width = 0.5, preserve = "single")) +
+  stat_pointinterval(
+    position = position_dodge(width = 0.5, preserve = "single")
+  ) +
   scale_color_brewer(palette = "Set2") +
   facet_wrap(~spp) +
   theme(legend.position = "bottom") +
   labs(y = NULL, x = "year 10 height (m)", fill = "treatment")
-
 ```
 
 ### Height increments
@@ -240,13 +232,12 @@ sprouts |>
     fill = "Year",
     color = "Year",
     y = "Treatment",
-    x = expression(Height~increment~(m~yr^-1))
+    x = expression(Height ~ increment ~ (m ~ yr^-1))
   ) +
   scale_color_manual(
-    values = rnd_color_brewer("Set2", c(1,4)),
+    values = rnd_color_brewer("Set2", c(1, 4)),
     aesthetics = c("color", "fill")
   )
-
 ```
 
 :::

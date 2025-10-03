@@ -26,8 +26,12 @@ library(bayesplot)
 library(brms)
 library(tidybayes)
 library(DHARMa)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(marginaleffects)
+library(tidyr)
+library(stringr)
+library(purrr)
 ```
 
 ```{r init}
@@ -36,10 +40,6 @@ library(marginaleffects)
 # this allows to adjust each panels coordinate limits
 source("./scripts/coord_cartesian_panels.r")
 
-# theme_update(
-#   panel.grid.major = element_blank(),
-#   panel.grid.minor = element_blank()
-# )
 
 fuel_class_labels <- c(
   onehr = "1-hr",
@@ -578,7 +578,6 @@ d <- mutate(
       str_glue(
         "normal( {round(median(data$load))}, {round(2.5 * sd(data$load))} )"
       ),
-      # lb = 0,
       class = "b",
       coef = "Intercept"
     ) +
@@ -588,7 +587,6 @@ d <- mutate(
         ),
         class = "b"
       )
-    # brms::set_prior("student_t(3, 0, 2.5)",  lb = 0, class = "sd")
   )
 )
 
@@ -686,11 +684,6 @@ plot_pri_post <- function(mod) {
 #|   effect of treatment. The plots for the other fuel classes look similar.
 
 plot_pri_post(bf2$mod[[1]]) + ggtitle("1-hr")
-# plot_pri_post(bf2$mod[[2]]) + ggtitle("10-hr")
-# plot_pri_post(bf2$mod[[3]]) + ggtitle("100-hr")
-# plot_pri_post(bf2$mod[[4]]) + ggtitle("duff & litter")
-# plot_pri_post(bf2$mod[[5]]) + ggtitle("1000-hr")
-# plot_pri_post(bf2$mod[[6]]) + ggtitle("Vegetation")
 ```
 
 #### Posterior Predictive check (Gaussian)
@@ -941,20 +934,6 @@ the output to infer the prior influence. I'm not going to do that right now.
 
 I will though, sample from the priors while fitting the model in order to plot those along with the posterior for our variables of interest.
 
-```{r}
-
-# prior_only_bf4a <- mutate(bf4a,
-#   mod = list(update(mod,
-#     sample_prior = "only",
-#     cores = 4,
-#     warmup = 4000,
-#     iter = 5000,
-#     control = list(adapt_delta = .99)
-#   ))
-# )
-
-```
-
 #### Model fitting
 
 Here I actually fit several models. They were each explored to some degree in an
@@ -993,7 +972,6 @@ bf4a <- mutate(
     family = brms::hurdle_gamma(),
     prior = priors,
     sample_prior = TRUE,
-    # backend = "cmdstanr",
     file = paste0("fits/bf4a_", class)
   ))
 )

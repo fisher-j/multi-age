@@ -11,7 +11,14 @@ knitr::opts_chunk$set(message = FALSE)
 
 ```{r}
 #| warning: false
-library(tidyverse, warn.conflicts = FALSE)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(ggplot2)
+library(forcats)
+library(stringr)
+
+
 library(patchwork)
 load("summarize_collected_data.rda")
 ```
@@ -60,7 +67,6 @@ simple_load <- function(sum_d2, G, k = 1.234, a, percent_slope, l) {
   c <- sqrt(1 + (percent_slope / 100)^2)
   (sum_d2 * G * k * a * c) / l
 }
-
 ```
 
 The "composite" values for G (for both sound and rotten wood), a, and the
@@ -73,56 +79,338 @@ used for slash fuel beds.
 #| code-fold: true
 
 lit_particle_params <- dplyr::tribble(
-  ~source,         ~parameter, ~onehr, ~tenhr, ~hundhr, ~thoushr_s, ~thoushr_r,
-  "brown",         "d2",       0.10,   1.86,   17.81,   1,          1,
-  "brown",         "G",        0.48,   0.48,   0.40,    0.40,       0.30,
-  "brown",         "a",        1.13,   1.13,   1.13,    1.00,       1.00,
-  "vanwagtendonk", "d2",       0.12,   1.28,   14.52,   1,          1,
-  "vanwagtendonk", "G",        0.58,   0.57,   0.53,    0.47,       0.36,
-  "vanwagtendonk", "a",        1.03,   1.02,   1.02,    1.02,       1.02,
+  ~source,
+  ~parameter,
+  ~onehr,
+  ~tenhr,
+  ~hundhr,
+  ~thoushr_s,
+  ~thoushr_r,
+  "brown",
+  "d2",
+  0.10,
+  1.86,
+  17.81,
+  1,
+  1,
+  "brown",
+  "G",
+  0.48,
+  0.48,
+  0.40,
+  0.40,
+  0.30,
+  "brown",
+  "a",
+  1.13,
+  1.13,
+  1.13,
+  1.00,
+  1.00,
+  "vanwagtendonk",
+  "d2",
+  0.12,
+  1.28,
+  14.52,
+  1,
+  1,
+  "vanwagtendonk",
+  "G",
+  0.58,
+  0.57,
+  0.53,
+  0.47,
+  0.36,
+  "vanwagtendonk",
+  "a",
+  1.03,
+  1.02,
+  1.02,
+  1.02,
+  1.02,
 )
 
 glebocki_particle_params <- dplyr::tribble(
-  ~id, ~parameter, ~onehr, ~tenhr, ~hundhr, ~thoushr_s, ~thoushr_r,
-  "85-0405", "a", 1.03, 1.03, 1.02, 1.01, 1.00, 
-  "85-0405", "d2", 0.13, 1.32, 16.13,  1, 1,
-  "85-0405", "G", 0.45, 0.46, 0.42, 0.38, 0.37, 
-  "85-0607", "a", 1.02, 1.02, 1.02, 1.01, 1.01, 
-  "85-0607", "d2", 0.10, 1.21, 20.90,  1, 1,
-  "85-0607", "G", 0.53, 0.48, 0.40, 0.33, 0.25, 
-  "85-0809", "a", 1.02, 1.02, 1.02, 1.01, 1.00, 
-  "85-0809", "d2", 0.12, 1.27, 19.24,  1, 1,
-  "85-0809", "G", 0.44, 0.49, 0.38, 0.46, 0.28, 
-  "85-1011", "a", 1.04, 1.02, 1.03, 1.01, 1.00, 
-  "85-1011", "d2", 0.10, 1.48, 21.72,  1, 1,
-  "85-1011", "G", 0.51, 0.53, 0.43, 0.47, 0.32, 
-  "85-C", "a", 1.02, 1.02, 1.01, 1.02, 1.02, 
-  "85-C", "d2", 0.12, 1.28, 17.74,  1, 1,
-  "85-C", "G", 0.47, 0.41, 0.31, 0.30, 0.30, 
-  "9192-0405", "a", 1.02, 1.02, 1.01, 1.01, 1.00, 
-  "9192-0405", "d2", 0.12, 1.45, 20.68,  1, 1,
-  "9192-0405", "G", 0.42, 0.51, 0.41, 0.36, 0.29, 
-  "9192-0607", "a", 1.03, 1.05, 1.02, 1.01, 1.01, 
-  "9192-0607", "d2", 0.12, 1.52, 19.42,  1, 1,
-  "9192-0607", "G", 0.46, 0.43, 0.43, 0.37, 0.27, 
-  "9192-0809", "a", 1.03, 1.04, 1.01, 1.01, 1.00, 
-  "9192-0809", "d2", 0.11, 1.44, 17.69,  1, 1,
-  "9192-0809", "G", 0.47, 0.51, 0.44, 0.46, 0.41, 
-  "9192-1011", "a", 1.02, 1.03, 1.01, 1.00, 1.00, 
-  "9192-1011", "d2", 0.13, 1.64, 15.32,  1, 1,
-  "9192-1011", "G", 0.49, 0.52, 0.47, 0.43, 0.32, 
-  "9192-C", "a", 1.04, 1.02, 1.03, 1.01, 1.01, 
-  "9192-C", "d2", 0.12, 1.41, 14.50,  1, 1,
-  "9192-C", "G", 0.46, 0.44, 0.43, 0.39, 0.28, 
-  "97-0809", "a", 1.06, 1.04, 1.01, 1.01, 1.00, 
-  "97-0809", "d2", 0.12, 1.81, 20.35,  1, 1,
-  "97-0809", "G", 0.46, 0.52, 0.46, 0.47, 0.45, 
-  "97-1011", "a", 1.11, 1.29, 1.01, 1.01, 1.04, 
-  "97-1011", "d2", 0.11, 1.46, 18.49,  1, 1,
-  "97-1011", "G", 0.48, 0.56, 0.46, 0.42, 0.41, 
-  "97-C", "a", 1.02, 1.01, 1.03, 1.08, 1.00, 
-  "97-C", "d2", 0.12, 1.40, 18.63,  1, 1,
-  "97-C", "G", 0.39, 0.36, 0.44, 0.37, 0.37, 
+  ~id,
+  ~parameter,
+  ~onehr,
+  ~tenhr,
+  ~hundhr,
+  ~thoushr_s,
+  ~thoushr_r,
+  "85-0405",
+  "a",
+  1.03,
+  1.03,
+  1.02,
+  1.01,
+  1.00,
+  "85-0405",
+  "d2",
+  0.13,
+  1.32,
+  16.13,
+  1,
+  1,
+  "85-0405",
+  "G",
+  0.45,
+  0.46,
+  0.42,
+  0.38,
+  0.37,
+  "85-0607",
+  "a",
+  1.02,
+  1.02,
+  1.02,
+  1.01,
+  1.01,
+  "85-0607",
+  "d2",
+  0.10,
+  1.21,
+  20.90,
+  1,
+  1,
+  "85-0607",
+  "G",
+  0.53,
+  0.48,
+  0.40,
+  0.33,
+  0.25,
+  "85-0809",
+  "a",
+  1.02,
+  1.02,
+  1.02,
+  1.01,
+  1.00,
+  "85-0809",
+  "d2",
+  0.12,
+  1.27,
+  19.24,
+  1,
+  1,
+  "85-0809",
+  "G",
+  0.44,
+  0.49,
+  0.38,
+  0.46,
+  0.28,
+  "85-1011",
+  "a",
+  1.04,
+  1.02,
+  1.03,
+  1.01,
+  1.00,
+  "85-1011",
+  "d2",
+  0.10,
+  1.48,
+  21.72,
+  1,
+  1,
+  "85-1011",
+  "G",
+  0.51,
+  0.53,
+  0.43,
+  0.47,
+  0.32,
+  "85-C",
+  "a",
+  1.02,
+  1.02,
+  1.01,
+  1.02,
+  1.02,
+  "85-C",
+  "d2",
+  0.12,
+  1.28,
+  17.74,
+  1,
+  1,
+  "85-C",
+  "G",
+  0.47,
+  0.41,
+  0.31,
+  0.30,
+  0.30,
+  "9192-0405",
+  "a",
+  1.02,
+  1.02,
+  1.01,
+  1.01,
+  1.00,
+  "9192-0405",
+  "d2",
+  0.12,
+  1.45,
+  20.68,
+  1,
+  1,
+  "9192-0405",
+  "G",
+  0.42,
+  0.51,
+  0.41,
+  0.36,
+  0.29,
+  "9192-0607",
+  "a",
+  1.03,
+  1.05,
+  1.02,
+  1.01,
+  1.01,
+  "9192-0607",
+  "d2",
+  0.12,
+  1.52,
+  19.42,
+  1,
+  1,
+  "9192-0607",
+  "G",
+  0.46,
+  0.43,
+  0.43,
+  0.37,
+  0.27,
+  "9192-0809",
+  "a",
+  1.03,
+  1.04,
+  1.01,
+  1.01,
+  1.00,
+  "9192-0809",
+  "d2",
+  0.11,
+  1.44,
+  17.69,
+  1,
+  1,
+  "9192-0809",
+  "G",
+  0.47,
+  0.51,
+  0.44,
+  0.46,
+  0.41,
+  "9192-1011",
+  "a",
+  1.02,
+  1.03,
+  1.01,
+  1.00,
+  1.00,
+  "9192-1011",
+  "d2",
+  0.13,
+  1.64,
+  15.32,
+  1,
+  1,
+  "9192-1011",
+  "G",
+  0.49,
+  0.52,
+  0.47,
+  0.43,
+  0.32,
+  "9192-C",
+  "a",
+  1.04,
+  1.02,
+  1.03,
+  1.01,
+  1.01,
+  "9192-C",
+  "d2",
+  0.12,
+  1.41,
+  14.50,
+  1,
+  1,
+  "9192-C",
+  "G",
+  0.46,
+  0.44,
+  0.43,
+  0.39,
+  0.28,
+  "97-0809",
+  "a",
+  1.06,
+  1.04,
+  1.01,
+  1.01,
+  1.00,
+  "97-0809",
+  "d2",
+  0.12,
+  1.81,
+  20.35,
+  1,
+  1,
+  "97-0809",
+  "G",
+  0.46,
+  0.52,
+  0.46,
+  0.47,
+  0.45,
+  "97-1011",
+  "a",
+  1.11,
+  1.29,
+  1.01,
+  1.01,
+  1.04,
+  "97-1011",
+  "d2",
+  0.11,
+  1.46,
+  18.49,
+  1,
+  1,
+  "97-1011",
+  "G",
+  0.48,
+  0.56,
+  0.46,
+  0.42,
+  0.41,
+  "97-C",
+  "a",
+  1.02,
+  1.01,
+  1.03,
+  1.08,
+  1.00,
+  "97-C",
+  "d2",
+  0.12,
+  1.40,
+  18.63,
+  1,
+  1,
+  "97-C",
+  "G",
+  0.39,
+  0.36,
+  0.44,
+  0.37,
+  0.37,
 )
 
 # Currently this function summarizes data across all Glebocki plots, I could #
@@ -130,14 +418,14 @@ glebocki_particle_params <- dplyr::tribble(
 summarize_glebocki <- function(data) {
   data |>
     dplyr::group_by(parameter) |>
-    dplyr::summarize(across(where(is.numeric), ~round(mean(.x), 2))) |>
+    dplyr::summarize(across(where(is.numeric), ~ round(mean(.x), 2))) |>
     dplyr::mutate(source = "glebocki", .before = 1)
 }
 
 lit_particle_params <- dplyr::bind_rows(
   lit_particle_params,
   summarize_glebocki(glebocki_particle_params)
-) |> 
+) |>
   dplyr::arrange(parameter)
 
 get_particle_params <- function(params = lit_particle_params, source) {
@@ -145,7 +433,6 @@ get_particle_params <- function(params = lit_particle_params, source) {
     pivot_longer(-c(parameter), names_to = "class") |>
     pivot_wider(names_from = parameter, values_from = value)
 }
-
 ```
 
 A study of Sierra Nevada conifers found these values to vary by species, and
@@ -164,9 +451,7 @@ counts were measured in the field.
 #|   Physical properties of woody fuel particles used for calculating fuel
 #|   loading from several different sources in the literature.
 
-
 lit_particle_params |> knitr::kable()
-
 ```
 
 ## Fine woody debris
@@ -194,7 +479,7 @@ fwd <- d$transects |>
     matches("count|len"),
     names_to = c("class", ".value"),
     names_sep = "_"
-  ) |> 
+  ) |>
   left_join(get_particle_params(source = "glebocki")) |>
   mutate(
     load = simple_load(
@@ -206,7 +491,6 @@ fwd <- d$transects |>
     )
   ) |>
   select(-c(G, a))
-
 ```
 
 ## Coarse woody debris
@@ -237,13 +521,11 @@ cwd <- d$coarse_woody |>
     med_d = median(dia),
     .groups = "drop"
   ) |>
-  # left_join(d$transects[c(transectid, "slope")]) |>
   # make missing cwd explicit
   right_join(d$transects[c(transectid, "slope")]) |>
   replace_na(
     list(med_d = 0, sum_d2 = 0, count = 0, slope = 0, class = "thoushr_s")
   ) |>
-  # mutate(slope = if_else(is.na(slope), 0, slope)) |>
   left_join(d$plots[c("phase", "site", "treatment", "thoushr_length")]) |>
   left_join(get_particle_params(source = "glebocki")) |>
   mutate(
@@ -256,7 +538,6 @@ cwd <- d$coarse_woody |>
     )
   ) |>
   select(-c(G, a, d2), length = thoushr_length)
-
 ```
 
 ## Duff and litter
@@ -282,10 +563,9 @@ dufflitter <- d$transects |>
   ) |>
   mutate(
     duff_depth = (1 - pct_litter / 100) * duff_litter,
-    litter_depth =  (pct_litter / 100) * duff_litter,
+    litter_depth = (pct_litter / 100) * duff_litter,
     .keep = "unused"
   )
-
 ```
 
 To convert these depths to load values we use a depth to load equation.
@@ -297,14 +577,16 @@ differentiating between duff and litter.
 ```{r}
 #| echo: false
 #| label: tbl-load
-#| tbl-cap: > 
+#| tbl-cap: >
 #|   Average depth to load multiplier from different sources in the
-#|   literature. 
+#|   literature.
 
 lit_dufflitter_load <- tribble(
-  ~Source, ~`Description`, ~`Load Mg ha^-1^ cm^-1^`,
-  "@finneyFuelLoadingBulk1993", 
-  "Annadel SP & Humboldt Redwoods SP (rw dbh <= 60 in)", 
+  ~Source,
+  ~`Description`,
+  ~`Load Mg ha^-1^ cm^-1^`,
+  "@finneyFuelLoadingBulk1993",
+  "Annadel SP & Humboldt Redwoods SP (rw dbh <= 60 in)",
   7.15,
 
   "@kittredgeComparisonForestFloors1940",
@@ -330,7 +612,6 @@ lit_dufflitter_load <- tribble(
   "@valachovicSuddenOakDeathcaused2011",
   "Tanoak-Douglas-fir, litter only, Humboldt County",
   0.93,
-  
 )
 
 knitr::kable(lit_dufflitter_load)
@@ -349,7 +630,7 @@ dufflitter |>
       na.rm = TRUE
     ),
     avg_total_depth = mean(duff_depth + litter_depth)
-)
+  )
 
 dufflitter <- dufflitter |>
   mutate(
@@ -394,7 +675,7 @@ veg <- d$transects |>
     !c(any_of(transectid), slope),
     names_to = c(".value", "station"),
     names_pattern = "(\\w+)([12])"
-  ) |> 
+  ) |>
   # there was some inconsistency in whether heights were zero or blank if no veg
   # was present, here I sort that out.
   # We are interested in total load, but the dead component has implications for
@@ -405,11 +686,15 @@ veg <- d$transects |>
     herb_ht = if_else(live_herb == 0 & dead_herb == 0, 0, avg_h_ht),
     woody_load = ((live_woody + dead_woody) / 100) * woody_ht * 18,
     woody_p_dead = if_else(
-      woody_load == 0, 0, dead_woody / (live_woody + dead_woody)
+      woody_load == 0,
+      0,
+      dead_woody / (live_woody + dead_woody)
     ),
     herb_load = ((live_herb + dead_herb) / 100) * herb_ht * 8,
     herb_p_dead = if_else(
-      herb_load == 0, 0, dead_herb / (live_herb + dead_herb)
+      herb_load == 0,
+      0,
+      dead_herb / (live_herb + dead_herb)
     )
   ) |>
   select(!matches("live_|dead_|avg_"), woody_ht, herb_ht) |>
@@ -418,7 +703,6 @@ veg <- d$transects |>
     names_to = c("class", ".value"),
     names_pattern = "(woody|herb)_(.*)"
   )
-
 ```
 
 ## Total load {#sec-total-load}
@@ -445,7 +729,6 @@ cwd_load <- cwd |> select(all_of(transectid), class, load)
 
 total_load <- bind_rows(dufflitter_load, veg_load, fwd_load, cwd_load) |>
   ungroup()
-
 ```
 
 John Stuart measured old-growth forest fuels in in Bull Creek Drainage of
@@ -474,35 +757,104 @@ across this range.
 #| message: false
 
 stuart <- tribble(
-  ~source, ~class, ~low, ~high,
-  "stuart", "dufflitter", 13.78, 32.81,
-  "stuart", "onehr", .41, .93,
-  "stuart", "tenhr", 1.57, 2.86,
-  "stuart", "hundhr", 1.26, 3.36,
-  "stuart", "onetenhundhr", 3.59, 5.96,
-  "stuart", "thoushr_s", 2.25, 52.35,
-  "stuart", "thoushr_r", 0.23, 20.82,
-  "stuart", "veg_woody", 0.04, 2.48,
-  "stuart", "thoushr", 2.48, 56.34,
+  ~source,
+  ~class,
+  ~low,
+  ~high,
+  "stuart",
+  "dufflitter",
+  13.78,
+  32.81,
+  "stuart",
+  "onehr",
+  .41,
+  .93,
+  "stuart",
+  "tenhr",
+  1.57,
+  2.86,
+  "stuart",
+  "hundhr",
+  1.26,
+  3.36,
+  "stuart",
+  "onetenhundhr",
+  3.59,
+  5.96,
+  "stuart",
+  "thoushr_s",
+  2.25,
+  52.35,
+  "stuart",
+  "thoushr_r",
+  0.23,
+  20.82,
+  "stuart",
+  "veg_woody",
+  0.04,
+  2.48,
+  "stuart",
+  "thoushr",
+  2.48,
+  56.34,
 )
 stuart <- mutate(stuart, across(where(is.numeric), \(x) x * 2.242))
 
 others <- tribble(
-  ~source, ~class, ~low, ~high,
-  "finney", "dufflitter", 29, 55,
-  "finney", "onetenhundhr", 9, 20,
-  "finney", "thoushr", 0, 264,
-  "kittredge", "dufflitter", 24, 24,
-  "valachovic", "litter", 2.9, 4.7,
-  "valachovic", "onehr", 2.0, 3.4,
-  "valachovic", "tenhr", 2.5, 6.1,
-  "valachovic", "hundhr", 3.1, 7.6,
-  "valachovic", "thoushr_s", 4.9, 76.7,
-  "valachovic", "thoushr_r", 3.1, 35.2,
-  "valachovic", "thoushr", 18.3, 85.9,
-  "valachovic", "onetenhundhr", 9, 15.5,
-) |> bind_rows(stuart)
-
+  ~source,
+  ~class,
+  ~low,
+  ~high,
+  "finney",
+  "dufflitter",
+  29,
+  55,
+  "finney",
+  "onetenhundhr",
+  9,
+  20,
+  "finney",
+  "thoushr",
+  0,
+  264,
+  "kittredge",
+  "dufflitter",
+  24,
+  24,
+  "valachovic",
+  "litter",
+  2.9,
+  4.7,
+  "valachovic",
+  "onehr",
+  2.0,
+  3.4,
+  "valachovic",
+  "tenhr",
+  2.5,
+  6.1,
+  "valachovic",
+  "hundhr",
+  3.1,
+  7.6,
+  "valachovic",
+  "thoushr_s",
+  4.9,
+  76.7,
+  "valachovic",
+  "thoushr_r",
+  3.1,
+  35.2,
+  "valachovic",
+  "thoushr",
+  18.3,
+  85.9,
+  "valachovic",
+  "onetenhundhr",
+  9,
+  15.5,
+) |>
+  bind_rows(stuart)
 ```
 
 ```{r}
@@ -517,8 +869,17 @@ others <- tribble(
 #| layout-ncol: 2
 
 fuel_classes <- c(
-  "litter", "dufflitter", "onehr", "tenhr", "hundhr", "onetenhundhr",
-  "thoushr_s", "thoushr_r", "thoushr", "veg_woody", "veg_herb"
+  "litter",
+  "dufflitter",
+  "onehr",
+  "tenhr",
+  "hundhr",
+  "onetenhundhr",
+  "thoushr_s",
+  "thoushr_r",
+  "thoushr",
+  "veg_woody",
+  "veg_herb"
 )
 
 # This function adds a summary row that sums load values from other rows, this
@@ -535,9 +896,13 @@ add_combined_classes <- function(data, newclass, classes) {
 # We have post PCT data, but I'm not including it here.
 tl_tab <- total_load |>
   filter(phase == "prepct") |>
-  mutate(class = if_else(
-    str_detect(class, "woody|herb"), paste0("veg_", class), class
-  )) |>
+  mutate(
+    class = if_else(
+      str_detect(class, "woody|herb"),
+      paste0("veg_", class),
+      class
+    )
+  ) |>
   add_combined_classes("onetenhundhr", c("onehr", "tenhr", "hundhr")) |>
   add_combined_classes("thoushr", c("thoushr_s", "thoushr_r")) |>
   group_by(class, treatment) |>
@@ -549,16 +914,15 @@ tl_tab <- total_load |>
   mutate(class = factor(class, levels = fuel_classes)) |> # intuitive row order
   arrange(class, mean(c(low, high)))
 
-  tl_tab[1:18, ] |>
-    gt::gt(groupname_col = "class") |>
-    gt::tab_options(row_group.as_column = TRUE) |>
-    gt::fmt_number(decimals = 1)
+tl_tab[1:18, ] |>
+  gt::gt(groupname_col = "class") |>
+  gt::tab_options(row_group.as_column = TRUE) |>
+  gt::fmt_number(decimals = 1)
 
-  tl_tab[19:nrow(tl_tab), ] |>
-    gt::gt(groupname_col = "class") |>
-    gt::tab_options(row_group.as_column = TRUE) |>
-    gt::fmt_number(decimals = 1)
-
+tl_tab[19:nrow(tl_tab), ] |>
+  gt::gt(groupname_col = "class") |>
+  gt::tab_options(row_group.as_column = TRUE) |>
+  gt::fmt_number(decimals = 1)
 ```
 
 ## Summarize fuel load
@@ -584,7 +948,7 @@ fig_labels <- labeller(
     thoushr_r = "1000-hr Rotten",
     thoushr_s = "1000-hr Sound",
     woody = "Woody Veg."
-    ),
+  ),
   phase = c(
     prepct = "Pre-pct",
     postpct = "Post-pct"
@@ -601,9 +965,18 @@ p1 <- total_load |>
   mutate(
     phase = factor(phase, levels = c("prepct", "postpct")),
     treatment = factor(treatment, levels = c("gs", "ld", "ha", "hd")),
-    class = factor(class,
-      levels = c("onehr", "tenhr", "hundhr", "dufflitter",
-        "thoushr_r", "thoushr_s", "woody", "herb")
+    class = factor(
+      class,
+      levels = c(
+        "onehr",
+        "tenhr",
+        "hundhr",
+        "dufflitter",
+        "thoushr_r",
+        "thoushr_s",
+        "woody",
+        "herb"
+      )
     )
   ) |>
   filter(!phase == "postpct" | !class == "dufflitter") |>
@@ -621,9 +994,18 @@ p2 <- total_load |>
   mutate(
     phase = factor(phase, levels = c("prepct", "postpct")),
     treatment = factor(treatment, levels = c("gs", "ld", "ha", "hd")),
-    class = factor(class,
-      levels = c("onehr", "tenhr", "hundhr", "dufflitter",
-        "thoushr_r", "thoushr_s", "woody", "herb")
+    class = factor(
+      class,
+      levels = c(
+        "onehr",
+        "tenhr",
+        "hundhr",
+        "dufflitter",
+        "thoushr_r",
+        "thoushr_s",
+        "woody",
+        "herb"
+      )
     )
   ) |>
   filter(!phase == "postpct" | !class == "dufflitter") |>
@@ -632,7 +1014,6 @@ p2 <- total_load |>
   facet_grid(class ~ phase, scales = "free_y", labeller = fig_labels)
 
 p1 + p2 + plot_layout(guides = "collect")
-
 ```
 
 ## Simplifying variables
@@ -655,7 +1036,6 @@ tl <- total_load |>
   mutate(
     treatment = forcats::fct_relevel(treatment, c("gs", "ld", "ha", "hd"))
   )
-
 ```
 
 ## Post-pct
@@ -666,13 +1046,13 @@ that were measured on a different azimuth. This is about 9% of the data.
 
 ```{r}
 
-tl |> select(phase, site, treatment, corner, azi) |>
+tl |>
+  select(phase, site, treatment, corner, azi) |>
   group_by(site, treatment, corner, azi) |>
   mutate(n = n()) |>
   filter(n == 1) |>
   arrange(site, treatment, corner, phase) |>
   print(n = Inf)
-
 ```
 
 For the post pct data, one variable that I would like to analyze is the
@@ -687,7 +1067,6 @@ tl2 <- tl |>
   arrange(site, treatment, corner, azi, phase) |>
   mutate(veg_diff = lead(veg) - veg) |>
   ungroup()
-
 ```
 
 ## Summary
@@ -742,6 +1121,5 @@ a csv](sampling_cylinder_dufflitter.csv) that has per-cylinder depths and the
 total_load <- tl2
 
 save(dufflitter, fwd, cwd, veg, total_load, file = "calculate_fuel_load.rda")
-
 ```
 

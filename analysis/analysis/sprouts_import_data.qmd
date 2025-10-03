@@ -27,12 +27,16 @@ library(ggridges)
 library(emmeans)
 library(multcomp)
 library(multcompView)
-library(tidyverse)
 library(mgcv)
 library(patchwork)
 library(DHARMa)
 library(glmmTMB)
 library(ggeffects)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(forcats)
+library(purrr)
 ```
 
 ```{r}
@@ -86,7 +90,6 @@ variable_descriptions |>
   }) |>
   list_rbind(names_to = "Variable") |>
   knitr::kable()
-
 ```
 
 ## Wrangle
@@ -96,14 +99,24 @@ I'm going to change some variable names to make them more ergonomic
 ```{r}
 
 newnames <- c(
-  site = "Site", plot = "Plot", treat = "Trtmt", tree = "Tree", spp = "Species",
-  ht1 = "HT1yr_m", ht5 = "HT5yr_m", ht10 = "HT10yr_m", ht_inc5 = "HTI1-5yr",
-  ht_inc10 = "HTI5-10yr", dbh10 = "DBH10yr_cm", lcbh10 = "LCBH10yr",
-  sdi_init = "SDIinit", agg = "AggregatedYN", ht_rnk10 = "HT10rank"
+  site = "Site",
+  plot = "Plot",
+  treat = "Trtmt",
+  tree = "Tree",
+  spp = "Species",
+  ht1 = "HT1yr_m",
+  ht5 = "HT5yr_m",
+  ht10 = "HT10yr_m",
+  ht_inc5 = "HTI1-5yr",
+  ht_inc10 = "HTI5-10yr",
+  dbh10 = "DBH10yr_cm",
+  lcbh10 = "LCBH10yr",
+  sdi_init = "SDIinit",
+  agg = "AggregatedYN",
+  ht_rnk10 = "HT10rank"
 )
 
 tibble(old = newnames, new = names(newnames)) |> knitr::kable()
-
 ```
 
 Our data are nested. We have plots within sites, trees within plots, and
@@ -133,7 +146,6 @@ make_site_plot_unique <- function(data) {
     mutate(plot = cur_group_id(), .by = c(site, treat)) |>
     mutate(tree = row_number())
 }
-
 ```
 
 I'm also going to order the treatments acording to our expectations about the
@@ -147,7 +159,6 @@ set_expected_treatment_order <- function(data) {
   data |>
     mutate(treat = fct_relevel(treat, treat_order))
 }
-
 ```
 
 For modeling purposes, I will make sure that the data are of the correct type.
@@ -162,7 +173,6 @@ set_data_types <- function(data) {
       across(c(site, plot, treat, tree, spp), as.factor)
     )
 }
-
 ```
 
 And I'll apply all the above steps in one go.
@@ -174,7 +184,6 @@ sprouts <- sprouts_fresh |>
   make_site_plot_unique() |>
   set_expected_treatment_order() |>
   set_data_types()
-
 ```
 
 I will need a function to convert a variable in the data from wide to long format.
@@ -187,15 +196,15 @@ lengthen_data <- function(data, var) {
   # and the year
   suf <- "(\\d+)"
   str_to_match <- paste0(pref, suf)
-  pivot_longer(data,
+  pivot_longer(
+    data,
     matches(str_to_match),
     names_to = c(".value", "year"),
     names_pattern = str_to_match,
     names_transform = list(year = as.integer)
   ) |>
-  relocate(year, matches(paste0(pref, "$")), .after = spp)
+    relocate(year, matches(paste0(pref, "$")), .after = spp)
 }
-
 ```
 
 Save the needed objects for the next script
@@ -204,6 +213,5 @@ Save the needed objects for the next script
 ```{r}
 
 save(sprouts, lengthen_data, treat_order, file = "wrangled_sprouts.rda")
-
 ```
 :::
