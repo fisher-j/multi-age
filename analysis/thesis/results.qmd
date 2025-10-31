@@ -1377,3 +1377,41 @@ fuel_tmb$pre |>
     guides = "collect"
   )
 ```
+
+```{r}
+#| include: false
+
+# do the sum differences in 1, 10, and 100 equal the vegetation differences?
+
+# combine pre and post dataframes
+fuel_tmb$pre |>
+  # only use fuel classes that are the same between PCT phase
+  filter(class %in% c("onehr", "tenhr", "hundhr", "thoushr", "veg")) |>
+  dplyr::group_map(function(x, ...) {
+    # for each row in pre-treatment, get the pre-treatment data and the
+    # corresponding data for post-treatment
+    bind_rows(
+      pre = emm_to_df_emm(x$emmobj[[1]]),
+      post = emm_to_df(
+        pluck(filter(fuel_tmb$post, class == x$class), "emmobj", 1)
+      ),
+      .id = "phase"
+    ) |>
+      mutate(class = x$class, .before = 1)
+  }) |>
+  bind_rows() |>
+  # Calcualte difference
+  select(class, phase, level, mean = Emmean) |>
+  tidyr::pivot_wider(names_from = phase, values_from = mean) |>
+  mutate(dif = post - pre) |>
+  # ignore 1,000 hour
+  filter(class != "thoushr") |>
+  select(class, level, dif) |>
+  # difference between Δfine-woody and Δveg
+  pivot_wider(names_from = class, values_from = dif) |>
+  mutate(
+    fine = onehr + tenhr + hundhr,
+    unaccounted = veg +
+      fine
+  )
+```

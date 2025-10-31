@@ -1,5 +1,13 @@
 # Reading notes
 
+## 2025-10-24
+
+I'm talking about combined duff/litter depths in my thesis discussion here are
+depths from various sources:
+- Stuart: 5.5 cm
+- Finney and Martin: 4 - 7.7 cm
+- Glebocki: thinned: 5.7 cm, unthinned: 6.7 cm
+
 ## 2025-03-21
 
 I was trying to back up the claim that we don't understand crown fire initiation
