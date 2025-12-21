@@ -223,8 +223,15 @@ minc13 <- glmmTMB(
   data = dinc
 )
 
+minc14 = glmmTMB(
+  ht_inc ~ treat + year * spp + (1 | tree) + (1 | plot) + (1 | plot:spp),
+  dispformula = ~ spp * year * treat,
+  data = dinc
+)
+
+
 modelsummary(
-  list(minc[[12]], minc13),
+  list(minc[[12]], minc13, minc14),
   shape = term:component ~ model,
   coef_omit = ".*dispersion$",
   coef_rename = rearrange_coef_names,
@@ -633,28 +640,28 @@ mht5 <- lmer(
 mht6 <- lmer(
   ht ~
     treat +
-      spp +
-      year +
-      treat:spp +
-      year:spp +
-      treat:year +
-      (0 + spp | site) +
-      (0 + spp | plot) +
-      (0 + spp | tree),
+    spp +
+    year +
+    treat:spp +
+    year:spp +
+    treat:year +
+    (0 + spp | site) +
+    (0 + spp | plot) +
+    (0 + spp | tree),
   data = dht
 )
 
 mht7 <- lmer(
   ht ~
     treat +
-      spp +
-      year +
-      treat:spp +
-      year:spp +
-      treat:year +
-      (1 | site:spp) +
-      (1 | plot:spp) +
-      (1 | tree:spp),
+    spp +
+    year +
+    treat:spp +
+    year:spp +
+    treat:year +
+    (1 | site:spp) +
+    (1 | plot:spp) +
+    (1 | tree:spp),
   data = dht
 )
 
@@ -729,13 +736,13 @@ mht11 <- glmmTMB(
 mht12 <- glmmTMB(
   ht ~
     treat +
-      spp +
-      year +
-      treat:spp +
-      treat:year +
-      spp:year +
-      (1 | plot) +
-      (1 | tree),
+    spp +
+    year +
+    treat:spp +
+    treat:year +
+    spp:year +
+    (1 | plot) +
+    (1 | tree),
   data = dht,
   family = Gamma(link = "log")
 )
@@ -743,13 +750,13 @@ mht12 <- glmmTMB(
 mht13 <- glmmTMB(
   ht ~
     treat +
-      spp +
-      year +
-      treat:spp +
-      treat:year +
-      spp:year +
-      (0 + spp | plot) +
-      (0 + spp | tree),
+    spp +
+    year +
+    treat:spp +
+    treat:year +
+    spp:year +
+    (0 + spp | plot) +
+    (0 + spp | tree),
   data = dht,
   family = Gamma(link = "log")
 )
@@ -757,13 +764,13 @@ mht13 <- glmmTMB(
 mht14 <- glmmTMB(
   ht ~
     treat +
-      spp +
-      year +
-      treat:spp +
-      treat:year +
-      spp:year +
-      (1 | plot) +
-      (1 | tree),
+    spp +
+    year +
+    treat:spp +
+    treat:year +
+    spp:year +
+    (1 | plot) +
+    (1 | tree),
   data = mutate(dht, year = factor(year)),
   family = Gamma(link = "log")
 )
@@ -771,13 +778,13 @@ mht14 <- glmmTMB(
 mht15 <- glmmTMB(
   ht ~
     treat +
-      spp +
-      year +
-      treat:spp +
-      treat:year +
-      spp:year +
-      (1 | plot) +
-      (1 | tree),
+    spp +
+    year +
+    treat:spp +
+    treat:year +
+    spp:year +
+    (1 | plot) +
+    (1 | tree),
   dispformula = ~year,
   data = mutate(dht, year = factor(year)),
   family = Gamma(link = "log")
@@ -786,13 +793,13 @@ mht15 <- glmmTMB(
 mht16 <- glmmTMB(
   ht ~
     treat +
-      spp +
-      year +
-      treat:spp +
-      treat:year +
-      spp:year +
-      (1 | plot) +
-      (1 | tree),
+    spp +
+    year +
+    treat:spp +
+    treat:year +
+    spp:year +
+    (1 | plot) +
+    (1 | tree),
   dispformula = ~ year * spp,
   data = mutate(dht, year = factor(year)),
   family = Gamma(link = "log")
@@ -801,13 +808,13 @@ mht16 <- glmmTMB(
 mht17 <- glmmTMB(
   ht ~
     treat +
-      spp +
-      year +
-      treat:spp +
-      treat:year +
-      spp:year +
-      (1 | plot) +
-      (1 | tree),
+    spp +
+    year +
+    treat:spp +
+    treat:year +
+    spp:year +
+    (1 | plot) +
+    (1 | tree),
   dispformula = ~ year * spp + treat + treat:spp,
   data = mutate(dht, year = factor(year)),
   family = Gamma(link = "log")

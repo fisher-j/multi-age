@@ -32,7 +32,7 @@ treatment is composed of a circular 1-ha opening in which all trees were
 removed, surrounded by a 50-meter buffer of light thinning in which less than
 1/3 of the basal area was removed. The remaining treatments were applied over
 2-hectare treatment units. The target post-harvest density was specified in
-terms of relative stand density index (SDI) using an assumed upper SDI limit for
+terms of relative density using an assumed upper stand density index (SDI) limit for
 redwood of 2,470 stems ha^-1^ [@reinekePerfectionStanddensityIndex1933]. The
 target residual relative density for the HA and HD treatments was 21% (SDI =
 520), and the for the LD treatment it was 13% (SDI = 320). These densities were
@@ -54,7 +54,7 @@ regeneration plots, 10-meter fuel transects were established parallel to the
 macro plot edges. Live fuels were estimated in 1-meter radius "sampling
 cylinders" at the five-, and nine-meter locations along each transect.
 
-Following year 10 measurements, all plots received a pre-commercial thinning
+Following year 10 measurements, all plots received a PCT
 treatment where the objective was to release merchantable conifers such as
 redwood and Douglas-fir from competition. Competing trees and shrubs were cut,
 lopped, and scattered within the measurement plots and fuel transects were
@@ -73,7 +73,7 @@ were quantified.](../figures/fuel_sampling_layout.png){#fig-plot-layout}
 Ten years after the initial harvest, four four-meter-radius regeneration plots
 were established within each macro plot (@fig-plot-layout). All regenerating
 trees (sprouts and seedlings) within the plot were recorded. Regenerating trees
-less than 5 cm at breast height (1.4 m) were tallied by 2.5 cm size classes and the
+less than 5 cm diameter at breast height (1.4 m) were tallied by 2.5 cm size classes and the
 actual DBH of all other regenerating trees were recorded. This allowed for an
 estimation of sprout and seedling density by species. 
 
@@ -96,8 +96,8 @@ to that of @brownHandbookInventoryingDowned1974. One-, 10-, 100-hr, and 1000-hr
 7.62 cm and those 7.62 cm and greater, respectively and included only dead and
 downed woody fuels (not those attached to live vegetation, or standing dead).
 Transect lengths for 1-, 10-, and 100-hr fuels were two, two, and four meters,
-respectively during pre-pct measurements. During post-pct measurement, the
-length of the 1-hr fuel transect was reduced to one meter because of he dramatic
+respectively during pre-PCT measurements. During post-PCT measurement, the
+length of the 1-hr fuel transect was reduced to one meter because of the dramatic
 increase in these fuels. Coarse woody fuels were measured along the entire 10-meter
 transect.
 
@@ -151,14 +151,13 @@ An analysis was conducted in three stages, one for each of the three response
 categories: fuels, sprout size, and regeneration density. All analyses were
 conducted using R and attempts were made to document all data, decisions, and
 techniques within a Quarto notebook, which is published at
-`https://fisher-j.github.io/multi-age`. All response variables were analyzed using
-multi-level models to account for the inherent nesting structure of the data,
-including multiple measurements of sprouts over time, where applicable.
+`https://fisher-j.github.io/multi-age`. All response variables were analyzed
+using multi-level models to account for the inherent nesting structure of the
+data, including multiple measurements of sprouts over time, where applicable.
 Grouping levels were included in the models if their variance estimate was
-determined to be significant based on the size of the variance and the magnitude
-that inclusion of that grouping level had on the estimates and their
-corresponding confidence
-levels. Because the overall objective was to detect differences between
+determined to be significant. If including a grouping level resulted in
+a meaningful change in estimates or confidence intervals, the grouping level was
+kept. Because the overall objective was to detect differences between
 treatments, treatment was used as the primary independent variable. Model
 development and selection were carried out using Akaike information criterion,
 Bayesian information criterion, and visualization of (probability integral)
@@ -185,7 +184,7 @@ used in our study. Notably, our population estimates assume equal proportions of
 north and south facing aspects.
 
 ::: {.callout-caution}
-TODO:
+TODO:@heissMarginalConditionalEffects2022
 
 * Try to use terminology for conditional and marginal predictions described in
   @heissMarginalConditionalEffects2022
@@ -203,10 +202,10 @@ TODO:
 
 ### Regeneration 
 
-Sprout census data from our 4-meter-radius regeneration plots were converted to
+Sprout count data from our 4-meter-radius regeneration plots were converted to
 basal area per acre per species. Tallies of species by size class for sprouts
 less than 5 cm dbh were converted to diameters using the class midpoint (1.27 or
-3.81 cm) before calculating basal area per acre. Minor species (e.g., those
+3.81 cm) before calculating basal area per acre. Minor species (i.e., those
 other than redwood, tanoak, and Douglas-fir) were combined into an "other"
 category. Missing species on a plot were made explicit by assigning a value of 0
 m^2^ ha^-1^ for that species and plot. In addition to basal area, Douglas-fir

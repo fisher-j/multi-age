@@ -275,13 +275,50 @@ species in a 4-meter radius vegetation plot was modeled as a gamma distribution
 with a log link with fixed effects for treatment and species, and random
 intercepts for site x species interaction. Dispersion was modeled separately as
 a function of species, using a log link and the rate of zeros was modeled using
-the logit link, for each species as well (@lst-regen-ba).
+the logit link, for each species as well:
 
 ::: {#lst-regen-ba}
 ```{r}
 print_model_info(mba)
 ```
 ::: 
+
+$$
+\text{hurdle\_gamma}(y_i \mid \pi_i, \mu_i, \phi_i) = 
+\begin{cases}
+1-\pi_i & \text{if } y_i = 0 \\
+\pi_i \cdot \text{Gamma}(y_i \mid \mu_i, \phi_i) & \text{if } y_i > 0
+\end{cases}
+$$
+
+$$
+Y_i \sim \text{hurdle\_gamma}(\pi_i, \mu_i, \phi_i)
+$$
+
+$$
+\text{logit}(\pi_i) = \beta^{\pi}_0 + \beta^{\pi}_{\text{spp}} \cdot \text{Species}_i
+$$
+
+$$
+\log(\mu_i) = \beta^{\mu}_0 + \beta^{\mu}_{\text{trt}} \cdot \text{Trt} + \alpha_{j[i]}
+$$
+
+$$
+\log(\phi_i) = \beta^{\phi}_0 + \beta^{\phi}_{\text{spp}} \cdot \text{Species}_i
+$$
+
+$$
+\alpha_j \sim N(0, \sigma^2_j)
+$$
+
+
+- $Y_i$: Total basal area per hectare for each species in a 4-meter radius
+  regeneration plot.
+- $\pi_i$: Probability that $Y_i > 0$
+- $\mu_i$: Mean of positive values.
+- $\phi_i$: Dispersion parameter for Gamma distribution
+- $\alpha_j$: Group effect pertaining to a site:species interaction
+
 
 ```{r}
 regen_all <- marginaleffects_to_emmeans(
@@ -338,14 +375,14 @@ regen_grand <- deframe(regen_grand_means)
 Focal species for this model included redwood, tanaok, Douglas-fir, and other
 species. 
 
-Redwood basal area regeneration showed the greatest treatment response. Where
-the GS treatment had the greatest basal area of redwood regeneration at 
-`r regen_mean$rw$estimate` m^2^ ha^-1^, which was 
+Redwood regeneration basal area showed the greatest treatment response. 
+The GS treatment had the greatest basal area of redwood regeneration at 
+`r regen_mean$rw$gs$estimate` m^2^ ha^-1^, which was 
 `r abs(regen_pairs$rw[["gs - hd"]]$estimate)` m^2^ ha^-1^ greater than in the HD
 treatment (p = `r pluck(regen_pairs, "rw", "gs - hd", "p.value")`). The LD and
 HD treatments were intermediate.
 
-Tanoak basal area regeneration was intermediate between that of redwood and
+Tanoak regeneration basal area was intermediate between that of redwood and
 Douglas-fir and other species. The GS and LD treatments had similar responses, as
 did the HA and HD treatments. The GS treatment resulted in `r regen_mean$to$gs$estimate` 
 m^2^ ha^-1^ of tanoak basal area, which was `r regen_pairs$to[["gs - ha"]]$estimate`
@@ -378,13 +415,14 @@ treatments were intermediate.
 #| label: tbl-regen-ba-grand-means
 #| tbl-cap: >
 #|   Grand means (m^2^ ha^-1^) for basal area of regeneration of each species
-#|   across treatments 10 years after the initiation of a multi-age redwood
+#|   across treatments 10 years after the initiation of a multiaged redwood
 #|   forest. The asymptotic 95% confidence intervals are based on the normal
 #|   approximation.
 
 regen_grand_means |>
   unnest(grand_mean) |>
   rename(any_of(standard_model_col_names)) |>
+  select(-c("1", "DF")) |>
   tinytable::tt()
 ```
 
@@ -397,7 +435,7 @@ regen_grand_means |>
 #|   blue arrows provide a means of assessing the statistical significance of
 #|   pairwise differences among treatments. Arrows are drawn so that when two
 #|   arrows just meet, the p-value for that difference is 0.05 and overlapping
-#|   arrows indicate a p-values greater than 0.05.
+#|   arrows indicate a p-values greater than 0.05. Note: Y-axes vary by species.
 
 regen_all |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -421,6 +459,7 @@ regen_all |>
   select(spp, emm) |>
   unnest(everything()) |>
   rename(treatment = level, any_of(standard_model_col_names)) |>
+  select(-c("DF")) |>
   tinytable::tt() |>
   tinytable::format_tt(digits = 2, num_fmt = "decimal")
 ```
@@ -438,7 +477,7 @@ regen_all |>
   ) |>
   select(spp, emm) |>
   unnest(emm) |>
-  select(-c(z.ratio)) |>
+  select(-c(z.ratio, df)) |>
   rename(any_of(standard_model_col_names)) |>
   tinytable::tt() |>
   tinytable::format_tt(digits = 2, num_fmt = "decimal")
@@ -496,11 +535,11 @@ ha^-1^ in the LD treatment (p = `r rw_to_pairs$ld[[1]]$p.value`), and about
 (p = `r rw_to_pairs$ha[[1]]$p.value`). In the HD treatment, we expect to see
 slightly higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`).
 
-Uncertainty in average Redwood basal area across sites, indicated by the size of
+Uncertainty in average redwood basal area across sites, indicated by the size of
 95% confidence intervals, is much greater than that of tanoak in the GS
-treatment, but this difference diminishes such that GS > LD > HA > HD. In the HD
+treatment, but this difference diminishes such that GS > LD > HA > HD (@fig-regen-ba-rw-to). In the HD
 treatment redwood and tanoak average basal area uncertainty across sites is very
-similar. (@fig-regen-ba-rw-to).
+similar.
 
 ```{r}
 #| label: fig-regen-ba-rw-to
@@ -525,14 +564,34 @@ regen_rw_to |>
 
 Counts of regenerating Douglas-fir seedlings per vegetation plot were
 analyzed for differences between harvest treatments using a negative binomial
-response with a log link, fixed effects for treatment, random effects for site
-and site x treatment interaction (@lst-df-counts).
+response with a log link, fixed effects for treatment, random effects for sites
+and macro plots within sites.
 
 ::: {#lst-df-counts}
 ```{r}
 print_model_info(mdf, NULL)
 ```
 :::
+
+$$
+Y_i \sim \text{NB1}(\mu_i, \phi); \quad \text{where} \quad Var(Y_i) = \mu_i +
+\phi \mu_i
+$$
+
+$$
+\log(\mu_i) = \beta_0 + \beta_{\text{trt}} \cdot \text{Trt}_i +
+\alpha_{j[i]} + \alpha_{k[i]}
+$$
+
+$$
+\alpha_{j} \sim \operatorname{N}(0, \sigma^2_{j}), \quad \alpha_{k} \sim \operatorname{N}(0, \sigma^2_{k})
+$$
+
+- $Y_i$: Count of Douglas-fir seedlings in a 4-meter radius vegetation plot.
+- $\mu_i$: The expected count for vegetation plot $i$.
+- $\beta_{\text{trt}}$: Fixed effect for harvest treatment.
+- $\alpha_j$: Random intercept for site.
+- $\alpha_k$: Random intercept for plots within sites. 
 
 This model for Douglas-fir counts does not indicate any statistically
 significant differences between treatments. Generally, we expect about 2
@@ -542,10 +601,11 @@ seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
 ```{r}
 #| label: fig-df-counts
 #| fig-cap: >
-#|   Vegetation plot level counts of regenerating Douglas-fir seedlings in four
-#|   harvest treatments 10 years after harvest (n = 16). Results have been
-#|   scaled to stems per hectare (4-meter radius plots). The asymptotic 95%
-#|   confidence intervals are based on the normal approximation.
+#|   Expected (emmeans) average vegetation plot level counts of regenerating
+#|   Douglas-fir seedlings in four harvest treatments 10 years after harvest (n
+#|   = 16). Results have been scaled to stems per hectare (4-meter radius
+#|   plots). The asymptotic 95% confidence intervals are based on the normal
+#|   approximation.
 
 df_counts <- marginaleffects_to_emmeans(
   model = mdf,
@@ -584,7 +644,7 @@ emmeans(df_counts, "level") |>
 The selected height increment model used a normal response distribution on the
 identity link. It included treatment, growth period, species, and the
 interaction of species and growth period as fixed effects. A random intercept
-was included for tree (multiple observations) and macro-plot, and an another
+was included for tree (multiple observations) and macro-plot, and another
 random effect allowed the response to vary by species differently for each macro
 plot. The dispersion parameter for the response was modeled (with a log link) as
 a function of treatment, growth period, species and all three-way interactions
@@ -595,6 +655,34 @@ a function of treatment, growth period, species and all three-way interactions
 print_model_info(minc_sel, "disp")
 ```
 :::
+
+$$
+Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
+$$
+
+$$
+\mu_i = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{year}}^{\mu}
+\cdot \text{Year}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i +
+\beta_{\text{spp:year}}^{\mu}(\text{Spp}_i \times \text{Year}_i) +
+\alpha_{\text{tree}[i]} + \alpha_{\text{macro}[i],\text{spp}[i]}
+$$
+
+$$
+\log(\sigma_i) = \beta^{\sigma}_0 + \beta^{\sigma}_{\text{trt}} \cdot \text{Trt}_i + \beta^{\sigma}_{\text{yr}}
+\cdot \text{Year}_i + \beta^{\sigma}_{\text{spp}} \cdot \text{Spp}_i + \dots + \beta^{\sigma}_{\text{3way}}
+(\text{Trt}_i \times \text{Year}_i \times \text{Spp}_i)
+$$
+
+$$
+\alpha_{\text{tree}} \sim N(0, \sigma^2_{\text{tree}})
+$$
+
+$$
+\alpha_{\text{macro}, \text{spp}} = \begin{pmatrix} \alpha_{\text{macro}_1, \text{spp}_1} \\
+\alpha_{\text{macro}_1, \text{spp}_2} \\
+\vdots \\ \alpha_{\text{macro}_j, \text{spp}_k} \end{pmatrix} \sim \operatorname{N}(\mathbf{0},
+\boldsymbol{\Sigma}_{\text{macro}, \text{spp}})
+$$
 
 ```{r}
 
@@ -814,6 +902,36 @@ dispersion (log link) with predictors species, treatment, and their interaction
 print_model_info(ht10_sel, "disp")
 ```
 :::
+
+$$
+Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
+$$
+
+$$
+\log(\mu_i) = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i + \alpha_{\text{spp}[i], \text{macro}[i]}
+$$
+
+$$
+\log(\sigma_i) = \beta^{\sigma}_0 + \beta^{\sigma}_{\text{trt}} \cdot
+\text{Trt}_i + \beta^{\sigma}_{\text{spp}} \cdot \text{Spp}_i +
+\beta^{\sigma}_{\text{trt:spp}}(\text{Trt}_i \times \text{Spp}_i)
+$$
+
+$$
+\alpha_{\text{spp}, \text{macro}} = \begin{pmatrix} \alpha_{\text{spp}_1,
+\text{macro}_1} \\ \alpha_{\text{spp}_1, \text{macro}_2} \\
+\vdots \\ \alpha_{\text{spp}_j, \text{macro}_k} \end{pmatrix} \sim
+\operatorname{N}(\mathbf{0}, \boldsymbol{\Sigma}_{\text{spp}, \text{macro}})
+$$
+
+- $Y_i$: Height at year 10 for tree $i$.
+- $\mu_i$: Mean height at year 10 for tree $i$.
+- $\sigma^2_i$: Variance of height at year 10 for tree $i$.
+- $\alpha_{\text{macro}, \text{spp}}$: Random effect for species, co-varying
+  within macro plot.
+- $\boldsymbol{\Sigma}_{\text{macro}, \text{spp}}$: Unstructured variance-covariance matrix for species
+  within macro plot.
+
 
 ```{r}
 ht_year_10 <- marginaleffects_to_emmeans(

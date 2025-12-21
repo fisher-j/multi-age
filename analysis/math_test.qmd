@@ -1,0 +1,133 @@
+---
+title: Math
+format: html
+---
+## Basal area regeneration model
+
+$$
+\text{hurdle\_gamma}(y_i \mid \pi_i, \mu_i, \phi_i) = 
+\begin{cases}
+1-\pi_i & \text{if } y_i = 0 \\
+\pi_i \cdot \text{Gamma}(y_i \mid \mu_i, \phi_i) & \text{if } y_i > 0
+\end{cases}
+$$
+
+$$
+Y_i \sim \text{hurdle\_gamma}(\pi_i, \mu_i, \phi_i)
+$$
+
+$$
+\text{logit}(\pi_i) = \beta^{\pi}_0 + \beta^{\pi}_{\text{spp}} \cdot \text{Species}_i
+$$
+
+$$
+\log(\mu_i) = \beta^{\mu}_0 + \beta^{\mu}_{\text{trt}} \cdot \text{Trt} + \alpha_{j[i]}
+$$
+
+$$
+\log(\phi_i) = \beta^{\phi}_0 + \beta^{\phi}_{\text{spp}} \cdot \text{Species}_i
+$$
+
+$$
+\alpha_j \sim N(0, \sigma^2_j)
+$$
+
+
+- $Y_i$: Total basal area per hectare for each species in a 4-meter radius
+  regeneration plot.
+- $\pi_i$: Probability that $Y_i > 0$
+- $\mu_i$: Mean of positive values.
+- $\phi_i$: Dispersion parameter for Gamma distribution
+- $\alpha_j$: Group effect pertaining to a site:species interaction
+
+## DF counts model
+
+$$
+Y_i \sim \text{NB1}(\mu_i, \phi); \quad \text{where} \quad Var(Y_i) = \mu_i +
+\phi \mu_i
+$$
+
+$$
+\log(\mu_i) = \beta_0 + \beta_{\text{trt}} \cdot \text{Trt}_i +
+\alpha_{j[i]} + \alpha_{k[i]}
+$$
+
+$$
+\alpha_{j} \sim \operatorname{N}(0, \sigma^2_{j}), \quad \alpha_{k} \sim \operatorname{N}(0, \sigma^2_{k})
+$$
+
+- $Y_i$: Count of Douglas-fir seedlings in a 4-meter radius vegetation plot.
+- $\mu_i$: The expected count for vegetation plot $i$.
+- $\beta_{\text{trt}}$: Fixed effect for harvest treatment.
+- $\alpha_j$: Random intercept for site.
+- $\alpha_k$: Random intercept for plots within sites. 
+
+## Height increment model
+
+$$
+Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
+$$
+
+$$
+\mu_i = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{year}}^{\mu}
+\cdot \text{Year}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i +
+\beta_{\text{spp:year}}^{\mu}(\text{Spp}_i \times \text{Year}_i) +
+\alpha_{\text{tree}[i]} + \alpha_{\text{macro}[i],\text{spp}[i]}
+$$
+
+$$
+\log(\sigma_i) = \beta^{\sigma}_0 + \beta^{\sigma}_{\text{trt}} \cdot \text{Trt}_i + \beta^{\sigma}_{\text{yr}}
+\cdot \text{Year}_i + \beta^{\sigma}_{\text{spp}} \cdot \text{Spp}_i + \dots + \beta^{\sigma}_{\text{3way}}
+(\text{Trt}_i \times \text{Year}_i \times \text{Spp}_i)
+$$
+
+$$
+\alpha_{\text{tree}} \sim N(0, \sigma^2_{\text{tree}})
+$$
+
+$$
+\alpha_{\text{macro}, \text{spp}} = \begin{pmatrix} \alpha_{\text{macro}_1, \text{spp}_1} \\
+\alpha_{\text{macro}_1, \text{spp}_2} \\
+\vdots \\ \alpha_{\text{macro}_j, \text{spp}_k} \end{pmatrix} \sim \operatorname{N}(\mathbf{0},
+\boldsymbol{\Sigma}_{\text{macro}, \text{spp}})
+$$
+
+- $Y_i$: Height increment (m yr^-1^) for sprout observation $i$.
+- $\mu_i$: Mean height increment for observation $i$.
+- $\sigma^2_i$: Variance of height increment for observation $i$.
+- $\alpha^{\mu}_{\text{tree}}$: Random intercept for tree.
+- $\alpha^{\mu}_{\text{macro}, \text{spp}}$: Random effect for species, co-varying
+  within macro plot.
+- $\boldsymbol{\Sigma}_{\text{macro}, \text{spp}}$: Unstructured variance-covariance matrix for species
+  within macro plot.
+
+## Ht at year 10 model
+
+$$
+Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
+$$
+
+$$
+\log(\mu_i) = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i + \alpha_{\text{spp}[i], \text{macro}[i]}
+$$
+
+$$
+\log(\sigma_i) = \beta^{\sigma}_0 + \beta^{\sigma}_{\text{trt}} \cdot
+\text{Trt}_i + \beta^{\sigma}_{\text{spp}} \cdot \text{Spp}_i +
+\beta^{\sigma}_{\text{trt:spp}}(\text{Trt}_i \times \text{Spp}_i)
+$$
+
+$$
+\alpha_{\text{spp}, \text{macro}} = \begin{pmatrix} \alpha_{\text{spp}_1,
+\text{macro}_1} \\ \alpha_{\text{spp}_1, \text{macro}_2} \\
+\vdots \\ \alpha_{\text{spp}_j, \text{macro}_k} \end{pmatrix} \sim
+\operatorname{N}(\mathbf{0}, \boldsymbol{\Sigma}_{\text{spp}, \text{macro}})
+$$
+
+- $Y_i$: Height at year 10 for tree $i$.
+- $\mu_i$: Mean height at year 10 for tree $i$.
+- $\sigma^2_i$: Variance of height at year 10 for tree $i$.
+- $\alpha_{\text{macro}, \text{spp}}$: Random effect for species, co-varying
+  within macro plot.
+- $\boldsymbol{\Sigma}_{\text{macro}, \text{spp}}$: Unstructured variance-covariance matrix for species
+  within macro plot.

@@ -455,7 +455,16 @@ m5 <- glmmTMB(
 )
 plot(simulateResiduals(m5))
 
-m6 <- glmmTMB(
+m5a <- glmmTMB(
+  ba_ha ~ treat * spp + (1 | site:spp),
+  regen_pa,
+  family = ziGamma(link = "log"),
+  dispformula = ~spp,
+  ziformula = ~ spp * site
+)
+plot(simulateResiduals(m5a))
+
+m6 <- glmmTMB::glmmTMB(
   ba_ha ~ treat * spp + (1 | site:spp) + (1 | site),
   regen_pa,
   family = ziGamma(link = "log"),
@@ -504,7 +513,7 @@ rmse <- function(...) {
   data.frame(model = arg_strings, rmse = rmse)
 }
 
-rmse(m1, m2, m3, m4, m5, m6, m6a, m7)
+rmse(m1, m2, m3, m4, m5a, m6, m6a, m7)
 
 AIC(m1, m2, m3, m4, m5, m6, m6a, m7)
 ```
@@ -536,7 +545,7 @@ regen_pa |>
   labs(fill = "obs/sim")
 ```
 
-Finally, significant differences?
+Use this graph to compare two models
 
 ```{r}
 #| label: fig-species-ba-model
@@ -547,15 +556,29 @@ avg_predictions(
   by = c("spp", "treat"),
   re.form = NULL
 ) |>
-  ggplot(aes(treat, estimate)) +
+  bind_rows(
+    avg_predictions(
+      m6,
+      newdata = datagrid(treat = unique, spp = unique, site = unique),
+      by = c("spp", "treat"),
+      re.form = NULL
+    ),
+    .id = "model"
+  ) |>
+  ggplot(aes(treat, estimate, color = model, group = model)) +
   facet_wrap(~spp, scales = "free", labeller = plot_labels) +
   geom_linerange(
+    position = position_dodge(width = 0.5),
     aes(ymin = conf.low, ymax = conf.high),
-    color = "gray70",
+    # color = "gray70",
     linewidth = 2.3,
-    show.legend = FALSE
+    show.legend = TRUE
   ) +
-  geom_point(color = "black", size = 2) +
+  geom_point(
+    color = "black",
+    size = 2,
+    position = position_dodge(width = 0.5)
+  ) +
   labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1))) +
   scale_x_discrete(labels = toupper)
 ```
