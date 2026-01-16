@@ -146,6 +146,17 @@ Y_i \sim \text{NB1}(\mu_i, \phi); \quad \text{where} \quad Var(Y_i) = \mu_i +
 <li><span class="math inline">\(\alpha_k\)</span>: Random intercept for plots within sites.</li>
 </ul>
 </section>
+<section id="height-covariance-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="height-covariance-matrix">Height covariance matrix</h2>
+<p><span class="math display">\[
+\boldsymbol{\Sigma}_{\text{macro}} =
+\begin{pmatrix}
+\sigma_A^2 &amp; \rho_{AB}\sigma_A\sigma_B &amp; \rho_{AC}\sigma_A\sigma_C \\
+\rho_{AB}\sigma_A\sigma_B &amp; \sigma_B^2 &amp; \rho_{BC}\sigma_B\sigma_C \\
+\rho_{AC}\sigma_A\sigma_C &amp; \rho_{BC}\sigma_B\sigma_C &amp; \sigma_C^2
+\end{pmatrix}
+\]</span></p>
+</section>
 <section id="height-increment-model" class="level2">
 <h2 class="anchored" data-anchor-id="height-increment-model">Height increment model</h2>
 <p><span class="math display">\[
@@ -169,7 +180,7 @@ Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
 \alpha_{\text{macro}, \text{spp}} = \begin{pmatrix} \alpha_{\text{macro}_1, \text{spp}_1} \\
 \alpha_{\text{macro}_1, \text{spp}_2} \\
 \vdots \\ \alpha_{\text{macro}_j, \text{spp}_k} \end{pmatrix} \sim \operatorname{N}(\mathbf{0},
-\boldsymbol{\Sigma}_{\text{macro}, \text{spp}})
+\boldsymbol{\Sigma}_{\text{macro}})
 \]</span></p>
 <ul>
 <li><span class="math inline">\(Y_i\)</span>: Height increment (m yr<sup>-1</sup>) for sprout observation <span class="math inline">\(i\)</span>.</li>
@@ -177,7 +188,7 @@ Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
 <li><span class="math inline">\(\sigma^2_i\)</span>: Variance of height increment for observation <span class="math inline">\(i\)</span>.</li>
 <li><span class="math inline">\(\alpha^{\mu}_{\text{tree}}\)</span>: Random intercept for tree.</li>
 <li><span class="math inline">\(\alpha^{\mu}_{\text{macro}, \text{spp}}\)</span>: Random effect for species, co-varying within macro plot.</li>
-<li><span class="math inline">\(\boldsymbol{\Sigma}_{\text{macro}, \text{spp}}\)</span>: Unstructured variance-covariance matrix for species within macro plot.</li>
+<li><span class="math inline">\(\boldsymbol{\Sigma}_{\text{macro}}\)</span>: Unstructured variance-covariance matrix for species within macro plot.</li>
 </ul>
 </section>
 <section id="ht-at-year-10-model" class="level2">
@@ -206,6 +217,49 @@ Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
 <li><span class="math inline">\(\alpha_{\text{macro}, \text{spp}}\)</span>: Random effect for species, co-varying within macro plot.</li>
 <li><span class="math inline">\(\boldsymbol{\Sigma}_{\text{macro}, \text{spp}}\)</span>: Unstructured variance-covariance matrix for species within macro plot.</li>
 </ul>
+</section>
+<section id="fuels-model" class="level2">
+<h2 class="anchored" data-anchor-id="fuels-model">Fuels model</h2>
+<p>Gamma distributed, linear multi-level models, with a log link were used to model fuel load response (Mg ha<sup>-1</sup>) for all fuel classes. Random intercepts were specified for three levels of nesting, representing sites, macro plots, and transect corners. A hurdle component with logit link was used for predicting zeros in all models except for the duff &amp; litter model. Dispersion components were included where needed, based on AIC model selection. Models were fit separately for pre- and post-PCT fuel measurements. Duff and litter were not measured post-PCT, and vegetation difference was only modeled post-PCT. The following describes the portion of the fuel load models that are common to the pre- and post-PCT fuel load models.</p>
+<p><span class="math display">\[
+Y_i \sim \text{hurdle\_gamma}(\pi_i, \mu_i, \phi_i)
+\]</span></p>
+<p><span class="math display">\[
+\log(\mu_i) = \beta^{\mu}_0 + \beta^{\mu}_{\text{trt}} \cdot \text{Trt}_i +
+\alpha_{\text{site}[i]} + \alpha_{\text{macro}[i]} + \alpha_{\text{corner}[i]}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(Y_i\)</span>: Fuel load (Mg ha<sup>-1</sup>) for transect <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(\pi_i\)</span>: Probability that <span class="math inline">\(Y_i &gt; 0\)</span></li>
+<li><span class="math inline">\(\mu_i\)</span>: Mean of positive values.</li>
+<li><span class="math inline">\(\phi_i\)</span>: Dispersion parameter for Gamma distribution.</li>
+<li><span class="math inline">\(\alpha_{\text{site}}\)</span>: Random intercept for site.</li>
+<li><span class="math inline">\(\alpha_{\text{macro}}\)</span>: Random intercept for macro plot.</li>
+</ul>
+<section id="pre-pct-fuel-models" class="level3">
+<h3 class="anchored" data-anchor-id="pre-pct-fuel-models">Pre-pct fuel models</h3>
+<p>For the Duff &amp; Litter model, there was no hurdle component because there were no zeros in the data.</p>
+<p><span class="math display">\[
+\text{logit}(\pi_i^{\text{dufflitter}}) = \beta^{(\pi,\text{dufflitter})}_0
+\]</span></p>
+<p>For the 10-hr fuel model, the hurdle and the dispersion components were modeled as functions of treatment.</p>
+<p><span class="math display">\[
+\text{logit}(\pi_i^{\text{10hr}}) = \beta^{(\pi,\text{10hr})}_0 +
+\beta^{(\pi,\text{10hr})}_{\text{trt}} \cdot \text{Trt}_i
+\]</span></p>
+<p><span class="math display">\[
+\log(\phi_i^{\text{10hr}}) = \beta^{(\phi,\text{10hr})}_0 +
+\beta^{(\phi,\text{10hr})}_{\text{trt}} \cdot \text{Trt}_i
+\]</span></p>
+<p>For the rest of the fuel models (1-hr, 100-hr, 1000-hr, and vegetation), the hurdle and dispersion components were modeled with only an intercept;</p>
+<p><span class="math display">\[
+\text{logit}(\pi_i^\cdot) = \beta^{(\pi,\cdot)}_0
+\]</span></p>
+<p><span class="math display">\[
+\log(\phi_i^{\cdot}) = \beta^{(\phi,\cdot)}_0
+\]</span></p>
+<p>and the for the others, it was modeled as a single rate for all observations. The 10-hr fuel model also included a dispersion model, which was modeled with a log link, using treatment as a predictor (<strong>?@tbl-fuel-pre-pct-mod</strong>).</p>
+</section>
 </section>
 
 </main>

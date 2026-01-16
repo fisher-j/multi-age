@@ -93,7 +93,8 @@ standard_model_col_names <- c(
   Contrast = "contrast",
   Estimate = "estimate",
   DF = "df",
-  `P value` = "p.value"
+  `P value` = "p.value",
+  Class = "class"
 )
 
 ############### For package emmeans #################
@@ -266,6 +267,23 @@ marginaleffects_to_emmeans <- function(
 }
 ```
 
+The formulas below use $\beta$ to represent fixed effects and $\alpha$ to
+represent random effects. Subscripts indicate the variable associated with each
+effect. Superscripted Greek letters indicate the model component where fixed or
+random effects are present in more than one component (e.g., $\mu$ for the
+conditional model, $\pi$ for the hurdle model, and $\phi$ for the dispersion
+model). A "hurdle gamma" distribution is used for models of basal area and fuels
+and is defined below.
+
+$$
+\text{hurdle\_gamma}(y_i \mid \pi_i, \mu_i, \phi_i) = 
+\begin{cases}
+1-\pi_i & \text{if } y_i = 0 \\
+\pi_i \cdot \text{Gamma}(y_i \mid \mu_i, \phi_i) & \text{if } y_i > 0
+\end{cases}
+$$
+
+
 ## Regeneration
 
 ### Basal area
@@ -282,14 +300,6 @@ the logit link, for each species as well:
 print_model_info(mba)
 ```
 ::: 
-
-$$
-\text{hurdle\_gamma}(y_i \mid \pi_i, \mu_i, \phi_i) = 
-\begin{cases}
-1-\pi_i & \text{if } y_i = 0 \\
-\pi_i \cdot \text{Gamma}(y_i \mid \mu_i, \phi_i) & \text{if } y_i > 0
-\end{cases}
-$$
 
 $$
 Y_i \sim \text{hurdle\_gamma}(\pi_i, \mu_i, \phi_i)
@@ -601,7 +611,7 @@ seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
 ```{r}
 #| label: fig-df-counts
 #| fig-cap: >
-#|   Expected (emmeans) average vegetation plot level counts of regenerating
+#|   Expected marginal means of vegetation plot level counts of regenerating
 #|   Douglas-fir seedlings in four harvest treatments 10 years after harvest (n
 #|   = 16). Results have been scaled to stems per hectare (4-meter radius
 #|   plots). The asymptotic 95% confidence intervals are based on the normal
@@ -638,6 +648,23 @@ emmeans(df_counts, "level") |>
 ```
 
 ## Sprout heights
+
+In the following two models, a random slope for species is included for each
+macro plot. This specifies a general (unstructured) covariance matrix that
+allows the random effect variance to differ by species (heteroscedasticity) and
+allows for non-zero correlations between species-level effects within the same
+plot (e.g., assessing if plots that are favorable for one species are also
+favorable for others). This variance-covariance matrix takes the following form,
+where $A$, $B$, and $C$ represent different species.
+
+$$
+\boldsymbol{\Sigma}_{\text{macro}} =
+\begin{pmatrix}
+\sigma_A^2 & \rho_{AB}\sigma_A\sigma_B & \rho_{AC}\sigma_A\sigma_C \\
+\rho_{AB}\sigma_A\sigma_B & \sigma_B^2 & \rho_{BC}\sigma_B\sigma_C \\
+\rho_{AC}\sigma_A\sigma_C & \rho_{BC}\sigma_B\sigma_C & \sigma_C^2
+\end{pmatrix}
+$$
 
 ### Height increment
 
@@ -681,8 +708,17 @@ $$
 \alpha_{\text{macro}, \text{spp}} = \begin{pmatrix} \alpha_{\text{macro}_1, \text{spp}_1} \\
 \alpha_{\text{macro}_1, \text{spp}_2} \\
 \vdots \\ \alpha_{\text{macro}_j, \text{spp}_k} \end{pmatrix} \sim \operatorname{N}(\mathbf{0},
-\boldsymbol{\Sigma}_{\text{macro}, \text{spp}})
+\boldsymbol{\Sigma}_{\text{macro}})
 $$
+
+- $Y_i$: Height increment (m yr^-1^) for sprout observation $i$.
+- $\mu_i$: Mean height increment for observation $i$.
+- $\sigma^2_i$: Variance of height increment for observation $i$.
+- $\alpha^{\mu}_{\text{tree}}$: Random intercept for tree.
+- $\alpha^{\mu}_{\text{macro}, \text{spp}}$: Random effect for species, co-varying
+  within macro plot.
+- $\boldsymbol{\Sigma}_{\text{macro}}$: Unstructured variance-covariance matrix for species
+  within macro plot.
 
 ```{r}
 
@@ -785,7 +821,10 @@ ht_inc_treat |>
   mutate(emm = list(as_tibble(emmeans(emmobj, ~level)))) |>
   select(spp, emm) |>
   unnest(everything()) |>
-  rename(treatment = level, ) |>
+  select(-c(df)) |>
+  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
+  rename(Treat = level) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt(digits = 2) |>
   tinytable::format_tt(num_fmt = "decimal")
 ```
@@ -883,7 +922,9 @@ ht_inc_year |>
   mutate(emm = list(as_tibble(emmeans(emmobj, ~level)))) |>
   select(spp, emm) |>
   unnest(everything()) |>
-  rename(year = level) |>
+  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
+  rename(Year = level) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt(digits = 2) |>
   tinytable::format_tt(num_fmt = "decimal")
 ```
@@ -1017,7 +1058,10 @@ ht_year_10 |>
   mutate(emm = list(as_tibble(emmeans(emmobj, ~level)))) |>
   select(spp, emm) |>
   unnest(everything()) |>
-  rename(year = level) |>
+  select(-c(df)) |>
+  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
+  rename(Year = level) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt(digits = 2) |>
   tinytable::format_tt(num_fmt = "decimal")
 ```
@@ -1036,34 +1080,97 @@ ht_year_10 |>
   select(spp, pairs) |>
   unnest(pairs) |>
   select(-c(z.ratio)) |>
+  select(-c(df)) |>
+  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt() |>
   tinytable::format_tt(digits = 2, num_fmt = "decimal")
 ```
 
 ## Fuels
 
+Gamma distributed, linear multi-level models, with a log link were used to model
+fuel load response (Mg ha^-1^) for all fuel classes. Random intercepts were
+specified for three levels of nesting, representing sites, macro plots, and
+transect corners. A hurdle component with logit link was used for predicting
+zeros in all models except for the duff & litter model. Dispersion components
+were included where needed, based on AIC model selection. Models were fit
+separately for pre- and post-PCT fuel measurements. Duff and litter were not
+measured post-PCT, and vegetation difference was only modeled post-PCT.
+
+:::{#lst-fuel-pre-pct-mod}
+```
+family: Gamma(link = "log")
+conditional: fuel_load ~ treatment + (1 | site/macro/corner)
+```
+:::
+
+$$
+Y_i \sim \text{hurdle\_gamma}(\pi_i, \mu_i, \phi_i)
+$$
+
+$$
+\log(\mu_i) = \beta^{\mu}_0 + \beta^{\mu}_{\text{trt}} \cdot \text{Trt}_i +
+\alpha_{\text{site}[i]} + \alpha_{\text{macro}[i]} + \alpha_{\text{corner}[i]}
+$$
+
+
+Any model component not explicitly defined below was modeled with only an
+intercept:
+
+$$
+\text{logit}(\pi_i^\cdot) = \beta^{(\pi,\cdot)}_0
+$$
+
+$$
+\log(\phi_i^{\cdot}) = \beta^{(\phi,\cdot)}_0
+$$
+
+- $Y_i$: Fuel load (Mg ha^-1^) for transect $i$.
+- $\pi_i$: Probability that $Y_i > 0$, the hurdle component.
+- $\mu_i$: Mean of positive values.
+- $\phi_i$: Dispersion parameter for Gamma distribution.
+- $\alpha_{\cdot}$: Random intercepts for site, macro plot, and corner.
+- $\beta^{\cdot}_{\cdot}$: Fixed effects for intercepts and treatment
+  levels for mean, hurdle, and dispersion components
+.
+
+
 ### Pre-pct
 
-Gamma distributed, linear multi-level models, with a log link were used for all
-six fuel class responses. Random intercepts were specified for three levels of
-nesting, representing sites, treatment blocks, and transect corners. All models
-except for the duff & litter model included a hurdle model to account for
-zeros, which was modeled with a logit link. For the 10-hr fuel model, the hurdle
-portion was modeled as a function of treatment, and for the others, it was
-modeled as a single rate for all observations. The 10-hr fuel model also
-included a dispersion model, which was modeled with a log link, using treatment
-as a predictor (@tbl-fuel-pre-pct-mod).
+For the Duff & Litter model, there was no hurdle component because there were no
+zeros in the data, and the dispersion parameter was modeled with only an
+intercept (see below).
+
+$$
+\text{logit}(\pi_i^{\text{dufflitter}}) = \beta^{(\pi,\text{dufflitter})}_0
+$$
+
+For the 10-hr fuel model, the hurdle
+and the dispersion components were modeled as functions of treatment.
+
+$$
+\text{logit}(\pi_i^{\text{10hr}}) = \beta^{(\pi,\text{10hr})}_0 +
+\beta^{(\pi,\text{10hr})}_{\text{trt}} \cdot \text{Trt}_i
+$$
+
+$$
+\log(\phi_i^{\text{10hr}}) = \beta^{(\phi,\text{10hr})}_0 +
+\beta^{(\phi,\text{10hr})}_{\text{trt}} \cdot \text{Trt}_i
+$$
+.
+
 
 ```{r}
 #| label: tbl-fuel-pre-pct-mod
-#| tbl-cap: Model specifications for six fuel classes before pct.
+#| tbl-cap: Dispersion and hurdle component specifications for six fuel classes before pct.
 
 fuel_tmb$pre |>
   transmute(
     class = fuel_class_labels[as.character(class)],
-    Family = mod$modelInfo$family$family,
-    Link = mod$modelInfo$family$link,
-    Conditional = gsub("treatment", "trt", format_model_formula(mod, "cond")),
+    # Family = mod$modelInfo$family$family,
+    # Link = mod$modelInfo$family$link,
+    # Conditional = gsub("treatment", "trt", format_model_formula(mod, "cond")),
     "Dispersion (log)" = gsub(
       "treatment",
       "trt",
@@ -1189,7 +1296,10 @@ fuel_tmb$pre |>
   mutate(emmeans = list(as_tibble(emmeans(emmobj, ~level)))) |>
   select(class, emmeans) |>
   unnest(emmeans) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  select(-c(df)) |>
   rename(treatment = level) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
 
@@ -1205,7 +1315,10 @@ fuel_tmb$pre |>
   select(class, pairs) |>
   unnest(pairs) |>
   select(-c(z.ratio)) |>
+  select(-c(df)) |>
   arrange(p.value) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
 
@@ -1220,14 +1333,46 @@ fuel_tmb$pre |>
   mutate(grand_mean = as_tibble(emmeans(emmobj, ~1))) |>
   select(c(class, grand_mean)) |>
   unnest(grand_mean) |>
+  select(-c(df, `1`)) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
 
 ### Post-pct
 
-After PCT, the response for all six fuel classes were modeled with a gamma
-distribution and a log link, and included the same multi-level random effects as
-for the pre-pct models. Dispersion models with treatment as the only predictor
+After PCT, duff & litter was not modeled, vegetation difference was added. Model
+selection resulted in somewhat more complex models for dispersion ($\phi$) and
+hurdle ($\pi$) components. For 1-hr fuels the dispersion component included
+treatment and site predictors:
+
+$$
+\log(\phi_i^{\text{1hr}}) = \beta^{(\phi,\text{1hr})}_0 +
+\beta^{(\phi,\text{1hr})}_{\text{trt}} \cdot \text{Trt}_i + 
+\beta^{(\phi,\text{1hr})}_{\text{site}} \cdot \text{Site}_i
+$$
+,
+
+and for 100-hr fuels, the dispersion and hurdle components included treatment
+and site predictors:
+
+$$
+\log(\phi_i^{\text{100hr}}) = \beta^{(\phi,\text{100hr})}_0 +
+\beta^{(\phi,\text{100hr})}_{\text{trt}} \cdot \text{Trt}_i + 
+\beta^{(\phi,\text{100hr})}_{\text{site}} \cdot \text{Site}_i
+$$
+
+$$
+\text{logit}(\pi_i^{\text{100hr}}) = \beta^{(\pi,\text{100hr})}_0 +
+\beta^{(\pi,\text{100hr})}_{\text{trt}} \cdot \text{Trt}_i + 
+\beta^{(\pi,\text{100hr})}_{\text{site}} \cdot \text{Site}_i
+$$
+.
+
+The dispersion and hurdle components for the rest of the fuel models included
+only an intercept.
+
+Dispersion models with treatment as the only predictor
 were included for 1-hr and 100-hr fuel classes. All models included a hurdle
 portion to model zeros using a logit link. For 100-hr fuels, the hurdle portion included
 treatment and site as predictors. For the rest, a constant rate of zeros for all
@@ -1239,9 +1384,9 @@ observations was used (@tbl-fuel-post-pct).
 fuel_tmb$post |>
   transmute(
     class = fuel_class_labels[as.character(class)],
-    Family = mod$modelInfo$family$family,
-    Link = mod$modelInfo$family$link,
-    Conditional = gsub("treatment", "trt", format_model_formula(mod, "cond")),
+    # Family = mod$modelInfo$family$family,
+    # Link = mod$modelInfo$family$link,
+    # Conditional = gsub("treatment", "trt", format_model_formula(mod, "cond")),
     "Dispersion (log)" = gsub(
       "treatment",
       "trt",
@@ -1395,7 +1540,10 @@ fuel_tmb$post |>
   ) |>
   select(class, emmeans) |>
   unnest(emmeans) |>
+  select(-c(df)) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
   rename(treatment = level) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
 
@@ -1418,6 +1566,9 @@ fuel_tmb$post |>
   unnest(pairs) |>
   select(-c(z.ratio)) |>
   arrange(p.value) |>
+  select(-c(df)) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt(digits = 2) |>
   tinytable::format_tt(num_fmt = "significant_cell")
 ```
@@ -1433,6 +1584,9 @@ fuel_tmb$post |>
   mutate(grand_mean = as_tibble(emmeans(emmobj, ~1))) |>
   select(c(class, grand_mean)) |>
   unnest(grand_mean) |>
+  select(-c(df, `1`)) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  rename(any_of(standard_model_col_names)) |>
   tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
 

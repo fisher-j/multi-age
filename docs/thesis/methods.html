@@ -97,35 +97,6 @@ div.csl-indent {
   });
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -249,7 +220,7 @@ window.Quarto = {
 
 <section id="site-description" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="site-description"><span class="header-section-number">2.1</span> Site description</h2>
-<p>Situated within the unceded ancestral territory of the Northern Pomo, near the coast of Northern California, the 20,000-ha Jackson Demonstration State Forest (JDSF) was established in 1947 after being cut over multiple times starting in 1862. The mission of the JDSF is to remain in timber production for research and demonstration purposes. The predominant cover type is redwood, tanoak, and Douglas-fir forest at elevations ranging from 20 m near the coast to 700 m inland. The climate is Mediterranean with cool, wet winters and an average annual precipitation of about 1150 mm. The sites that compose our experiment were all redwood dominated with significant components of tanoak and Douglas-fir and were well stocked with trees 80 to 100 years old. All of our study sites are between 13 and 16 km from the Pacific Ocean at elevations between 130 and 300 m, on well-drained, sandstone-derived soils. The sites are located on various aspects on mid to upper-slope positions (<a href="#fig-site-map" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-site-map</span></a>), and the site quality is classified as Site Class II <span class="citation" data-cites="lindquistEmpiricalYieldTables1963 webbWhiskeySpringsLongterm2012">(<a href="#ref-lindquistEmpiricalYieldTables1963" role="doc-biblioref">Lindquist &amp; Palley, 1963</a>; <a href="#ref-webbWhiskeySpringsLongterm2012" role="doc-biblioref">Webb et al., 2012</a>)</span>.</p>
+<p>Situated within the unceded ancestral territory of the Northern Pomo, near the coast of Northern California, the 20,000-ha Jackson Demonstration State Forest (JDSF) was established in 1947 after being cut over multiple times starting in 1862. The mission of the JDSF is to remain in timber production for research and demonstration purposes. The predominant cover type is redwood, tanoak, and Douglas-fir forest at elevations ranging from 20 m near the coast to 700 m inland. The climate is Mediterranean with cool, wet winters and an average annual precipitation of about 1150 mm. The sites that compose our experiment were all redwood dominated with significant components of tanoak and Douglas-fir and were well stocked with trees 80 to 100 years old. All of our study sites are between 13 and 16 km from the Pacific Ocean at elevations between 130 and 300 m, on well-drained, sandstone-derived soils. The sites are located on various aspects on mid to upper-slope positions (<a href="#fig-site-map" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>), and the site quality is classified as Site Class II <span class="citation" data-cites="lindquistEmpiricalYieldTables1963 webbWhiskeySpringsLongterm2012">(<a href="#ref-lindquistEmpiricalYieldTables1963" role="doc-biblioref">Lindquist &amp; Palley, 1963</a>; <a href="#ref-webbWhiskeySpringsLongterm2012" role="doc-biblioref">Webb et al., 2012</a>)</span>.</p>
 <div id="fig-site-map" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-site-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -265,7 +236,7 @@ Figure&nbsp;2.1: The site locations and topography for our study plots. The red 
 <h2 data-number="2.2" class="anchored" data-anchor-id="study-design"><span class="header-section-number">2.2</span> Study design</h2>
 <p>In 2012, four treatments were replicated at four different sites. The treatments were: group selection (GS), high-density dispersed retention (HD), high-density aggregated retention (HA), and low-density dispersed retention (LD). The GS treatment is composed of a circular 1-ha opening in which all trees were removed, surrounded by a 50-meter buffer of light thinning in which less than 1/3 of the basal area was removed. The remaining treatments were applied over 2-hectare treatment units. The target post-harvest density was specified in terms of relative density using an assumed upper stand density index (SDI) limit for redwood of 2,470 stems ha<sup>-1</sup> <span class="citation" data-cites="reinekePerfectionStanddensityIndex1933">(<a href="#ref-reinekePerfectionStanddensityIndex1933" role="doc-biblioref">Reineke, 1933</a>)</span>. The target residual relative density for the HA and HD treatments was 21% (SDI = 520), and the for the LD treatment it was 13% (SDI = 320). These densities were chosen to balance the objectives of stand volume production and individual tree growth assuming a subsequent, similar harvest after 20 years <span class="citation" data-cites="berrillSimulatingMultiagedCoast2009">(<a href="#ref-berrillSimulatingMultiagedCoast2009" role="doc-biblioref">Berrill &amp; O’Hara, 2009</a>)</span>.</p>
 <p>After harvesting, a single 0.2-hectare square macro plot was established in the center of each treatment unit. Approximately 25 redwood and 25 tanoak sprout clumps that were well distributed across the plot, were selected for measurement. Additionally, for redwood, sprout clumps were selected evenly from those with, and without residual standing trees.</p>
-<p>Ten years after the initial harvest, regeneration plots and fuel transects were established within the macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-plot-layout</span></a>). Circular regeneration plots with a 4-meter radius were established 10 meters from each macro plot corner, towards the plot center. Terminating at the center of each of these regeneration plots, 10-meter fuel transects were established parallel to the macro plot edges. Live fuels were estimated in 1-meter radius “sampling cylinders” at the five-, and nine-meter locations along each transect.</p>
+<p>Ten years after the initial harvest, regeneration plots and fuel transects were established within the macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). Circular regeneration plots with a 4-meter radius were established 10 meters from each macro plot corner, towards the plot center. Terminating at the center of each of these regeneration plots, 10-meter fuel transects were established parallel to the macro plot edges. Live fuels were estimated in 1-meter radius “sampling cylinders” at the five-, and nine-meter locations along each transect.</p>
 <p>Following year 10 measurements, all plots received a PCT treatment where the objective was to release merchantable conifers such as redwood and Douglas-fir from competition. Competing trees and shrubs were cut, lopped, and scattered within the measurement plots and fuel transects were re-measured.</p>
 <div id="fig-plot-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -282,7 +253,7 @@ Figure&nbsp;2.2: A diagram of the fuel sampling design depicting a 0.2-hectare m
 <h2 data-number="2.3" class="anchored" data-anchor-id="data-collection"><span class="header-section-number">2.3</span> Data collection</h2>
 <section id="regeneration" class="level3" data-number="2.3.1">
 <h3 data-number="2.3.1" class="anchored" data-anchor-id="regeneration"><span class="header-section-number">2.3.1</span> Regeneration</h3>
-<p>Ten years after the initial harvest, four four-meter-radius regeneration plots were established within each macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-plot-layout</span></a>). All regenerating trees (sprouts and seedlings) within the plot were recorded. Regenerating trees less than 5 cm diameter at breast height (1.4 m) were tallied by 2.5 cm size classes and the actual DBH of all other regenerating trees were recorded. This allowed for an estimation of sprout and seedling density by species.</p>
+<p>Ten years after the initial harvest, four four-meter-radius regeneration plots were established within each macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). All regenerating trees (sprouts and seedlings) within the plot were recorded. Regenerating trees less than 5 cm diameter at breast height (1.4 m) were tallied by 2.5 cm size classes and the actual DBH of all other regenerating trees were recorded. This allowed for an estimation of sprout and seedling density by species.</p>
 </section>
 <section id="sprout-size" class="level3" data-number="2.3.2">
 <h3 data-number="2.3.2" class="anchored" data-anchor-id="sprout-size"><span class="header-section-number">2.3.2</span> Sprout size</h3>
@@ -301,29 +272,6 @@ Figure&nbsp;2.2: A diagram of the fuel sampling design depicting a 0.2-hectare m
 <h2 data-number="2.4" class="anchored" data-anchor-id="analysis"><span class="header-section-number">2.4</span> Analysis</h2>
 <p>An analysis was conducted in three stages, one for each of the three response categories: fuels, sprout size, and regeneration density. All analyses were conducted using R and attempts were made to document all data, decisions, and techniques within a Quarto notebook, which is published at <code>https://fisher-j.github.io/multi-age</code>. All response variables were analyzed using multi-level models to account for the inherent nesting structure of the data, including multiple measurements of sprouts over time, where applicable. Grouping levels were included in the models if their variance estimate was determined to be significant. If including a grouping level resulted in a meaningful change in estimates or confidence intervals, the grouping level was kept. Because the overall objective was to detect differences between treatments, treatment was used as the primary independent variable. Model development and selection were carried out using Akaike information criterion, Bayesian information criterion, and visualization of (probability integral) transformed residuals <span class="citation" data-cites="hartigDHARMaResidualDiagnostics2022">(<a href="#ref-hartigDHARMaResidualDiagnostics2022" role="doc-biblioref">Hartig, 2022</a>)</span>. Models were built using the R package GLMMtmb, which provides a consistent framework for exploring different response distributions and link functions as well as the ability to model variance as a function of predictors <span class="citation" data-cites="brooksGlmmTMBBalancesSpeed2017">(<a href="#ref-brooksGlmmTMBBalancesSpeed2017" role="doc-biblioref">Brooks et al., 2017</a>)</span>. The final model structures chosen for each response are given in the results section.</p>
 <p>Models were interpreted using estimated marginal means calculated with the R packages <code>marginaleffects</code> and <code>emmeans</code> <span class="citation" data-cites="lenthEmmeansEstimatedMarginal2021 arel-bundockHowInterpretStatistical2024">(<a href="#ref-arel-bundockHowInterpretStatistical2024" role="doc-biblioref">Arel-Bundock et al., 2024</a>; <a href="#ref-lenthEmmeansEstimatedMarginal2021" role="doc-biblioref">Lenth, 2021</a>)</span>. Predictions incorporating the effects of all model components were made on the response scale for a grid of predictors consisting of all unique combinations of factors in the data that were used in at least one component of a given model (we didn’t have numeric predictors) except in the case of tree heights where predictions were made for each observation in the data set. Standard errors for the predictions were calculated using the delta method. Predictions were averaged across non-focal predictors (especially “random” effects) to obtain the population estimates of marginal means. These means are expected to be applicable to other treatments when conducted across equal proportions of sites with conditions similar to those used in our study. Notably, our population estimates assume equal proportions of north and south facing aspects.</p>
-<div class="callout callout-style-default callout-caution callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Caution
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>TODO:<span class="citation" data-cites="heissMarginalConditionalEffects2022">Heiss (<a href="#ref-heissMarginalConditionalEffects2022" role="doc-biblioref">2022</a>)</span></p>
-<ul>
-<li>Try to use terminology for conditional and marginal predictions described in <span class="citation" data-cites="heissMarginalConditionalEffects2022">Heiss (<a href="#ref-heissMarginalConditionalEffects2022" role="doc-biblioref">2022</a>)</span></li>
-<li>I would like to write my models in formal notation similar to <span class="citation" data-cites="heissMarginalConditionalEffects2022">Heiss (<a href="#ref-heissMarginalConditionalEffects2022" role="doc-biblioref">2022</a>)</span>: <span class="math display">\[
-\begin{aligned}
-\text{lifeExp} &amp;\sim \mathcal{N}(\mu_{i_j}, \sigma_y) &amp; \text{Life expectancy within countries } j \\
-\mu_{i_j} &amp;= (\beta_0 + b_{0_j}) + \beta_1\, \text{gdpPercap}_{i_j} &amp; \text{Model of within-country variation} \\
-b_{0_j} &amp;\sim \mathcal{N}(0, \sigma_0) &amp; \text{Random country offsets from global average}
-\end{aligned}
-\]</span></li>
-</ul>
-</div>
-</div>
 <section id="regeneration-1" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="regeneration-1"><span class="header-section-number">2.4.1</span> Regeneration</h3>
 <p>Sprout count data from our 4-meter-radius regeneration plots were converted to basal area per acre per species. Tallies of species by size class for sprouts less than 5 cm dbh were converted to diameters using the class midpoint (1.27 or 3.81 cm) before calculating basal area per acre. Minor species (i.e., those other than redwood, tanoak, and Douglas-fir) were combined into an “other” category. Missing species on a plot were made explicit by assigning a value of 0 m<sup>2</sup> ha<sup>-1</sup> for that species and plot. In addition to basal area, Douglas-fir stem counts (stems ha<sup>-1</sup>) were modeled separately.</p>
@@ -364,9 +312,6 @@ Graham, B. D. (2009). <em>Structure of downed woody and vegetative detritus in o
 </div>
 <div id="ref-hartigDHARMaResidualDiagnostics2022" class="csl-entry" role="listitem">
 Hartig, F. (2022). <em><span>DHARMa</span>: <span>Residual</span> diagnostics for hierarchical (multi-level / mixed) regression models</em> [Manual]. <a href="https://CRAN.R-project.org/package=DHARMa">https://CRAN.R-project.org/package=DHARMa</a>
-</div>
-<div id="ref-heissMarginalConditionalEffects2022" class="csl-entry" role="listitem">
-Heiss, A. (2022, November 29). <em>Marginal and conditional effects for <span>GLMMs</span> with {marginaleffects}</em>. <a href="https://www.andrewheiss.com/blog/2022/11/29/conditional-marginal-marginaleffects/">https://www.andrewheiss.com/blog/2022/11/29/conditional-marginal-marginaleffects/</a>
 </div>
 <div id="ref-kittredgeComparisonForestFloors1940" class="csl-entry" role="listitem">
 Kittredge, J. (1940). A comparison of forest floors from plantations of the same age and environment. <em>Journal of Forestry</em>, <em>38</em>(9), 729–731. <a href="https://doi.org/10.1093/jof/38.9.729">https://doi.org/10.1093/jof/38.9.729</a>
