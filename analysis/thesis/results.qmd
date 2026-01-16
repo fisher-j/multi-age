@@ -1252,8 +1252,7 @@ maximum differences of around 1, 3, and 10 Mg ha^-1^ for ten, hundred, and thous
 respectively. 
 
 Vegetative fuel loading was greatest in the GS treatment, with an
-expected value of `r fuel_pre_means$veg$gs$estimate` Mg ha^-1^, which was about  
-`r fuel_pre_compare$veg[["gs - ha"]]$estimate` Mg ha^-1^ greater than in the HA
+expected value of `r fuel_pre_means$veg$gs$estimate` Mg ha^-1^, which was about `r fuel_pre_compare$veg[["gs - ha"]]$estimate` Mg ha^-1^ greater than in the HA
 treatment (p = `r fuel_pre_compare$veg[["gs - ha"]]$p.value`) and LD and HD
 treatments were intermediate. 
 (@fig-fuel-pre-pct).
@@ -1457,12 +1456,8 @@ Mg ha^-1^, but the HA treatment was lower than these at about
 `r fuel_post_means$onehr$ha$estimate` Mg ha^-1^ 
 (p <= `r fuel_post_compare$onehr[["ha - gs"]]$p.value`).
 
-The GS treatment had the greatest 10-hr fuel loading with 
-`r fuel_post_means$tenhr$gs$estimate` Mg ha^-1^, which was
-greater than the LD, HA, and HD treatments by  
-`r fuel_post_compare$tenhr[["gs - ld"]]$estimate`,
-`r fuel_post_compare$tenhr[["gs - ha"]]$estimate`, and
-`r fuel_post_compare$tenhr[["gs - hd"]]$estimate` Mg ha^-1^, respectively (
+The GS treatment had the greatest 10-hr fuel loading with `r fuel_post_means$tenhr$gs$estimate` Mg ha^-1^, which was
+greater than the LD, HA, and HD treatments by  `r fuel_post_compare$tenhr[["gs - ld"]]$estimate`, `r fuel_post_compare$tenhr[["gs - ha"]]$estimate`, and `r fuel_post_compare$tenhr[["gs - hd"]]$estimate` Mg ha^-1^, respectively (
 p = `r fuel_post_compare$tenhr[["gs - ld"]]$p.value`, 
 p  < 0.001, and
 p = `r fuel_post_compare$tenhr[["gs - hd"]]$p.value`).
@@ -1475,12 +1470,7 @@ treatment, with an average of about `r fuel_post_means$hundhr$gs$estimate` Mg ha
 which was about `r fuel_post_compare$hundhr[["gs - hd"]]$estimate` Mg ha^-1^ 
 greater than the HD treatment (p = `r fuel_post_compare$hundhr[["gs - hd"]]$p.value`).
 
-Thousand-hour fuels
-were greatest in the HD treatment, with an average of about `r
-fuel_post_means$thoushr$hd$estimate` Mg ha^-1^, which was about
-`r abs(fuel_post_compare$thoushr[["ld - hd"]]$estimate)` Mg ha^-1^ greater than the
-LD and HA treatments (p <= `r fuel_post_compare$thoushr[["ha - hd"]]$p.value`).
-The GS treatment was intermediate.
+Thousand-hour fuels were greatest in the HD treatment, with an average of about `r fuel_post_means$thoushr$hd$estimate` Mg ha^-1^, which was about `r abs(fuel_post_compare$thoushr[["ld - hd"]]$estimate)` Mg ha^-1^ greater than the LD and HA treatments (p <= `r fuel_post_compare$thoushr[["ha - hd"]]$p.value`). The GS treatment was intermediate.
 
 Fuel loading for live vegetation was similar across treatments at around 
 `r round(mean(map_dbl(fuel_post_means$onehr, ~pluck(.x, "estimate"))), 1)`

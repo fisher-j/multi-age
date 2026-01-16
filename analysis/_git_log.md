@@ -1,4 +1,23 @@
 
+## 2026-01-16 
+ - finished model notation, finished pascal discussion edits, incorporated old JK into edits
+
+## 2025-12-21 
+ - writing math models
+
+## 2025-11-07 
+ - Added a conclusion.
+ - second draft revisions all but conclusion
+
+## 2025-10-31 
+ - Nearly finished with discussion edits -- added un-used calculation of veg diff vs fine fuel diff
+
+## 2025-10-18 
+ - Begining discussion edits
+
+## 2025-10-03 
+ - real first draft
+
 ## 2025-07-18 
  - editing fuels discussion, minor fixes to fuels results
 
