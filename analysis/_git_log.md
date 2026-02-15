@@ -1,5 +1,10 @@
 
+## 2026-02-15 
+ - Moved model descriptions from results to methods
+ - Continuing work on JK revisions
+
 ## 2026-01-16 
+ - Re-render, minor copy edit
  - finished model notation, finished pascal discussion edits, incorporated old JK into edits
 
 ## 2025-12-21 

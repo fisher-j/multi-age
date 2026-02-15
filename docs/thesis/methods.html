@@ -97,6 +97,35 @@ div.csl-indent {
   });
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -184,14 +213,26 @@ div.csl-indent {
   <li><a href="#data-collection" id="toc-data-collection" class="nav-link" data-scroll-target="#data-collection"><span class="header-section-number">2.3</span> Data collection</a>
   <ul>
   <li><a href="#regeneration" id="toc-regeneration" class="nav-link" data-scroll-target="#regeneration"><span class="header-section-number">2.3.1</span> Regeneration</a></li>
-  <li><a href="#sprout-size" id="toc-sprout-size" class="nav-link" data-scroll-target="#sprout-size"><span class="header-section-number">2.3.2</span> Sprout size</a></li>
+  <li><a href="#sprout-heights" id="toc-sprout-heights" class="nav-link" data-scroll-target="#sprout-heights"><span class="header-section-number">2.3.2</span> Sprout heights</a></li>
   <li><a href="#fuels" id="toc-fuels" class="nav-link" data-scroll-target="#fuels"><span class="header-section-number">2.3.3</span> Fuels</a></li>
   </ul></li>
   <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis"><span class="header-section-number">2.4</span> Analysis</a>
   <ul>
-  <li><a href="#regeneration-1" id="toc-regeneration-1" class="nav-link" data-scroll-target="#regeneration-1"><span class="header-section-number">2.4.1</span> Regeneration</a></li>
-  <li><a href="#sprout-heights" id="toc-sprout-heights" class="nav-link" data-scroll-target="#sprout-heights"><span class="header-section-number">2.4.2</span> Sprout heights</a></li>
-  <li><a href="#fuels-1" id="toc-fuels-1" class="nav-link" data-scroll-target="#fuels-1"><span class="header-section-number">2.4.3</span> Fuels</a></li>
+  <li><a href="#regeneration-1" id="toc-regeneration-1" class="nav-link" data-scroll-target="#regeneration-1"><span class="header-section-number">2.4.1</span> Regeneration</a>
+  <ul class="collapse">
+  <li><a href="#basal-area" id="toc-basal-area" class="nav-link" data-scroll-target="#basal-area"><span class="header-section-number">2.4.1.1</span> Basal area</a></li>
+  <li><a href="#douglas-fir-seedling-counts" id="toc-douglas-fir-seedling-counts" class="nav-link" data-scroll-target="#douglas-fir-seedling-counts"><span class="header-section-number">2.4.1.2</span> Douglas-fir seedling counts</a></li>
+  </ul></li>
+  <li><a href="#sprout-heights-1" id="toc-sprout-heights-1" class="nav-link" data-scroll-target="#sprout-heights-1"><span class="header-section-number">2.4.2</span> Sprout heights</a>
+  <ul class="collapse">
+  <li><a href="#height-increment" id="toc-height-increment" class="nav-link" data-scroll-target="#height-increment"><span class="header-section-number">2.4.2.1</span> Height increment</a></li>
+  <li><a href="#height-at-year-10" id="toc-height-at-year-10" class="nav-link" data-scroll-target="#height-at-year-10"><span class="header-section-number">2.4.2.2</span> Height at year 10</a></li>
+  </ul></li>
+  <li><a href="#fuels-1" id="toc-fuels-1" class="nav-link" data-scroll-target="#fuels-1"><span class="header-section-number">2.4.3</span> Fuels</a>
+  <ul class="collapse">
+  <li><a href="#pre-pct" id="toc-pre-pct" class="nav-link" data-scroll-target="#pre-pct"><span class="header-section-number">2.4.3.1</span> Pre-pct</a></li>
+  <li><a href="#post-pct" id="toc-post-pct" class="nav-link" data-scroll-target="#post-pct"><span class="header-section-number">2.4.3.2</span> Post-pct</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -220,14 +261,14 @@ div.csl-indent {
 
 <section id="site-description" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="site-description"><span class="header-section-number">2.1</span> Site description</h2>
-<p>Situated within the unceded ancestral territory of the Northern Pomo, near the coast of Northern California, the 20,000-ha Jackson Demonstration State Forest (JDSF) was established in 1947 after being cut over multiple times starting in 1862. The mission of the JDSF is to remain in timber production for research and demonstration purposes. The predominant cover type is redwood, tanoak, and Douglas-fir forest at elevations ranging from 20 m near the coast to 700 m inland. The climate is Mediterranean with cool, wet winters and an average annual precipitation of about 1150 mm. The sites that compose our experiment were all redwood dominated with significant components of tanoak and Douglas-fir and were well stocked with trees 80 to 100 years old. All of our study sites are between 13 and 16 km from the Pacific Ocean at elevations between 130 and 300 m, on well-drained, sandstone-derived soils. The sites are located on various aspects on mid to upper-slope positions (<a href="#fig-site-map" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>), and the site quality is classified as Site Class II <span class="citation" data-cites="lindquistEmpiricalYieldTables1963 webbWhiskeySpringsLongterm2012">(<a href="#ref-lindquistEmpiricalYieldTables1963" role="doc-biblioref">Lindquist &amp; Palley, 1963</a>; <a href="#ref-webbWhiskeySpringsLongterm2012" role="doc-biblioref">Webb et al., 2012</a>)</span>.</p>
+<p>Situated within the unceded ancestral territory of the Northern Pomo, near the coast of northern California, the 20,000-ha Jackson Demonstration State Forest (JDSF) was established in 1947 after being cut over multiple times starting in 1862. The mission of the JDSF is to remain in timber production for research and demonstration purposes. The predominant cover type is redwood, tanoak, and Douglas-fir forest at elevations ranging from 20 m near the coast to 700 m inland. The climate is Mediterranean with cool, wet winters and an average annual precipitation of about 1150 mm. The sites that compose my experiment were all redwood dominated with significant components of tanoak and Douglas-fir and were well stocked with trees 80 to 100 years old. All of my study sites are between 13 and 16 km from the Pacific Ocean at elevations between 130 and 300 m, on well-drained, sandstone-derived soils. The sites are located on various aspects on mid to upper-slope positions (<a href="#fig-site-map" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>), and the site quality is classified as Site Class II <span class="citation" data-cites="lindquistEmpiricalYieldTables1963 webbWhiskeySpringsLongterm2012">(<a href="#ref-lindquistEmpiricalYieldTables1963" role="doc-biblioref">Lindquist &amp; Palley, 1963</a>; <a href="#ref-webbWhiskeySpringsLongterm2012" role="doc-biblioref">Webb et al., 2012</a>)</span>.</p>
 <div id="fig-site-map" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-site-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../figures/site_map_2.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-site-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.1: The site locations and topography for our study plots. The red box delineates the area of the topographical map seen in the background. JDSF = Jackson Demonstration State Forest.
+Figure&nbsp;2.1: The site locations and topography for my study plots. The red box delineates the area of the topographical map seen in the background. JDSF = Jackson Demonstration State Forest.
 </figcaption>
 </figure>
 </div>
@@ -253,36 +294,226 @@ Figure&nbsp;2.2: A diagram of the fuel sampling design depicting a 0.2-hectare m
 <h2 data-number="2.3" class="anchored" data-anchor-id="data-collection"><span class="header-section-number">2.3</span> Data collection</h2>
 <section id="regeneration" class="level3" data-number="2.3.1">
 <h3 data-number="2.3.1" class="anchored" data-anchor-id="regeneration"><span class="header-section-number">2.3.1</span> Regeneration</h3>
-<p>Ten years after the initial harvest, four four-meter-radius regeneration plots were established within each macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). All regenerating trees (sprouts and seedlings) within the plot were recorded. Regenerating trees less than 5 cm diameter at breast height (1.4 m) were tallied by 2.5 cm size classes and the actual DBH of all other regenerating trees were recorded. This allowed for an estimation of sprout and seedling density by species.</p>
+<p>Ten years after the initial harvest, four regeneration plots (4-m radius) were established within each macro plot (<a href="#fig-plot-layout" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). All regenerating trees (sprouts and seedlings) within the plot were recorded. Regenerating trees less than 5 cm diameter at breast height (1.4 m) were tallied by 2.5 cm size classes and the actual DBH of all other regenerating trees were recorded. This allowed for an estimation of sprout and seedling density by species.</p>
 </section>
-<section id="sprout-size" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2" class="anchored" data-anchor-id="sprout-size"><span class="header-section-number">2.3.2</span> Sprout size</h3>
+<section id="sprout-heights" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="sprout-heights"><span class="header-section-number">2.3.2</span> Sprout heights</h3>
 <p>Sprout height data were collected during the winter at years 1, 5, and 10 following the initial harvest. Sprout heights at each period were based on the tallest individual within the selected redwood and tanoak clumps at the time of measurement with a height pole placed at the same location on the ground at each measurement period. The observer eliminated parallax by observing from a location up-slope, level with the height of the sprout. Sprout DBH for only redwood was collected in year 10.</p>
 </section>
 <section id="fuels" class="level3" data-number="2.3.3">
 <h3 data-number="2.3.3" class="anchored" data-anchor-id="fuels"><span class="header-section-number">2.3.3</span> Fuels</h3>
-<p>Also at 10 years after the initial harvest, fuel transects were established and sampled according to the FIREMON protocol <span class="citation" data-cites="lutesFIREMONFireEffects2006">(<a href="#ref-lutesFIREMONFireEffects2006" role="doc-biblioref">Lutes et al., 2006</a>)</span>, with some adaptations that were unique to this project. This protocol is very similar to that of <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. One-, 10-, 100-hr, and 1000-hr (or coarse woody) fuels were those less than 0.635 cm, 0.635 to 2.54 cm, 2.54 to 7.62 cm and those 7.62 cm and greater, respectively and included only dead and downed woody fuels (not those attached to live vegetation, or standing dead). Transect lengths for 1-, 10-, and 100-hr fuels were two, two, and four meters, respectively during pre-PCT measurements. During post-PCT measurement, the length of the 1-hr fuel transect was reduced to one meter because of the dramatic increase in these fuels. Coarse woody fuels were measured along the entire 10-meter transect.</p>
+<p>Also at 10 years after the initial harvest, fuel transects were established and sampled according to the FIREMON protocol <span class="citation" data-cites="lutesFIREMONFireEffects2006">(<a href="#ref-lutesFIREMONFireEffects2006" role="doc-biblioref">Lutes et al., 2006</a>)</span>, with some adaptations that were unique to this project. This protocol is very similar to that of <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. One-, 10-, 100-hr, and 1000-hr (or coarse woody) fuels were those less than 0.635 cm, 0.635 to 2.54 cm, 2.54 to 7.62 cm and those 7.62 cm and greater, respectively and included only dead and downed woody fuels (not those attached to live vegetation, or standing dead). For pre-PCT fuel measurements, transect lengths were two, two, and four meters for 1-, 10-, and 100-hr fuels, respectively. For post-PCT measurements, the length of the 1-hr fuel transect was reduced to one meter because of the dramatic increase in these fuels. Coarse woody fuels were measured along the entire 10-meter transect.</p>
 <p>Redwoods, like other species in Cupressaceae, shed branchlets instead of individual leaves. This leads to difficulty in distinguishing “litter” from 1-hr fuels. We chose to use an estimated cutoff of about 2 mm for redwood branchlets, where larger pieces were considered 1-hr fuel and smaller pieces were considered part of the litter layer. We did not distinguish between “leafy” and “awl like” leaf shapes <span class="citation" data-cites="grahamStructureDownedWoody2009">(<a href="#ref-grahamStructureDownedWoody2009" role="doc-biblioref">Graham, 2009</a>)</span>.</p>
-<p>Live vegetation percent cover and average height were estimated in 1-meter-radius “sampling cylinders” as described in the FIREMON protocol <span class="citation" data-cites="lutesFIREMONFireEffects2006">(<a href="#ref-lutesFIREMONFireEffects2006" role="doc-biblioref">Lutes et al., 2006</a>)</span>. A notable exception is that the sampling cylinders were allowed to extend to the (average) top height of the live fuels that were continuous within less than a meter of the ground. This resulted in average live vegetation heights that could sometimes reach near the height of the sprouts and average heights above two meters were estimated with the help of a clinometer. This decision makes explicit instances when when fuels are vertically continuous with the ground. Live vegetation percent cover was estimated for four vegetation classes: live woody fuels, dead woody fuels, live herbaceous fuels, and dead herbaceous fuels. Dead “live” fuels includes dead fuels attached to live plants, or those still rooted in the ground. Particles in these conditions are not counted as downed woody fuels when tallying fine and coarse woody fuels along fuel transects. These fuels are, though, expected to behave differently during combustion than live “live” fuels. Average vegetation height was recorded for two classes: the average height of all woody fuels and the average height of all herbaceous fuels. These estimates pertain to the particles present in the sampling cylinder, and not the area-average, thus a cylinder with only one percent cover, could still have an average height of two meters, i.e., the empty space within the cylinder does not affect the average height. The average height and percent-cover estimates are visual estimations and efforts were made to compare these frequently to ensure that estimates among observers were consistent. Percent cover estimates were discrete, rounded to the nearest class in the set: 0.5, 3, 10, and all subsequent 10 percent increments up to 100 percent.</p>
+<p>Live vegetation percent cover and average height were estimated in 1-meter-radius “sampling cylinders” as described in the FIREMON protocol <span class="citation" data-cites="lutesFIREMONFireEffects2006">(<a href="#ref-lutesFIREMONFireEffects2006" role="doc-biblioref">Lutes et al., 2006</a>)</span>. A notable exception is that the sampling cylinders were allowed to extend to the (average) top height of the live fuels that were continuous within less than a meter of the ground. This resulted in average live vegetation heights that could sometimes reach near the height of the sprouts. Average live fuel heights that were above two meters were estimated with the help of a clinometer. Live vegetation percent cover was estimated for four vegetation classes: live woody fuels, dead woody fuels, live herbaceous fuels, and dead herbaceous fuels. Dead “live” fuels included dead fuels attached to live plants, or those still rooted in the ground. Particles in these conditions are not counted as downed woody fuels when tallying fine and coarse woody fuels along fuel transects.</p>
+<p>Average vegetation height was recorded for two classes: the average height of all woody fuels and the average height of all herbaceous fuels. These estimates pertain to the particles present in the sampling cylinder, and not the area-average, thus a cylinder with only one percent cover, could still have an average height of two meters, i.e., the empty space within the cylinder does not affect the average height. The average height and percent-cover estimates are visual estimations and efforts were made to compare these frequently to ensure that estimates among observers were consistent. Percent cover estimates were discrete, rounded to the nearest class in the set: 0.5, 3, 10, and all subsequent 10 percent increments up to 100 percent.</p>
 <p>The depth of duff and litter was measured at one representative location within each of the two, 1-meter-radius sampling cylinders along each transect. When duff and litter conditions varied greatly in a single sampling cylinder, a location was chosen to represent the average of conditions within the cylinder.</p>
 <p>Fuel bed depth was estimated as the average height of the fine and coarse woody debris components within each sampling cylinder. Theoretically, this included litter, but not duff. This estimate was not described in the FIREMON protocol, but it was designed to be made in a similar manner as described for vegetation heights.</p>
 </section>
 </section>
 <section id="analysis" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="analysis"><span class="header-section-number">2.4</span> Analysis</h2>
-<p>An analysis was conducted in three stages, one for each of the three response categories: fuels, sprout size, and regeneration density. All analyses were conducted using R and attempts were made to document all data, decisions, and techniques within a Quarto notebook, which is published at <code>https://fisher-j.github.io/multi-age</code>. All response variables were analyzed using multi-level models to account for the inherent nesting structure of the data, including multiple measurements of sprouts over time, where applicable. Grouping levels were included in the models if their variance estimate was determined to be significant. If including a grouping level resulted in a meaningful change in estimates or confidence intervals, the grouping level was kept. Because the overall objective was to detect differences between treatments, treatment was used as the primary independent variable. Model development and selection were carried out using Akaike information criterion, Bayesian information criterion, and visualization of (probability integral) transformed residuals <span class="citation" data-cites="hartigDHARMaResidualDiagnostics2022">(<a href="#ref-hartigDHARMaResidualDiagnostics2022" role="doc-biblioref">Hartig, 2022</a>)</span>. Models were built using the R package GLMMtmb, which provides a consistent framework for exploring different response distributions and link functions as well as the ability to model variance as a function of predictors <span class="citation" data-cites="brooksGlmmTMBBalancesSpeed2017">(<a href="#ref-brooksGlmmTMBBalancesSpeed2017" role="doc-biblioref">Brooks et al., 2017</a>)</span>. The final model structures chosen for each response are given in the results section.</p>
-<p>Models were interpreted using estimated marginal means calculated with the R packages <code>marginaleffects</code> and <code>emmeans</code> <span class="citation" data-cites="lenthEmmeansEstimatedMarginal2021 arel-bundockHowInterpretStatistical2024">(<a href="#ref-arel-bundockHowInterpretStatistical2024" role="doc-biblioref">Arel-Bundock et al., 2024</a>; <a href="#ref-lenthEmmeansEstimatedMarginal2021" role="doc-biblioref">Lenth, 2021</a>)</span>. Predictions incorporating the effects of all model components were made on the response scale for a grid of predictors consisting of all unique combinations of factors in the data that were used in at least one component of a given model (we didn’t have numeric predictors) except in the case of tree heights where predictions were made for each observation in the data set. Standard errors for the predictions were calculated using the delta method. Predictions were averaged across non-focal predictors (especially “random” effects) to obtain the population estimates of marginal means. These means are expected to be applicable to other treatments when conducted across equal proportions of sites with conditions similar to those used in our study. Notably, our population estimates assume equal proportions of north and south facing aspects.</p>
+<p>An analysis was conducted in three stages, one for each of the three response categories: fuels, sprout size, and regeneration density. All analyses were conducted using R and attempts were made to document all data, decisions, and techniques within a Quarto notebook, which is published at <code>https://fisher-j.github.io/multi-age</code>. All response variables were analyzed using multi-level models to account for the inherent nesting structure of the data, including multiple measurements of sprouts over time, where applicable. Grouping levels were included in the models if their variance estimate was determined to be significant. If including a grouping level resulted in a meaningful change in estimates or confidence intervals, the grouping level was kept. Because the overall objective was to detect differences between treatments, treatment was used as the primary independent variable. Model development and selection were carried out using Akaike information criterion, and visualization of (probability integral) transformed residuals <span class="citation" data-cites="hartigDHARMaResidualDiagnostics2022">(<a href="#ref-hartigDHARMaResidualDiagnostics2022" role="doc-biblioref">Hartig, 2022</a>)</span>. Models were built using the R package GLMMtmb, which provides a consistent framework for exploring different response distributions and link functions as well as the ability to model variance as a function of predictors <span class="citation" data-cites="brooksGlmmTMBBalancesSpeed2017">(<a href="#ref-brooksGlmmTMBBalancesSpeed2017" role="doc-biblioref">Brooks et al., 2017</a>)</span>.</p>
+<p>Models were interpreted using estimated marginal means calculated with the R packages <code>marginaleffects</code> and <code>emmeans</code> <span class="citation" data-cites="lenthEmmeansEstimatedMarginal2021 arel-bundockHowInterpretStatistical2024">(<a href="#ref-arel-bundockHowInterpretStatistical2024" role="doc-biblioref">Arel-Bundock et al., 2024</a>; <a href="#ref-lenthEmmeansEstimatedMarginal2021" role="doc-biblioref">Lenth, 2021</a>)</span>. Predictions incorporating the effects of all model components were made on the response scale for a grid of predictors consisting of all unique combinations of factors in the data that were used in at least one component of a given model (we didn’t have numeric predictors) except in the case of tree heights where predictions were made for each observation in the data set. Standard errors for the predictions were calculated using the delta method. Predictions were averaged across non-focal predictors (especially “random” effects) to obtain the population estimates of marginal means. These means are expected to be applicable to other treatments when conducted across equal proportions of sites with conditions similar to those used in my study. Notably, my population estimates assume equal proportions of north and south facing aspects.</p>
+<p>The formulas below use <span class="math inline">\(\beta\)</span> to represent fixed effects and <span class="math inline">\(\alpha\)</span> to represent random effects. Subscripts indicate the variable associated with each effect. Superscripted Greek letters indicate the model component where fixed or random effects are present in more than one component (e.g., <span class="math inline">\(\mu\)</span> for the conditional model, <span class="math inline">\(\pi\)</span> for the hurdle model, and <span class="math inline">\(\phi\)</span> for the dispersion model). A “hurdle gamma” distribution is used for models of basal area and fuels and is defined as</p>
+<p><span class="math display">\[
+\text{hurdle\_gamma}(y_i \mid \pi_i, \mu_i, \phi_i) =
+\begin{cases}
+1-\pi_i &amp; \text{if } y_i = 0 \\
+\pi_i \cdot \text{Gamma}(y_i \mid \mu_i, \phi_i) &amp; \text{if } y_i &gt; 0
+\end{cases}
+\]</span> .</p>
 <section id="regeneration-1" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="regeneration-1"><span class="header-section-number">2.4.1</span> Regeneration</h3>
-<p>Sprout count data from our 4-meter-radius regeneration plots were converted to basal area per acre per species. Tallies of species by size class for sprouts less than 5 cm dbh were converted to diameters using the class midpoint (1.27 or 3.81 cm) before calculating basal area per acre. Minor species (i.e., those other than redwood, tanoak, and Douglas-fir) were combined into an “other” category. Missing species on a plot were made explicit by assigning a value of 0 m<sup>2</sup> ha<sup>-1</sup> for that species and plot. In addition to basal area, Douglas-fir stem counts (stems ha<sup>-1</sup>) were modeled separately.</p>
+<section id="basal-area" class="level4" data-number="2.4.1.1">
+<h4 data-number="2.4.1.1" class="anchored" data-anchor-id="basal-area"><span class="header-section-number">2.4.1.1</span> Basal area</h4>
+<p>Sprout count data from my 4-meter-radius regeneration plots were converted to basal area per acre per species. Tallies of species by size class for sprouts less than 5 cm dbh were converted to diameters using the class midpoint (1.27 or 3.81 cm) before calculating basal area per acre. Minor species (i.e., those other than redwood, tanoak, and Douglas-fir) were combined into an “other” category. Missing species on a plot were made explicit by assigning a value of 0 m<sup>2</sup> ha<sup>-1</sup> for that species and plot.</p>
+<p>Composition of regeneration in terms of basal area per acre represented by each species in a 4-meter radius vegetation plot was modeled as a gamma distribution with a log link with fixed effects for treatment and species, and random intercepts for site x species interaction. Dispersion was modeled separately as a function of species, using a log link and the rate of zeros was modeled using the logit link, for each species as well:</p>
+<p><span class="math display">\[
+Y_i \sim \text{hurdle\_gamma}(\pi_i, \mu_i, \phi_i)
+\]</span></p>
+<p><span class="math display">\[
+\text{logit}(\pi_i) = \beta^{\pi}_0 + \beta^{\pi}_{\text{spp}} \cdot \text{Species}_i
+\]</span></p>
+<p><span class="math display">\[
+\log(\mu_i) = \beta^{\mu}_0 + \beta^{\mu}_{\text{trt}} \cdot \text{Trt} + \alpha_{j[i]}
+\]</span></p>
+<p><span class="math display">\[
+\log(\phi_i) = \beta^{\phi}_0 + \beta^{\phi}_{\text{spp}} \cdot \text{Species}_i
+\]</span></p>
+<p><span class="math display">\[
+\alpha_j \sim N(0, \sigma^2_j)
+\]</span></p>
+<ul>
+<li><span class="math inline">\(Y_i\)</span>: Total basal area per hectare for each species in a 4-meter radius regeneration plot.</li>
+<li><span class="math inline">\(\pi_i\)</span>: Probability that <span class="math inline">\(Y_i &gt; 0\)</span></li>
+<li><span class="math inline">\(\mu_i\)</span>: Mean of positive values.</li>
+<li><span class="math inline">\(\phi_i\)</span>: Dispersion parameter for Gamma distribution</li>
+<li><span class="math inline">\(\alpha_j\)</span>: Group effect pertaining to a site:species interaction</li>
+</ul>
 </section>
-<section id="sprout-heights" class="level3" data-number="2.4.2">
-<h3 data-number="2.4.2" class="anchored" data-anchor-id="sprout-heights"><span class="header-section-number">2.4.2</span> Sprout heights</h3>
-<p>Two metrics were analyzed from the sprout height data: height increment (m year<sup>-1</sup>), and total height (m) at year 10. For height increment, there were two measurements for each tree: increment for years 1 to 5 and increment for years 5 to 10. Thus, analysis of these data included <code>tree</code> as a candidate random effect. While not making a difference for analysis results, it is worth noting that these data were structured differently from the other datasets in that <code>plot</code> was made a globally unique identifier, thus making explicit the nesting of plots within sites or treatments and eliminating the need to specify this nesting structure in the R code model formulas.</p>
+<section id="douglas-fir-seedling-counts" class="level4" data-number="2.4.1.2">
+<h4 data-number="2.4.1.2" class="anchored" data-anchor-id="douglas-fir-seedling-counts"><span class="header-section-number">2.4.1.2</span> Douglas-fir seedling counts</h4>
+<p>Counts of regenerating Douglas-fir seedlings per vegetation plot were analyzed for differences between harvest treatments using a negative binomial response with a log link, fixed effects for treatment, random effects for sites and macro plots within sites.</p>
+<p><span class="math display">\[
+Y_i \sim \text{NB1}(\mu_i, \phi); \quad \text{where} \quad Var(Y_i) = \mu_i +
+\phi \mu_i
+\]</span></p>
+<p><span class="math display">\[
+\log(\mu_i) = \beta_0 + \beta_{\text{trt}} \cdot \text{Trt}_i +
+\alpha_{j[i]} + \alpha_{k[i]}
+\]</span></p>
+<p><span class="math display">\[
+\alpha_{j} \sim \operatorname{N}(0, \sigma^2_{j}), \quad \alpha_{k} \sim \operatorname{N}(0, \sigma^2_{k})
+\]</span></p>
+<ul>
+<li><span class="math inline">\(Y_i\)</span>: Count of Douglas-fir seedlings in a 4-meter radius vegetation plot.</li>
+<li><span class="math inline">\(\mu_i\)</span>: The expected count for vegetation plot <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(\beta_{\text{trt}}\)</span>: Fixed effect for harvest treatment.</li>
+<li><span class="math inline">\(\alpha_j\)</span>: Random intercept for site.</li>
+<li><span class="math inline">\(\alpha_k\)</span>: Random intercept for plots within sites.</li>
+</ul>
+</section>
+</section>
+<section id="sprout-heights-1" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="sprout-heights-1"><span class="header-section-number">2.4.2</span> Sprout heights</h3>
+<p>Two metrics were analyzed from the sprout height data: height increment (m year<sup>-1</sup>), and total height (m) at year 10.</p>
+<p>In both models, a random slope for species is included for each macro plot. This specifies a general (unstructured) covariance matrix that allows the random effect variance to differ by species (heteroscedasticity) and allows for non-zero correlations between species-level effects within the same plot (e.g., assessing if plots that are favorable for one species are also favorable for others). This variance-covariance matrix takes the following form, where <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span>, and <span class="math inline">\(C\)</span> represent different species:</p>
+<p><span class="math display">\[
+\boldsymbol{\Sigma}_{\text{macro}} =
+\begin{pmatrix}
+\sigma_A^2 &amp; \rho_{AB}\sigma_A\sigma_B &amp; \rho_{AC}\sigma_A\sigma_C \\
+\rho_{AB}\sigma_A\sigma_B &amp; \sigma_B^2 &amp; \rho_{BC}\sigma_B\sigma_C \\
+\rho_{AC}\sigma_A\sigma_C &amp; \rho_{BC}\sigma_B\sigma_C &amp; \sigma_C^2
+\end{pmatrix}
+\]</span> .</p>
+<section id="height-increment" class="level4" data-number="2.4.2.1">
+<h4 data-number="2.4.2.1" class="anchored" data-anchor-id="height-increment"><span class="header-section-number">2.4.2.1</span> Height increment</h4>
+<p>For height increment, there were two measurements for each tree: increment for years 1 to 5 and increment for years 5 to 10. Thus, analysis of these data included <code>tree</code> as a candidate random effect. While not making a difference for analysis results, it is worth noting that these data were structured differently from the other datasets in that <code>plot</code> was made a globally unique identifier, thus making explicit the nesting of plots within sites or treatments and eliminating the need to specify this nesting structure in the R code model formulas.</p>
+<p>The selected height increment model used a normal response distribution on the identity link. It included treatment, growth period, species, and the interaction of species and growth period as fixed effects. A random intercept was included for tree (multiple observations) and macro-plot, and another random effect allowed the response to vary by species differently for each macro plot. The dispersion parameter for the response was modeled (with a log link) as a function of treatment, growth period, species and all three-way interactions .</p>
+<p><span class="math display">\[
+Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
+\]</span></p>
+<p><span class="math display">\[
+\mu_i = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{year}}^{\mu}
+\cdot \text{Year}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i +
+\beta_{\text{spp:year}}^{\mu}(\text{Spp}_i \times \text{Year}_i) +
+\alpha_{\text{tree}[i]} + \alpha_{\text{macro}[i],\text{spp}[i]}
+\]</span></p>
+<p><span class="math display">\[
+\log(\sigma_i) = \beta^{\sigma}_0 + \beta^{\sigma}_{\text{trt}} \cdot \text{Trt}_i + \beta^{\sigma}_{\text{yr}}
+\cdot \text{Year}_i + \beta^{\sigma}_{\text{spp}} \cdot \text{Spp}_i + \dots + \beta^{\sigma}_{\text{3way}}
+(\text{Trt}_i \times \text{Year}_i \times \text{Spp}_i)
+\]</span></p>
+<p><span class="math display">\[
+\alpha_{\text{tree}} \sim N(0, \sigma^2_{\text{tree}})
+\]</span></p>
+<p><span class="math display">\[
+\alpha_{\text{macro}, \text{spp}} = \begin{pmatrix} \alpha_{\text{macro}_1, \text{spp}_1} \\
+\alpha_{\text{macro}_1, \text{spp}_2} \\
+\vdots \\ \alpha_{\text{macro}_j, \text{spp}_k} \end{pmatrix} \sim \operatorname{N}(\mathbf{0},
+\boldsymbol{\Sigma}_{\text{macro}})
+\]</span></p>
+<ul>
+<li><span class="math inline">\(Y_i\)</span>: Height increment (m yr<sup>-1</sup>) for sprout observation <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(\mu_i\)</span>: Mean height increment for observation <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(\sigma^2_i\)</span>: Variance of height increment for observation <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(\alpha^{\mu}_{\text{tree}}\)</span>: Random intercept for tree.</li>
+<li><span class="math inline">\(\alpha^{\mu}_{\text{macro}, \text{spp}}\)</span>: Random effect for species, co-varying within macro plot.</li>
+<li><span class="math inline">\(\boldsymbol{\Sigma}_{\text{macro}}\)</span>: Unstructured variance-covariance matrix for species within macro plot.</li>
+</ul>
+</section>
+<section id="height-at-year-10" class="level4" data-number="2.4.2.2">
+<h4 data-number="2.4.2.2" class="anchored" data-anchor-id="height-at-year-10"><span class="header-section-number">2.4.2.2</span> Height at year 10</h4>
+<p>Sprout heights at year 10 were modeled with a normal response and a log link. The best model included species and treatment, but no interactions in the fixed effects. This suggests that treatments do not affect species differentially in terms of the mean response (height at year 10). It also included a model for dispersion (log link) with predictors species, treatment, and their interaction .</p>
+<p><span class="math display">\[
+Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
+\]</span></p>
+<p><span class="math display">\[
+\log(\mu_i) = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i + \alpha_{\text{spp}[i], \text{macro}[i]}
+\]</span></p>
+<p><span class="math display">\[
+\log(\sigma_i) = \beta^{\sigma}_0 + \beta^{\sigma}_{\text{trt}} \cdot
+\text{Trt}_i + \beta^{\sigma}_{\text{spp}} \cdot \text{Spp}_i +
+\beta^{\sigma}_{\text{trt:spp}}(\text{Trt}_i \times \text{Spp}_i)
+\]</span></p>
+<p><span class="math display">\[
+\alpha_{\text{spp}, \text{macro}} = \begin{pmatrix} \alpha_{\text{spp}_1,
+\text{macro}_1} \\ \alpha_{\text{spp}_1, \text{macro}_2} \\
+\vdots \\ \alpha_{\text{spp}_j, \text{macro}_k} \end{pmatrix} \sim
+\operatorname{N}(\mathbf{0}, \boldsymbol{\Sigma}_{\text{spp}, \text{macro}})
+\]</span></p>
+<ul>
+<li><span class="math inline">\(Y_i\)</span>: Height at year 10 for tree <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(\mu_i\)</span>: Mean height at year 10 for tree <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(\sigma^2_i\)</span>: Variance of height at year 10 for tree <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(\alpha_{\text{macro}, \text{spp}}\)</span>: Random effect for species, co-varying within macro plot.</li>
+<li><span class="math inline">\(\boldsymbol{\Sigma}_{\text{macro}, \text{spp}}\)</span>: Unstructured variance-covariance matrix for species within macro plot.</li>
+</ul>
+</section>
 </section>
 <section id="fuels-1" class="level3" data-number="2.4.3">
 <h3 data-number="2.4.3" class="anchored" data-anchor-id="fuels-1"><span class="header-section-number">2.4.3</span> Fuels</h3>
 <p>Fuel load in Mg ha<sup>-1</sup> was estimated for 1-hr, 10-hr, 100-hr, combined duff and litter (“duff/litter”), 1,000-hr, and live vegetation fuels at the transect level. Any transect where a fuel type was not observed was assigned a value of zero for that class and transect. Fuel load for 1- through 1,000-hr fuels were calculated using the method in <span class="citation" data-cites="brownHandbookInventoryingDowned1974">Brown (<a href="#ref-brownHandbookInventoryingDowned1974" role="doc-biblioref">1974</a>)</span>. The required size-class specific parameters (specific gravity, particle inclination, and average diameter) were derived from a previous study where I used parameters averaged across all of the measured plots <span class="citation" data-cites="glebockiFuelLoadingMoisture2015">(<a href="#ref-glebockiFuelLoadingMoisture2015" role="doc-biblioref">Glebocki, 2015</a>)</span>. For 1,000-hr fuels, decay classes 1-3 were considered “sound” and decay classes 4 and 5 were considered “rotten” for the purpose of calculating load and these loads were combined. Duff and litter were measured at two locations along each transect and these were averaged at the transect level. We did not measure the bulk density of duff and litter fuels, but based on findings in other studies in the redwood region, we opted to combine these classes into a single fuel class, using an average bulk density found across those studies of 7.73 Mg ha<sup>-1</sup> <span class="citation" data-cites="finneyFuelLoadingBulk1993 stuartRedwoodFireEcology1985 kittredgeComparisonForestFloors1940">(<a href="#ref-finneyFuelLoadingBulk1993" role="doc-biblioref">Finney &amp; Martin, 1993</a>; <a href="#ref-kittredgeComparisonForestFloors1940" role="doc-biblioref">Kittredge, 1940</a>; <a href="#ref-stuartRedwoodFireEcology1985" role="doc-biblioref">Stuart, 1985</a>)</span>. Vegetation fuel load was calculated using bulk density constants of 8 Mg ha<sup>-1</sup> m<sup>-1</sup> for herbaceous fuels and 18 Mg ha<sup>-1</sup> m<sup>-1</sup> for woody components <span class="citation" data-cites="gangiFIREMONDatabaseUser2006">(<a href="#ref-gangiFIREMONDatabaseUser2006" role="doc-biblioref">Gangi, 2006</a>)</span>. Live and dead components were combined to calculate herbaceous and woody loading. Herbaceous and woody fuel loads were then combined and averaged at the transect level (two measurements per transect) to determine total vegetation loading.</p>
+<p>Gamma distributed, linear multi-level models, with a log link were used to model fuel load response (Mg ha<sup>-1</sup>) for all fuel classes. Random intercepts were specified for three levels of nesting, representing sites, macro plots, and transect corners. A hurdle component with logit link was used for predicting zeros in all models except for the duff &amp; litter model. Dispersion components were included where needed, based on AIC model selection. Models were fit separately for pre- and post-PCT fuel measurements. Duff and litter were not measured post-PCT, and vegetation difference was only modeled post-PCT.</p>
+<p><span class="math display">\[
+Y_i \sim \text{hurdle\_gamma}(\pi_i, \mu_i, \phi_i)
+\]</span></p>
+<p><span class="math display">\[
+\log(\mu_i) = \beta^{\mu}_0 + \beta^{\mu}_{\text{trt}} \cdot \text{Trt}_i +
+\alpha_{\text{site}[i]} + \alpha_{\text{macro}[i]} + \alpha_{\text{corner}[i]}
+\]</span></p>
+<p>Any model component not explicitly defined below was modeled with only an intercept:</p>
+<p><span class="math display">\[
+\text{logit}(\pi_i^\cdot) = \beta^{(\pi,\cdot)}_0
+\]</span></p>
+<p><span class="math display">\[
+\log(\phi_i^{\cdot}) = \beta^{(\phi,\cdot)}_0
+\]</span></p>
+<ul>
+<li><span class="math inline">\(Y_i\)</span>: Fuel load (Mg ha<sup>-1</sup>) for transect <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(\pi_i\)</span>: Probability that <span class="math inline">\(Y_i &gt; 0\)</span>, the hurdle component.</li>
+<li><span class="math inline">\(\mu_i\)</span>: Mean of positive values.</li>
+<li><span class="math inline">\(\phi_i\)</span>: Dispersion parameter for Gamma distribution.</li>
+<li><span class="math inline">\(\alpha_{\cdot}\)</span>: Random intercepts for site, macro plot, and corner.</li>
+<li><span class="math inline">\(\beta^{\cdot}_{\cdot}\)</span>: Fixed effects for intercepts and treatment levels for mean, hurdle, and dispersion components .</li>
+</ul>
+<section id="pre-pct" class="level4" data-number="2.4.3.1">
+<h4 data-number="2.4.3.1" class="anchored" data-anchor-id="pre-pct"><span class="header-section-number">2.4.3.1</span> Pre-pct</h4>
+<p>For the Duff &amp; Litter model, there was no hurdle component because there were no zeros in the data, and the dispersion parameter was modeled with only an intercept:</p>
+<p><span class="math display">\[
+\text{logit}(\pi_i^{\text{dufflitter}}) = \beta^{(\pi,\text{dufflitter})}_0
+\]</span></p>
+<p>For the 10-hr fuel model, the hurdle and the dispersion components were modeled as functions of treatment.</p>
+<p><span class="math display">\[
+\text{logit}(\pi_i^{\text{10hr}}) = \beta^{(\pi,\text{10hr})}_0 +
+\beta^{(\pi,\text{10hr})}_{\text{trt}} \cdot \text{Trt}_i
+\]</span></p>
+<p><span class="math display">\[
+\log(\phi_i^{\text{10hr}}) = \beta^{(\phi,\text{10hr})}_0 +
+\beta^{(\phi,\text{10hr})}_{\text{trt}} \cdot \text{Trt}_i
+\]</span> .</p>
+</section>
+<section id="post-pct" class="level4" data-number="2.4.3.2">
+<h4 data-number="2.4.3.2" class="anchored" data-anchor-id="post-pct"><span class="header-section-number">2.4.3.2</span> Post-pct</h4>
+<p>After PCT, duff &amp; litter was not modeled, vegetation difference was added. Model selection resulted in somewhat more complex models for dispersion (<span class="math inline">\(\phi\)</span>) and hurdle (<span class="math inline">\(\pi\)</span>) components. For 1-hr fuels the dispersion component included treatment and site predictors:</p>
+<p><span class="math display">\[
+\log(\phi_i^{\text{1hr}}) = \beta^{(\phi,\text{1hr})}_0 +
+\beta^{(\phi,\text{1hr})}_{\text{trt}} \cdot \text{Trt}_i +
+\beta^{(\phi,\text{1hr})}_{\text{site}} \cdot \text{Site}_i
+\]</span> .</p>
+<p>For 100-hr fuels, the dispersion and hurdle components included treatment and site predictors:</p>
+<p><span class="math display">\[
+\log(\phi_i^{\text{100hr}}) = \beta^{(\phi,\text{100hr})}_0 +
+\beta^{(\phi,\text{100hr})}_{\text{trt}} \cdot \text{Trt}_i +
+\beta^{(\phi,\text{100hr})}_{\text{site}} \cdot \text{Site}_i
+\]</span></p>
+<p><span class="math display">\[
+\text{logit}(\pi_i^{\text{100hr}}) = \beta^{(\pi,\text{100hr})}_0 +
+\beta^{(\pi,\text{100hr})}_{\text{trt}} \cdot \text{Trt}_i +
+\beta^{(\pi,\text{100hr})}_{\text{site}} \cdot \text{Site}_i
+\]</span> .</p>
+<p>The dispersion and hurdle components for the rest of the fuel models included only an intercept.</p>
+<p>Dispersion models with treatment as the only predictor were included for 1-hr and 100-hr fuel classes. All models included a hurdle portion to model zeros using a logit link. For 100-hr fuels, the hurdle portion included treatment and site as predictors. For the rest, a constant rate of zeros for all observations was used.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
@@ -335,6 +566,7 @@ Stuart, J. (1985). <em>Redwood fire ecology: Final report submitted to <span>Cal
 Webb, L. A., Lindquist, J. L., Wahl, E., &amp; Hubb, A. (2012). Whiskey springs long-term coast redwood density management; final growth, sprout, and yield results. In R. B. Standiford, T. J. Weller, D. D. Piirto, &amp; J. D. Stuart (Eds.), <em>Proceedings of coast redwood forests in a changing <span>California</span>: <span>A</span> symposium for scientists and managers.</em> (Vol. 238, pp. 571–581). Pacific Southwest Research Station, Forest Service, U.S. Department of Agriculture. <a href="https://www.fs.usda.gov/research/treesearch/41828">https://www.fs.usda.gov/research/treesearch/41828</a>
 </div>
 </div>
+</section>
 </section>
 </section>
 
