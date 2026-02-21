@@ -269,13 +269,6 @@ marginaleffects_to_emmeans <- function(
 
 ### Basal area
 
-::: {#lst-regen-ba}
-```{r}
-print_model_info(mba)
-```
-::: 
-
-
 ```{r}
 regen_all <- marginaleffects_to_emmeans(
   mba,
@@ -328,10 +321,31 @@ regen_mean <-
 regen_grand <- deframe(regen_grand_means)
 ```
 
-Focal species for this model included redwood, tanaok, Douglas-fir, and other
-species. 
+According to predictions made from this model, there was not enough evidence to
+support that treatments affected species basal area growth differentially. This
+was true for species individually and when considered together (data not shown).
 
-Redwood regeneration basal area showed the greatest treatment response. 
+Redwood regeneration showed the strongest apparent treatment response, with the
+greatest basal area observed in the GS treatment. LD and HD treatments were
+intermediate, while HD tended to have the lowest redwood basal area.
+
+Tanoak regeneration basal area was intermediate relative to redwood and
+Douglas-fir. GS and LD treatments showed similar, comparatively higher
+responses, whereas HA and HD tended to be lower.
+
+Douglas-fir regeneration was low across all treatments, with little apparent
+variation among them. GS showed the highest basal area, but overall differences
+were minimal.
+
+Other species (grand fir, madrone, and California wax-myrtle) occurred at low
+densities across plots. Most plots contained few individuals, though one LD
+macro plot had notably higher counts. Basal area for other species was low
+across treatments overall, with HD tending to be highest and HA lowest, while GS
+and LD were intermediate.
+
+
+
+<!-- Redwood regeneration basal area showed the greatest treatment response. 
 The GS treatment had the greatest basal area of redwood regeneration at 
 `r regen_mean$rw$gs$estimate` m^2^ ha^-1^, which was 
 `r abs(regen_pairs$rw[["gs - hd"]]$estimate)` m^2^ ha^-1^ greater than in the HD
@@ -365,22 +379,8 @@ ha^-1^ of basal area across treatments. The greatest basal area of other species
 was in the HD treatment which was `r abs(pluck(regen_pairs, "other", "ha - hd", "estimate"))`
 m^2^ ha^-1^ greater than in the HA treatment 
 (p = `r pluck(regen_pairs, "other", "ha - hd", "p.value")`). The GS and LD
-treatments were intermediate.
+treatments were intermediate. -->
 
-```{r}
-#| label: tbl-regen-ba-grand-means
-#| tbl-cap: >
-#|   Grand means (m^2^ ha^-1^) for basal area of regeneration of each species
-#|   across treatments 10 years after the initiation of a multiaged redwood
-#|   forest. The asymptotic 95% confidence intervals are based on the normal
-#|   approximation.
-
-regen_grand_means |>
-  unnest(grand_mean) |>
-  rename(any_of(standard_model_col_names)) |>
-  select(-c("1", "DF")) |>
-  tinytable::tt()
-```
 
 ```{r}
 #| label: fig-regen-ba
@@ -402,41 +402,6 @@ regen_all |>
   draw_emm_emm() +
   scale_x_discrete(labels = toupper) +
   labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1)))
-```
-
-```{r}
-#| label: tbl-regen-ba
-#| tbl-cap: >
-#|   Basal area (m^2^ ha^-1^) modeled at the vegetation plot level for four
-#|   harvest treatments and four species classes (n = 16). The asymptotic 95%
-#|   confidence intervals are based on the normal approximation.
-
-regen_all |>
-  select(spp, emm) |>
-  unnest(everything()) |>
-  rename(treatment = level, any_of(standard_model_col_names)) |>
-  select(-c("DF")) |>
-  tinytable::tt() |>
-  tinytable::format_tt(digits = 2, num_fmt = "decimal")
-```
-
-```{r}
-#| label: tbl-regen-ba-compare
-#| tbl-cap: >
-#|   Pairwise comparisons of treatments within species. P-values were adjusted
-#|   using the Tukey method for comparing families of four estimates and they
-#|   are based on large-sample (asymptotic) normal approximations.
-
-regen_all |>
-  mutate(
-    emm = list(pairs(emmobj) |> as_tibble())
-  ) |>
-  select(spp, emm) |>
-  unnest(emm) |>
-  select(-c(z.ratio, df)) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt() |>
-  tinytable::format_tt(digits = 2, num_fmt = "decimal")
 ```
 
 ```{r}
@@ -480,7 +445,7 @@ rw_to_mean <-
   deframe()
 ```
 
-@fig-regen-ba-rw-to shows the same model as @fig-regen-ba, but with an emphasis
+<!-- @fig-regen-ba-rw-to shows the same model as @fig-regen-ba, but with an emphasis
 on treatment comparisons between redwood and tanoak. 
 This shows that we expect on average, 
 `r abs(rw_to_pairs$gs[[1]]$estimate)` m^2^ ha^-1^ greater redwood basal area
@@ -489,13 +454,12 @@ about `r abs(rw_to_pairs$ld[[1]]$estimate)` m^2^
 ha^-1^ in the LD treatment (p = `r rw_to_pairs$ld[[1]]$p.value`), and about 
 `r abs(rw_to_pairs$ha[[1]]$estimate)` m^2^ ha^-1^ in the HA treatment 
 (p = `r rw_to_pairs$ha[[1]]$p.value`). In the HD treatment, we expect to see
-slightly higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`).
+slightly higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`). -->
 
-Uncertainty in average redwood basal area across sites, indicated by the size of
-95% confidence intervals, is much greater than that of tanoak in the GS
-treatment, but this difference diminishes such that GS > LD > HA > HD (@fig-regen-ba-rw-to). In the HD
-treatment redwood and tanoak average basal area uncertainty across sites is very
-similar.
+@fig-regen-ba-rw-to highlights the rapid decline in redwood basal area relative
+to tanoak with increasing overstory retention. It also illustrates the greater
+uncertainty associated with redwood basal area in the GS treatment, as reflected
+by the wider confidence intervals compared to those of tanoak.
 
 ```{r}
 #| label: fig-regen-ba-rw-to
@@ -517,13 +481,6 @@ regen_rw_to |>
 ```
 
 ### Douglas-fir counts
-
-::: {#lst-df-counts}
-```{r}
-print_model_info(mdf, NULL)
-```
-:::
-
 
 The selected model for Douglas-fir counts did not indicate any statistically
 significant differences between treatments. Generally, we expect about 2
@@ -550,35 +507,13 @@ df_counts <- marginaleffects_to_emmeans(
 emm_to_df_emm(df_counts) |>
   mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
   ggplot(emm_mapping(x = level)) +
-  draw_emm_emm()
-```
-
-```{r}
-#| label: tbl-df-counts
-#| tbl-cap: >
-#|   Vegetation plot level counts of regenerating Douglas-fir seedlings in four
-#|   harvest treatments 10 years after harvest (n = 16). Results have been
-#|   scaled to stems per hectare from 4-meter radius plots. The asymptotic 95%
-#|   confidence intervals are based on the normal approximation.
-
-emmeans(df_counts, "level") |>
-  as_tibble() |>
-  mutate(level = as.character(level)) |>
-  mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
-  select(Treatment = level, !c(SE, df)) |>
-  tinytable::tt(digits = 2)
+  draw_emm_emm() +
+  labs(x = "Treatment", y = expression(Density ~ (stems %.% ha^-1)))
 ```
 
 ## Sprout heights
 
 ### Height increment
-
-::: {#lst-sprout-ht-inc}
-```{r}
-print_model_info(minc_sel, "disp")
-```
-:::
-
 
 ```{r}
 
@@ -669,26 +604,6 @@ ht_inc_treat |>
   labs(x = "Treatment", y = expression(Height ~ Increment ~ (m %.% yr^-1)))
 ```
 
-```{r}
-#| label: tbl-sprout-ht-inc-treat
-#| tbl-cap: >
-#|  Estimated marginal means for the effect of harvest treatment on redwood and
-#|  tanoak sprout height increment, averaged over two growth periods, ten years
-#|  after harvest. The asymptotic 95% confidence intervals are based on the
-#|  normal approximation.
-
-ht_inc_treat |>
-  mutate(emm = list(as_tibble(emmeans(emmobj, ~level)))) |>
-  select(spp, emm) |>
-  unnest(everything()) |>
-  select(-c(df)) |>
-  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
-  rename(Treat = level) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt(digits = 2) |>
-  tinytable::format_tt(num_fmt = "decimal")
-```
-
 
 ```{r}
 
@@ -770,33 +685,8 @@ ht_inc_year |>
   )
 ```
 
-```{r}
-#| label: tbl-sprout-ht-inc-year
-#| tbl-cap: >
-#|   Estimated marginal means for the effect of growth period on redwood and
-#|   tanoak sprout height increment, averaged over four harvest treatments, from
-#|   years 1 to 5, and years 5 to 10 after harvest. The asymptotic 95%
-#|   confidence intervals are based on the normal approximation.
-
-ht_inc_year |>
-  mutate(emm = list(as_tibble(emmeans(emmobj, ~level)))) |>
-  select(spp, emm) |>
-  unnest(everything()) |>
-  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
-  rename(Year = level) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt(digits = 2) |>
-  tinytable::format_tt(num_fmt = "decimal")
-```
 
 ### Height at year 10
-
-::: {#lst-sprout-ht-yr-10}
-```{r}
-print_model_info(ht10_sel, "disp")
-```
-:::
-
 
 ```{r}
 ht_year_10 <- marginaleffects_to_emmeans(
@@ -871,78 +761,9 @@ ht_year_10 |>
   labs(x = "Treatment", y = "Height (m)")
 ```
 
-```{r}
-#| label: tbl-ht-year-10
-#| tbl-cap: >
-#|   Height (m) of measured redwood and tanaok sprouts 10 years after harvest
-#|   treatments with four different over-story densities. The asymptotic 95%
-#|   confidence intervals are based on the normal approximation.
-
-ht_year_10 |>
-  mutate(emm = list(as_tibble(emmeans(emmobj, ~level)))) |>
-  select(spp, emm) |>
-  unnest(everything()) |>
-  select(-c(df)) |>
-  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
-  rename(Year = level) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt(digits = 2) |>
-  tinytable::format_tt(num_fmt = "decimal")
-```
-
-```{r}
-#| label: tbl-ht-year-10-compare
-#| tbl-cap: >
-#|  Pairwise comparisons of treatments within species for height (m) of
-#|  measured redwood and tanoak sprouts 10 years after harvest. The P-values are
-#|  based on the normal approximation.
-
-ht_year_10 |>
-  mutate(
-    pairs = list(pairs(emmobj) |> as_tibble())
-  ) |>
-  select(spp, pairs) |>
-  unnest(pairs) |>
-  select(-c(z.ratio)) |>
-  select(-c(df)) |>
-  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt() |>
-  tinytable::format_tt(digits = 2, num_fmt = "decimal")
-```
-
 ## Fuels
 
-:::{#lst-fuel-pre-pct-mod}
-```
-family: Gamma(link = "log")
-conditional: fuel_load ~ treatment + (1 | site/macro/corner)
-```
-:::
-
-
 ### Pre-pct
-
-
-```{r}
-#| label: tbl-fuel-pre-pct-mod
-#| tbl-cap: Dispersion and hurdle component specifications for six fuel classes before pct.
-
-fuel_tmb$pre |>
-  transmute(
-    class = fuel_class_labels[as.character(class)],
-    # Family = mod$modelInfo$family$family,
-    # Link = mod$modelInfo$family$link,
-    # Conditional = gsub("treatment", "trt", format_model_formula(mod, "cond")),
-    "Dispersion (log)" = gsub(
-      "treatment",
-      "trt",
-      format_model_formula(mod, "disp")
-    ),
-    "Hurdle (logit)" = gsub("treatment", "trt", format_model_formula(mod, "zi"))
-  ) |>
-  tinytable::tt()
-```
 
 ```{r}
 
@@ -1046,81 +867,7 @@ fuel_tmb$pre |>
   patchwork::plot_layout(axes = "collect")
 ```
 
-```{r}
-#| label: tbl-fuel-pre-pct-means
-#| tbl-cap: >
-#|  Estimated marginal means (Mg ha^-1^) for six fuel classes and four overstory
-#|  treatments 10 years after partial harvest and prior to pre-commercial
-#|  thinning (PCT). The asymptotic 95% confidence intervals are based on the
-#|  normal approximation.
-
-fuel_tmb$pre |>
-  mutate(emmeans = list(as_tibble(emmeans(emmobj, ~level)))) |>
-  select(class, emmeans) |>
-  unnest(emmeans) |>
-  mutate(class = fuel_class_labels[as.character(class)]) |>
-  select(-c(df)) |>
-  rename(treatment = level) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt(digits = 2, num_fmt = "decimal")
-```
-
-```{r}
-#| label: tbl-fuel-pre-pct-compare
-#| tbl-cap: >
-#|   Pairwise comparisons of treatments for six fuel classes before pct.
-#|   P-values were adjusted for multiple comparisons using the Tukey method and
-#|   are based on normal approximations.
-
-fuel_tmb$pre |>
-  mutate(pairs = list(as_tibble(pairs(emmobj)))) |>
-  select(class, pairs) |>
-  unnest(pairs) |>
-  select(-c(z.ratio)) |>
-  select(-c(df)) |>
-  arrange(p.value) |>
-  mutate(class = fuel_class_labels[as.character(class)]) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt(digits = 2, num_fmt = "decimal")
-```
-
-```{r}
-#| label: tbl-fuel-pre-pct-grand-means
-#| tbl-cap: >
-#|   Modeled grand means Mg ha^-1^ of fuel loading 10 years after harvest and
-#|   prior to PCT. The asymptotic 95% confidence intervals are based on the
-#|   normal approximation.
-
-fuel_tmb$pre |>
-  mutate(grand_mean = as_tibble(emmeans(emmobj, ~1))) |>
-  select(c(class, grand_mean)) |>
-  unnest(grand_mean) |>
-  select(-c(df, `1`)) |>
-  mutate(class = fuel_class_labels[as.character(class)]) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt(digits = 2, num_fmt = "decimal")
-```
-
 ### Post-pct
-
-```{r}
-#| label: tbl-fuel-post-pct
-#| tbl-cap: Model specifications for six fuel classes after pct.
-fuel_tmb$post |>
-  transmute(
-    class = fuel_class_labels[as.character(class)],
-    # Family = mod$modelInfo$family$family,
-    # Link = mod$modelInfo$family$link,
-    # Conditional = gsub("treatment", "trt", format_model_formula(mod, "cond")),
-    "Dispersion (log)" = gsub(
-      "treatment",
-      "trt",
-      format_model_formula(mod, "disp")
-    ),
-    "Hurdle (logit)" = gsub("treatment", "trt", format_model_formula(mod, "zi"))
-  ) |>
-  tinytable::tt()
-```
 
 ```{r}
 fuel_tmb$post <- mutate(
@@ -1263,49 +1010,6 @@ fuel_tmb$post |>
   tinytable::tt(digits = 2, num_fmt = "decimal")
 ```
 
-
-```{r}
-#| label: tbl-fuel-post-pct-compare
-#| tbl-cap: >
-#|   Pairwise comparisons of treatments for six fuel classes after pct. P-values
-#|   were adjusted for multiple comparisons using the Tukey method and are based
-#|   on normal approximations.
-
-fuel_tmb$post |>
-  mutate(
-    pairs = list(
-      pairs(emmobj) |>
-        as_tibble()
-    )
-  ) |>
-  select(class, pairs) |>
-  unnest(pairs) |>
-  select(-c(z.ratio)) |>
-  arrange(p.value) |>
-  select(-c(df)) |>
-  mutate(class = fuel_class_labels[as.character(class)]) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt(digits = 2) |>
-  tinytable::format_tt(num_fmt = "significant_cell")
-```
-
-```{r}
-#| label: tbl-fuel-post-pct-grand-means
-#| tbl-cap: >
-#|   Modeled grand means Mg ha^-1^ of fuel loading 10 years after harvest and
-#|   PCT. The asymptotic 95% confidence intervals are based on the normal
-#|   approximation.
-
-fuel_tmb$post |>
-  mutate(grand_mean = as_tibble(emmeans(emmobj, ~1))) |>
-  select(c(class, grand_mean)) |>
-  unnest(grand_mean) |>
-  select(-c(df, `1`)) |>
-  mutate(class = fuel_class_labels[as.character(class)]) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt(digits = 2, num_fmt = "decimal")
-```
-
 ### Pre-post commercial thinning comparison
 
 The PCT of 10-year-old vegetation dramatically reduced live surface fuels,
@@ -1402,4 +1106,22 @@ fuel_tmb$pre |>
     unaccounted = veg +
       fine
   )
+```
+
+```{r}
+#| include: false
+
+save(
+  format_model_formula,
+  print_model_info,
+  standard_model_col_names,
+  regen_all,
+  regen_grand_means,
+  df_counts,
+  ht_inc_treat,
+  ht_inc_year,
+  ht_year_10,
+  fuel_tmb,
+  file = "./results_appendix_deps.rda"
+)
 ```

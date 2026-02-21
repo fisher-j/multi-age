@@ -1,0 +1,375 @@
+---
+execute:
+  echo: false
+---
+
+```{r include=FALSE}
+load("./fuel_modeling_round_3.rda")
+load("./sprout_modeling.rda")
+load("./regen_visualize.rda")
+load("./results_appendix_deps.rda")
+
+library(emmeans)
+# library(ggdist)
+library(purrr)
+library(stringr)
+# library(tibble)
+library(dplyr)
+library(tidyr)
+# library(tidyselect)
+# library(ggplot2)
+# library(tibble)
+# library(patchwork)
+library(tinytable)
+# library(marginaleffects)
+```
+
+# Appendix
+
+## Regeneration
+
+### Basal area
+
+**Pseduo-code model listing:**
+
+::: {#lst-regen-ba}
+```{r}
+print_model_info(mba)
+```
+::: 
+
+
+```{r}
+#| label: tbl-regen-ba
+#| tbl-cap: >
+#|   Basal area (m^2^ ha^-1^) modeled at the vegetation plot level for four
+#|   harvest treatments and four species classes (n = 16). The asymptotic 95%
+#|   confidence intervals are based on the normal approximation.
+
+regen_all |>
+  select(spp, emm) |>
+  unnest(everything()) |>
+  rename(treatment = level, any_of(standard_model_col_names)) |>
+  select(-c("DF")) |>
+  tinytable::tt() |>
+  tinytable::format_tt(digits = 2, num_fmt = "decimal")
+```
+
+```{r}
+#| label: tbl-regen-ba-compare
+#| tbl-cap: >
+#|   Pairwise comparisons of treatments within species. P-values were adjusted
+#|   using the Tukey method for comparing families of four estimates and they
+#|   are based on large-sample (asymptotic) normal approximations.
+
+regen_all |>
+  mutate(
+    emm = list(pairs(emmobj) |> as_tibble())
+  ) |>
+  select(spp, emm) |>
+  unnest(emm) |>
+  select(-c(z.ratio, df)) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt() |>
+  tinytable::format_tt(digits = 2, num_fmt = "decimal")
+```
+
+```{r}
+#| label: tbl-regen-ba-grand-means
+#| tbl-cap: >
+#|   Grand means (m^2^ ha^-1^) for basal area of regeneration of each species
+#|   across treatments 10 years after the initiation of a multiaged redwood
+#|   forest. The asymptotic 95% confidence intervals are based on the normal
+#|   approximation.
+
+regen_grand_means |>
+  unnest(grand_mean) |>
+  rename(any_of(standard_model_col_names)) |>
+  select(-c("1", "DF")) |>
+  tinytable::tt()
+```
+
+### Douglas-fir counts
+
+**Pseduo-code model listing:**
+
+::: {#lst-df-counts}
+```{r}
+print_model_info(mdf, NULL)
+```
+:::
+
+```{r}
+#| label: tbl-df-counts
+#| tbl-cap: >
+#|   Vegetation plot level counts of regenerating Douglas-fir seedlings in four
+#|   harvest treatments 10 years after harvest (n = 16). Results have been
+#|   scaled to stems per hectare from 4-meter radius plots. The asymptotic 95%
+#|   confidence intervals are based on the normal approximation.
+
+emmeans(df_counts, "level") |>
+  as_tibble() |>
+  mutate(level = as.character(level)) |>
+  mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
+  select(Treatment = level, !c(SE, df)) |>
+  tinytable::tt(digits = 2)
+```
+
+
+## Sprout heights
+
+### Height increment
+
+**Pseduo-code model listing:**
+
+::: {#lst-sprout-ht-inc}
+```{r}
+print_model_info(minc_sel, "disp")
+```
+:::
+
+
+```{r}
+#| label: tbl-sprout-ht-inc-treat
+#| tbl-cap: >
+#|  Estimated marginal means for the effect of harvest treatment on redwood and
+#|  tanoak sprout height increment, averaged over two growth periods, ten years
+#|  after harvest. The asymptotic 95% confidence intervals are based on the
+#|  normal approximation.
+
+ht_inc_treat |>
+  mutate(emm = list(as_tibble(emmeans(emmobj, ~level)))) |>
+  select(spp, emm) |>
+  unnest(everything()) |>
+  select(-c(df)) |>
+  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
+  rename(Treat = level) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt(digits = 2) |>
+  tinytable::format_tt(num_fmt = "decimal")
+```
+
+```{r}
+#| label: tbl-sprout-ht-inc-year
+#| tbl-cap: >
+#|   Estimated marginal means for the effect of growth period on redwood and
+#|   tanoak sprout height increment, averaged over four harvest treatments, from
+#|   years 1 to 5, and years 5 to 10 after harvest. The asymptotic 95%
+#|   confidence intervals are based on the normal approximation.
+
+ht_inc_year |>
+  mutate(emm = list(as_tibble(emmeans(emmobj, ~level)))) |>
+  select(spp, emm) |>
+  unnest(everything()) |>
+  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
+  rename(Year = level) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt(digits = 2) |>
+  tinytable::format_tt(num_fmt = "decimal")
+```
+
+
+### Height at year 10
+
+::: {#lst-sprout-ht-yr-10}
+```{r}
+print_model_info(ht10_sel, "disp")
+```
+:::
+
+```{r}
+#| label: tbl-ht-year-10
+#| tbl-cap: >
+#|   Height (m) of measured redwood and tanaok sprouts 10 years after harvest
+#|   treatments with four different over-story densities. The asymptotic 95%
+#|   confidence intervals are based on the normal approximation.
+
+ht_year_10 |>
+  mutate(emm = list(as_tibble(emmeans(emmobj, ~level)))) |>
+  select(spp, emm) |>
+  unnest(everything()) |>
+  select(-c(df)) |>
+  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
+  rename(Year = level) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt(digits = 2) |>
+  tinytable::format_tt(num_fmt = "decimal")
+```
+
+```{r}
+#| label: tbl-ht-year-10-compare
+#| tbl-cap: >
+#|  Pairwise comparisons of treatments within species for height (m) of
+#|  measured redwood and tanoak sprouts 10 years after harvest. The P-values are
+#|  based on the normal approximation.
+
+ht_year_10 |>
+  mutate(
+    pairs = list(pairs(emmobj) |> as_tibble())
+  ) |>
+  select(spp, pairs) |>
+  unnest(pairs) |>
+  select(-c(z.ratio)) |>
+  select(-c(df)) |>
+  mutate(spp = recode(spp, LIDE = "TO", SESE = "RW")) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt() |>
+  tinytable::format_tt(digits = 2, num_fmt = "decimal")
+```
+
+
+## Fuels
+
+**Pseduo-code model listing:**
+
+:::{#lst-fuel-pre-pct-mod}
+```
+family: Gamma(link = "log")
+conditional: fuel_load ~ treatment + (1 | site/macro/corner)
+```
+:::
+
+### Pre-pct
+
+**Model subcomponents:**
+
+```{r}
+#| label: tbl-fuel-pre-pct-mod
+#| tbl-cap: Dispersion and hurdle component specifications for six fuel classes before pct.
+
+fuel_tmb$pre |>
+  transmute(
+    class = fuel_class_labels[as.character(class)],
+    # Family = mod$modelInfo$family$family,
+    # Link = mod$modelInfo$family$link,
+    # Conditional = gsub("treatment", "trt", format_model_formula(mod, "cond")),
+    "Dispersion (log)" = gsub(
+      "treatment",
+      "trt",
+      format_model_formula(mod, "disp")
+    ),
+    "Hurdle (logit)" = gsub("treatment", "trt", format_model_formula(mod, "zi"))
+  ) |>
+  tinytable::tt()
+```
+
+```{r}
+#| label: tbl-fuel-pre-pct-means
+#| tbl-cap: >
+#|  Estimated marginal means (Mg ha^-1^) for six fuel classes and four overstory
+#|  treatments 10 years after partial harvest and prior to pre-commercial
+#|  thinning (PCT). The asymptotic 95% confidence intervals are based on the
+#|  normal approximation.
+
+fuel_tmb$pre |>
+  mutate(emmeans = list(as_tibble(emmeans(emmobj, ~level)))) |>
+  select(class, emmeans) |>
+  unnest(emmeans) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  select(-c(df)) |>
+  rename(treatment = level) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt(digits = 2, num_fmt = "decimal")
+```
+
+```{r}
+#| label: tbl-fuel-pre-pct-compare
+#| tbl-cap: >
+#|   Pairwise comparisons of treatments for six fuel classes before pct.
+#|   P-values were adjusted for multiple comparisons using the Tukey method and
+#|   are based on normal approximations.
+
+fuel_tmb$pre |>
+  mutate(pairs = list(as_tibble(pairs(emmobj)))) |>
+  select(class, pairs) |>
+  unnest(pairs) |>
+  select(-c(z.ratio)) |>
+  select(-c(df)) |>
+  arrange(p.value) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt(digits = 2, num_fmt = "decimal")
+```
+
+```{r}
+#| label: tbl-fuel-pre-pct-grand-means
+#| tbl-cap: >
+#|   Modeled grand means Mg ha^-1^ of fuel loading 10 years after harvest and
+#|   prior to PCT. The asymptotic 95% confidence intervals are based on the
+#|   normal approximation.
+
+fuel_tmb$pre |>
+  mutate(grand_mean = as_tibble(emmeans(emmobj, ~1))) |>
+  select(c(class, grand_mean)) |>
+  unnest(grand_mean) |>
+  select(-c(df, `1`)) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt(digits = 2, num_fmt = "decimal")
+```
+
+
+### Post-pct
+
+**Model subcomponents:**
+
+```{r}
+#| label: tbl-fuel-post-pct
+#| tbl-cap: Model specifications for six fuel classes after pct.
+fuel_tmb$post |>
+  transmute(
+    class = fuel_class_labels[as.character(class)],
+    # Family = mod$modelInfo$family$family,
+    # Link = mod$modelInfo$family$link,
+    # Conditional = gsub("treatment", "trt", format_model_formula(mod, "cond")),
+    "Dispersion (log)" = gsub(
+      "treatment",
+      "trt",
+      format_model_formula(mod, "disp")
+    ),
+    "Hurdle (logit)" = gsub("treatment", "trt", format_model_formula(mod, "zi"))
+  ) |>
+  tinytable::tt()
+```
+
+```{r}
+#| label: tbl-fuel-post-pct-compare
+#| tbl-cap: >
+#|   Pairwise comparisons of treatments for six fuel classes after pct. P-values
+#|   were adjusted for multiple comparisons using the Tukey method and are based
+#|   on normal approximations.
+
+fuel_tmb$post |>
+  mutate(
+    pairs = list(
+      pairs(emmobj) |>
+        as_tibble()
+    )
+  ) |>
+  select(class, pairs) |>
+  unnest(pairs) |>
+  select(-c(z.ratio)) |>
+  arrange(p.value) |>
+  select(-c(df)) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt(digits = 2) |>
+  tinytable::format_tt(num_fmt = "significant_cell")
+```
+
+```{r}
+#| label: tbl-fuel-post-pct-grand-means
+#| tbl-cap: >
+#|   Modeled grand means Mg ha^-1^ of fuel loading 10 years after harvest and
+#|   PCT. The asymptotic 95% confidence intervals are based on the normal
+#|   approximation.
+
+fuel_tmb$post |>
+  mutate(grand_mean = as_tibble(emmeans(emmobj, ~1))) |>
+  select(c(class, grand_mean)) |>
+  unnest(grand_mean) |>
+  select(-c(df, `1`)) |>
+  mutate(class = fuel_class_labels[as.character(class)]) |>
+  rename(any_of(standard_model_col_names)) |>
+  tinytable::tt(digits = 2, num_fmt = "decimal")
+```
