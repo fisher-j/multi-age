@@ -1,5 +1,9 @@
 
+## 2026-02-21 
+ - just have JK discussion points left, rebuilt docs
+
 ## 2026-02-15 
+ - build docs
  - Moved model descriptions from results to methods
  - Continuing work on JK revisions
 

@@ -986,30 +986,6 @@ fuel_tmb$post |>
   patchwork::plot_layout(axes = "collect")
 ```
 
-```{r}
-#| label: tbl-fuel-post-pct-means
-#| tbl-cap: >
-#|  Estimated marginal means (Mg ha^-1^) for six fuel classes and four overstory
-#|  treatments 10 years after partial harvest and after pre-commercial
-#|  thinning (PCT). The asymptotic 95% confidence intervals are based on the
-#|  normal approximation.
-
-fuel_tmb$post |>
-  mutate(
-    emmeans = list(
-      emmeans::emmeans(emmobj, ~level) |>
-        as_tibble()
-    )
-  ) |>
-  select(class, emmeans) |>
-  unnest(emmeans) |>
-  select(-c(df)) |>
-  mutate(class = fuel_class_labels[as.character(class)]) |>
-  rename(treatment = level) |>
-  rename(any_of(standard_model_col_names)) |>
-  tinytable::tt(digits = 2, num_fmt = "decimal")
-```
-
 ### Pre-post commercial thinning comparison
 
 The PCT of 10-year-old vegetation dramatically reduced live surface fuels,
