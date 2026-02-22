@@ -31,13 +31,18 @@ aggregated retention (HA), and low-density dispersed retention (LD). The GS
 treatment is composed of a circular 1-ha opening in which all trees were
 removed, surrounded by a 50-meter buffer of light thinning in which less than
 1/3 of the basal area was removed. The remaining treatments were applied over
-2-hectare treatment units. The target post-harvest density was specified in
-terms of relative density using an assumed upper stand density index (SDI) limit for
-redwood of 2,470 stems ha^-1^ [@reinekePerfectionStanddensityIndex1933]. The
-target residual relative density for the HA and HD treatments was 21% (SDI =
-520), and the for the LD treatment it was 13% (SDI = 320). These densities were
-chosen to balance the objectives of stand volume production and individual tree
-growth assuming a subsequent, similar harvest after 20 years
+2-hectare treatment units. 
+
+The target post-harvest density was specified in terms of relative density,
+defined as the proportion of the assumed total site carrying capacity based on
+an upper stand density index (SDI) limit for redwood of 2,470 stems stems ha^-1^
+[@reinekePerfectionStanddensityIndex1933]. The HA and HD treatments targeted a
+residual overstory relative density of 20%, which was selected as an upper limit
+to support the objective of maintaining conifer growth. In contrast, the LD
+treatment targeted a residual overstory relative density of 13% to favor
+establishment of a new cohort. These target densities were chosen to balance
+stand-level volume production with individual tree growth, assuming a
+subsequent, similar harvest entry after 20 years
 [@berrillSimulatingMultiagedCoast2009].
 
 After harvesting, a single 0.2-hectare square macro plot was established in the
@@ -208,6 +213,17 @@ less than 5 cm dbh were converted to diameters using the class midpoint (1.27 or
 other than redwood, tanoak, and Douglas-fir) were combined into an "other"
 category. Missing species on a plot were made explicit by assigning a value of 0
 m^2^ ha^-1^ for that species and plot. 
+
+Basal area was selected as the metric for quantifying redwood and tanoak
+abundance because prolific sprout regeneration in both species was undergoing
+self-thinning. In this context, basal area provided a more informative measure
+than stem density, as it better captured treatment responses by reflecting the
+relative contribution of established stems rather than the transient abundance
+of sprouts. Although numerous metric have been used to asses shade tolerance
+[@forresterResponseTreeRegeneration2014], basal area was selected because it
+integrates both growth and survival of sprouts. This approach assumes that
+growth and survival are positively correlated in forests that do not experience
+prolonged harsh winters [@linSaplingGrowthSurvivorship2002]. 
 
 Composition of regeneration in terms of basal area per acre represented by each
 species in a 4-meter radius vegetation plot 10 years after treatment was modeled
@@ -398,25 +414,32 @@ $$
 Fuel load in Mg ha^-1^ was estimated for 1-hr, 10-hr, 100-hr, combined duff and
 litter ("duff/litter"), 1,000-hr, and live vegetation fuels at the transect
 level. Any transect where a fuel type was not observed was assigned a value of
-zero for that class and transect. Fuel load for 1- through 1,000-hr fuels were
-calculated using the method in @brownHandbookInventoryingDowned1974. The
-required size-class specific parameters (specific gravity, particle inclination,
-and average diameter) were derived from a previous study where I used parameters
-averaged across all of the measured plots [@glebockiFuelLoadingMoisture2015].
-For 1,000-hr fuels, decay classes 1-3 were considered "sound" and decay classes
-4 and 5 were considered "rotten" for the purpose of calculating load and these
-loads were combined. Duff and litter were measured at two locations along each
-transect and these were averaged at the transect level. We did not measure the
-bulk density of duff and litter fuels, but based on findings in other studies in
-the redwood region, we opted to combine these classes into a single fuel class,
-using an average bulk density found across those studies of 7.73 Mg ha^-1^
+zero for that class and transect. 
+
+Fuel load for 1- through 1,000-hr fuels were calculated using the method in
+@brownHandbookInventoryingDowned1974. The required size-class specific
+parameters (specific gravity, particle inclination, and average diameter) were
+derived from a previous study where I used parameters averaged across all of the
+measured plots [@glebockiFuelLoadingMoisture2015]. For 1,000-hr fuels, decay
+classes 1-3 were considered "sound" and decay classes 4 and 5 were considered
+"rotten" for the purpose of calculating load and these loads were combined. 
+
+Duff and litter were measured at two locations along each transect and these
+were averaged at the transect level. We did not measure the bulk density of duff
+and litter fuels, but based on a suggestion in another study we used an average
+combined bulk density (7.73 Mg ha^-1^) derived from average bulk density across
+other studies in the redwood region
 [@finneyFuelLoadingBulk1993;@stuartRedwoodFireEcology1985;@kittredgeComparisonForestFloors1940].
+We opted to combine duff and litter components to simplify analysis and focus on
+total forest floor fuel load.
+
 Vegetation fuel load was calculated using bulk density constants of 8 Mg ha^-1^
 m^-1^ for herbaceous fuels and 18 Mg ha^-1^ m^-1^ for woody components
-[@gangiFIREMONDatabaseUser2006]. Live and dead components were combined to
-calculate herbaceous and woody loading. Herbaceous and woody fuel loads were
-then combined and averaged at the transect level (two measurements per transect)
-to determine total vegetation loading.
+[@gangiFIREMONDatabaseUser2006]. Live and dead vegetation components were combined to
+calculate herbaceous and woody loading and herbaceous and woody fuel loads were
+also combined and averaged at the transect level (two measurements per transect)
+to determine total vegetation loading. Vegetation fuel classes were combined to
+simplify analysis and because the herbaceous fuel load was generally very low.
 
 Gamma distributed, linear multi-level models, with a log link were used to model
 fuel load response (Mg ha^-1^) for all fuel classes. Random intercepts were
@@ -482,7 +505,14 @@ $$
 
 #### Post-pct
 
-After PCT, duff & litter was not modeled, vegetation difference was added. Model
+After PCT, duff & litter was not modeled, vegetation difference was added. 
+
+Duff and litter are not reported for post-pct stands for two reasons. First,
+these are not expected to have changed significantly given the relatively short
+timespan before and after PCT. Second, the sampling protocol did not make it
+clear how to quantify the loading for leaves attached to recently cut branches.
+
+Model
 selection resulted in somewhat more complex models for dispersion ($\phi$) and
 hurdle ($\pi$) components. For 1-hr fuels the dispersion component included
 treatment and site predictors:

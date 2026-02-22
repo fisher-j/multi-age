@@ -267,7 +267,7 @@ marginaleffects_to_emmeans <- function(
 
 ## Regeneration
 
-### Basal area
+### Basal area density
 
 ```{r}
 regen_all <- marginaleffects_to_emmeans(
@@ -322,8 +322,10 @@ regen_grand <- deframe(regen_grand_means)
 ```
 
 According to predictions made from this model, there was not enough evidence to
-support that treatments affected species basal area growth differentially. This
-was true for species individually and when considered together (data not shown).
+support that treatments resulted in different basal area densities of
+regeneration. This was true for species individually and when considered
+together (data not shown). Although trends in means follow the expected pattern
+of greater regeneration with less retention.
 
 Redwood regeneration showed the strongest apparent treatment response, with the
 greatest basal area observed in the GS treatment. LD and HD treatments were
@@ -385,13 +387,14 @@ treatments were intermediate. -->
 ```{r}
 #| label: fig-regen-ba
 #| fig-cap: >
-#|   Basal area (m^2^ ha^-1^) modeled at the vegetation plot level for four
-#|   harvest treatments and four species classes (n = 16). Gray bars represent
-#|   the 95% confidence interval (α = 0.05), black dots indicate the mean, and
-#|   blue arrows provide a means of assessing the statistical significance of
-#|   pairwise differences among treatments. Arrows are drawn so that when two
-#|   arrows just meet, the p-value for that difference is 0.05 and overlapping
-#|   arrows indicate a p-values greater than 0.05. Note: Y-axes vary by species.
+#|   Basal area density (m^2^ ha^-1^) modeled at the vegetation plot level for
+#|   four harvest treatments and four species classes (n = 16). Gray bars
+#|   represent the 95% confidence interval (α = 0.05), black dots indicate the
+#|   mean, and blue arrows provide a means of assessing the statistical
+#|   significance of pairwise differences among treatments. Arrows are drawn so
+#|   that when two arrows just meet, the p-value for that difference is 0.05 and
+#|   overlapping arrows indicate a p-values greater than 0.05. Note: Y-axes vary
+#|   by species.
 
 regen_all |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -456,18 +459,19 @@ ha^-1^ in the LD treatment (p = `r rw_to_pairs$ld[[1]]$p.value`), and about
 (p = `r rw_to_pairs$ha[[1]]$p.value`). In the HD treatment, we expect to see
 slightly higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`). -->
 
-@fig-regen-ba-rw-to highlights the rapid decline in redwood basal area relative
-to tanoak with increasing overstory retention. It also illustrates the greater
-uncertainty associated with redwood basal area in the GS treatment, as reflected
-by the wider confidence intervals compared to those of tanoak.
+@fig-regen-ba-rw-to highlights the rapid decline in redwood basal area density
+relative to tanoak with increasing overstory retention. It also illustrates the
+greater uncertainty associated with redwood basal area density in the GS
+treatment, as reflected by the wider confidence intervals compared to those of
+tanoak.
 
 ```{r}
 #| label: fig-regen-ba-rw-to
 #| fig-cap: >
-#|   Basal area (m^2^ ha^-1^) modeled at the vegetation plot level for four
-#|   harvest treatments and two species classes (n = 16). Gray bars represent
-#|   the 95% confidence interval, black dots---the mean, and non-overlapping
-#|   blue arrows signify statistical significance (α = 0.05).
+#|   Basal area density (m^2^ ha^-1^) modeled at the vegetation plot level for
+#|   four harvest treatments and two species classes (n = 16). Gray bars
+#|   represent the 95% confidence interval, black dots---the mean, and
+#|   non-overlapping blue arrows signify statistical significance (α = 0.05).
 
 regen_rw_to |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>

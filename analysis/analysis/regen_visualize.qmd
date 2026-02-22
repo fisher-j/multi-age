@@ -96,7 +96,7 @@ per_ha <- c(
   plot = 1 / 4,
   corner = 1
 ) *
-  (10000 / (16 * pi))
+  (10000 / (pi * 4^2))
 
 p <- regen |>
   ggplot(aes(dbh, fill = spp)) +
@@ -208,10 +208,10 @@ simplify and visualize just treatment and species.
 ```{r}
 #| label: fig-raw-abundance-ba
 
-# I'm expanding my data to ensure that any plot missing a species observation is
-# recorded as zeros.
 colors <- spp_col(regen, scales::brewer_pal, palette = "Set2")
 
+# I'm expanding my data to ensure that any plot missing a species observation is
+# recorded as zeros.
 regen |>
   summarise(
     .by = c(site, treat, plot, spp),
@@ -412,6 +412,10 @@ non-independence of our sampling design.
 ```{r}
 
 library(emmeans)
+m1 <- glmmTMB(ba_ha ~ treat * spp + (1 | site / treat / plot), regen_pa)
+res1 <- simulateResiduals(m1)
+plot(res1)
+
 m1 <- glmmTMB(ba_ha ~ treat * spp + (1 | site / treat / plot), regen_pa)
 res1 <- simulateResiduals(m1)
 plot(res1)
@@ -639,7 +643,7 @@ inflation or dispersion formulae.
 m1 <- glmmTMB(
   n ~ treat + (1 | site) + (1 | site:treat),
   regen_df,
-  family = nbinom1()
+  family = glmmTMB::nbinom1()
 )
 
 
