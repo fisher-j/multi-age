@@ -1,0 +1,808 @@
+---
+date: 03/05/2024
+# title: >
+#   Regeneration and Fuel Loading with Varying Overstory Retention in Redwood Stands
+#   10 Years after Transformation to Multiaged Management
+# author: Judson Fisher
+format: 
+  pptx: 
+    slide-level: 2 
+  revealjs:
+    theme: serif
+---
+
+## {style="text-align: center"}
+
+### Regeneration and Fuel Loading with Varying Overstory Retention in Redwood Stands 10 Years after Transformation to Multiaged Management 
+
+Thesis committee presentation by Judson Fisher
+
+## Thank you
+
+:::{.notes}
+- Thank you for being here
+- exciting time
+- appreciate your willingness to see me through to the finish
+- by the end
+  - good understanding of project
+  - some idea of where you'll be able to offer support/feedback
+:::
+
+## Today's plan
+
+1. **Introduction**
+1. [What we did]{.fragment fragment-index=1 .semi-fade-out}
+1. [Some results]{.fragment fragment-index=1 .semi-fade-out}
+1. [My questions]{.fragment fragment-index=1 .semi-fade-out}
+1. [Your questions]{.fragment fragment-index=1 .semi-fade-out}
+
+---
+
+:::{.columns}
+:::{.column width=35%}
+### A multiaged silviculture experiment
+:::
+:::{.column width=65%}
+![](../figures/site_map_2.png)
+:::
+:::
+
+:::{.notes}
+10 years ago, Pascal implemented a large scale, replicated, manipulative
+silvicultural experiment to demonstrate and study the transformation from
+even-aged to multiaged management in redwood dominated forests in the Jackson
+Demonstration State Forest in Mendocino County. My thesis serves as a 10-year
+report of the remeasurement of several key factors of that experiment ----
+sprout heights, regeneration density, and fuels.
+:::
+
+## An important part of ecological forest management
+
+- Diversity of forest structures == Diversity of silvicultural techniques
+- Predominance of even-aged management
+- This work contributes to our understanding of multiaged stand development
+- Greater understanding -> increased adoption
+
+
+:::{.notes}
+Why study multiaged management?
+:::
+
+## Suitability of redwood forests
+
+:::{.columns}
+:::{.column}
+- Timber value
+- Shade tolerance
+- Reliable regeneration
+:::
+:::{.column}
+![](../figures/redwood_sprouts.jpg)
+:::
+:::
+
+:::{.notes}
+Why do this study in redwood forests?
+:::
+
+## Fire-informed management
+
+:::{.columns}
+:::{.column width=70%}
+
+- Slow adoption of fire-informed management on the North Coast
+- Redwood is a fire-adapted species
+- Historical record shows frequent fire
+- What is the pyrosilvicultural significance of our management actions?
+
+:::
+:::{.column width=30%}
+![](../figures/redwood_fire.png){height=500}
+:::
+:::
+
+:::{.notes}
+Why study fuels in addition to tree growth?
+:::
+
+## Today's plan
+
+1. [Introduction]{.fragment fragment-index=1 .semi-fade-out}
+1. **What we did**
+1. [Some results]{.fragment fragment-index=1 .semi-fade-out}
+1. [My questions]{.fragment fragment-index=1 .semi-fade-out}
+1. [Your questions]{.fragment fragment-index=1 .semi-fade-out}
+
+:::{.notes}
+Now that you have and idea of the what and why, I'll explain more of the details
+of what we did.
+:::
+
+## What we did
+
+1. **Implementation**
+1. [Sampling procedure]{style="opacity: 50%"}
+1. [Analysis]{style="opacity: 50%"}
+
+:::{.notes}
+I've broken this section into 3 parts.
+
+By the end of this section you'll understand how the treatments and how they
+were applied across the landscape.
+:::
+
+
+## Initial harvest: 2012
+
+:::{.columns}
+:::{.column width=60%}
+
+- 16 one-hectare blocks 
+  - **GS**: Group selection
+  - **LD**: Low density dispersed
+  - **HA**: High density aggregated 
+  - **HD**: High density dispersed
+
+These four treatments were replicated across four sites.
+
+:::
+:::{.column width=40%}
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 4
+#| fig-height: 4
+
+source("./scripts/design.r")
+experiment_design("macro")
+```
+:::
+:::
+
+:::{.notes}
+This is how the treatments are defined. They are listed in order from least, to
+greatest amount of competition (light and growing space).
+:::
+
+## The treatments are defined in terms of retained trees after harvest
+
+![](../figures/treatments.png)
+
+:::{.notes}
+And this is that the treatments mean, in a schematic representation.
+:::
+
+## One site{background-color="black" background-image="../figures/treatments_aerial_labeled.png" background-size="contain"}
+
+## {background-color="black" background-image="../figures/GS.jpg" background-size="contain"}
+:::{.absolute bottom="5%" right="5%"}
+[GS]{style="font-size: 2em;"}
+:::
+
+## {background-color="black" background-image="../figures/LD.jpg" background-size="contain"}
+:::{.absolute bottom="5%" right="5%"}
+[LD]{style="font-size: 2em;"}
+:::
+
+## {background-color="black" background-image="../figures/HA.jpg" background-size="contain"}
+:::{.absolute bottom="5%" right="5%"}
+[HA]{style="font-size: 2em;"}
+:::
+
+## {background-color="black" background-image="../figures/HD.jpg" background-size="contain"}
+:::{.absolute bottom="5%" right="5%"}
+[HD]{style="font-size: 2em;"}
+:::
+
+## What we did
+
+1. [Implementation]{style="opacity: 50%"}
+1. **Sampling procedure**
+1. [Analysis]{style="opacity: 50%"}
+
+:::{.notes}
+At the end of this next section, you'll understand how my sampling design
+resulted in response variables across three categories:
+
+- Sprout heights
+- Regeneration density
+- Fuels
+:::
+
+## The plot structure{.smaller}
+
+:::{.columns }
+:::{.column style="vertical-align:middle; width:30%;"}
+
+- Macro plot (Outline)
+- Regeneration plots ([green]{style="color: green"} circles)
+- Fuel transects ([orange]{style="color: orange"} lines)
+- Fuel sampling cylinders ([orange]{style="color: orange"} circles)
+
+:::
+:::{.column style="vertical-align:middle; width:70%"}
+![](../figures/fuel_sampling_layout.png)
+:::
+:::
+
+:::{.notes}
+Here I define the various aspects of the sampling design.
+
+Next, I'll describe what we sampled in each of these.
+:::
+
+## Sprout height
+
+:::{.columns}
+:::{.column width=60%}
+
+- 25 each of tanoak and redwood sprout clumps were selected for measurement
+- Tallest sprout in clump measured at years 1, 5, and 10
+
+:::
+:::{.column width=40%}
+![](../figures/measuring_sprouts10.jpg){}
+
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 1.5
+#| fig-height: 1.5
+plot_design("macro")
+```
+:::
+:::
+
+## Regeneration density and composition
+
+:::{.columns}
+:::{.column width=60%}
+We recorded diameter and species of all sprouts and seedlings taller than 1.4 m
+
+:::
+:::{.column width=40%}
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 3.5
+#| fig-height: 3.5
+#| fig-align: left
+plot_design("regen")
+```
+:::
+:::
+
+
+## Downed woody fuel
+
+:::{.columns}
+:::{.column width=60%}
+- Particles were tallied by size class
+- Counts were converted to load (Mg/ha) using linear intersect theory and
+  parameters from the literature
+:::
+:::{.column width=40%}
+
+![A transect](../figures/transect.jpg)
+
+:::
+:::
+
+## Litter and duff
+
+:::{.columns}
+:::{.column width=60%}
+- Litter and duff depth measured from a representative location within the
+  sampling cylinder
+- Depth-to-load equation taken from the literature
+:::
+:::{.column width=40%}
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 3.5
+#| fig-height: 3.5
+plot_design("samp_cyl")
+```
+:::
+:::
+
+## Vegetation
+
+:::: {.columns}
+:::{.column width=60%}
+- We estimated percent cover and average height 
+- Converted to load using a constant bulk density
+:::
+
+:::{.column width=40%}
+![](../figures/samp_cyl.png)
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 1.5
+#| fig-height: 1.5
+#| fig-align: left
+plot_design("samp_cyl")
+```
+:::
+::::
+
+## Sampling review
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 4
+library(patchwork)
+
+local({
+  title <- function(T) {
+    list(
+      ggplot2::labs(title = T),
+      ggplot2::theme(plot.title = ggplot2::element_text(size = 20))
+    )
+  }
+  plot_design("macro") +
+    title("Sprout heights") +
+    plot_design("regen") +
+    title("Regen. density") +
+    plot_design(c("samp_cyl", "transect")) +
+    title("Fuels")
+})
+```
+:::{.notes}
+That was a lot of response variables. Here they are summarized in three
+categories.
+:::
+
+## What we did
+
+1. [Implementation]{style="opacity: 50%"}
+1. [Sampling procedure]{style="opacity: 50%"}
+1. **Analysis**
+
+:::{.notes}
+By the end of this section, you'll have an idea of they methods I used to anlyze
+these data.
+:::
+
+## Sprout height
+
+- Frequentist framework
+- Model selection was performed using AIC
+- Treatment and year were **factors**
+- Tested various random effects 
+- Included fixed effect model for dispersion
+- Model checked using simulated residuals
+
+## Regeneration density
+
+I report on:
+
+- Species diameter frequency distributions and
+- Basal area weighted frequency distributions 
+
+for each treatment.
+
+## Fuel
+
+- Bayesian framework
+- Separate models for six different fuel classes
+- Used $gamma$ hurdle model: zeros modeled separately as a proportion
+- Priors determined from data with support from literature
+- Model checked with posterior predictive distribution
+
+## Today's plan
+
+1. [What we did]{style="opacity: 50%"}
+1. [Why we did it]{style="opacity: 50%"}
+1. **Some results**
+1. [My questions]{style="opacity: 50%"}
+1. [Your questions]{style="opacity: 50%"}
+
+## Sprout height model
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 5
+#| fig-width: 12
+
+# Modeled heights, confidence intervals, and distribution of data.
+
+library(dplyr)
+library(emmeans)
+library(ggplot2)
+library(glmmTMB)
+library(ggdist)
+library(multcomp)
+library(multcompView)
+load("./sprout_modeling.rda")
+
+mht18emmeans <- emmeans(
+  mht18,
+  c("spp", "treat", "year"),
+  type = "response"
+)
+
+mht18emmeans |>
+  as_tibble() |>
+  mutate(
+    year = as.numeric(levels(year))[year]
+  ) |>
+  rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL"))) |>
+  ggplot(aes(year, response, color = spp, fill = spp, group = spp)) +
+  geom_line() +
+  facet_wrap(~treat, nrow = 1) +
+  geom_ribbon(
+    aes(ymin = lower.CL, ymax = upper.CL, color = NULL),
+    alpha = .2
+  ) +
+  stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  theme_gray(base_size = 20) +
+  theme(
+    plot.background = element_blank(),
+    legend.background = element_blank(),
+    legend.position = "bottom"
+  ) +
+  labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species") +
+  scale_x_continuous(breaks = c(1, 5, 10)) +
+  coord_cartesian(xlim = c(1, 11))
+```
+:::{.notes}
+- redwood is growing faster than tanoak
+- redwood is taller than tanoak
+- the difference in slow down in growth rates is negligible across treatments
+- redwood is more variable than tanoak
+- Is the slow down in growth rate different between species?
+- Is the slow down statistically significant?
+:::
+
+## Sprout height: year 10
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 5
+#| fig-width: 9
+
+# Means, confidence intervals, and Tukey's letters and raw data.
+
+library(stringr)
+
+local({
+  mht18_compare <- emmeans(
+    mht18,
+    spec = "treat",
+    by = c("spp"),
+    at = list(year = "10"),
+    type = "response"
+  ) |>
+    cld(Letters = letters) |>
+    as_tibble() |>
+    mutate(
+      # year = as.numeric(levels(year))[year],
+      .group = str_replace_all(.group, " ", "")
+    ) |>
+    rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL")))
+
+  filter(dht, year == 10) |>
+    ggplot(aes(treat, ht, color = spp, fill = spp)) +
+    facet_grid(~spp, switch = "x") +
+    geom_dots() +
+    scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+    geom_pointrange(
+      aes(y = response, ymin = lower.CL, ymax = upper.CL),
+      data = mht18_compare,
+      color = "gray50",
+      position = position_nudge(x = -0.07),
+      size = 0.7,
+      linewidth = 1,
+      show.legend = FALSE
+    ) +
+    geom_text(
+      aes(y = upper.CL, label = .group),
+      data = mht18_compare,
+      color = "gray30",
+      position = position_nudge(x = -0.3, y = 0.2),
+      size = 6
+    ) +
+    labs(
+      x = "Treatment",
+      y = "Height (m)",
+      color = "Species",
+      fill = "Species"
+    ) +
+    theme_gray(base_size = 20) +
+    theme(
+      panel.spacing = unit(0, "lines"),
+      plot.background = element_blank(),
+      legend.background = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_blank()
+      # legend.position = "bottom"
+    )
+})
+```
+:::{.notes}
+Our data were only sufficient to detect a statistical difference for height in
+year 10 for the GS treatment
+:::
+
+## Regeneration density: frequency
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 5.5
+#| fig-width: 11
+
+# Trees per hectare by species and size.
+
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(forcats)
+
+load("./regen_visualize.rda")
+
+raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
+  generate_facet_totals <- function(data) {
+    summarize(
+      data,
+      .by = treat,
+      n = paste("Total: ", round(n() * per_ha["treat"]))
+    )
+  }
+  regen |>
+    filter({{ group }}) |>
+    ggplot(aes(dbh, fill = spp)) +
+    stat_bin(
+      aes(y = after_stat(count) * per_ha["treat"]),
+      breaks = bin_breaks
+    ) +
+    ggpp::geom_text_npc(
+      data = generate_facet_totals,
+      aes(npcx = "center", npcy = "top", label = n, fill = NULL),
+      size = 6
+    ) +
+    facet_wrap(vars(treat), nrow = 1) +
+    labs(y = expression(trees %.% ha^-1), x = "dbh (cm)", fill = "spp") +
+    scale_x_continuous(breaks = scale_breaks) +
+    scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
+    scale_fill_manual(
+      values = spp_col(regen, scales::brewer_pal, palette = "Set2")
+    ) +
+    theme_bw(base_size = 20)
+}
+
+raw_hist2(dbh < 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
+  raw_hist2(dbh >= 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(27, 600)) +
+  theme(strip.text = element_blank()) +
+  plot_layout(axis_titles = "collect", axes = "collect_x") &
+  theme(
+    plot.background = element_blank(),
+    legend.background = element_blank()
+  )
+```
+:::{.notes}
+- the number of tanoak in the smallest size class increases with greater
+  competition.
+- the number of stems in other size classes follow a decreasing trend
+- The decreasing trend is more pronounced for redwood
+:::
+
+## Regeneration density: basal area
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+# Basal area by species and size.
+
+local({
+  bin_breaks <- seq(0, 17.5, 2.5)
+  scale_breaks <- seq(0, 15, 5)
+  facet_total_label <- function(data) {
+    summarize(
+      data,
+      .by = treat,
+      ba_ha = round(sum(per_ha["treat"] * for_const(dbh)), 1)
+    )
+  }
+  colors <- spp_col(regen, scales::brewer_pal, palette = "Set2")
+  regen |>
+    ggplot(aes(
+      dbh,
+      fill = forcats::fct_reorder(spp, dbh, .fun = ~ sum(.x^2))
+    )) +
+    stat_bin(
+      aes(weight = per_ha["treat"] * for_const(dbh)),
+      breaks = bin_breaks
+    ) +
+    ggpp::geom_text_npc(
+      data = facet_total_label,
+      mapping = aes(npcx = "center", npcy = "top", label = ba_ha, fill = NULL),
+      size = 6
+    ) +
+    facet_wrap(vars(treat), nrow = 1) +
+    scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
+    scale_x_continuous(breaks = scale_breaks) +
+    scale_fill_manual(values = colors) +
+    theme_bw(
+      base_size = 20,
+    ) +
+    labs(y = expr(m^2 %.% ha^-1), x = "dbh (cm)", fill = "spp") +
+    theme(
+      plot.background = element_blank(),
+      legend.background = element_blank(),
+    )
+})
+```
+:::{.notes}
+- This emphasizes the decreasing trend in redwood abundance
+- The trend is less clear for tanoak
+:::
+
+
+## Fuel: means
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 5.5
+#| fig-width: 9
+
+load("fuel_data_modeling.rda")
+source("./scripts/coord_cartesian_panels.r")
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+local({
+  data <- expected_predictions
+  data |>
+    tidyr::unnest(pred) |>
+    ggplot(aes(pred, treatment)) +
+    tidybayes::stat_halfeye(normalize = "panels") +
+    facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
+    coord_cartesian_panels(
+      panel_limits = tidyr::unnest(dplyr::select(data, lims), lims)
+    ) +
+    scale_y_discrete(labels = toupper) +
+    labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Treatment") +
+    theme_grey(base_size = 20) +
+    theme(
+      plot.background = element_blank(),
+      legend.background = element_blank()
+    )
+})
+```
+:::{.notes}
+- 1hr fuels are slightly higher in HD and HA and lower in LD and GS. Likely due
+  to inputs from residual trees.
+- 10-- and 100hr fuels are very similar across treatments, but slightly
+  increasing with increasing light.
+- duff & litter are highest in HD and lowest in HA. Why?
+- veg is lowest in HA, highest in GS
+:::
+
+## Fuel: comparisons
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-height: 5.5
+#| fig-width: 9.5
+
+local({
+  d <- expected_contrasts
+  d |>
+    unnest(c(pred)) |>
+    ggplot(aes(x = pred, y = contrast)) +
+    tidybayes::stat_halfeye(normalize = "panels") +
+    geom_vline(aes(xintercept = rope)) +
+    geom_vline(aes(xintercept = -rope)) +
+    facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
+    coord_cartesian_panels(
+      panel_limits = unnest(dplyr::select(d, lims), lims)
+    ) +
+    scale_y_discrete(labels = toupper) +
+    labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Treatment") +
+    theme_gray(base_size = 20) +
+    theme(
+      plot.background = element_blank(),
+      legend.background = element_blank()
+    )
+})
+```
+:::{.notes}
+- 1hr HA > GS, and almost HA > LD. Also HD almost > GS
+- Duff & Litter HD maybe greater than HA
+- veg GS > HA; LD maybe > HA
+:::
+
+## Today's plan
+
+1. [What we did]{style="opacity: 50%"}
+1. [Why we did it]{style="opacity: 50%"}
+1. [Some results]{style="opacity: 50%"}
+1. **My questions**
+1. [Your questions]{style="opacity: 50%"}
+
+## My questions
+
+- How to add post-pct to the story
+- Potential questions generated by regen. distributions
+- "Asking questions" of the height model: confidence intervals
+
+## Today's plan
+
+1. [What we did]{style="opacity: 50%"}
+1. [Why we did it]{style="opacity: 50%"}
+1. [Some results]{style="opacity: 50%"}
+1. [My questions]{style="opacity: 50%"}
+1. **Your questions**
+
+## Questions?
+
+learn more at online at:
+
+<https://fisher-j.github.io/multi-age>
+
+## Thanks again
+
+
+## Downed woody fuel classes
+
+Class name | Size (cm)  | Transect length (m)
+---------- | ---------- | -------------------
+1 hr       | < 0.64     | 1
+10 hr      | 0.64 - 2.5 | 2
+100 hr     | 2.5 - 7.6  | 4
+1,000 hr   | > 7.6      | 10
+
+
+## Vegetation: Load calc.
+
+We calculated average load for herbaceous and woody vegetation: 
+
+$$load = ht. \times pct. cover \times \rho,$$
+
+where $\rho$ is a bulk density of 8 and 18 Mg/ha/m for herbaceous and shrub
+components, respectively. 
+ 
+
+## Fuel bed depth
+
+:::: {.columns}
+:::{.column width=60%}
+We estimated the combined average fuel bed depth of all litter and downed woody
+debris within the sampling cylinder.
+:::
+:::{.column width=40%}
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 1.5
+#| fig-height: 1.5
+#| fig-align: right
+plot_design("samp_cyl")
+```
+:::
+::::
+
+## Regeneration density: frequency
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 8
+#| fig-height: 5.5
+
+raw_hist2(
+  dbh < 5 & treat %in% c("gs", "hd"),
+  seq(0, 17.5, 2.5),
+  seq(0, 15, 5),
+  c(2.5, 6000)
+) /
+  raw_hist2(
+    dbh >= 5 & treat %in% c("gs", "hd"),
+    seq(0, 17.5, 2.5),
+    seq(0, 15, 5),
+    c(27, 600)
+  ) +
+  theme(strip.text = element_blank()) +
+  plot_layout(axis_titles = "collect", axes = "collect_x") &
+  theme(
+    plot.background = element_blank(),
+    legend.background = element_blank()
+  )
+```
+
+---
+
+:::: {.columns}
+:::{.column}
+Year 1 height measurement
+:::
+:::{.column}
+![](../figures/measuring_sprouts1.jpg){height=350}
+:::
+::::
