@@ -31,10 +31,10 @@ Thesis committee presentation by Judson Fisher
 ## Today's plan
 
 1. **Introduction**
-1. [What we did]{.fragment fragment-index=1 .semi-fade-out}
-1. [Some results]{.fragment fragment-index=1 .semi-fade-out}
-1. [My questions]{.fragment fragment-index=1 .semi-fade-out}
-1. [Your questions]{.fragment fragment-index=1 .semi-fade-out}
+1. What we did
+1. Some results
+1. My questions
+1. Your questions
 
 ---
 
@@ -107,24 +107,19 @@ Why study fuels in addition to tree growth?
 
 ## Today's plan
 
-1. [Introduction]{.fragment fragment-index=1 .semi-fade-out}
+1. Introduction
 1. **What we did**
-1. [Some results]{.fragment fragment-index=1 .semi-fade-out}
-1. [My questions]{.fragment fragment-index=1 .semi-fade-out}
-1. [Your questions]{.fragment fragment-index=1 .semi-fade-out}
+   - **Implementation**
+   - Sampling procedure
+   - Analysis
+1. Some results
+1. My questions
+1. Your questions
 
 :::{.notes}
 Now that you have and idea of the what and why, I'll explain more of the details
 of what we did.
-:::
 
-## What we did
-
-1. **Implementation**
-1. [Sampling procedure]{style="opacity: 50%"}
-1. [Analysis]{style="opacity: 50%"}
-
-:::{.notes}
 I've broken this section into 3 parts.
 
 By the end of this section you'll understand how the treatments and how they
@@ -192,11 +187,16 @@ And this is that the treatments mean, in a schematic representation.
 [HD]{style="font-size: 2em;"}
 :::
 
-## What we did
+## Today's plan
 
-1. [Implementation]{style="opacity: 50%"}
-1. **Sampling procedure**
-1. [Analysis]{style="opacity: 50%"}
+1. Introduction
+1. **What we did**
+   - Implementation
+   - **Sampling procedure**
+   - Analysis
+1. Some results
+1. My questions
+1. Your questions
 
 :::{.notes}
 At the end of this next section, you'll understand how my sampling design
@@ -347,50 +347,234 @@ That was a lot of response variables. Here they are summarized in three
 categories.
 :::
 
-## What we did
+## Today's plan
 
-1. [Implementation]{style="opacity: 50%"}
-1. [Sampling procedure]{style="opacity: 50%"}
-1. **Analysis**
+1. Introduction
+1. **What we did**
+   - Implementation
+   - Sampling procedure
+   - **Analysis**
+1. Some results
+1. My questions
+1. Your questions
 
 :::{.notes}
-By the end of this section, you'll have an idea of they methods I used to anlyze
+By the end of this section, you'll have an idea of they methods I used to
+analyze
 these data.
 :::
 
-## Sprout height
+## Analytical Framework
 
-- Frequentist framework
-- Model selection was performed using AIC
-- Treatment and year were **factors**
-- Tested various random effects 
-- Included fixed effect model for dispersion
-- Model checked using simulated residuals
+- 16 models across three response categories  
+- Multilevel (mixed-effects) models throughout  
+- Treatment as primary fixed effect  
+- Random effects reflect study design hierarchy  
+- Model structure selected using AIC + residual diagnostics  
+- Models fit with `glmmTMB`  
+- Inference based on population-level marginal means  
 
-## Regeneration density
+::: {.notes}
+- All response variables were analyzed using mixed-effects models to account for
+  nesting within sites, macroplots, and repeated measures where applicable.  
+- Random effects were retained when they explained meaningful variance or
+  influenced fixed-effect estimates.  
+- Candidate distributions and model structures were compared using AIC, and
+  residual diagnostics were evaluated using DHARMa.  
+- Predictions were generated on the response scale and averaged across non-focal
+  predictors to obtain population-level marginal means.  
+:::
 
-I report on:
+## Regeneration Analysis
 
-- Species diameter frequency distributions and
-- Basal area weighted frequency distributions 
+- Basal area (m² ha⁻¹) used to quantify species abundance  
+- Reflects growth + survival under self-thinning  
+- Zero-inflated continuous data → hurdle Gamma model  
+- Treatment as fixed effect  
+- Random intercept: Site × Species  
 
-for each treatment.
+. . . 
 
-## Fuel
+- Douglas-fir seedlings analyzed as counts  
+- Overdispersed counts → negative binomial model  
 
-- Bayesian framework
-- Separate models for six different fuel classes
-- Used $gamma$ hurdle model: zeros modeled separately as a proportion
-- Priors determined from data with support from literature
-- Model checked with posterior predictive distribution
+::: {.notes}
+Sprout tallies from 4-m radius plots were converted to basal area per hectare
+using size-class midpoints. Minor species were grouped as “Other,” and absences
+were coded explicitly as zero.  
+
+Basal area was selected instead of stem density because prolific sprouting in
+redwood and tanoak leads to self-thinning; basal area better captures
+established biomass rather than transient stem counts.  
+
+Basal area was modeled using a hurdle Gamma distribution to separate probability
+of occurrence from abundance when present. Species-specific dispersion was
+allowed, and site-by-species random intercepts accounted for hierarchical
+structure.  
+
+Douglas-fir seedlings were analyzed separately using a negative binomial model
+to account for overdispersion, with random effects for site and macroplot.
+:::
+
+## Sprout Height Analysis
+
+- Two responses:  
+  - Height increment (yrs 1–5, 5–10)  
+  - Total height at year 10  
+
+. . . 
+
+- Normal mixed-effects models  
+
+. . . 
+
+- Fixed effects: Treatment, Species, Growth period  
+- Random intercepts: Tree (repeated measures), Macroplot  
+- Species responses allowed to vary within macroplots  
+
+. . . 
+
+- Variance modeled as a function of predictors  
+
+::: {.notes}
+Height increment included two measurements per tree, so tree was included as a
+random intercept to account for repeated measures.  
+
+Macroplot was included as a random effect to reflect spatial hierarchy.  
+
+We allowed species effects to vary within macroplots using an unstructured
+covariance matrix. This accounts for heteroscedasticity and allows species to
+co-vary within plots — for example, testing whether plots favorable for one
+species are also favorable for others.  
+
+For height increment, fixed effects included treatment, growth period, species,
+and the species × growth period interaction.  
+
+For total height at year 10, the best model included additive effects of
+treatment and species.  
+
+Dispersion was modeled as a function of predictors to allow variance to differ
+among treatments, species, and growth periods.
+:::
+
+## Fuels Analysis
+
+- Fuel load (Mg ha⁻¹) estimated by standard planar intercept methods  
+- Classes: 1–1,000 hr, duff/litter, vegetation  
+
+. . . 
+
+- Zero-inflated continuous data → Gamma mixed models  
+- Hurdle component used when zeros were present  
+
+. . . 
+
+- Random intercepts: Site, Macroplot, Transect corner  
+- Pre- and post-PCT modeled separately  
+- Model components (mean, zeros, dispersion) selected using AIC  
+
+::: {.notes}
+Fuel loads were calculated using Brown (1974) methods with regionally derived
+parameters.  
+
+Duff and litter were combined and bulk density was estimated from published
+regional averages.  
+
+Vegetation fuels were calculated using standard bulk density constants and
+combined to simplify interpretation.  
+
+Gamma mixed models with a log link were used because fuel loads are continuous
+and right-skewed.  
+
+A hurdle component was included when zeros were present to separately model
+occurrence and positive load.  
+
+Random effects reflected the nested sampling design (site → macroplot → transect
+corner).  
+
+Pre- and post-PCT fuels were modeled separately because not all fuel classes
+were measured post-treatment.
+:::
 
 ## Today's plan
 
-1. [What we did]{style="opacity: 50%"}
-1. [Why we did it]{style="opacity: 50%"}
-1. **Some results**
-1. [My questions]{style="opacity: 50%"}
-1. [Your questions]{style="opacity: 50%"}
+1. Introduction
+1. What we did
+1. **Results**
+   - **Regeneration density**
+   - Sprout height
+   - Fuel
+1. My questions
+1. Your questions
+
+## Regeneration Density
+
+- No statistically supported treatment differences  
+
+- Redwood basal area declined sharply with increasing retention  
+  - GS highest → HD lowest (~50% reduction per step)  
+
+- Tanoak response more modest and less variable  
+
+- Greater uncertainty in redwood responses  
+
+::: {.notes}
+Although treatment differences were not statistically significant, trends followed expectations based on light availability.  
+
+Redwood showed the clearest decline in basal area with increasing retention, consistent with strong light sensitivity.  
+
+Tanoak followed a similar but more moderate pattern, reflecting greater shade tolerance.  
+
+Uncertainty was higher for redwood, likely due to spatial variability in light conditions and patchy sprout distribution.
+:::
+
+## Regeneration Takeaways
+
+- Douglas-fir regeneration low (~400 seedlings ha⁻¹) and similar across treatments  
+
+- Openness most strongly favored redwood  
+
+- High retention treatments reduced redwood advantage  
+
+- Trends consistent with shade tolerance theory  
+
+::: {.notes}
+Douglas-fir occurred at modest densities and did not differ among treatments.  
+
+The primary regeneration signal was the strong response of redwood to openness.  
+
+As retention increased, differences between redwood and tanoak narrowed, consistent with shade tolerance expectations.  
+
+While basal area differences were not statistically supported, the ecological trends are coherent and align with previous literature.
+:::
+
+## Regeneration Summary
+
+::: {.notes}
+This figure synthesizes regeneration responses across treatments.  
+
+Redwood shows a strong positive response to increasing openness, while tanoak’s response is more moderate.  
+
+Under higher retention, differences between species narrow, consistent with shade tolerance theory.  
+
+Although uncertainty limited statistical support for basal area differences, the overall directional trends are clear and reinforced by sprout height results, which I will show next.
+:::
+
+```{r}
+#| include: false
+
+library(ggplot2)
+load("./thesis_defense_plots.rda")
+```
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| label: fig-regen-ba
+#| fig-height: 5.5
+#| fig-width: 9.5
+
+fig_regen_ba
+```
+
 
 ## Sprout height model
 
@@ -518,116 +702,6 @@ Our data were only sufficient to detect a statistical difference for height in
 year 10 for the GS treatment
 :::
 
-## Regeneration density: frequency
-
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-height: 5.5
-#| fig-width: 11
-
-# Trees per hectare by species and size.
-
-library(ggplot2)
-library(patchwork)
-library(dplyr)
-library(forcats)
-
-load("./regen_visualize.rda")
-
-raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
-  generate_facet_totals <- function(data) {
-    summarize(
-      data,
-      .by = treat,
-      n = paste("Total: ", round(n() * per_ha["treat"]))
-    )
-  }
-  regen |>
-    filter({{ group }}) |>
-    ggplot(aes(dbh, fill = spp)) +
-    stat_bin(
-      aes(y = after_stat(count) * per_ha["treat"]),
-      breaks = bin_breaks
-    ) +
-    ggpp::geom_text_npc(
-      data = generate_facet_totals,
-      aes(npcx = "center", npcy = "top", label = n, fill = NULL),
-      size = 6
-    ) +
-    facet_wrap(vars(treat), nrow = 1) +
-    labs(y = expression(trees %.% ha^-1), x = "dbh (cm)", fill = "spp") +
-    scale_x_continuous(breaks = scale_breaks) +
-    scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
-    scale_fill_manual(
-      values = spp_col(regen, scales::brewer_pal, palette = "Set2")
-    ) +
-    theme_bw(base_size = 20)
-}
-
-raw_hist2(dbh < 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
-  raw_hist2(dbh >= 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(27, 600)) +
-  theme(strip.text = element_blank()) +
-  plot_layout(axis_titles = "collect", axes = "collect_x") &
-  theme(
-    plot.background = element_blank(),
-    legend.background = element_blank()
-  )
-```
-:::{.notes}
-- the number of tanoak in the smallest size class increases with greater
-  competition.
-- the number of stems in other size classes follow a decreasing trend
-- The decreasing trend is more pronounced for redwood
-:::
-
-## Regeneration density: basal area
-
-```{r, dev="png", dev.args=list(bg="transparent")}
-# Basal area by species and size.
-
-local({
-  bin_breaks <- seq(0, 17.5, 2.5)
-  scale_breaks <- seq(0, 15, 5)
-  facet_total_label <- function(data) {
-    summarize(
-      data,
-      .by = treat,
-      ba_ha = round(sum(per_ha["treat"] * for_const(dbh)), 1)
-    )
-  }
-  colors <- spp_col(regen, scales::brewer_pal, palette = "Set2")
-  regen |>
-    ggplot(aes(
-      dbh,
-      fill = forcats::fct_reorder(spp, dbh, .fun = ~ sum(.x^2))
-    )) +
-    stat_bin(
-      aes(weight = per_ha["treat"] * for_const(dbh)),
-      breaks = bin_breaks
-    ) +
-    ggpp::geom_text_npc(
-      data = facet_total_label,
-      mapping = aes(npcx = "center", npcy = "top", label = ba_ha, fill = NULL),
-      size = 6
-    ) +
-    facet_wrap(vars(treat), nrow = 1) +
-    scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
-    scale_x_continuous(breaks = scale_breaks) +
-    scale_fill_manual(values = colors) +
-    theme_bw(
-      base_size = 20,
-    ) +
-    labs(y = expr(m^2 %.% ha^-1), x = "dbh (cm)", fill = "spp") +
-    theme(
-      plot.background = element_blank(),
-      legend.background = element_blank(),
-    )
-})
-```
-:::{.notes}
-- This emphasizes the decreasing trend in redwood abundance
-- The trend is less clear for tanoak
-:::
-
 
 ## Fuel: means
 
@@ -704,11 +778,11 @@ local({
 
 ## Today's plan
 
-1. [What we did]{style="opacity: 50%"}
-1. [Why we did it]{style="opacity: 50%"}
-1. [Some results]{style="opacity: 50%"}
+1. Introduction
+1. What we did
+1. Some results
 1. **My questions**
-1. [Your questions]{style="opacity: 50%"}
+1. Your questions
 
 ## My questions
 
@@ -718,10 +792,10 @@ local({
 
 ## Today's plan
 
-1. [What we did]{style="opacity: 50%"}
-1. [Why we did it]{style="opacity: 50%"}
-1. [Some results]{style="opacity: 50%"}
-1. [My questions]{style="opacity: 50%"}
+1. Introduction
+1. What we did
+1. Some results
+1. My questions
 1. **Your questions**
 
 ## Questions?
@@ -775,6 +849,38 @@ plot_design("samp_cyl")
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| fig-width: 8
 #| fig-height: 5.5
+
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+load("./regen_visualize.rda")
+
+raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
+  generate_facet_totals <- function(data) {
+    summarize(
+      data,
+      .by = treat,
+      n = paste("Total: ", round(n() * per_ha["treat"]))
+    )
+  }
+  regen |>
+    filter({{ group }}) |>
+    ggplot(aes(dbh, fill = spp)) +
+    stat_bin(aes(y = after_stat(count) * per_ha["treat"]), breaks = bin_breaks) +
+    ggpp::geom_text_npc(
+      data = generate_facet_totals,
+      aes(npcx = "center", npcy = "top", label = n, fill = NULL),
+      size = 6
+    ) +
+    facet_wrap(vars(treat), nrow = 1) +
+    labs(y = expression(trees %.% ha^-1), x = "dbh (cm)", fill = "spp") +
+    scale_x_continuous(breaks = scale_breaks) +
+    scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
+    scale_fill_manual(
+      values = spp_col(regen, scales::brewer_pal, palette = "Set2")
+    ) +
+    theme_bw(base_size = 20)
+}
 
 raw_hist2(
   dbh < 5 & treat %in% c("gs", "hd"),

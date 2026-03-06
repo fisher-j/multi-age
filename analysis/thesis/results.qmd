@@ -396,7 +396,7 @@ treatments were intermediate. -->
 #|   overlapping arrows indicate a p-values greater than 0.05. Note: Y-axes vary
 #|   by species.
 
-regen_all |>
+fig_regen_ba <- regen_all |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
   select(spp, emm_df) |>
   unnest(emm_df) |>
@@ -405,6 +405,8 @@ regen_all |>
   draw_emm_emm() +
   scale_x_discrete(labels = toupper) +
   labs(x = "Treatment", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1)))
+
+fig_regen_ba
 ```
 
 ```{r}
@@ -473,7 +475,7 @@ tanoak.
 #|   represent the 95% confidence interval, black dots---the mean, and
 #|   non-overlapping blue arrows signify statistical significance (α = 0.05).
 
-regen_rw_to |>
+fig_regen_ba_rw_to <- regen_rw_to |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
   select(treat, emm_df) |>
   unnest(emm_df) |>
@@ -482,6 +484,8 @@ regen_rw_to |>
   draw_emm_emm() +
   scale_x_discrete(labels = species_labels) +
   labs(x = "Species", y = expression(Basal ~ Area ~ (m^2 %.% ha^-1)))
+
+fig_regen_ba_rw_to
 ```
 
 ### Douglas-fir counts
@@ -508,11 +512,13 @@ df_counts <- marginaleffects_to_emmeans(
   contrast = list(treat = "pairwise")
 )
 
-emm_to_df_emm(df_counts) |>
+fig_df_counts <- emm_to_df_emm(df_counts) |>
   mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
   ggplot(emm_mapping(x = level)) +
   draw_emm_emm() +
   labs(x = "Treatment", y = expression(Density ~ (stems %.% ha^-1)))
+
+fig_df_counts
 ```
 
 ## Sprout heights
@@ -598,7 +604,7 @@ higher than the HA treatment by about `r rw_to_ht_pairs$SESE[["LD - HA"]]$estima
 #|   after harvest. Gray bars represent confidence intervals and statistical
 #|   significance (α = 0.05) is indicated by non-overlapping blue arrows.
 
-ht_inc_treat |>
+fig_sprout_ht_inc_treat <- ht_inc_treat |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
   select(spp, emm_df) |>
   unnest(emm_df) |>
@@ -606,6 +612,8 @@ ht_inc_treat |>
   facet_wrap(~spp, ncol = 2, labeller = plot_labels) +
   draw_emm_emm() +
   labs(x = "Treatment", y = expression(Height ~ Increment ~ (m %.% yr^-1)))
+
+fig_sprout_ht_inc_treat
 ```
 
 
@@ -670,7 +678,7 @@ period (@fig-sprout-ht-inc-year).
 #|   data. Gray bars represent confidence intervals and statistical significance
 #|   (α = 0.05) is indicated by non-overlapping blue arrows.
 
-ht_inc_year |>
+fig_sprout_ht_inc_year <- ht_inc_year |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
   select(spp, emm_df) |>
   unnest(emm_df) |>
@@ -687,6 +695,8 @@ ht_inc_year |>
     x = "Growth Period (years)",
     y = expression(Height ~ increment ~ (m %.% year^-1))
   )
+
+fig_sprout_ht_inc_year
 ```
 
 
@@ -749,7 +759,7 @@ heights followed the pattern GS > LD > HA ≥ HD (@fig-sprout-ht-yr-10).
 #|   harvest treatments. Non-overlapping blue arrows indicate statistically
 #|   significant differences between treatments within a species.
 
-ht_year_10 |>
+fig_sprout_ht_yr_10 <- ht_year_10 |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
   select(spp, emm_df) |>
   unnest(emm_df) |>
@@ -763,6 +773,8 @@ ht_year_10 |>
   ) +
   facet_wrap(~spp, labeller = plot_labels) +
   labs(x = "Treatment", y = "Height (m)")
+
+fig_sprout_ht_yr_10
 ```
 
 ## Fuels
@@ -854,7 +866,7 @@ treatments were intermediate.
 #|   different fuel-class models. Non-overlapping blue arrows indicates
 #|   statistical significance at the α = 0.05 level.
 
-fuel_tmb$pre |>
+fig_fuel_pre_pct <- fuel_tmb$pre |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
   group_map(function(x, ...) {
     emm_to_df_emm(x$emmobj[[1]]) |>
@@ -869,6 +881,8 @@ fuel_tmb$pre |>
   }) |>
   patchwork::wrap_plots() +
   patchwork::plot_layout(axes = "collect")
+
+fig_fuel_pre_pct
 ```
 
 ### Post-pct
@@ -973,7 +987,7 @@ The LD treatment was intermediate.
 #|   pre and post-pct conditions. This represents slash fuels recruited to the
 #|   forest floor following the pre-commercial thinning.
 
-fuel_tmb$post |>
+fig_fuel_post_pct <- fuel_tmb$post |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
   group_map(function(x, ...) {
     emm_to_df_emm(x$emmobj[[1]]) |>
@@ -988,6 +1002,8 @@ fuel_tmb$post |>
   }) |>
   patchwork::wrap_plots() +
   patchwork::plot_layout(axes = "collect")
+
+fig_fuel_post_pct
 ```
 
 ### Pre-post commercial thinning comparison
@@ -1010,7 +1026,7 @@ comparable, due to slightly different model structures.
 #|   are from similar, but not necessarily identical models.
 
 # pre and post together
-fuel_tmb$pre |>
+fig_fuel_pct_comparison <- fuel_tmb$pre |>
   # only use fuel classes that are the same between PCT phase
   filter(class %in% c("onehr", "tenhr", "hundhr", "thoushr", "veg")) |>
   group_map(function(x, ...) {
@@ -1048,6 +1064,8 @@ fuel_tmb$pre |>
     axis_title = "collect",
     guides = "collect"
   )
+
+fig_fuel_pct_comparison
 ```
 
 ```{r}
@@ -1103,5 +1121,22 @@ save(
   ht_year_10,
   fuel_tmb,
   file = "./results_appendix_deps.rda"
+)
+```
+
+```{r}
+#| include: false
+
+save(
+  fig_regen_ba,
+  fig_regen_ba_rw_to,
+  fig_df_counts,
+  fig_sprout_ht_inc_treat,
+  fig_sprout_ht_inc_year,
+  fig_sprout_ht_yr_10,
+  fig_fuel_pre_pct,
+  fig_fuel_post_pct,
+  fig_fuel_pct_comparison,
+  file = "./thesis_defense_plots.rda"
 )
 ```
