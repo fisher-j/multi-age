@@ -1,5 +1,15 @@
 
+## 2026-03-06 
+ - have defense methods sections complete and reuslts/discussion for regen
+ - starting thesis defense
+
+## 2026-02-22 
+ - re-render, minor edit
+ - worked through JK comments and various other comment inspried edits
+
 ## 2026-02-21 
+ - re-render, formatting
+ - worked on discussion summary paragraphs, and reworked some of conclusion
  - just have JK discussion points left, rebuilt docs
 
 ## 2026-02-15 

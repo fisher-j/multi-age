@@ -229,16 +229,27 @@ minc14 = glmmTMB(
   data = dinc
 )
 
+minc15 <- glmmTMB(
+  ht_inc ~ treat * spp + year * spp + (1 | tree) + (0 + spp | plot),
+  dispformula = ~ spp * year * treat,
+  data = dinc
+)
+
+minc16 <- glmmTMB(
+  ht_inc ~ treat * spp * year + (1 | tree) + (0 + spp | plot),
+  dispformula = ~ spp * year * treat,
+  data = dinc
+)
 
 modelsummary(
-  list(minc[[12]], minc13, minc14),
+  list(minc[[12]], minc13, minc14, minc15, minc16),
   shape = term:component ~ model,
   coef_omit = ".*dispersion$",
   coef_rename = rearrange_coef_names,
   gof_omit = "F|Log.Lik",
   stars = TRUE,
   output = "markdown",
-  metrics = c("AIC", "BIC", "RMSE"),
+  metrics = c("AIC", "AICc", "RMSE"),
   estimator = "ML",
 )
 
@@ -265,7 +276,7 @@ The final selected model, based on AIC and examination of residuals had the
 form: 
 
 ```{r, echo = FALSE}
-minc_sel <- minc[[12]]
+minc_sel <- minc15
 format_model_formula(minc_sel) |> cat()
 ```
 
@@ -446,6 +457,13 @@ mht1010 <- glmmTMB(
   dispformula = ~ spp * treat
 )
 
+mht1011 <- glmmTMB(
+  ht ~ treat * spp + (0 + spp | plot) + (1 | site),
+  family = gaussian(link = "log"),
+  data = dht10,
+  dispformula = ~ spp * treat
+)
+
 mht10_list <- lst(
   mht101,
   mht102,
@@ -460,9 +478,9 @@ mht10_list <- lst(
 
 # nolint start
 # # Here I'm testing if adding a random effect for site improves the model. It
-# # doesn't
+# # doesn't. I also check the three-way interaction again.
 # modelsummary(
-#   list(mht109, mht1010),
+#   list(mht109, mht1010, mht1011),
 #   stars = TRUE,
 #   output = "markdown",
 #   shape = term:component + statistic ~ model,
@@ -492,13 +510,14 @@ We can see the residuals are not perfect, but nor are they very offensive.
 ```{r}
 
 plot(simulateResiduals(mht109))
+plot(simulateResiduals(mht1011))
 ```
 
 ### Here I make my selection
 
 ```{r}
 
-ht10_sel <- mht109
+ht10_sel <- mht1011
 ```
 
 ### Year 10 only Results

@@ -1,6 +1,13 @@
 ---
 execute:
   echo: false
+format:
+  pdf:
+    fig-width: 5
+    fig-height: 5
+  docx:
+    fig-width: 5
+    fig-height: 5
 ---
 
 # Results
@@ -238,7 +245,7 @@ marginaleffects_to_emmeans <- function(
   pred <- predictions(
     model,
     newdata = newdata,
-    re.form = NULL,
+    re.form = NA,
     by = by
   )
   comp <- comparisons(
@@ -246,7 +253,7 @@ marginaleffects_to_emmeans <- function(
     newdata = newdata,
     variables = contrast,
     by = c(by_var, "contrast"),
-    re.form = NULL
+    re.form = NA
   )
   # return a single emmobj if by_var is NULL, otherwise return a nested tibble
   if (!is.null(by_var)) {
@@ -272,7 +279,7 @@ marginaleffects_to_emmeans <- function(
 ```{r}
 regen_all <- marginaleffects_to_emmeans(
   mba,
-  list(spp = unique, treat = unique, site = unique),
+  list(spp = unique, treat = unique),
   x_var = "treat",
   by_var = "spp",
   contrast = list(treat = "pairwise")
@@ -450,7 +457,8 @@ rw_to_mean <-
   deframe()
 ```
 
-<!-- @fig-regen-ba-rw-to shows the same model as @fig-regen-ba, but with an emphasis
+<!-- 
+@fig-regen-ba-rw-to shows the same model as @fig-regen-ba, but with an emphasis
 on treatment comparisons between redwood and tanoak. 
 This shows that we expect on average, 
 `r abs(rw_to_pairs$gs[[1]]$estimate)` m^2^ ha^-1^ greater redwood basal area
@@ -459,7 +467,8 @@ about `r abs(rw_to_pairs$ld[[1]]$estimate)` m^2^
 ha^-1^ in the LD treatment (p = `r rw_to_pairs$ld[[1]]$p.value`), and about 
 `r abs(rw_to_pairs$ha[[1]]$estimate)` m^2^ ha^-1^ in the HA treatment 
 (p = `r rw_to_pairs$ha[[1]]$p.value`). In the HD treatment, we expect to see
-slightly higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`). -->
+slightly higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`).
+-->
 
 @fig-regen-ba-rw-to highlights the rapid decline in redwood basal area density
 relative to tanoak with increasing overstory retention. It also illustrates the
@@ -492,7 +501,7 @@ fig_regen_ba_rw_to
 
 The selected model for Douglas-fir counts did not indicate any statistically
 significant differences between treatments. Generally, we expect about 2
-seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
+seedlings per 4-meter-radius plot, or about 400 seedlings per hectare
 (@fig-df-counts).
 
 ```{r}
@@ -506,7 +515,7 @@ seedlings per 4-meter-radius plot, or about 413 seedlings per hectare
 
 df_counts <- marginaleffects_to_emmeans(
   model = mdf,
-  newdata = list(treat = unique, site = unique),
+  newdata = list(treat = unique),
   x_var = "treat",
   by_var = NULL,
   contrast = list(treat = "pairwise")
@@ -529,7 +538,7 @@ fig_df_counts
 
 ht_inc_treat <- marginaleffects_to_emmeans(
   model = minc_sel,
-  newdata = NULL,
+  newdata = list(spp = unique, treat = unique, year = unique),
   x_var = "treat",
   by_var = "spp",
   contrast = list(treat = "pairwise")
@@ -705,7 +714,7 @@ fig_sprout_ht_inc_year
 ```{r}
 ht_year_10 <- marginaleffects_to_emmeans(
   model = ht10_sel,
-  newdata = list(spp = unique, treat = unique, plot = unique),
+  newdata = list(spp = unique, treat = unique),
   x_var = "treat",
   by_var = "spp",
   contrast = list(treat = "pairwise")
@@ -1120,6 +1129,10 @@ save(
   ht_inc_year,
   ht_year_10,
   fuel_tmb,
+  mba,
+  mdf,
+  minc_sel,
+  ht10_sel,
   file = "./results_appendix_deps.rda"
 )
 ```
