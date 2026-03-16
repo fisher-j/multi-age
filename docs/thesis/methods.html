@@ -334,7 +334,7 @@ Figure&nbsp;2.2: A diagram of the fuel sampling design depicting a 0.2-hectare m
 <p>Models were interpreted using estimated marginal means calculated with the R packages <code>marginaleffects</code> and <code>emmeans</code> <span class="citation" data-cites="lenthEmmeansEstimatedMarginal2021 arel-bundockHowInterpretStatistical2024">(<a href="discussion.html#ref-arel-bundockHowInterpretStatistical2024" role="doc-biblioref">Arel-Bundock et al., 2024</a>; <a href="discussion.html#ref-lenthEmmeansEstimatedMarginal2021" role="doc-biblioref">Lenth, 2021</a>)</span>. Predictions incorporating the effects of all model components were made on the response scale for a grid of predictors consisting of all unique combinations of factors in the data that were used in at least one component of a given model (we didn’t have numeric predictors) except in the case of tree heights where predictions were made for each observation in the data set. Standard errors for the predictions were calculated using the delta method. Predictions were averaged across non-focal predictors (especially “random” effects) to obtain the population estimates of marginal means. These means are expected to be applicable to other treatments when conducted across equal proportions of sites with conditions similar to those used in my study. Notably, my population estimates assume equal proportions of north and south facing aspects.</p>
 <p>The formulas below use <span class="math inline">\(\beta\)</span> to represent fixed effects and <span class="math inline">\(\alpha\)</span> to represent random effects. Subscripts indicate the variable associated with each effect. Superscripted Greek letters indicate the model component where fixed or random effects are present in more than one component (e.g., <span class="math inline">\(\mu\)</span> for the conditional model, <span class="math inline">\(\pi\)</span> for the hurdle model, and <span class="math inline">\(\phi\)</span> for the dispersion model). A “hurdle gamma” distribution is used for models of basal area and fuels and is defined as</p>
 <p><span class="math display">\[
-\text{hurdle\_gamma}(y_i \mid \pi_i, \mu_i, \phi_i) =
+f(y_i \mid \pi_i, \mu_i, \phi_i) =
 \begin{cases}
 1-\pi_i &amp; \text{if } y_i = 0 \\
 \pi_i \cdot \text{Gamma}(y_i \mid \mu_i, \phi_i) &amp; \text{if } y_i &gt; 0
@@ -354,7 +354,11 @@ Y_i \sim \text{hurdle\_gamma}(\pi_i, \mu_i, \phi_i)
 \text{logit}(\pi_i) = \beta^{\pi}_0 + \beta^{\pi}_{\text{spp}} \cdot \text{Species}_i
 \]</span></p>
 <p><span class="math display">\[
-\log(\mu_i) = \beta^{\mu}_0 + \beta^{\mu}_{\text{trt}} \cdot \text{Trt} + \alpha_{j[i]}
+\log(\mu_i) = \beta^{\mu}_0 +
+\beta^{\mu}_{\text{trt}} \cdot \text{Trt} +
+\beta^{\mu}_{\text{spp}} \cdot \text{Spp} +
+\beta^{\mu}_{\text{trt:spp}}(\text{Spp} \times \text{Trt}) +
+\alpha_{j[i]}
 \]</span></p>
 <p><span class="math display">\[
 \log(\phi_i) = \beta^{\phi}_0 + \beta^{\phi}_{\text{spp}} \cdot \text{Species}_i
