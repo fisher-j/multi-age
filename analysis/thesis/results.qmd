@@ -799,7 +799,7 @@ fig_sprout_ht_yr_10
 # creating the we need to be explicit about the grouping.
 fuel_tmb$pre <- mutate(
   fuel_tmb$pre,
-  newdata = list(tidyr::expand(data, treatment, nesting(site, block, corner))),
+  newdata = list(tidyr::expand(data, treatment, site)),
   emmobj = list(marginaleffects_to_emmeans(
     model = mod,
     newdata = newdata,
@@ -899,7 +899,7 @@ fig_fuel_pre_pct
 ```{r}
 fuel_tmb$post <- mutate(
   fuel_tmb$post,
-  newdata = list(tidyr::expand(data, treatment, nesting(site, block, corner))),
+  newdata = list(tidyr::expand(data, treatment, site)),
   emmobj = list(marginaleffects_to_emmeans(
     model = mod,
     newdata = newdata,
@@ -1119,6 +1119,8 @@ fuel_tmb$pre |>
 #| include: false
 
 save(
+  fuel_class_labels,
+  per_ha,
   format_model_formula,
   print_model_info,
   standard_model_col_names,

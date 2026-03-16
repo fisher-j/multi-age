@@ -408,15 +408,19 @@ Y_i \sim \text{NB1}(\mu_i, \phi); \quad \text{where} \quad Var(Y_i) = \mu_i +
 <section id="height-increment" class="level4" data-number="2.4.2.1">
 <h4 data-number="2.4.2.1" class="anchored" data-anchor-id="height-increment"><span class="header-section-number">2.4.2.1</span> Height increment</h4>
 <p>For height increment, there were two measurements for each tree: increment for years 1 to 5 and increment for years 5 to 10. Thus, analysis of these data included <code>tree</code> as a candidate random effect. While not making a difference for analysis results, it is worth noting that these data were structured differently from the other datasets in that <code>plot</code> was made a globally unique identifier, thus making explicit the nesting of plots within sites or treatments and eliminating the need to specify this nesting structure in the R code model formulas.</p>
-<p>The selected height increment model used a normal response distribution on the identity link. It included treatment, growth period, species, and the interaction of species and growth period as fixed effects. A random intercept was included for tree (multiple observations) and macro-plot, and another random effect allowed the response to vary by species differently for each macro plot. The dispersion parameter for the response was modeled (with a log link) as a function of treatment, growth period, species and all three-way interactions .</p>
+<p>The selected height increment model used a normal response distribution on the identity link. It included treatment, growth period, species, the interaction of species and growth period, and the interaction of treatment and species as fixed effects. The treatment/species interaction was included not because the interaction was significant, but because it represented a fundamental research question. A random intercept was included for tree (multiple observations) and macro-plot, and another random effect allowed the response to vary by species differently for each macro plot. The dispersion parameter for the response was modeled (with a log link) as a function of treatment, growth period, species and all three-way interactions .</p>
 <p><span class="math display">\[
 Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
 \]</span></p>
 <p><span class="math display">\[
-\mu_i = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{year}}^{\mu}
-\cdot \text{Year}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i +
+\mu_i = \beta_0^{\mu} +
+\beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i +
+\beta_{\text{year}}^{\mu} \cdot \text{Year}_i +
+\beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i +
+\beta_{\text{spp:trt}}^{\mu}(\text{Spp}_i \times \text{Trt}_i) +
 \beta_{\text{spp:year}}^{\mu}(\text{Spp}_i \times \text{Year}_i) +
-\alpha_{\text{tree}[i]} + \alpha_{\text{macro}[i],\text{spp}[i]}
+\alpha_{\text{tree}[i]} +
+\alpha_{\text{macro}[i],\text{spp}[i]}
 \]</span></p>
 <p><span class="math display">\[
 \log(\sigma_i) = \beta^{\sigma}_0 + \beta^{\sigma}_{\text{trt}} \cdot \text{Trt}_i + \beta^{\sigma}_{\text{yr}}
@@ -443,12 +447,16 @@ Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
 </section>
 <section id="height-at-year-10" class="level4" data-number="2.4.2.2">
 <h4 data-number="2.4.2.2" class="anchored" data-anchor-id="height-at-year-10"><span class="header-section-number">2.4.2.2</span> Height at year 10</h4>
-<p>Sprout heights at year 10 were modeled with a normal response and a log link. The best model included species and treatment, but no interactions in the fixed effects. This suggests that treatments do not affect species differentially in terms of the mean response (height at year 10). It also included a model for dispersion (log link) with predictors species, treatment, and their interaction .</p>
+<p>Sprout heights at year 10 were modeled with a normal response and a log link. The model with the lowest AIC included species and treatment, but no interactions in the fixed effects. I included the interaction of species and treatment because it was central to our question. I also included a model for dispersion (log link) with predictors species, treatment, and their interaction .</p>
 <p><span class="math display">\[
 Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
 \]</span></p>
 <p><span class="math display">\[
-\log(\mu_i) = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i + \alpha_{\text{spp}[i], \text{macro}[i]}
+\log(\mu_i) = \beta_0^{\mu} +
+\beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i +
+\beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i +
+\beta_{\text{spp:trt}}^{\mu}(\text{Spp} \times \text{Trt}) +
+\alpha_{\text{spp}[i], \text{macro}[i]}
 \]</span></p>
 <p><span class="math display">\[
 \log(\sigma_i) = \beta^{\sigma}_0 + \beta^{\sigma}_{\text{trt}} \cdot

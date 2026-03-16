@@ -194,7 +194,7 @@ model). A "hurdle gamma" distribution is used for models of basal area and fuels
 and is defined as
 
 $$
-\text{hurdle\_gamma}(y_i \mid \pi_i, \mu_i, \phi_i) = 
+f(y_i \mid \pi_i, \mu_i, \phi_i) = 
 \begin{cases}
 1-\pi_i & \text{if } y_i = 0 \\
 \pi_i \cdot \text{Gamma}(y_i \mid \mu_i, \phi_i) & \text{if } y_i > 0
@@ -242,7 +242,11 @@ $$
 $$
 
 $$
-\log(\mu_i) = \beta^{\mu}_0 + \beta^{\mu}_{\text{trt}} \cdot \text{Trt} + \alpha_{j[i]}
+\log(\mu_i) = \beta^{\mu}_0 + 
+\beta^{\mu}_{\text{trt}} \cdot \text{Trt} + 
+\beta^{\mu}_{\text{spp}} \cdot \text{Spp} + 
+\beta^{\mu}_{\text{trt:spp}}(\text{Spp} \times \text{Trt}) + 
+\alpha_{j[i]}
 $$
 
 $$
@@ -324,23 +328,29 @@ of plots within sites or treatments and eliminating the need to specify this
 nesting structure in the R code model formulas.
 
 The selected height increment model used a normal response distribution on the
-identity link. It included treatment, growth period, species, and the
-interaction of species and growth period as fixed effects. A random intercept
-was included for tree (multiple observations) and macro-plot, and another
-random effect allowed the response to vary by species differently for each macro
-plot. The dispersion parameter for the response was modeled (with a log link) as
-a function of treatment, growth period, species and all three-way interactions
-.  
+identity link. It included treatment, growth period, species, the interaction of
+species and growth period, and the interaction of treatment and species  as
+fixed effects. The treatment/species interaction was included not because the
+interaction was significant, but because it represented a fundamental research
+question. A random intercept was included for tree (multiple observations) and
+macro-plot, and another random effect allowed the response to vary by species
+differently for each macro plot. The dispersion parameter for the response was
+modeled (with a log link) as a function of treatment, growth period, species and
+all three-way interactions .
 
 $$
 Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
 $$
 
 $$
-\mu_i = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{year}}^{\mu}
-\cdot \text{Year}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i +
+\mu_i = \beta_0^{\mu} + 
+\beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + 
+\beta_{\text{year}}^{\mu} \cdot \text{Year}_i + 
+\beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i +
+\beta_{\text{spp:trt}}^{\mu}(\text{Spp}_i \times \text{Trt}_i) + 
 \beta_{\text{spp:year}}^{\mu}(\text{Spp}_i \times \text{Year}_i) +
-\alpha_{\text{tree}[i]} + \alpha_{\text{macro}[i],\text{spp}[i]}
+\alpha_{\text{tree}[i]} + 
+\alpha_{\text{macro}[i],\text{spp}[i]}
 $$
 
 $$
@@ -373,9 +383,9 @@ $$
 #### Height at year 10
 
 Sprout heights at year 10 were modeled with a normal response and a log link.
-The best model included species and treatment, but no interactions in the fixed
-effects. This suggests that treatments do not affect species differentially in
-terms of the mean response (height at year 10). It also included a model for
+The model with the lowest AIC included species and treatment, but no
+interactions in the fixed effects. I included the interaction of species and
+treatment because it was central to our question. I also included a model for
 dispersion (log link) with predictors species, treatment, and their interaction
 .
 
@@ -384,7 +394,11 @@ Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
 $$
 
 $$
-\log(\mu_i) = \beta_0^{\mu} + \beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + \beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i + \alpha_{\text{spp}[i], \text{macro}[i]}
+\log(\mu_i) = \beta_0^{\mu} + 
+\beta_{\text{trt}}^{\mu} \cdot \text{Trt}_i + 
+\beta_{\text{spp}}^{\mu} \cdot \text{Spp}_i +
+\beta_{\text{spp:trt}}^{\mu}(\text{Spp} \times \text{Trt}) +
+\alpha_{\text{spp}[i], \text{macro}[i]}
 $$
 
 $$
