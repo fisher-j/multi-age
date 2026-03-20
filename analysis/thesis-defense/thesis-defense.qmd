@@ -576,131 +576,67 @@ fig_regen_ba
 ```
 
 
-## Sprout height model
+## Sprout Height — Year 10
+
+:::{.columns}
+:::{.column width=55%}
+
+- Strong treatment effect on final height  
+
+- GS > LD > HA ≥ HD  
+
+- Redwood consistently taller than tanoak  
+
+- Openness drives rapid early development  
+
+:::
+:::{.column width=45%}
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-height: 5
-#| fig-width: 12
+#| fig-width: 4
+#| fig-height: 4
+#| fig-align: center
 
-# Modeled heights, confidence intervals, and distribution of data.
-
-library(dplyr)
-library(emmeans)
-library(ggplot2)
-library(glmmTMB)
-library(ggdist)
-library(multcomp)
-library(multcompView)
-load("./sprout_modeling.rda")
-
-mht18emmeans <- emmeans(
-  mht18,
-  c("spp", "treat", "year"),
-  type = "response"
-)
-
-mht18emmeans |>
-  as_tibble() |>
-  mutate(
-    year = as.numeric(levels(year))[year]
-  ) |>
-  rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL"))) |>
-  ggplot(aes(year, response, color = spp, fill = spp, group = spp)) +
-  geom_line() +
-  facet_wrap(~treat, nrow = 1) +
-  geom_ribbon(
-    aes(ymin = lower.CL, ymax = upper.CL, color = NULL),
-    alpha = .2
-  ) +
-  stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
-  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
-  theme_gray(base_size = 20) +
-  theme(
-    plot.background = element_blank(),
-    legend.background = element_blank(),
-    legend.position = "bottom"
-  ) +
-  labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species") +
-  scale_x_continuous(breaks = c(1, 5, 10)) +
-  coord_cartesian(xlim = c(1, 11))
+fig_sprout_ht_yr_10
 ```
-:::{.notes}
-- redwood is growing faster than tanoak
-- redwood is taller than tanoak
-- the difference in slow down in growth rates is negligible across treatments
-- redwood is more variable than tanoak
-- Is the slow down in growth rate different between species?
-- Is the slow down statistically significant?
+
+:::
 :::
 
-## Sprout height: year 10
+::: {.notes}
+This is the clearest signal in the study.
+
+Both species reached their greatest heights under the most open conditions, with a consistent ordering of GS > LD > HA ≥ HD.
+
+Redwood was substantially taller than tanoak across all treatments.
+
+This result highlights the strong role of canopy openness in driving early stand development.
+:::
+
+
+## Sprout Growth Dynamics
+
+:::{.columns}
+:::{.column width=55%}
+
+- Redwood grew faster than tanoak  
+
+- Growth declined over time for both species  
+
+- Redwood slowed more in later period  
+
+- Strong early response to openness  
+
+:::
+:::{.column width=45%}
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-height: 5
-#| fig-width: 9
+#| fig-width: 4
+#| fig-height: 4
+#| fig-align: center
 
-# Means, confidence intervals, and Tukey's letters and raw data.
-
-library(stringr)
-
-local({
-  mht18_compare <- emmeans(
-    mht18,
-    spec = "treat",
-    by = c("spp"),
-    at = list(year = "10"),
-    type = "response"
-  ) |>
-    cld(Letters = letters) |>
-    as_tibble() |>
-    mutate(
-      # year = as.numeric(levels(year))[year],
-      .group = str_replace_all(.group, " ", "")
-    ) |>
-    rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL")))
-
-  filter(dht, year == 10) |>
-    ggplot(aes(treat, ht, color = spp, fill = spp)) +
-    facet_grid(~spp, switch = "x") +
-    geom_dots() +
-    scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
-    geom_pointrange(
-      aes(y = response, ymin = lower.CL, ymax = upper.CL),
-      data = mht18_compare,
-      color = "gray50",
-      position = position_nudge(x = -0.07),
-      size = 0.7,
-      linewidth = 1,
-      show.legend = FALSE
-    ) +
-    geom_text(
-      aes(y = upper.CL, label = .group),
-      data = mht18_compare,
-      color = "gray30",
-      position = position_nudge(x = -0.3, y = 0.2),
-      size = 6
-    ) +
-    labs(
-      x = "Treatment",
-      y = "Height (m)",
-      color = "Species",
-      fill = "Species"
-    ) +
-    theme_gray(base_size = 20) +
-    theme(
-      panel.spacing = unit(0, "lines"),
-      plot.background = element_blank(),
-      legend.background = element_blank(),
-      strip.background = element_blank(),
-      strip.text = element_blank()
-      # legend.position = "bottom"
-    )
-})
+fig_sprout_ht_inc_year
 ```
-:::{.notes}
-Our data were only sufficient to detect a statistical difference for height in
-year 10 for the GS treatment
-:::
 
 
 ## Fuel: means
@@ -866,7 +802,10 @@ raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
   regen |>
     filter({{ group }}) |>
     ggplot(aes(dbh, fill = spp)) +
-    stat_bin(aes(y = after_stat(count) * per_ha["treat"]), breaks = bin_breaks) +
+    stat_bin(
+      aes(y = after_stat(count) * per_ha["treat"]),
+      breaks = bin_breaks
+    ) +
     ggpp::geom_text_npc(
       data = generate_facet_totals,
       aes(npcx = "center", npcy = "top", label = n, fill = NULL),
