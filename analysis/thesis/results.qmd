@@ -887,11 +887,11 @@ fig_fuel_pre_pct <- fuel_tmb$pre |>
         y = expression(Load ~ (Mg %.% ha^-1)),
         x = "Treatment"
       )
-  }) |>
+  })
+
+fig_fuel_pre_pct |>
   patchwork::wrap_plots() +
   patchwork::plot_layout(axes = "collect")
-
-fig_fuel_pre_pct
 ```
 
 ### Post-pct
@@ -1008,11 +1008,11 @@ fig_fuel_post_pct <- fuel_tmb$post |>
         y = expression(Load ~ (Mg %.% ha^-1)),
         x = "Treatment"
       )
-  }) |>
+  })
+
+fig_fuel_post_pct |>
   patchwork::wrap_plots() +
   patchwork::plot_layout(axes = "collect")
-
-fig_fuel_post_pct
 ```
 
 ### Pre-post commercial thinning comparison

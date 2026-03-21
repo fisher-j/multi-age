@@ -5,8 +5,8 @@ date: 03/05/2024
 #   10 Years after Transformation to Multiaged Management
 # author: Judson Fisher
 format: 
-  pptx: 
-    slide-level: 2 
+  # pptx: 
+  #   slide-level: 2 
   revealjs:
     theme: serif
 ---
@@ -25,25 +25,25 @@ Thesis committee presentation by Judson Fisher
 - appreciate your willingness to see me through to the finish
 - by the end
   - good understanding of project
-  - some idea of where you'll be able to offer support/feedback
+  - the major takeaways
+  - Some ideas for future improvement
 :::
 
-## Today's plan
-
-1. **Introduction**
-1. What we did
-1. Some results
-1. My questions
-1. Your questions
+## Introduction {.center}
 
 ---
 
 :::{.columns}
 :::{.column width=35%}
+
 ### A multiaged silviculture experiment
+
 :::
+
 :::{.column width=65%}
+
 ![](../figures/site_map_2.png)
+
 :::
 :::
 
@@ -105,25 +105,18 @@ Why do this study in redwood forests?
 Why study fuels in addition to tree growth?
 :::
 
-## Today's plan
-
-1. Introduction
-1. **What we did**
-   - **Implementation**
-   - Sampling procedure
-   - Analysis
-1. Some results
-1. My questions
-1. Your questions
+## Methods -- Implementation {.center}
 
 :::{.notes}
 Now that you have and idea of the what and why, I'll explain more of the details
-of what we did.
+of Methods.
 
 I've broken this section into 3 parts.
 
-By the end of this section you'll understand how the treatments and how they
-were applied across the landscape.
+By the end of this section you'll understand: 
+- how the treatments were implemented
+- how they were measured, and
+- how I drew conclusions from those measurements
 :::
 
 
@@ -187,16 +180,7 @@ And this is that the treatments mean, in a schematic representation.
 [HD]{style="font-size: 2em;"}
 :::
 
-## Today's plan
-
-1. Introduction
-1. **What we did**
-   - Implementation
-   - **Sampling procedure**
-   - Analysis
-1. Some results
-1. My questions
-1. Your questions
+## Methods -- Sampling Procedure {.center}
 
 :::{.notes}
 At the end of this next section, you'll understand how my sampling design
@@ -347,21 +331,11 @@ That was a lot of response variables. Here they are summarized in three
 categories.
 :::
 
-## Today's plan
-
-1. Introduction
-1. **What we did**
-   - Implementation
-   - Sampling procedure
-   - **Analysis**
-1. Some results
-1. My questions
-1. Your questions
+## Methods -- Analysis {.center}
 
 :::{.notes}
 By the end of this section, you'll have an idea of they methods I used to
-analyze
-these data.
+analyze these data.
 :::
 
 ## Analytical Framework
@@ -496,16 +470,7 @@ Pre- and post-PCT fuels were modeled separately because not all fuel classes
 were measured post-treatment.
 :::
 
-## Today's plan
-
-1. Introduction
-1. What we did
-1. **Results**
-   - **Regeneration density**
-   - Sprout height
-   - Fuel
-1. My questions
-1. Your questions
+## Results -- Regeneration {.center}
 
 ## Regeneration Density
 
@@ -518,6 +483,8 @@ were measured post-treatment.
 
 - Greater uncertainty in redwood responses  
 
+- Douglas-fir regeneration low (~400 seedlings ha⁻¹) and similar across treatments  
+
 ::: {.notes}
 Although treatment differences were not statistically significant, trends followed expectations based on light availability.  
 
@@ -526,60 +493,67 @@ Redwood showed the clearest decline in basal area with increasing retention, con
 Tanoak followed a similar but more moderate pattern, reflecting greater shade tolerance.  
 
 Uncertainty was higher for redwood, likely due to spatial variability in light conditions and patchy sprout distribution.
+
+Douglas-fir occurred at modest densities and did not differ among treatments.  
 :::
 
 ## Regeneration Takeaways
 
-- Douglas-fir regeneration low (~400 seedlings ha⁻¹) and similar across treatments  
+:::{.columns}
+:::{.column width=45%}
 
 - Openness most strongly favored redwood  
 
 - High retention treatments reduced redwood advantage  
 
 - Trends consistent with shade tolerance theory  
-
-::: {.notes}
-Douglas-fir occurred at modest densities and did not differ among treatments.  
-
-The primary regeneration signal was the strong response of redwood to openness.  
-
-As retention increased, differences between redwood and tanoak narrowed, consistent with shade tolerance expectations.  
-
-While basal area differences were not statistically supported, the ecological trends are coherent and align with previous literature.
 :::
+:::{.column width=55%}
 
-## Regeneration Summary
-
-::: {.notes}
-This figure synthesizes regeneration responses across treatments.  
-
-Redwood shows a strong positive response to increasing openness, while tanoak’s response is more moderate.  
-
-Under higher retention, differences between species narrow, consistent with shade tolerance theory.  
-
-Although uncertainty limited statistical support for basal area differences, the overall directional trends are clear and reinforced by sprout height results, which I will show next.
-:::
 
 ```{r}
 #| include: false
 
 library(ggplot2)
 load("./thesis_defense_plots.rda")
+result_theme <- theme(
+  plot.background = element_rect(fill = 'transparent', color = NA),
+  panel.background = element_rect(color = NA),
+  text = element_text(size = 16)
+)
 ```
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| label: fig-regen-ba
-#| fig-height: 5.5
-#| fig-width: 9.5
+#| fig-height: 5
+#| fig-width: 5.5
 
-fig_regen_ba
+fig_regen_ba + result_theme
 ```
+:::
+:::
 
+::: {.notes}
+
+The primary regeneration signal was the strong response of redwood to openness.
+
+As retention increased, differences between redwood and tanoak narrowed,
+consistent with shade tolerance expectations.
+
+While basal area differences were not statistically supported, the ecological
+trends are coherent and align with previous literature.
+
+Although uncertainty limited statistical support for basal area differences, the
+overall directional trends are clear and reinforced by sprout height results,
+which I will show next.
+:::
+
+## Results -- Sprout Height {.center}
 
 ## Sprout Height — Year 10
 
 :::{.columns}
-:::{.column width=55%}
+:::{.column width=50%}
 
 - Strong treatment effect on final height  
 
@@ -590,14 +564,15 @@ fig_regen_ba
 - Openness drives rapid early development  
 
 :::
-:::{.column width=45%}
+:::{.column width=50%}
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-width: 4
+#| label: fig-sprout-ht-yr-10
+#| fig-width: 5
 #| fig-height: 4
 #| fig-align: center
 
-fig_sprout_ht_yr_10
+fig_sprout_ht_yr_10 + result_theme
 ```
 
 :::
@@ -606,18 +581,20 @@ fig_sprout_ht_yr_10
 ::: {.notes}
 This is the clearest signal in the study.
 
-Both species reached their greatest heights under the most open conditions, with a consistent ordering of GS > LD > HA ≥ HD.
+Both species reached their greatest heights under the most open conditions, with
+a consistent ordering of GS > LD > HA ≥ HD.
 
 Redwood was substantially taller than tanoak across all treatments.
 
-This result highlights the strong role of canopy openness in driving early stand development.
+This result highlights the strong role of canopy openness in driving early stand
+development.
 :::
 
 
 ## Sprout Growth Dynamics
 
 :::{.columns}
-:::{.column width=55%}
+:::{.column width=50%}
 
 - Redwood grew faster than tanoak  
 
@@ -628,226 +605,187 @@ This result highlights the strong role of canopy openness in driving early stand
 - Strong early response to openness  
 
 :::
-:::{.column width=45%}
+:::{.column width=50%}
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-width: 4
+#| label: fig-sprout-ht-inc-yr
+#| fig-width: 5
 #| fig-height: 4
 #| fig-align: center
 
-fig_sprout_ht_inc_year
+fig_sprout_ht_inc_year + result_theme
 ```
 
+:::
+:::
 
-## Fuel: means
+## Sprout Height Takeaways
+
+- Canopy openness strongly controls sprout growth  
+
+- Redwood maintains clear growth advantage  
+
+- High retention reduces growth but not dominance  
+
+- Reinforces regeneration patterns  
+
+::: {.notes}
+Sprout height provides the strongest and most consistent evidence of treatment
+effects in this study.
+
+Increased openness promotes rapid growth, particularly for redwood.
+
+Even under higher retention, redwood maintains a clear growth advantage over
+tanoak.
+
+These results reinforce the regeneration trends and strengthen the conclusion
+that overstory density is a key driver of early stand development.
+
+"But that same rapid growth has implications for fuels — especially after
+thinning."
+:::
+
+
+## Results -- Fuel {.center}
+
+## Fuels — Pre-PCT
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-height: 5.5
-#| fig-width: 9
+#| fig-width: 10.5
+#| fig-height: 5
+#| fig-align: center
 
-load("fuel_data_modeling.rda")
-source("./scripts/coord_cartesian_panels.r")
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-
-local({
-  data <- expected_predictions
-  data |>
-    tidyr::unnest(pred) |>
-    ggplot(aes(pred, treatment)) +
-    tidybayes::stat_halfeye(normalize = "panels") +
-    facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
-    coord_cartesian_panels(
-      panel_limits = tidyr::unnest(dplyr::select(data, lims), lims)
-    ) +
-    scale_y_discrete(labels = toupper) +
-    labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Treatment") +
-    theme_grey(base_size = 20) +
-    theme(
-      plot.background = element_blank(),
-      legend.background = element_blank()
-    )
-})
+fig_fuel_pre_pct |>
+  patchwork::wrap_plots() +
+  patchwork::plot_layout(axes = "collect") &
+  result_theme
 ```
-:::{.notes}
-- 1hr fuels are slightly higher in HD and HA and lower in LD and GS. Likely due
-  to inputs from residual trees.
-- 10-- and 100hr fuels are very similar across treatments, but slightly
-  increasing with increasing light.
-- duff & litter are highest in HD and lowest in HA. Why?
-- veg is lowest in HA, highest in GS
+
+- Fuel loads broadly similar across treatments
+- Fine fuels showed minor differences
+- Vegetation fuels highest in open treatments
+
+::: {.notes}
+Prior to pre-commercial thinning, fuel loads were generally similar across
+treatments.
+
+Fine woody fuels showed only small differences, which are unlikely to
+meaningfully affect fire behavior.
+
+The main difference was in vegetation fuels, which were highest in the more open
+treatments, reflecting greater understory productivity.
+
+Overall, this stage shows that initial harvest treatments had limited impact on
+surface fuels.
 :::
 
-## Fuel: comparisons
+## Fuels — Post-PCT
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-height: 5.5
-#| fig-width: 9.5
+#| fig-width: 10.5
+#| fig-height: 5
+#| fig-align: center
 
-local({
-  d <- expected_contrasts
-  d |>
-    unnest(c(pred)) |>
-    ggplot(aes(x = pred, y = contrast)) +
-    tidybayes::stat_halfeye(normalize = "panels") +
-    geom_vline(aes(xintercept = rope)) +
-    geom_vline(aes(xintercept = -rope)) +
-    facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
-    coord_cartesian_panels(
-      panel_limits = unnest(dplyr::select(d, lims), lims)
-    ) +
-    scale_y_discrete(labels = toupper) +
-    labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Treatment") +
-    theme_gray(base_size = 20) +
-    theme(
-      plot.background = element_blank(),
-      legend.background = element_blank()
-    )
-})
-```
-:::{.notes}
-- 1hr HA > GS, and almost HA > LD. Also HD almost > GS
-- Duff & Litter HD maybe greater than HA
-- veg GS > HA; LD maybe > HA
-:::
-
-## Today's plan
-
-1. Introduction
-1. What we did
-1. Some results
-1. **My questions**
-1. Your questions
-
-## My questions
-
-- How to add post-pct to the story
-- Potential questions generated by regen. distributions
-- "Asking questions" of the height model: confidence intervals
-
-## Today's plan
-
-1. Introduction
-1. What we did
-1. Some results
-1. My questions
-1. **Your questions**
-
-## Questions?
-
-learn more at online at:
-
-<https://fisher-j.github.io/multi-age>
-
-## Thanks again
-
-
-## Downed woody fuel classes
-
-Class name | Size (cm)  | Transect length (m)
----------- | ---------- | -------------------
-1 hr       | < 0.64     | 1
-10 hr      | 0.64 - 2.5 | 2
-100 hr     | 2.5 - 7.6  | 4
-1,000 hr   | > 7.6      | 10
-
-
-## Vegetation: Load calc.
-
-We calculated average load for herbaceous and woody vegetation: 
-
-$$load = ht. \times pct. cover \times \rho,$$
-
-where $\rho$ is a bulk density of 8 and 18 Mg/ha/m for herbaceous and shrub
-components, respectively. 
- 
-
-## Fuel bed depth
-
-:::: {.columns}
-:::{.column width=60%}
-We estimated the combined average fuel bed depth of all litter and downed woody
-debris within the sampling cylinder.
-:::
-:::{.column width=40%}
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-width: 1.5
-#| fig-height: 1.5
-#| fig-align: right
-plot_design("samp_cyl")
-```
-:::
-::::
-
-## Regeneration density: frequency
-
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-width: 8
-#| fig-height: 5.5
-
-library(dplyr)
-library(ggplot2)
-library(patchwork)
-load("./regen_visualize.rda")
-
-raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
-  generate_facet_totals <- function(data) {
-    summarize(
-      data,
-      .by = treat,
-      n = paste("Total: ", round(n() * per_ha["treat"]))
-    )
-  }
-  regen |>
-    filter({{ group }}) |>
-    ggplot(aes(dbh, fill = spp)) +
-    stat_bin(
-      aes(y = after_stat(count) * per_ha["treat"]),
-      breaks = bin_breaks
-    ) +
-    ggpp::geom_text_npc(
-      data = generate_facet_totals,
-      aes(npcx = "center", npcy = "top", label = n, fill = NULL),
-      size = 6
-    ) +
-    facet_wrap(vars(treat), nrow = 1) +
-    labs(y = expression(trees %.% ha^-1), x = "dbh (cm)", fill = "spp") +
-    scale_x_continuous(breaks = scale_breaks) +
-    scale_y_continuous(expand = expansion(c(0.05, 0.2))) +
-    scale_fill_manual(
-      values = spp_col(regen, scales::brewer_pal, palette = "Set2")
-    ) +
-    theme_bw(base_size = 20)
-}
-
-raw_hist2(
-  dbh < 5 & treat %in% c("gs", "hd"),
-  seq(0, 17.5, 2.5),
-  seq(0, 15, 5),
-  c(2.5, 6000)
-) /
-  raw_hist2(
-    dbh >= 5 & treat %in% c("gs", "hd"),
-    seq(0, 17.5, 2.5),
-    seq(0, 15, 5),
-    c(27, 600)
-  ) +
-  theme(strip.text = element_blank()) +
-  plot_layout(axis_titles = "collect", axes = "collect_x") &
-  theme(
-    plot.background = element_blank(),
-    legend.background = element_blank()
-  )
+fig_fuel_post_pct |>
+  patchwork::wrap_plots() +
+  patchwork::plot_layout(axes = "collect") &
+  result_theme
 ```
 
----
+- Fine dead fuels increased after thinning
 
-:::: {.columns}
-:::{.column}
-Year 1 height measurement
+- Stronger differences among treatments
+
+- Highest loads in GS and LD treatments
+
+::: {.notes}
+After pre-commercial thinning, fine dead surface fuels increased substantially.
+
+This reflects the addition of slash from thinning operations.
+
+Differences among treatments became more pronounced, with the greatest increases
+in the GS and LD treatments where more biomass had accumulated prior to
+thinning.
+
+This highlights a key trade-off: treatments that promote growth also generate
+more surface fuels after thinning.
+
 :::
-:::{.column}
-![](../figures/measuring_sprouts1.jpg){height=350}
+
+## Fuels Takeaways
+
+- Pre-PCT: minimal dead surface fuels differences among treatments
+
+- Post-PCT: increased fine dead fuels  
+
+- Open treatments → more growth → more slash  
+
+- Trade-off between growth and fuel accumulation  
+
+::: {.notes}
+Before thinning, fuel loads were relatively similar across treatments.
+
+After thinning, differences emerged due to the conversion of live biomass into
+surface fuels.
+
+Treatments that promoted more growth ultimately produced more slash.
+
+This illustrates a key trade-off in multiaged management between promoting
+regeneration and managing fuel hazards.
 :::
-::::
+
+## Conclusions {.center}
+
+## Conclusions & Implications
+
+- Canopy openness strongly drives sprout growth and development  
+
+- Redwood responds most strongly; tanoak more shade tolerant  
+
+- High retention reduces redwood advantage  
+
+- Treatments that promote growth also increase fuel loads after thinning  
+
+- Multiaged management requires balancing regeneration and fuel hazard  
+
+::: {.notes}
+The primary driver across all analyses was canopy openness.
+
+Redwood showed the strongest response to increased light, while tanoak was more
+tolerant of shaded conditions.
+
+Higher retention levels reduced redwood’s competitive advantage, suggesting a
+potential threshold where tanoak becomes more competitive.
+
+At the same time, treatments that promoted the most growth also resulted in
+greater fuel accumulation following thinning.
+
+This highlights a key trade-off in multiaged management: promoting regeneration
+and stand development can increase short-term fuel hazards, requiring careful
+integration of silviculture and fuels management.
+:::
+
+## Future Directions
+
+- Incorporate light and microclimate measurements  
+- Improve estimation of vegetation fuel loads  
+- Evaluate fire behavior implications directly  
+- Integrate Indigenous fire stewardship perspectives  
+
+::: {.notes}
+Future work should focus on directly measuring understory light and
+microclimate, which are key drivers of both growth and fuel dynamics.
+
+Improving methods for estimating vegetation fuel loading would strengthen links
+between productivity and fuels.
+
+Testing how these fuel differences influence fire behavior will be critical.
+
+There is also an important opportunity to integrate Indigenous fire stewardship
+into future research and management approaches.
+
+"Ultimately, managing these systems requires balancing the conditions that
+promote regeneration with those that reduce fuel hazard."
+:::
+
+## Questions? {.center}
