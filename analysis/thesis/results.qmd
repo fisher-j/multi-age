@@ -396,12 +396,17 @@ treatments were intermediate. -->
 #| fig-cap: >
 #|   Basal area density (m^2^ ha^-1^) modeled at the vegetation plot level for
 #|   four harvest treatments and four species classes (n = 16). Gray bars
-#|   represent the 95% confidence interval (α = 0.05), black dots indicate the
-#|   mean, and blue arrows provide a means of assessing the statistical
-#|   significance of pairwise differences among treatments. Arrows are drawn so
-#|   that when two arrows just meet, the p-value for that difference is 0.05 and
-#|   overlapping arrows indicate a p-values greater than 0.05. Note: Y-axes vary
-#|   by species.
+#|   represent the asymtotic 95% confidence interval (α = 0.05), black dots
+#|   indicate the mean, and blue arrows provide a means of assessing the
+#|   statistical significance of pairwise differences among treatments within a
+#|   species (panels). Arrows are drawn so that when two arrows just meet, the
+#|   p-value for that difference is 0.05 and overlapping arrows indicate a
+#|   p-values greater than 0.05. Note that Y-axes vary by species. While none of
+#|   the differences were statistically supported, basal area was greatest in
+#|   the GS treament, varied by species in the LD, and was lowest in the HA and
+#|   HD. Additionally, redwood basal area was the greatest, tanoak was lower,
+#|   and Douglas-fir and Other were much lower, but differences were smaller
+#|   with HA and HD treatments.
 
 fig_regen_ba <- regen_all |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -481,8 +486,12 @@ tanoak.
 #| fig-cap: >
 #|   Basal area density (m^2^ ha^-1^) modeled at the vegetation plot level for
 #|   four harvest treatments and two species classes (n = 16). Gray bars
-#|   represent the 95% confidence interval, black dots---the mean, and
-#|   non-overlapping blue arrows signify statistical significance (α = 0.05).
+#|   represent the 95% confidence interval (asymtotic, based on normal
+#|   approximation), black dots---the mean, and non-overlapping blue arrows
+#|   signify statistical significance (α = 0.05) of comparisons between species
+#|   redwood and tanoak within a treatment. While none of the differences were
+#|   statistically supported, this figure highlights the decreasing difference
+#|   between redwood and tanoak with increasing overstory retention.
 
 fig_regen_ba_rw_to <- regen_rw_to |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -506,12 +515,15 @@ seedlings per 4-meter-radius plot, or about 400 seedlings per hectare
 
 ```{r}
 #| label: fig-df-counts
+#| fig-width: 4
+#| fig-height: 3.5
 #| fig-cap: >
 #|   Expected marginal means of vegetation plot level counts of regenerating
 #|   Douglas-fir seedlings in four harvest treatments 10 years after harvest (n
 #|   = 16). Results have been scaled to stems per hectare (4-meter radius
 #|   plots). The asymptotic 95% confidence intervals are based on the normal
-#|   approximation.
+#|   approximation. Comparisons among treatment were not significant and
+#|   centered around 400 seedlings per hectare.
 
 df_counts <- marginaleffects_to_emmeans(
   model = mdf,
@@ -607,11 +619,17 @@ higher than the HA treatment by about `r rw_to_ht_pairs$SESE[["LD - HA"]]$estima
 
 ```{r}
 #| label: fig-sprout-ht-inc-treat
+#| fig-height: 3.5
+#| fig-width: 5
 #| fig-cap: >
-#|   Estimated marginal means for the effect of harvest treatment on redwood and
-#|   tanoak sprout height increment, averaged over two growth periods, ten years
-#|   after harvest. Gray bars represent confidence intervals and statistical
-#|   significance (α = 0.05) is indicated by non-overlapping blue arrows.
+#|   Estimated marginal means for the effect of harvest treatment (x-axis) on
+#|   redwood and tanoak sprout height increment (y-axis), averaged over two
+#|   growth periods, ten years after harvest. Gray bars represent asymtotic
+#|   (normal approximation) confidence intervals and statistical significance (α
+#|   = 0.05) is indicated by non-overlapping blue arrows for species (panels)
+#|   between treatments. Height increment decreased with overstory retention
+#|   were GS > LD > (HA & HD). The difference between GS, and HA and HD were
+#|   statistically supported.
 
 fig_sprout_ht_inc_treat <- ht_inc_treat |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -680,12 +698,17 @@ period (@fig-sprout-ht-inc-year).
 
 ```{r}
 #| label: fig-sprout-ht-inc-year
+#| fig-width: 5
+#| fig-height: 3.5
 #| fig-cap: >
 #|   Estimated marginal means for the effect of growth period on redwood and
 #|   tanoak sprout height increment, averaged over four harvest treatments, from
 #|   years 1 to 5, and years 5 to 10 after harvest, plotted alongside actual
-#|   data. Gray bars represent confidence intervals and statistical significance
-#|   (α = 0.05) is indicated by non-overlapping blue arrows.
+#|   data (small dots). Gray bars represent asymtotic (normal approximation)
+#|   confidence intervals and statistical significance (α = 0.05) is indicated
+#|   by non-overlapping blue arrows for a period (x-axis) within a growth period
+#|   (panel). Both tanoak and redwood exhibited a slight decrease in height
+#|   increment from the first to second periods.
 
 fig_sprout_ht_inc_year <- ht_inc_year |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -762,11 +785,15 @@ heights followed the pattern GS > LD > HA ≥ HD (@fig-sprout-ht-yr-10).
 
 ```{r}
 #| label: fig-sprout-ht-yr-10
+#| fig-height: 3.5
+#| fig-width: 5
 #| fig-cap: >
-#|   Predicted mean height and 95% confidence intervals (gray bars) for redwood
-#|   and tanoak stump sprouts 10 years after harvest using four different
-#|   harvest treatments. Non-overlapping blue arrows indicate statistically
-#|   significant differences between treatments within a species.
+#|   Predicted mean height (black dots) and 95% (asymtotic) confidence intervals
+#|   (gray bars) for redwood and tanoak stump sprouts 10 years after harvest
+#|   using four different harvest treatments. Non-overlapping blue arrows
+#|   indicate statistically significant differences between treatments within a
+#|   species (panels). Height was greatest in the GS treatment and lowest in the
+#|   HA and HD treatments. Redwood was taller than tanoak.
 
 fig_sprout_ht_yr_10 <- ht_year_10 |>
   mutate(emm_df = list(emm_to_df_emm(emmobj))) |>
@@ -868,12 +895,17 @@ treatments were intermediate.
 
 ```{r}
 #| label: fig-fuel-pre-pct
-#| fig-width: 8
+#| fig-height: 5
+#| fig-width: 6.3
 #| fig-cap: >
 #|   Estimated marginal means (black dots) confidence intervals (gray bands) and
-#|   comparisons (blue arrows) of fuel loading across four treatments for six
-#|   different fuel-class models. Non-overlapping blue arrows indicates
-#|   statistical significance at the α = 0.05 level.
+#|   comparisons (blue arrows) of surface fuel loading across four treatments
+#|   for six different fuel-class models. Non-overlapping blue arrows indicates
+#|   statistical significance at the α = 0.05 level for treatments within a fuel
+#|   class (panels). Differences between treatments for most classes were small
+#|   and/or statistically unsupported, except for 1-hr and vegetation fuels for
+#|   GS and HA treatment comparisons, where 1-hr was lower in the GS treatment
+#|   and vegetation was higher.
 
 fig_fuel_pre_pct <- fuel_tmb$pre |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
@@ -986,15 +1018,19 @@ The LD treatment was intermediate.
 
 ```{r}
 #| label: fig-fuel-post-pct
-#| fig-width: 8
+#| fig-height: 5
+#| fig-width: 6.3
 #| fig-cap: >
-#|   Estimated marginal means (black dots) confidence intervals (gray bars) and
-#|   statistical comparisons (blue arrows) of fuel loading across four
-#|   treatments for six different fuel-class models. Non-overlapping blue arrows
-#|   indicates statistical significance at the α = 0.05 level. Vegetation
-#|   difference equals the transect level difference in vegetation load in the
-#|   pre and post-pct conditions. This represents slash fuels recruited to the
-#|   forest floor following the pre-commercial thinning.
+#|   Estimated marginal means (black dots), 95% confidence intervals (asymtotic,
+#|   gray bars) and statistical comparisons (blue arrows) of fuel loading across
+#|   four treatments for six different fuel-class models. Non-overlapping blue
+#|   arrows indicates statistical significance at the α = 0.05 level within a
+#|   fuel class (panels). Vegetation difference equals the transect level
+#|   difference in vegetation load in the pre and post-pct conditions. This
+#|   represents slash fuels recruited to the forest floor following the
+#|   pre-commercial thinning. Loading was more differentianted following PCT,
+#|   where 1-hr, 10-hr, 100-hr, and vegetation difference were all higher in the
+#|   GS treatment.
 
 fig_fuel_post_pct <- fuel_tmb$post |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
@@ -1027,12 +1063,18 @@ comparable, due to slightly different model structures.
 
 ```{r}
 #| label: fig-fuel-pct-comparison
-#| fig-width: 8
+#| fig-height: 5
+#| fig-width: 6.3
 #| fig-cap: >
 #|   Estimated marginal means (black dots) and confidence intervals (colored
 #|   bars) of fuel loading across four treatments and five different fuel
-#|   classes, before and after PCT. Pre- and Post PCT models within a treatment
-#|   are from similar, but not necessarily identical models.
+#|   classes (panels), before and after PCT. Pre- and Post PCT models within a
+#|   treatment are from similar, but not necessarily identical models.
+#|   Ninety-five percent (asymtotic) confidence intervals are represented by
+#|   lighter orange bars for pre-PCT and dark blue for post-PCT fuel loads. This
+#|   figure shows how fuel loads inscrease after PCT for 1-, 10-, and to a
+#|   lesser extent, 100-hr fuels, particularly for the GS treatment, while
+#|   vegetation loading decreased across all treatments.
 
 # pre and post together
 fig_fuel_pct_comparison <- fuel_tmb$pre |>

@@ -19,9 +19,10 @@ aspects on mid to upper-slope positions (@fig-site-map), and the site quality is
 classified as Site Class II [@lindquistEmpiricalYieldTables1963;
 @webbWhiskeySpringsLongterm2012].
 
-![The site locations and topography for my study plots. The red box delineates
-the area of the topographical map seen in the background. JDSF = Jackson
-Demonstration State Forest.](../figures/site_map_2.png){#fig-site-map}
+![The vicinity, plot locations, and topography for my study plots. The small red
+box in the inset delineates the area of the topographical map seen in the
+background. Study plots appear in inset and background as black dos. JDSF =
+Jackson Demonstration State Forest.](../figures/site_map_2.png){#fig-site-map}
 
 ## Study design
 
@@ -65,31 +66,33 @@ redwood and Douglas-fir from competition. Competing trees and shrubs were cut,
 lopped, and scattered within the measurement plots and fuel transects were
 re-measured.
 
-![A diagram of the fuel sampling design depicting a 0.2-hectare macro plot
-(black outline), fuels transects (black lines), sampling cylinders (orange
-circles) where duff, litter, and live and dead vegetation were measured, and
-vegetation sub-plots (green circles), where regeneration density and diversity
-were quantified.](../figures/fuel_sampling_layout.png){#fig-plot-layout}
+![A diagram of the sampling design depicting a 0.2-hectare macro plot (large,
+square, black outline), fuels transects (short, oragne, perpendicular lines),
+sampling cylinders (small orange circles) where duff, litter, and live and dead
+vegetation were measured, and vegetation sub-plots (medium, green circles),
+where regeneration density and diversity were
+quantified.](../figures/fuel_sampling_layout.png){#fig-plot-layout}
 
 ## Data collection
 
 ### Regeneration
 
-Ten years after the initial harvest, four regeneration plots (4-m radius)
-were established within each macro plot (@fig-plot-layout). All regenerating
-trees (sprouts and seedlings) within the plot were recorded. Regenerating trees
-less than 5 cm diameter at breast height (1.4 m) were tallied by 2.5 cm size classes and the
-actual DBH of all other regenerating trees were recorded. This allowed for an
-estimation of sprout and seedling density by species. 
+Ten years after the initial harvest, four regeneration plots (4-m radius) were
+established within each macro plot (@fig-plot-layout). All regenerating trees
+(sprouts and seedlings) within the plot were recorded. Regenerating trees less
+than 5 cm diameter at breast height (1.4 m) were tallied by 2.5 cm size classes
+and the actual DBH of all other regenerating trees were recorded. This allowed
+for an estimation of sprout and seedling density by species. 
 
 ### Sprout heights
 
 Sprout height data were collected during the winter at years 1, 5, and 10
 following the initial harvest. Sprout heights at each period were based on the
-tallest individual within the selected redwood and tanoak clumps at the time of measurement with a height pole
-placed at the same location on the ground at each measurement period. The
-observer eliminated parallax by observing from a location up-slope, level with
-the height of the sprout. Sprout DBH for only redwood was collected in year 10.
+tallest individual within the selected redwood and tanoak clumps at the time of
+measurement with a height pole placed at the same location on the ground at each
+measurement period. The observer eliminated parallax by observing from a
+location up-slope, level with the height of the sprout. Sprout DBH for only
+redwood was collected in year 10.
 
 ### Fuels
 
@@ -238,10 +241,6 @@ Y_i \sim \text{hurdle\_gamma}(\pi_i, \mu_i, \phi_i)
 $$
 
 $$
-\text{logit}(\pi_i) = \beta^{\pi}_0 + \beta^{\pi}_{\text{spp}} \cdot \text{Species}_i
-$$
-
-$$
 \log(\mu_i) = \beta^{\mu}_0 + 
 \beta^{\mu}_{\text{trt}} \cdot \text{Trt} + 
 \beta^{\mu}_{\text{spp}} \cdot \text{Spp} + 
@@ -250,18 +249,22 @@ $$
 $$
 
 $$
+\alpha_j \sim N(0, \sigma^2_j)
+$$
+
+$$
 \log(\phi_i) = \beta^{\phi}_0 + \beta^{\phi}_{\text{spp}} \cdot \text{Species}_i
 $$
 
 $$
-\alpha_j \sim N(0, \sigma^2_j)
+\text{logit}(\pi_i) = \beta^{\pi}_0 + \beta^{\pi}_{\text{spp}} \cdot \text{Species}_i
 $$
-
+.
 
 - $Y_i$: Total basal area per hectare for each species in a 4-meter radius
-  regeneration plot.
+  regeneration plot
 - $\pi_i$: Probability that $Y_i > 0$
-- $\mu_i$: Mean of positive values.
+- $\mu_i$: Mean of positive values
 - $\phi_i$: Dispersion parameter for Gamma distribution
 - $\alpha_j$: Group effect pertaining to a site:species interaction
 
@@ -271,7 +274,6 @@ Counts of regenerating Douglas-fir seedlings per vegetation plot were
 analyzed for differences between harvest treatments using a negative binomial
 response with a log link, fixed effects for treatment, random effects for sites
 and macro plots within sites.
-
 
 $$
 Y_i \sim \text{NB1}(\mu_i, \phi); \quad \text{where} \quad Var(Y_i) = \mu_i +
@@ -286,6 +288,7 @@ $$
 $$
 \alpha_{j} \sim \operatorname{N}(0, \sigma^2_{j}), \quad \alpha_{k} \sim \operatorname{N}(0, \sigma^2_{k})
 $$
+.
 
 - $Y_i$: Count of Douglas-fir seedlings in a 4-meter radius vegetation plot.
 - $\mu_i$: The expected count for vegetation plot $i$.
@@ -369,15 +372,16 @@ $$
 \vdots \\ \alpha_{\text{macro}_j, \text{spp}_k} \end{pmatrix} \sim \operatorname{N}(\mathbf{0},
 \boldsymbol{\Sigma}_{\text{macro}})
 $$
+.
 
-- $Y_i$: Height increment (m yr^-1^) for sprout observation $i$.
-- $\mu_i$: Mean height increment for observation $i$.
-- $\sigma^2_i$: Variance of height increment for observation $i$.
-- $\alpha^{\mu}_{\text{tree}}$: Random intercept for tree.
-- $\alpha^{\mu}_{\text{macro}, \text{spp}}$: Random effect for species, co-varying
-  within macro plot.
-- $\boldsymbol{\Sigma}_{\text{macro}}$: Unstructured variance-covariance matrix for species
-  within macro plot.
+- $Y_i$: Height increment (m yr^-1^) for sprout observation $i$
+- $\mu_i$: Mean height increment for observation $i$
+- $\sigma^2_i$: Variance of height increment for observation $i$
+- $\alpha^{\mu}_{\text{tree}}$: Random intercept for tree
+- $\alpha^{\mu}_{\text{macro}, \text{spp}}$: Random effect for species,
+  co-varying within macro plot
+- $\boldsymbol{\Sigma}_{\text{macro}}$: Unstructured variance-covariance matrix
+  for species within macro plot
 
 
 #### Height at year 10
@@ -386,8 +390,7 @@ Sprout heights at year 10 were modeled with a normal response and a log link.
 The model with the lowest AIC included species and treatment, but no
 interactions in the fixed effects. I included the interaction of species and
 treatment because it was central to our question. I also included a model for
-dispersion (log link) with predictors species, treatment, and their interaction
-.
+dispersion (log link) with predictors species, treatment, and their interaction:
 
 $$
 Y_i \sim \operatorname{N}(\mu_i, \sigma^2_i)
@@ -413,14 +416,15 @@ $$
 \vdots \\ \alpha_{\text{spp}_j, \text{macro}_k} \end{pmatrix} \sim
 \operatorname{N}(\mathbf{0}, \boldsymbol{\Sigma}_{\text{spp}, \text{macro}})
 $$
+.
 
-- $Y_i$: Height at year 10 for tree $i$.
-- $\mu_i$: Mean height at year 10 for tree $i$.
-- $\sigma^2_i$: Variance of height at year 10 for tree $i$.
+- $Y_i$: Height at year 10 for tree $i$
+- $\mu_i$: Mean height at year 10 for tree $i$
+- $\sigma^2_i$: Variance of height at year 10 for tree $i$
 - $\alpha_{\text{macro}, \text{spp}}$: Random effect for species, co-varying
-  within macro plot.
-- $\boldsymbol{\Sigma}_{\text{macro}, \text{spp}}$: Unstructured variance-covariance matrix for species
-  within macro plot.
+  within macro plot
+- $\boldsymbol{\Sigma}_{\text{macro}, \text{spp}}$: Unstructured
+  variance-covariance matrix for species within macro plot
 
 
 ### Fuels
@@ -472,6 +476,7 @@ $$
 \log(\mu_i) = \beta^{\mu}_0 + \beta^{\mu}_{\text{trt}} \cdot \text{Trt}_i +
 \alpha_{\text{site}[i]} + \alpha_{\text{macro}[i]} + \alpha_{\text{corner}[i]}
 $$
+.
 
 Any model component not explicitly defined below was modeled with only an
 intercept:
@@ -483,15 +488,16 @@ $$
 $$
 \log(\phi_i^{\cdot}) = \beta^{(\phi,\cdot)}_0
 $$
-
-- $Y_i$: Fuel load (Mg ha^-1^) for transect $i$.
-- $\pi_i$: Probability that $Y_i > 0$, the hurdle component.
-- $\mu_i$: Mean of positive values.
-- $\phi_i$: Dispersion parameter for Gamma distribution.
-- $\alpha_{\cdot}$: Random intercepts for site, macro plot, and corner.
-- $\beta^{\cdot}_{\cdot}$: Fixed effects for intercepts and treatment
-  levels for mean, hurdle, and dispersion components
 .
+
+- $Y_i$: Fuel load (Mg ha^-1^) for transect $i$
+- $\pi_i$: Probability that $Y_i > 0$, the hurdle component
+- $\mu_i$: Mean of positive values
+- $\phi_i$: Dispersion parameter for Gamma distribution
+- $\alpha_{\cdot}$: Random intercepts for site, macro plot, and corner
+- $\beta^{\cdot}_{\cdot}$: Fixed effects for intercepts and treatment levels for
+  mean, hurdle, and dispersion components
+
 
 #### Pre-pct
 
@@ -502,9 +508,10 @@ intercept:
 $$
 \text{logit}(\pi_i^{\text{dufflitter}}) = \beta^{(\pi,\text{dufflitter})}_0
 $$
+.
 
 For the 10-hr fuel model, the hurdle
-and the dispersion components were modeled as functions of treatment.
+and the dispersion components were modeled as functions of treatment:
 
 $$
 \text{logit}(\pi_i^{\text{10hr}}) = \beta^{(\pi,\text{10hr})}_0 +
