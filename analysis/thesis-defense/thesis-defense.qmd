@@ -13,119 +13,154 @@ format:
 
 ## {style="text-align: center"}
 
+```{r}
+#| include: false
+
+library(ggplot2)
+library(patchwork)
+load("./thesis_defense_plots.rda")
+
+result_theme <- theme(
+  plot.background = element_rect(fill = 'transparent', color = NA),
+  panel.background = element_rect(color = NA),
+  text = element_text(size = 16)
+)
+
+fig_theme <- theme(
+  plot.background = element_rect(fill = 'transparent', color = NA),
+  panel.background = element_rect(color = NA),
+  strip.background = element_rect(fill = 'transparent')
+)
+```
+
 ### Regeneration and Fuel Loading with Varying Overstory Retention in Redwood Stands 10 Years after Transformation to Multiaged Management 
 
 Thesis committee presentation by Judson Fisher
 
-## Thank you
+![](../figures/treatments.png)
 
-:::{.notes}
-- Thank you for being here
-- exciting time
-- appreciate your willingness to see me through to the finish
-- by the end
-  - good understanding of project
-  - the major takeaways
-  - Some ideas for future improvement
+::: {.notes}
+Thank you all for being here today.
 :::
-
-## Introduction {.center}
 
 ---
 
-:::{.columns}
-:::{.column width=35%}
+::: {.columns}
+::: {.column width=35%}
 
 ### A multiaged silviculture experiment
 
 :::
 
-:::{.column width=65%}
+::: {.column width=65%}
 
 ![](../figures/site_map_2.png)
 
 :::
 :::
 
-:::{.notes}
+::: {.notes}
 10 years ago, Pascal implemented a large scale, replicated, manipulative
 silvicultural experiment to demonstrate and study the transformation from
 even-aged to multiaged management in redwood dominated forests in the Jackson
 Demonstration State Forest in Mendocino County. My thesis serves as a 10-year
 report of the remeasurement of several key factors of that experiment ----
 sprout heights, regeneration density, and fuels.
+
+but why study multiaged management?
 :::
 
-## An important part of ecological forest management
+## An important approach to ecological forest management
 
-- Diversity of forest structures == Diversity of silvicultural techniques
-- Predominance of even-aged management
+- Diversity of silvicultural techniques → Diversity of forest structures 
+- Growing interest in transformation in Redwood region
 - This work contributes to our understanding of multiaged stand development
-- Greater understanding -> increased adoption
+- First replicated multiaged redwood experiment in the redwood region
 
 
-:::{.notes}
+::: {.notes}
 Why study multiaged management?
+
+A diversity of silvicultural techniques supports ecological diversity which
+promotes resilience and sustainability.
+
+There is widespread interest in transformation of legacy even-aged stands to
+multiaged silviculture.
+
+So why do study multiaged management in redwood forests?
 :::
 
 ## Suitability of redwood forests
 
-:::{.columns}
-:::{.column}
+:::: {.columns}
+::: {.column width=40%}
 - Timber value
 - Shade tolerance
 - Reliable regeneration
 :::
-:::{.column}
+::: {.column width=60%}
 ![](../figures/redwood_sprouts.jpg)
 :::
-:::
+::::
 
-:::{.notes}
+::: {.notes}
 Why do this study in redwood forests?
+
+Redwood forests are highly productive and actively managed timber.
+
+Their high timber value affords flexibility in management decisions.
+
+They are shade tolerant and regenerate reliably, which are
+prime qualities if you are trying to initiate new cohorts under older ones.
+
+So, redwood systems have a lot of the characteristics we want for multiaged
+management.
+
+But these systems also exist in a fire-adapted landscape, and that raises an
+important question…
 :::
 
 ## Fire-informed management
 
-:::{.columns}
-:::{.column width=70%}
+::: {.columns}
+::: {.column width=70%}
 
 - Slow adoption of fire-informed management on the North Coast
 - Redwood is a fire-adapted species
 - Historical record shows frequent fire
-- What is the pyrosilvicultural significance of our management actions?
+- We need to understand the pyrosilvicultural significance of our management.
 
 :::
-:::{.column width=30%}
+::: {.column width=30%}
 ![](../figures/redwood_fire.png){height=500}
 :::
 :::
 
-:::{.notes}
-Why study fuels in addition to tree growth?
+::: {.notes}
+We don't really understand how management approaches interact with fuels and
+fire in these systems.
+
+So I built in metrics to first-of-its-kind experiment to improve our
+understanding of the role fire might play in transformation to multiaged
+management.
 :::
 
-## Methods -- Implementation {.center}
+## Methods --- Implementation {.center}
 
-:::{.notes}
+::: {.notes}
 Now that you have and idea of the what and why, I'll explain more of the details
-of Methods.
+of how we implemented the experiment and how I collected and analyzed the data.
 
-I've broken this section into 3 parts.
-
-By the end of this section you'll understand: 
-- how the treatments were implemented
-- how they were measured, and
-- how I drew conclusions from those measurements
+We'll start with implementation
 :::
 
 
-## Initial harvest: 2012
+## Initial harvest --- 2012
 
-:::{.columns}
-:::{.column width=60%}
+::: {.columns}
+::: {.column width=60%}
 
-- 16 one-hectare blocks 
+- 16 two-hectare blocks, each with one 1/5-ha macro plot 
   - **GS**: Group selection
   - **LD**: Low density dispersed
   - **HA**: High density aggregated 
@@ -134,95 +169,187 @@ By the end of this section you'll understand:
 These four treatments were replicated across four sites.
 
 :::
-:::{.column width=40%}
+::: {.column width=40%}
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| fig-width: 4
-#| fig-height: 4
+#| fig-height: 6
 
 source("./scripts/design.r")
-experiment_design("macro")
+experiment_design("macro") + fig_theme + ggtitle("Macro plots")
 ```
 :::
 :::
 
-:::{.notes}
-This is how the treatments are defined. They are listed in order from least, to
-greatest amount of competition (light and growing space).
+::: {.notes}
+There were four treatments (harvest intensities) designed to reproduce a range
+of understory light conditions expected to promote conifer regeneration.
+
+They are listed here in order from least, to greatest amount of overstory
+competition including light and growing space.
+
+We installed one 1/5-ha plot within each 2-ha treatment block.
+
+Next
 :::
 
 ## The treatments are defined in terms of retained trees after harvest
 
 ![](../figures/treatments.png)
+[13% RD]{.absolute bottom=110 left=60}
+[21% RD]{.absolute bottom=110 left=290}
+[21% RD]{.absolute bottom=110 left=510}
+[0% RD]{.absolute bottom=110 left=730}
 
-:::{.notes}
-And this is that the treatments mean, in a schematic representation.
+::: {.notes}
+
+The high-density treatments targeted retaining about 21% of the sites estimated
+total growing capacity in overstory trees --- **relative density**. The low density
+treatments targeted 13% RD.
+
+Next
 :::
 
 ## One site{background-color="black" background-image="../figures/treatments_aerial_labeled.png" background-size="contain"}
 
+::: {.notes}
+This is what the four treatments look like from above at one of our four sites.
+
+Our measurement plots are outlined in red.
+
+Next, we'll see how the treatments looked like on the ground.
+:::
+
 ## {background-color="black" background-image="../figures/GS.jpg" background-size="contain"}
-:::{.absolute bottom="5%" right="5%"}
+::: {.absolute bottom="5%" right="5%"}
 [GS]{style="font-size: 2em;"}
+:::
+::: {.notes}
+GS
 :::
 
 ## {background-color="black" background-image="../figures/LD.jpg" background-size="contain"}
-:::{.absolute bottom="5%" right="5%"}
+::: {.absolute bottom="5%" right="5%"}
 [LD]{style="font-size: 2em;"}
+:::
+::: {.notes}
+LD
 :::
 
 ## {background-color="black" background-image="../figures/HA.jpg" background-size="contain"}
-:::{.absolute bottom="5%" right="5%"}
+::: {.absolute bottom="5%" right="5%"}
 [HA]{style="font-size: 2em;"}
+:::
+::: {.notes}
+HA
+
+Notice the freshly downed slash in the foreground. 
 :::
 
 ## {background-color="black" background-image="../figures/HD.jpg" background-size="contain"}
-:::{.absolute bottom="5%" right="5%"}
+::: {.absolute bottom="5%" right="5%"}
 [HD]{style="font-size: 2em;"}
 :::
+::: {.notes}
+HD
+:::
 
-## Methods -- Sampling Procedure {.center}
+## Pre-commercial thinning (PCT)
 
-:::{.notes}
-At the end of this next section, you'll understand how my sampling design
-resulted in response variables across three categories:
+tending the understory of the rapidly growing sprouts.
 
-- Sprout heights
+:::: {.columns}
+::: {.column width=50%}
+![Before PCT](../figures/Camp6_HD_Before.jpg)
+:::
+
+::: {.column widht=50%}
+![After PCT](../figures/Camp6_HD_After.jpg)
+:::
+::::
+
+::: {.notes}
+Silviculturally, this creates more growing space for selected sprouts. 
+
+The pyrosilvicultural significance is that this also results in conversion of
+potential ladder fuels to dead downed surface fuels.
+:::
+
+
+## Methods --- Sampling Procedure {.center}
+
+::: {.notes}
+Now that you have an idea of what we implemented, lets talk about how I
+measured it.
+
+I measured response variables across three categories:
+
 - Regeneration density
+- Sprout heights
 - Fuels
+
+We'll start by defining the plot structure.
 :::
 
 ## The plot structure{.smaller}
 
-:::{.columns }
-:::{.column style="vertical-align:middle; width:30%;"}
+::: {.columns }
+::: {.column style="vertical-align:middle; width:30%;"}
 
-- Macro plot (Outline)
 - Regeneration plots ([green]{style="color: green"} circles)
+- Macro plot (Outline)
 - Fuel transects ([orange]{style="color: orange"} lines)
 - Fuel sampling cylinders ([orange]{style="color: orange"} circles)
 
 :::
-:::{.column style="vertical-align:middle; width:70%"}
+::: {.column style="vertical-align:middle; width:70%"}
 ![](../figures/fuel_sampling_layout.png)
 :::
 :::
 
-:::{.notes}
-Here I define the various aspects of the sampling design.
+::: {.notes}
+[Describe the picture]
 
 Next, I'll describe what we sampled in each of these.
+
+We'll start with the regen sub-plots.
+:::
+
+## Regeneration density and composition
+
+::: {.columns}
+::: {.column width=60%}
+- Four 4-m-radius sub plots per macro plot
+- recorded diameter and species of all sprouts and seedlings taller than 1.4 m
+:::
+::: {.column width=40%}
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 3.5
+#| fig-height: 3.5
+#| fig-align: left
+
+plot_design("regen") + fig_theme
+```
+:::
+:::
+
+::: {.notes}
+These measurements give us an idea of total density and composition across our
+plots, but we wanted to quantify the growth of individual sprouts more
+precisely.
 :::
 
 ## Sprout height
 
-:::{.columns}
-:::{.column width=60%}
+::: {.columns}
+::: {.column width=60%}
 
+- 1/5 ha square macro plot
 - 25 each of tanoak and redwood sprout clumps were selected for measurement
 - Tallest sprout in clump measured at years 1, 5, and 10
 
 :::
-:::{.column width=40%}
+::: {.column width=40%}
 ![](../figures/measuring_sprouts10.jpg){}
 
 
@@ -234,66 +361,33 @@ plot_design("macro")
 :::
 :::
 
-## Regeneration density and composition
+::: {.notes}
+Sprout heights were measured in the macro plot
 
-:::{.columns}
-:::{.column width=60%}
-We recorded diameter and species of all sprouts and seedlings taller than 1.4 m
+Sprouts were selected to be well distributed across the macro plot. 
 
-:::
-:::{.column width=40%}
+This was to give us a good estimate of individual tree growth response over
+time.
 
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-width: 3.5
-#| fig-height: 3.5
-#| fig-align: left
-plot_design("regen")
-```
-:::
-:::
+These sprouts represent the next cohort in a multiaged silvicultural
+system, which is why we are interested in their growth and density.
 
-
-## Downed woody fuel
-
-:::{.columns}
-:::{.column width=60%}
-- Particles were tallied by size class
-- Counts were converted to load (Mg/ha) using linear intersect theory and
-  parameters from the literature
-:::
-:::{.column width=40%}
-
-![A transect](../figures/transect.jpg)
+But they also represent a significant source of potential fuel, given the right
+(or wrong) fire weather conditions.
 
 :::
-:::
 
-## Litter and duff
-
-:::{.columns}
-:::{.column width=60%}
-- Litter and duff depth measured from a representative location within the
-  sampling cylinder
-- Depth-to-load equation taken from the literature
-:::
-:::{.column width=40%}
-```{r, dev="png", dev.args=list(bg="transparent")}
-#| fig-width: 3.5
-#| fig-height: 3.5
-plot_design("samp_cyl")
-```
-:::
-:::
-
-## Vegetation
+## Vegetation fuels
 
 :::: {.columns}
-:::{.column width=60%}
-- We estimated percent cover and average height 
+::: {.column width=60%}
+- We estimated percent cover and average height for:
+  - grass and forbs
+  - shrubs and trees
 - Converted to load using a constant bulk density
 :::
 
-:::{.column width=40%}
+::: {.column width=40%}
 ![](../figures/samp_cyl.png)
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
@@ -305,11 +399,76 @@ plot_design("samp_cyl")
 :::
 ::::
 
+::: {.notes}
+We weren't quite satisfied with just stem and height measurements, so we
+estimated the density of the sprout foliage itself (as well as that of any
+shrubs or forbs present).
+
+In fact the sprouts had grown so much that a PCT was necessary, and that slash
+would become downed woody fuel, so we wanted to characterize that fuel loading
+before and after PCT.
+:::
+
+## Downed woody fuel
+
+::: {.columns}
+::: {.column width=60%}
+- Particles were tallied by size class
+- Counts were converted to load (Mg/ha) using linear intersect theory and
+  parameters from the literature
+
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 1.5
+#| fig-height: 1.5
+#| fig-align: left
+plot_design("transect")
+```
+:::
+::: {.column width=40%}
+
+![A transect](../figures/transect.jpg)
+
+:::
+:::
+
+::: {.notes}
+We partook in the time honored tradition of counting sticks on the forest floor
+by size class! 
+
+Next
+:::
+
+## Litter and duff
+
+::: {.columns}
+::: {.column width=60%}
+- Litter and duff depth measured from a representative location within the
+  sampling cylinder
+- Depth-to-load equation taken from the literature
+:::
+::: {.column width=40%}
+```{r, dev="png", dev.args=list(bg="transparent")}
+#| fig-width: 3.5
+#| fig-height: 3.5
+plot_design("samp_cyl")
+```
+:::
+:::
+
+::: {.notes}
+And of course you can't ignore leaf litter in these cladoptosising, fire-philic redwood
+stands.
+
+Ok, that was a lot of trampling around that plot. Hopefully we didn't crush too
+many sticks!
+
+Lets review the data we collected.
+:::
+
 ## Sampling review
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| fig-height: 4
-library(patchwork)
 
 local({
   title <- function(T) {
@@ -318,159 +477,186 @@ local({
       ggplot2::theme(plot.title = ggplot2::element_text(size = 20))
     )
   }
-  plot_design("macro") +
-    title("Sprout heights") +
-    plot_design("regen") +
+  plot_design("regen") +
     title("Regen. density") +
+    plot_design("macro") +
+    title("Sprout heights") +
     plot_design(c("samp_cyl", "transect")) +
-    title("Fuels")
+    title("Fuels") &
+    fig_theme
 })
 ```
-:::{.notes}
-That was a lot of response variables. Here they are summarized in three
-categories.
+::: {.notes}
+Here you can see they fall into three neat categories.
+
+Now, with data in hand, we are ready to try to fit them to models.
 :::
 
-## Methods -- Analysis {.center}
+## Methods --- Analysis {.center}
 
-:::{.notes}
-By the end of this section, you'll have an idea of they methods I used to
-analyze these data.
+::: {.notes}
+By the end of this section, you'll have an idea of how I approached analysis of
+these data.
 :::
 
 ## Analytical Framework
 
 - 16 models across three response categories  
 - Multilevel (mixed-effects) models throughout  
-- Treatment as primary fixed effect  
-- Random effects reflect study design hierarchy  
-- Model structure selected using AIC + residual diagnostics  
-- Models fit with `glmmTMB`  
-- Inference based on population-level marginal means  
+- Treatment and species as primary fixed effects
+- Random effects reflect study design hierarchy + impact
+- Models fit with R package `glmmTMB` = flexibility
+- Distribution and variance structure selected using AIC + residual diagnostics
+  in `DHARMa`
+- Inference based on population-level marginal means with `marginaleffects` and
+  `emmeans`
 
 ::: {.notes}
 - All response variables were analyzed using mixed-effects models to account for
-  nesting within sites, macroplots, and repeated measures where applicable.  
-- Random effects were retained when they explained meaningful variance or
-  influenced fixed-effect estimates.  
+  nesting within sites, macroplots, corners, transects, and repeated measures
+  where applicable.
+- Random effects nesting levels were retained when they explained meaningful
+  variance or influenced fixed-effect coefficient estimates.  
+- glmmTMB provides a consistent frame work for many distributions as well as sub-models
+  for zero-inflation and dispersion.
 - Candidate distributions and model structures were compared using AIC, and
-  residual diagnostics were evaluated using DHARMa.  
+  residual diagnostics were evaluated using R package, DHARMa.  
 - Predictions were generated on the response scale and averaged across non-focal
   predictors to obtain population-level marginal means.  
+
+Ok, that covers our 16 models generally, lets see how each response category was
+handled specifically. 
+
+We'll start with regeneration. 
+
+(Probability integral transform)
 :::
 
 ## Regeneration Analysis
 
-- Basal area (m² ha⁻¹) used to quantify species abundance  
+- Basal area (m^2^ ha^-1^) used to quantify species abundance  
 - Reflects growth + survival under self-thinning  
-- Zero-inflated continuous data → hurdle Gamma model  
-- Treatment as fixed effect  
-- Random intercept: Site × Species  
+- Zero-inflated right-skewed data → hurdle gamma model  
+- `ba_ha ~ treat * spp + (1 | site:spp)` 
+- Dispersion varied by species
+
+::: {.notes}
+Sprout tallies from 4-m radius plots were converted to basal area per hectare
+using size-class midpoints. Minor species were grouped as “Other,” and absences
+were coded explicitly as zero.
+
+Basal area was selected because prolific sprouting in redwood and tanoak leads
+to self-thinning and basal area better captures established biomass rather than
+transient stem counts.
+
+Basal area was modeled using a hurdle gamma distribution
+
+Species-specific dispersion was allowed
+
+(site-by-species random intercepts accounted for hierarchical structure.)
+:::
 
 . . . 
 
 - Douglas-fir seedlings analyzed as counts  
 - Overdispersed counts → negative binomial model  
+- `n ~ treat + (1 | site) + (1 | site:treat)`
+
 
 ::: {.notes}
-Sprout tallies from 4-m radius plots were converted to basal area per hectare
-using size-class midpoints. Minor species were grouped as “Other,” and absences
-were coded explicitly as zero.  
-
-Basal area was selected instead of stem density because prolific sprouting in
-redwood and tanoak leads to self-thinning; basal area better captures
-established biomass rather than transient stem counts.  
-
-Basal area was modeled using a hurdle Gamma distribution to separate probability
-of occurrence from abundance when present. Species-specific dispersion was
-allowed, and site-by-species random intercepts accounted for hierarchical
-structure.  
-
 Douglas-fir seedlings were analyzed separately using a negative binomial model
-to account for overdispersion, with random effects for site and macroplot.
+to account for overdispersion
+
+(random effects for site and macroplot)
 :::
 
 ## Sprout Height Analysis
 
 - Two responses:  
   - Height increment (yrs 1–5, 5–10)  
+  - `ht_inc ~ treat * spp + year * spp + (1 | tree) + (0 + spp | plot)`
   - Total height at year 10  
-
-. . . 
-
-- Normal mixed-effects models  
-
-. . . 
-
-- Fixed effects: Treatment, Species, Growth period  
-- Random intercepts: Tree (repeated measures), Macroplot  
-- Species responses allowed to vary within macroplots  
-
-. . . 
-
-- Variance modeled as a function of predictors  
+  - `ht ~ treat * spp + (0 + spp | plot) + (1 | site)`
 
 ::: {.notes}
-Height increment included two measurements per tree, so tree was included as a
-random intercept to account for repeated measures.  
-
-Macroplot was included as a random effect to reflect spatial hierarchy.  
-
-We allowed species effects to vary within macroplots using an unstructured
-covariance matrix. This accounts for heteroscedasticity and allows species to
-co-vary within plots — for example, testing whether plots favorable for one
-species are also favorable for others.  
-
 For height increment, fixed effects included treatment, growth period, species,
-and the species × growth period interaction.  
+and the species × growth period and species × treatment interactions. 
 
-For total height at year 10, the best model included additive effects of
-treatment and species.  
+For total height at year 10, the best model included effects of
+treatment and species (and their interaction).
 
-Dispersion was modeled as a function of predictors to allow variance to differ
-among treatments, species, and growth periods.
+Extra:
+
+(Height increment included two measurements per tree, so tree was included as a
+random intercept to account for repeated measures.)
+
+(Macroplot was included as a random effect to reflect spatial hierarchy.)
+
+(We allowed species effects to vary within macroplots (random slope) using an
+unstructured covariance matrix. This accounts for heteroscedasticity and allows
+species to co-vary within plots — for example, capturing whether plots favorable
+for one species are also favorable for others.)
+:::
+
+. . . 
+
+- Normal distribution mixed-effects models  
+- Dispersion modeled as a function of predictors  
+
+::: {.notes}
+(Dispersion was modeled as a function of predictors to allow variance to differ
+among treatments x species x growth periods.)
 :::
 
 ## Fuels Analysis
 
-- Fuel load (Mg ha⁻¹) estimated by standard planar intercept methods  
-- Classes: 1–1,000 hr, duff/litter, vegetation  
-
-. . . 
-
-- Zero-inflated continuous data → Gamma mixed models  
-- Hurdle component used when zeros were present  
-
-. . . 
-
-- Random intercepts: Site, Macroplot, Transect corner  
-- Pre- and post-PCT modeled separately  
-- Model components (mean, zeros, dispersion) selected using AIC  
+- Fuel load (Mg ha^-1^) estimated by standard planar intercept methods  
+- Classes: 1–, 10-, 100-, and 1,000-hr, duff/litter, vegetation  
+- Pre- and post-PCT fuel loads modeled separately
 
 ::: {.notes}
-Fuel loads were calculated using Brown (1974) methods with regionally derived
-parameters.  
+Fuel loads were calculated using methods of Brown (1974) using regionally
+derived parameters.
 
 Duff and litter were combined and bulk density was estimated from published
-regional averages.  
+regional averages.
 
 Vegetation fuels were calculated using standard bulk density constants and
-combined to simplify interpretation.  
-
-Gamma mixed models with a log link were used because fuel loads are continuous
-and right-skewed.  
-
-A hurdle component was included when zeros were present to separately model
-occurrence and positive load.  
-
-Random effects reflected the nested sampling design (site → macroplot → transect
-corner).  
+combined to simplify interpretation.
 
 Pre- and post-PCT fuels were modeled separately because not all fuel classes
 were measured post-treatment.
+
+(Veg bulk density estimates came from Firemon manual)
 :::
 
-## Results -- Regeneration {.center}
+. . . 
+
+- `fuel_load ~ treat + (1 | site/macro/corner)`
+- Zero-inflated continuous data → hurdle gamma mixed models  
+
+::: {.notes}
+I used a hurdle gamma distribution to model these zero-present-right-skewed
+data.
+
+Random effects reflected the nested sampling design (site → macroplot → transect
+corner).
+
+Data wrangling and working with all those models took took quite a while. Lets
+see what they tell us about sprout growth and fuel comparisons under
+tranformation to multiaged management.
+:::
+
+
+## Results --- Regeneration {.center}
+
+::: {.notes}
+It's important to keep in mind here, that while we sampled many trees, 32
+transects, 16 regeneration sub-plots per treatment. For the purpose of
+determining treatment differences, our sample size was basically 4, representing
+the 4 replicates per treatment. This limits our explanatory power, but is an
+inevitable trade off when implementing a large-scale controlled experiment.
+:::
 
 ## Regeneration Density
 
@@ -486,21 +672,25 @@ were measured post-treatment.
 - Douglas-fir regeneration low (~400 seedlings ha⁻¹) and similar across treatments  
 
 ::: {.notes}
-Although treatment differences were not statistically significant, trends followed expectations based on light availability.  
+Although treatment differences were not statistically significant, trends
+followed expectations based on light availability.
 
-Redwood showed the clearest decline in basal area with increasing retention, consistent with strong light sensitivity.  
+Redwood showed the clearest decline in basal area with increasing retention,
+consistent with strong light sensitivity.
 
-Tanoak followed a similar but more moderate pattern, reflecting greater shade tolerance.  
+Tanoak followed a similar but more moderate pattern, reflecting greater shade
+tolerance.
 
-Uncertainty was higher for redwood, likely due to spatial variability in light conditions and patchy sprout distribution.
+Uncertainty was higher for redwood, likely due to spatial variability in light
+conditions and patchy sprout distribution.
 
-Douglas-fir occurred at modest densities and did not differ among treatments.  
+Douglas-fir occurred at modest densities and did not differ among treatments.
 :::
 
 ## Regeneration Takeaways
 
-:::{.columns}
-:::{.column width=45%}
+::: {.columns}
+::: {.column width=45%}
 
 - Openness most strongly favored redwood  
 
@@ -508,20 +698,8 @@ Douglas-fir occurred at modest densities and did not differ among treatments.
 
 - Trends consistent with shade tolerance theory  
 :::
-:::{.column width=55%}
+::: {.column width=55%}
 
-
-```{r}
-#| include: false
-
-library(ggplot2)
-load("./thesis_defense_plots.rda")
-result_theme <- theme(
-  plot.background = element_rect(fill = 'transparent', color = NA),
-  panel.background = element_rect(color = NA),
-  text = element_text(size = 16)
-)
-```
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| label: fig-regen-ba
@@ -534,37 +712,36 @@ fig_regen_ba + result_theme
 :::
 
 ::: {.notes}
+Note that in this and following figures, non-overlapping blue arrows indicate
+statistical significance at the α=0.5 level. Β
 
 The primary regeneration signal was the strong response of redwood to openness.
 
 As retention increased, differences between redwood and tanoak narrowed,
 consistent with shade tolerance expectations.
 
-While basal area differences were not statistically supported, the ecological
-trends are coherent and align with previous literature.
-
 Although uncertainty limited statistical support for basal area differences, the
 overall directional trends are clear and reinforced by sprout height results,
 which I will show next.
 :::
 
-## Results -- Sprout Height {.center}
+## Results --- Sprout Height {.center}
 
 ## Sprout Height — Year 10
 
-:::{.columns}
-:::{.column width=50%}
+::: {.columns}
+::: {.column width=50%}
 
 - Strong treatment effect on final height  
 
-- GS > LD > HA ≥ HD  
+- GS > HA & HD  
 
 - Redwood consistently taller than tanoak  
 
 - Openness drives rapid early development  
 
 :::
-:::{.column width=50%}
+::: {.column width=50%}
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| label: fig-sprout-ht-yr-10
@@ -582,7 +759,9 @@ fig_sprout_ht_yr_10 + result_theme
 This is the clearest signal in the study.
 
 Both species reached their greatest heights under the most open conditions, with
-a consistent ordering of GS > LD > HA ≥ HD.
+a consistent ordering of GS > HA & HD. 
+
+Mean trend further reinforces expected pattern.
 
 Redwood was substantially taller than tanoak across all treatments.
 
@@ -593,8 +772,8 @@ development.
 
 ## Sprout Growth Dynamics
 
-:::{.columns}
-:::{.column width=50%}
+::: {.columns}
+::: {.column width=50%}
 
 - Redwood grew faster than tanoak  
 
@@ -605,7 +784,7 @@ development.
 - Strong early response to openness  
 
 :::
-:::{.column width=50%}
+::: {.column width=50%}
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| label: fig-sprout-ht-inc-yr
@@ -646,9 +825,9 @@ thinning."
 :::
 
 
-## Results -- Fuel {.center}
+## Results --- Fuel {.center}
 
-## Fuels — Pre-PCT
+## Fuels --- Pre-PCT
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| fig-width: 10.5
@@ -675,11 +854,16 @@ meaningfully affect fire behavior.
 The main difference was in vegetation fuels, which were highest in the more open
 treatments, reflecting greater understory productivity.
 
+The vegetation fuels may serve as ladder fuels under certain fire-weather
+conditions.
+
 Overall, this stage shows that initial harvest treatments had limited impact on
-surface fuels.
+surface fuels, except for vegetation, driven by the sprout response.
+
+But that changes after PCT
 :::
 
-## Fuels — Post-PCT
+## Fuels --- Post-PCT
 
 ```{r, dev="png", dev.args=list(bg="transparent")}
 #| fig-width: 10.5
@@ -723,12 +907,11 @@ more surface fuels after thinning.
 - Trade-off between growth and fuel accumulation  
 
 ::: {.notes}
-Before thinning, fuel loads were relatively similar across treatments.
+Before thinning, fine dead fuel loads were relatively similar across treatments.
+But sprout growth can serve as ladder fuels.
 
-After thinning, differences emerged due to the conversion of live biomass into
-surface fuels.
-
-Treatments that promoted more growth ultimately produced more slash.
+After thinning, treatments that promoted more growth ultimately produced more
+slash = fine dead fuels.
 
 This illustrates a key trade-off in multiaged management between promoting
 regeneration and managing fuel hazards.
@@ -744,12 +927,13 @@ regeneration and managing fuel hazards.
 
 - High retention reduces redwood advantage  
 
-- Treatments that promote growth also increase fuel loads after thinning  
+- Treatments that promote growth also increase ladder fuels before thinning and
+  fine dead fuel loads after thinning  
 
 - Multiaged management requires balancing regeneration and fuel hazard  
 
 ::: {.notes}
-The primary driver across all analyses was canopy openness.
+We explored canopy openness as the primary driver across all analyses 
 
 Redwood showed the strongest response to increased light, while tanoak was more
 tolerant of shaded conditions.
@@ -763,14 +947,17 @@ greater fuel accumulation following thinning.
 This highlights a key trade-off in multiaged management: promoting regeneration
 and stand development can increase short-term fuel hazards, requiring careful
 integration of silviculture and fuels management.
+
+This will likely require the use of active tending and prescribed fire to manage
+these fuels. 
 :::
 
 ## Future Directions
 
-- Incorporate light and microclimate measurements  
-- Improve estimation of vegetation fuel loads  
-- Evaluate fire behavior implications directly  
-- Integrate Indigenous fire stewardship perspectives  
+- Incorporate light and microclimate measurements (especially aspect)
+- Improve estimation of vegetation fuel loads 
+- Evaluate fire behavior implications directly
+- Integrate Indigenous fire stewardship perspectives
 
 ::: {.notes}
 Future work should focus on directly measuring understory light and
@@ -784,8 +971,53 @@ Testing how these fuel differences influence fire behavior will be critical.
 There is also an important opportunity to integrate Indigenous fire stewardship
 into future research and management approaches.
 
-"Ultimately, managing these systems requires balancing the conditions that
-promote regeneration with those that reduce fuel hazard."
+I did not engage with the Northern Pomo during this experiment. Hopefully,
+future studies will to: 
+- share knowledge, 
+- help to build capacity, and 
+- align research and modeling with tribal knowledge and values.
+
+This research represents a first step (for western science) towards exploring
+the synergy between silviculture and fire-based management (pyrosilviculture) in
+coast redwood forests. Once fire has been applied to this experiment and the
+results are observed, we will essentially have one data point supporting our
+understanding of redwood pyrosiviculture. This further emphasizes the value of
+traditional knowledge developed over centuries.
+
+Ultimately, understanding the balance of conditions that
+promote regeneration with those that reduce fuel hazard is a long term
+objective, and I hope this study can serve as a valuable baseline.
+
 :::
 
-## Questions? {.center}
+## Questions?
+
+:::: {.columns}
+::: {.column width=40%}
+![](../figures/calfire.png){width=220}
+![](../figures/cci.png){width=250}
+:::
+::: {.column width=60%}
+![](../figures/crew.jpg)
+:::
+::::
+
+## Hurdle gamma distribution
+
+::: {.notes}
+A "hurdle gamma" distribution is used for models of basal area and fuels because
+these data, conditional on the model, were right skewed, continuous, but also
+had zeros.
+:::
+
+- A continuous right-skewed distribution that allows zeros
+- used in basal area and fuels models.
+
+$$
+f(y_i \mid \pi_i, \mu_i, \phi_i) = 
+\begin{cases}
+1-\pi_i & \text{if } y_i = 0 \\
+\pi_i \cdot \text{Gamma}(y_i \mid \mu_i, \phi_i) & \text{if } y_i > 0
+\end{cases}
+$$
+

@@ -131,21 +131,9 @@
 <h2></h2>
 <h3 id="regeneration-and-fuel-loading-with-varying-overstory-retention-in-redwood-stands-10-years-after-transformation-to-multiaged-management">Regeneration and Fuel Loading with Varying Overstory Retention in Redwood Stands 10 Years after Transformation to Multiaged Management</h3>
 <p>Thesis committee presentation by Judson Fisher</p>
-</section>
-<section id="thank-you" class="slide level2">
-<h2>Thank you</h2>
-<aside class="notes">
-<ul>
-<li>Thank you for being here</li>
-<li>exciting time</li>
-<li>appreciate your willingness to see me through to the finish</li>
-<li>by the end
-<ul>
-<li>good understanding of project</li>
-<li>the major takeaways</li>
-<li>Some ideas for future improvement</li>
-</ul></li>
-</ul>
+
+<img data-src="../figures/treatments.png" class="r-stretch"><aside class="notes">
+<p>Thank you all for being here today.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -157,9 +145,6 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-</section>
-<section id="introduction" class="slide level2 center">
-<h2>Introduction</h2>
 </section>
 <section class="slide level2">
 
@@ -171,6 +156,7 @@
 </div></div>
 <aside class="notes">
 <p>10 years ago, Pascal implemented a large scale, replicated, manipulative silvicultural experiment to demonstrate and study the transformation from even-aged to multiaged management in redwood dominated forests in the Jackson Demonstration State Forest in Mendocino County. My thesis serves as a 10-year report of the remeasurement of several key factors of that experiment —- sprout heights, regeneration density, and fuels.</p>
+<p>but why study multiaged management?</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -183,16 +169,19 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="an-important-part-of-ecological-forest-management" class="slide level2">
-<h2>An important part of ecological forest management</h2>
+<section id="an-important-approach-to-ecological-forest-management" class="slide level2">
+<h2>An important approach to ecological forest management</h2>
 <ul>
-<li>Diversity of forest structures == Diversity of silvicultural techniques</li>
-<li>Predominance of even-aged management</li>
+<li>Diversity of silvicultural techniques → Diversity of forest structures</li>
+<li>Growing interest in transformation in Redwood region</li>
 <li>This work contributes to our understanding of multiaged stand development</li>
-<li>Greater understanding -&gt; increased adoption</li>
+<li>First replicated multiaged redwood experiment in the redwood region</li>
 </ul>
 <aside class="notes">
 <p>Why study multiaged management?</p>
+<p>A diversity of silvicultural techniques supports ecological diversity which promotes resilience and sustainability.</p>
+<p>There is widespread interest in transformation of legacy even-aged stands to multiaged silviculture.</p>
+<p>So why do study multiaged management in redwood forests?</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -208,17 +197,22 @@
 <section id="suitability-of-redwood-forests" class="slide level2">
 <h2>Suitability of redwood forests</h2>
 <div class="columns">
-<div class="column">
+<div class="column" style="width:40%;">
 <ul>
 <li>Timber value</li>
 <li>Shade tolerance</li>
 <li>Reliable regeneration</li>
 </ul>
-</div><div class="column">
+</div><div class="column" style="width:60%;">
 <p><img data-src="../figures/redwood_sprouts.jpg"></p>
 </div></div>
 <aside class="notes">
 <p>Why do this study in redwood forests?</p>
+<p>Redwood forests are highly productive and actively managed timber.</p>
+<p>Their high timber value affords flexibility in management decisions.</p>
+<p>They are shade tolerant and regenerate reliably, which are prime qualities if you are trying to initiate new cohorts under older ones.</p>
+<p>So, redwood systems have a lot of the characteristics we want for multiaged management.</p>
+<p>But these systems also exist in a fire-adapted landscape, and that raises an important question…</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -239,13 +233,14 @@
 <li>Slow adoption of fire-informed management on the North Coast</li>
 <li>Redwood is a fire-adapted species</li>
 <li>Historical record shows frequent fire</li>
-<li>What is the pyrosilvicultural significance of our management actions?</li>
+<li>We need to understand the pyrosilvicultural significance of our management.</li>
 </ul>
 </div><div class="column" style="width:30%;">
 <p><img data-src="../figures/redwood_fire.png" height="500"></p>
 </div></div>
 <aside class="notes">
-<p>Why study fuels in addition to tree growth?</p>
+<p>We don’t really understand how management approaches interact with fuels and fire in these systems.</p>
+<p>So I built in metrics to first-of-its-kind experiment to improve our understanding of the role fire might play in transformation to multiaged management.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -259,11 +254,10 @@
       }</style></aside>
 </section>
 <section id="methods-implementation" class="slide level2 center">
-<h2>Methods – Implementation</h2>
+<h2>Methods — Implementation</h2>
 <aside class="notes">
-<p>Now that you have and idea of the what and why, I’ll explain more of the details of Methods.</p>
-<p>I’ve broken this section into 3 parts.</p>
-<p>By the end of this section you’ll understand: - how the treatments were implemented - how they were measured, and - how I drew conclusions from those measurements</p>
+<p>Now that you have and idea of the what and why, I’ll explain more of the details of how we implemented the experiment and how I collected and analyzed the data.</p>
+<p>We’ll start with implementation</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -277,11 +271,11 @@
       }</style></aside>
 </section>
 <section id="initial-harvest-2012" class="slide level2">
-<h2>Initial harvest: 2012</h2>
+<h2>Initial harvest — 2012</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <ul>
-<li>16 one-hectare blocks
+<li>16 two-hectare blocks, each with one 1/5-ha macro plot
 <ul>
 <li><strong>GS</strong>: Group selection</li>
 <li><strong>LD</strong>: Low density dispersed</li>
@@ -295,14 +289,17 @@
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-1-1.png" width="384"></p>
+<p><img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-2-1.png" width="384"></p>
 </figure>
 </div>
 </div>
 </div>
 </div></div>
 <aside class="notes">
-<p>This is how the treatments are defined. They are listed in order from least, to greatest amount of competition (light and growing space).</p>
+<p>There were four treatments (harvest intensities) designed to reproduce a range of understory light conditions expected to promote conifer regeneration.</p>
+<p>They are listed here in order from least, to greatest amount of overstory competition including light and growing space.</p>
+<p>We installed one 1/5-ha plot within each 2-ha treatment block.</p>
+<p>Next</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -317,9 +314,10 @@
 </section>
 <section id="the-treatments-are-defined-in-terms-of-retained-trees-after-harvest" class="slide level2">
 <h2>The treatments are defined in terms of retained trees after harvest</h2>
-
-<img data-src="../figures/treatments.png" class="r-stretch"><aside class="notes">
-<p>And this is that the treatments mean, in a schematic representation.</p>
+<p><img data-src="../figures/treatments.png"> <span class="absolute" style="left: 60px; bottom: 110px; ">13% RD</span> <span class="absolute" style="left: 290px; bottom: 110px; ">21% RD</span> <span class="absolute" style="left: 510px; bottom: 110px; ">21% RD</span> <span class="absolute" style="left: 730px; bottom: 110px; ">0% RD</span></p>
+<aside class="notes">
+<p>The high-density treatments targeted retaining about 21% of the sites estimated total growing capacity in overstory trees — <strong>relative density</strong>. The low density treatments targeted 13% RD.</p>
+<p>Next</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -334,40 +332,144 @@
 </section>
 <section id="one-site" class="slide level2" data-background-color="black" data-background-image="../figures/treatments_aerial_labeled.png" data-background-size="contain">
 <h2>One site</h2>
+<aside class="notes">
+<p>This is what the four treatments look like from above at one of our four sites.</p>
+<p>Our measurement plots are outlined in red.</p>
+<p>Next, we’ll see how the treatments looked like on the ground.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="section-1" class="slide level2" data-background-color="black" data-background-image="../figures/GS.jpg" data-background-size="contain">
 <h2></h2>
 <div class="absolute" style="bottom: 5%; right: 5%; ">
 <p><span style="font-size: 2em;">GS</span></p>
 </div>
+<aside class="notes">
+<p>GS</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="section-2" class="slide level2" data-background-color="black" data-background-image="../figures/LD.jpg" data-background-size="contain">
 <h2></h2>
 <div class="absolute" style="bottom: 5%; right: 5%; ">
 <p><span style="font-size: 2em;">LD</span></p>
 </div>
+<aside class="notes">
+<p>LD</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="section-3" class="slide level2" data-background-color="black" data-background-image="../figures/HA.jpg" data-background-size="contain">
 <h2></h2>
 <div class="absolute" style="bottom: 5%; right: 5%; ">
 <p><span style="font-size: 2em;">HA</span></p>
 </div>
+<aside class="notes">
+<p>HA</p>
+<p>Notice the freshly downed slash in the foreground.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="section-4" class="slide level2" data-background-color="black" data-background-image="../figures/HD.jpg" data-background-size="contain">
 <h2></h2>
 <div class="absolute" style="bottom: 5%; right: 5%; ">
 <p><span style="font-size: 2em;">HD</span></p>
 </div>
+<aside class="notes">
+<p>HD</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="pre-commercial-thinning-pct" class="slide level2">
+<h2>Pre-commercial thinning (PCT)</h2>
+<p>tending the understory of the rapidly growing sprouts.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../figures/Camp6_HD_Before.jpg"></p>
+<figcaption>Before PCT</figcaption>
+</figure>
+</div>
+</div><div class="column" data-widht="50%">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../figures/Camp6_HD_After.jpg"></p>
+<figcaption>After PCT</figcaption>
+</figure>
+</div>
+</div></div>
+<aside class="notes">
+<p>Silviculturally, this creates more growing space for selected sprouts.</p>
+<p>The pyrosilvicultural significance is that this also results in conversion of potential ladder fuels to dead downed surface fuels.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="methods-sampling-procedure" class="slide level2 center">
-<h2>Methods – Sampling Procedure</h2>
+<h2>Methods — Sampling Procedure</h2>
 <aside class="notes">
-<p>At the end of this next section, you’ll understand how my sampling design resulted in response variables across three categories:</p>
+<p>Now that you have an idea of what we implemented, lets talk about how I measured it.</p>
+<p>I measured response variables across three categories:</p>
 <ul>
-<li>Sprout heights</li>
 <li>Regeneration density</li>
+<li>Sprout heights</li>
 <li>Fuels</li>
 </ul>
+<p>We’ll start by defining the plot structure.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -385,8 +487,8 @@
 <div class="columns">
 <div class="column" style="vertical-align:middle; width:30%;">
 <ul>
-<li>Macro plot (Outline)</li>
 <li>Regeneration plots (<span style="color: green">green</span> circles)</li>
+<li>Macro plot (Outline)</li>
 <li>Fuel transects (<span style="color: orange">orange</span> lines)</li>
 <li>Fuel sampling cylinders (<span style="color: orange">orange</span> circles)</li>
 </ul>
@@ -394,8 +496,42 @@
 <p><img data-src="../figures/fuel_sampling_layout.png"></p>
 </div></div>
 <aside class="notes">
-<p>Here I define the various aspects of the sampling design.</p>
+<p>[Describe the picture]</p>
 <p>Next, I’ll describe what we sampled in each of these.</p>
+<p>We’ll start with the regen sub-plots.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="regeneration-density-and-composition" class="slide level2">
+<h2>Regeneration density and composition</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<ul>
+<li>Four 4-m-radius sub plots per macro plot</li>
+<li>recorded diameter and species of all sprouts and seedlings taller than 1.4 m</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<div class="cell" data-layout-align="left">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-left">
+<figure>
+<p><img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-left" width="336"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<aside class="notes">
+<p>These measurements give us an idea of total density and composition across our plots, but we wanted to quantify the growth of individual sprouts more precisely.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -413,6 +549,7 @@
 <div class="columns">
 <div class="column" style="width:60%;">
 <ul>
+<li>1/5 ha square macro plot</li>
 <li>25 each of tanoak and redwood sprout clumps were selected for measurement</li>
 <li>Tallest sprout in clump measured at years 1, 5, and 10</li>
 </ul>
@@ -422,73 +559,40 @@
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-2-1.png" width="144"></p>
+<p><img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-4-1.png" width="144"></p>
 </figure>
 </div>
 </div>
 </div>
 </div></div>
+<aside class="notes">
+<p>Sprout heights were measured in the macro plot</p>
+<p>Sprouts were selected to be well distributed across the macro plot.</p>
+<p>This was to give us a good estimate of individual tree growth response over time.</p>
+<p>These sprouts represent the next cohort in a multiaged silvicultural system, which is why we are interested in their growth and density.</p>
+<p>But they also represent a significant source of potential fuel, given the right (or wrong) fire weather conditions.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="regeneration-density-and-composition" class="slide level2">
-<h2>Regeneration density and composition</h2>
-<div class="columns">
-<div class="column" style="width:60%;">
-<p>We recorded diameter and species of all sprouts and seedlings taller than 1.4 m</p>
-</div><div class="column" style="width:40%;">
-<div class="cell" data-layout-align="left">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-left">
-<figure>
-<p><img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-left" width="336"></p>
-</figure>
-</div>
-</div>
-</div>
-</div></div>
-</section>
-<section id="downed-woody-fuel" class="slide level2">
-<h2>Downed woody fuel</h2>
-<div class="columns">
-<div class="column" style="width:60%;">
-<ul>
-<li>Particles were tallied by size class</li>
-<li>Counts were converted to load (Mg/ha) using linear intersect theory and parameters from the literature</li>
-</ul>
-</div><div class="column" style="width:40%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="../figures/transect.jpg"></p>
-<figcaption>A transect</figcaption>
-</figure>
-</div>
-</div></div>
-</section>
-<section id="litter-and-duff" class="slide level2">
-<h2>Litter and duff</h2>
+<section id="vegetation-fuels" class="slide level2">
+<h2>Vegetation fuels</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <ul>
-<li>Litter and duff depth measured from a representative location within the sampling cylinder</li>
-<li>Depth-to-load equation taken from the literature</li>
-</ul>
-</div><div class="column" style="width:40%;">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-4-1.png" width="336"></p>
-</figure>
-</div>
-</div>
-</div>
-</div></div>
-</section>
-<section id="vegetation" class="slide level2">
-<h2>Vegetation</h2>
-<div class="columns">
-<div class="column" style="width:60%;">
+<li>We estimated percent cover and average height for:
 <ul>
-<li>We estimated percent cover and average height</li>
+<li>grass and forbs</li>
+<li>shrubs and trees</li>
+</ul></li>
 <li>Converted to load using a constant bulk density</li>
 </ul>
 </div><div class="column" style="width:40%;">
@@ -503,12 +607,102 @@
 </div>
 </div>
 </div></div>
+<aside class="notes">
+<p>We weren’t quite satisfied with just stem and height measurements, so we estimated the density of the sprout foliage itself (as well as that of any shrubs or forbs present).</p>
+<p>In fact the sprouts had grown so much that a PCT was necessary, and that slash would become downed woody fuel, so we wanted to characterize that fuel loading before and after PCT.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="downed-woody-fuel" class="slide level2">
+<h2>Downed woody fuel</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<ul>
+<li>Particles were tallied by size class</li>
+<li>Counts were converted to load (Mg/ha) using linear intersect theory and parameters from the literature</li>
+</ul>
+<div class="cell" data-layout-align="left">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-left">
+<figure>
+<p><img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-6-1.png" class="quarto-figure quarto-figure-left" width="144"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../figures/transect.jpg"></p>
+<figcaption>A transect</figcaption>
+</figure>
+</div>
+</div></div>
+<aside class="notes">
+<p>We partook in the time honored tradition of counting sticks on the forest floor by size class!</p>
+<p>Next</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="litter-and-duff" class="slide level2">
+<h2>Litter and duff</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<ul>
+<li>Litter and duff depth measured from a representative location within the sampling cylinder</li>
+<li>Depth-to-load equation taken from the literature</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-7-1.png" width="336"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<aside class="notes">
+<p>And of course you can’t ignore leaf litter in these cladoptosising, fire-philic redwood stands.</p>
+<p>Ok, that was a lot of trampling around that plot. Hopefully we didn’t crush too many sticks!</p>
+<p>Lets review the data we collected.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="sampling-review" class="slide level2">
 <h2>Sampling review</h2>
 
-<img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"><aside class="notes">
-<p>That was a lot of response variables. Here they are summarized in three categories.</p>
+<img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"><aside class="notes">
+<p>Here you can see they fall into three neat categories.</p>
+<p>Now, with data in hand, we are ready to try to fit them to models.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -522,9 +716,9 @@
       }</style></aside>
 </section>
 <section id="methods-analysis" class="slide level2 center">
-<h2>Methods – Analysis</h2>
+<h2>Methods — Analysis</h2>
 <aside class="notes">
-<p>By the end of this section, you’ll have an idea of they methods I used to analyze these data.</p>
+<p>By the end of this section, you’ll have an idea of how I approached analysis of these data.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -544,27 +738,25 @@
 </li>
 <li>Multilevel (mixed-effects) models throughout<br>
 </li>
-<li>Treatment as primary fixed effect<br>
-</li>
-<li>Random effects reflect study design hierarchy<br>
-</li>
-<li>Model structure selected using AIC + residual diagnostics<br>
-</li>
-<li>Models fit with <code>glmmTMB</code><br>
-</li>
-<li>Inference based on population-level marginal means</li>
+<li>Treatment and species as primary fixed effects</li>
+<li>Random effects reflect study design hierarchy + impact</li>
+<li>Models fit with R package <code>glmmTMB</code> = flexibility</li>
+<li>Distribution and variance structure selected using AIC + residual diagnostics in <code>DHARMa</code></li>
+<li>Inference based on population-level marginal means with <code>marginaleffects</code> and <code>emmeans</code></li>
 </ul>
 <aside class="notes">
 <ul>
-<li>All response variables were analyzed using mixed-effects models to account for nesting within sites, macroplots, and repeated measures where applicable.<br>
+<li>All response variables were analyzed using mixed-effects models to account for nesting within sites, macroplots, corners, transects, and repeated measures where applicable.</li>
+<li>Random effects nesting levels were retained when they explained meaningful variance or influenced fixed-effect coefficient estimates.<br>
 </li>
-<li>Random effects were retained when they explained meaningful variance or influenced fixed-effect estimates.<br>
+<li>glmmTMB provides a consistent frame work for many distributions as well as sub-models for zero-inflation and dispersion.</li>
+<li>Candidate distributions and model structures were compared using AIC, and residual diagnostics were evaluated using R package, DHARMa.<br>
 </li>
-<li>Candidate distributions and model structures were compared using AIC, and residual diagnostics were evaluated using DHARMa.<br>
-</li>
-<li>Predictions were generated on the response scale and averaged across non-focal predictors to obtain population-level marginal means.<br>
-</li>
+<li>Predictions were generated on the response scale and averaged across non-focal predictors to obtain population-level marginal means.</li>
 </ul>
+<p>Ok, that covers our 16 models generally, lets see how each response category was handled specifically.</p>
+<p>We’ll start with regeneration.</p>
+<p>(Probability integral transform)</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -580,27 +772,43 @@
 <section id="regeneration-analysis" class="slide level2">
 <h2>Regeneration Analysis</h2>
 <ul>
-<li>Basal area (m² ha⁻¹) used to quantify species abundance<br>
+<li>Basal area (m<sup>2</sup> ha<sup>-1</sup>) used to quantify species abundance<br>
 </li>
 <li>Reflects growth + survival under self-thinning<br>
 </li>
-<li>Zero-inflated continuous data → hurdle Gamma model<br>
+<li>Zero-inflated right-skewed data → hurdle gamma model<br>
 </li>
-<li>Treatment as fixed effect<br>
-</li>
-<li>Random intercept: Site × Species</li>
+<li><code>ba_ha ~ treat * spp + (1 | site:spp)</code></li>
+<li>Dispersion varied by species</li>
 </ul>
+<aside class="notes">
+<p>Sprout tallies from 4-m radius plots were converted to basal area per hectare using size-class midpoints. Minor species were grouped as “Other,” and absences were coded explicitly as zero.</p>
+<p>Basal area was selected because prolific sprouting in redwood and tanoak leads to self-thinning and basal area better captures established biomass rather than transient stem counts.</p>
+<p>Basal area was modeled using a hurdle gamma distribution</p>
+<p>Species-specific dispersion was allowed</p>
+<p>(site-by-species random intercepts accounted for hierarchical structure.)</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 <div class="fragment">
 <ul>
 <li>Douglas-fir seedlings analyzed as counts<br>
 </li>
-<li>Overdispersed counts → negative binomial model</li>
+<li>Overdispersed counts → negative binomial model<br>
+</li>
+<li><code>n ~ treat + (1 | site) + (1 | site:treat)</code></li>
 </ul>
 <aside class="notes">
-<p>Sprout tallies from 4-m radius plots were converted to basal area per hectare using size-class midpoints. Minor species were grouped as “Other,” and absences were coded explicitly as zero.</p>
-<p>Basal area was selected instead of stem density because prolific sprouting in redwood and tanoak leads to self-thinning; basal area better captures established biomass rather than transient stem counts.</p>
-<p>Basal area was modeled using a hurdle Gamma distribution to separate probability of occurrence from abundance when present. Species-specific dispersion was allowed, and site-by-species random intercepts accounted for hierarchical structure.</p>
-<p>Douglas-fir seedlings were analyzed separately using a negative binomial model to account for overdispersion, with random effects for site and macroplot.</p>
+<p>Douglas-fir seedlings were analyzed separately using a negative binomial model to account for overdispersion</p>
+<p>(random effects for site and macroplot)</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -621,34 +829,38 @@
 <ul>
 <li>Height increment (yrs 1–5, 5–10)<br>
 </li>
-<li>Total height at year 10</li>
+<li><code>ht_inc ~ treat * spp + year * spp + (1 | tree) + (0 + spp | plot)</code></li>
+<li>Total height at year 10<br>
+</li>
+<li><code>ht ~ treat * spp + (0 + spp | plot) + (1 | site)</code></li>
 </ul></li>
 </ul>
+<aside class="notes">
+<p>For height increment, fixed effects included treatment, growth period, species, and the species × growth period and species × treatment interactions.</p>
+<p>For total height at year 10, the best model included effects of treatment and species (and their interaction).</p>
+<p>Extra:</p>
+<p>(Height increment included two measurements per tree, so tree was included as a random intercept to account for repeated measures.)</p>
+<p>(Macroplot was included as a random effect to reflect spatial hierarchy.)</p>
+<p>(We allowed species effects to vary within macroplots (random slope) using an unstructured covariance matrix. This accounts for heteroscedasticity and allows species to co-vary within plots — for example, capturing whether plots favorable for one species are also favorable for others.)</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 <div class="fragment">
 <ul>
-<li>Normal mixed-effects models</li>
-</ul>
-</div>
-<div class="fragment">
-<ul>
-<li>Fixed effects: Treatment, Species, Growth period<br>
+<li>Normal distribution mixed-effects models<br>
 </li>
-<li>Random intercepts: Tree (repeated measures), Macroplot<br>
-</li>
-<li>Species responses allowed to vary within macroplots</li>
-</ul>
-</div>
-<div class="fragment">
-<ul>
-<li>Variance modeled as a function of predictors</li>
+<li>Dispersion modeled as a function of predictors</li>
 </ul>
 <aside class="notes">
-<p>Height increment included two measurements per tree, so tree was included as a random intercept to account for repeated measures.</p>
-<p>Macroplot was included as a random effect to reflect spatial hierarchy.</p>
-<p>We allowed species effects to vary within macroplots using an unstructured covariance matrix. This accounts for heteroscedasticity and allows species to co-vary within plots — for example, testing whether plots favorable for one species are also favorable for others.</p>
-<p>For height increment, fixed effects included treatment, growth period, species, and the species × growth period interaction.</p>
-<p>For total height at year 10, the best model included additive effects of treatment and species.</p>
-<p>Dispersion was modeled as a function of predictors to allow variance to differ among treatments, species, and growth periods.</p>
+<p>(Dispersion was modeled as a function of predictors to allow variance to differ among treatments x species x growth periods.)</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -665,33 +877,38 @@
 <section id="fuels-analysis" class="slide level2">
 <h2>Fuels Analysis</h2>
 <ul>
-<li>Fuel load (Mg ha⁻¹) estimated by standard planar intercept methods<br>
+<li>Fuel load (Mg ha<sup>-1</sup>) estimated by standard planar intercept methods<br>
 </li>
-<li>Classes: 1–1,000 hr, duff/litter, vegetation</li>
-</ul>
-<div class="fragment">
-<ul>
-<li>Zero-inflated continuous data → Gamma mixed models<br>
+<li>Classes: 1–, 10-, 100-, and 1,000-hr, duff/litter, vegetation<br>
 </li>
-<li>Hurdle component used when zeros were present</li>
-</ul>
-</div>
-<div class="fragment">
-<ul>
-<li>Random intercepts: Site, Macroplot, Transect corner<br>
-</li>
-<li>Pre- and post-PCT modeled separately<br>
-</li>
-<li>Model components (mean, zeros, dispersion) selected using AIC</li>
+<li>Pre- and post-PCT fuel loads modeled separately</li>
 </ul>
 <aside class="notes">
-<p>Fuel loads were calculated using Brown (1974) methods with regionally derived parameters.</p>
+<p>Fuel loads were calculated using methods of Brown (1974) using regionally derived parameters.</p>
 <p>Duff and litter were combined and bulk density was estimated from published regional averages.</p>
 <p>Vegetation fuels were calculated using standard bulk density constants and combined to simplify interpretation.</p>
-<p>Gamma mixed models with a log link were used because fuel loads are continuous and right-skewed.</p>
-<p>A hurdle component was included when zeros were present to separately model occurrence and positive load.</p>
-<p>Random effects reflected the nested sampling design (site → macroplot → transect corner).</p>
 <p>Pre- and post-PCT fuels were modeled separately because not all fuel classes were measured post-treatment.</p>
+<p>(Veg bulk density estimates came from Firemon manual)</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<div class="fragment">
+<ul>
+<li><code>fuel_load ~ treat + (1 | site/macro/corner)</code></li>
+<li>Zero-inflated continuous data → hurdle gamma mixed models</li>
+</ul>
+<aside class="notes">
+<p>I used a hurdle gamma distribution to model these zero-present-right-skewed data.</p>
+<p>Random effects reflected the nested sampling design (site → macroplot → transect corner).</p>
+<p>Data wrangling and working with all those models took took quite a while. Lets see what they tell us about sprout growth and fuel comparisons under tranformation to multiaged management.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -706,7 +923,20 @@
 </div>
 </section>
 <section id="results-regeneration" class="slide level2 center">
-<h2>Results – Regeneration</h2>
+<h2>Results — Regeneration</h2>
+<aside class="notes">
+<p>It’s important to keep in mind here, that while we sampled many trees, 32 transects, 16 regeneration sub-plots per treatment. For the purpose of determining treatment differences, our sample size was basically 4, representing the 4 replicates per treatment. This limits our explanatory power, but is an inevitable trade off when implementing a large-scale controlled experiment.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="regeneration-density" class="slide level2">
 <h2>Regeneration Density</h2>
@@ -765,9 +995,9 @@ Figure&nbsp;1
 </div>
 </div></div>
 <aside class="notes">
+<p>Note that in this and following figures, non-overlapping blue arrows indicate statistical significance at the α=0.5 level. Β</p>
 <p>The primary regeneration signal was the strong response of redwood to openness.</p>
 <p>As retention increased, differences between redwood and tanoak narrowed, consistent with shade tolerance expectations.</p>
-<p>While basal area differences were not statistically supported, the ecological trends are coherent and align with previous literature.</p>
 <p>Although uncertainty limited statistical support for basal area differences, the overall directional trends are clear and reinforced by sprout height results, which I will show next.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -782,7 +1012,7 @@ Figure&nbsp;1
       }</style></aside>
 </section>
 <section id="results-sprout-height" class="slide level2 center">
-<h2>Results – Sprout Height</h2>
+<h2>Results — Sprout Height</h2>
 </section>
 <section id="sprout-height-year-10" class="slide level2">
 <h2>Sprout Height — Year 10</h2>
@@ -790,14 +1020,14 @@ Figure&nbsp;1
 <div class="column" style="width:50%;">
 <ul>
 <li><p>Strong treatment effect on final height</p></li>
-<li><p>GS &gt; LD &gt; HA ≥ HD</p></li>
+<li><p>GS &gt; HA &amp; HD</p></li>
 <li><p>Redwood consistently taller than tanoak</p></li>
 <li><p>Openness drives rapid early development</p></li>
 </ul>
 </div><div class="column" style="width:50%;">
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-sprout-ht-yr-10" class="quarto-float quarto-figure quarto-figure-center" width="480" data-fig-align="center">
+<div id="fig-sprout-ht-yr-10" class="quarto-float quarto-figure quarto-figure-center" data-fig-align="center" width="480">
 <figure class="quarto-float quarto-float-fig">
 <div aria-describedby="fig-sprout-ht-yr-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img data-src="thesis-defense_files/figure-revealjs/fig-sprout-ht-yr-10-1.png" id="fig-sprout-ht-yr-10" class="quarto-figure quarto-figure-center" width="480">
@@ -812,7 +1042,8 @@ Figure&nbsp;2
 </div></div>
 <aside class="notes">
 <p>This is the clearest signal in the study.</p>
-<p>Both species reached their greatest heights under the most open conditions, with a consistent ordering of GS &gt; LD &gt; HA ≥ HD.</p>
+<p>Both species reached their greatest heights under the most open conditions, with a consistent ordering of GS &gt; HA &amp; HD.</p>
+<p>Mean trend further reinforces expected pattern.</p>
 <p>Redwood was substantially taller than tanoak across all treatments.</p>
 <p>This result highlights the strong role of canopy openness in driving early stand development.</p>
 <style type="text/css">
@@ -840,7 +1071,7 @@ Figure&nbsp;2
 </div><div class="column" style="width:50%;">
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-sprout-ht-inc-yr" class="quarto-float quarto-figure quarto-figure-center" width="480" data-fig-align="center">
+<div id="fig-sprout-ht-inc-yr" class="quarto-float quarto-figure quarto-figure-center" data-fig-align="center" width="480">
 <figure class="quarto-float quarto-float-fig">
 <div aria-describedby="fig-sprout-ht-inc-yr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img data-src="thesis-defense_files/figure-revealjs/fig-sprout-ht-inc-yr-1.png" id="fig-sprout-ht-inc-yr" class="quarto-figure quarto-figure-center" width="480">
@@ -881,12 +1112,12 @@ Figure&nbsp;3
       }</style></aside>
 </section>
 <section id="results-fuel" class="slide level2 center">
-<h2>Results – Fuel</h2>
+<h2>Results — Fuel</h2>
 </section>
 <section id="fuels-pre-pct" class="slide level2">
 <h2>Fuels — Pre-PCT</h2>
 
-<img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-8-1.png" class="quarto-figure quarto-figure-center r-stretch" width="1008"><ul>
+<img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-9-1.png" class="quarto-figure quarto-figure-center r-stretch" width="1008"><ul>
 <li>Fuel loads broadly similar across treatments</li>
 <li>Fine fuels showed minor differences</li>
 <li>Vegetation fuels highest in open treatments</li>
@@ -895,7 +1126,9 @@ Figure&nbsp;3
 <p>Prior to pre-commercial thinning, fuel loads were generally similar across treatments.</p>
 <p>Fine woody fuels showed only small differences, which are unlikely to meaningfully affect fire behavior.</p>
 <p>The main difference was in vegetation fuels, which were highest in the more open treatments, reflecting greater understory productivity.</p>
-<p>Overall, this stage shows that initial harvest treatments had limited impact on surface fuels.</p>
+<p>The vegetation fuels may serve as ladder fuels under certain fire-weather conditions.</p>
+<p>Overall, this stage shows that initial harvest treatments had limited impact on surface fuels, except for vegetation, driven by the sprout response.</p>
+<p>But that changes after PCT</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -911,7 +1144,7 @@ Figure&nbsp;3
 <section id="fuels-post-pct" class="slide level2">
 <h2>Fuels — Post-PCT</h2>
 
-<img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-9-1.png" class="quarto-figure quarto-figure-center r-stretch" width="1008"><ul>
+<img data-src="thesis-defense_files/figure-revealjs/unnamed-chunk-10-1.png" class="quarto-figure quarto-figure-center r-stretch" width="1008"><ul>
 <li><p>Fine dead fuels increased after thinning</p></li>
 <li><p>Stronger differences among treatments</p></li>
 <li><p>Highest loads in GS and LD treatments</p></li>
@@ -942,9 +1175,8 @@ Figure&nbsp;3
 <li><p>Trade-off between growth and fuel accumulation</p></li>
 </ul>
 <aside class="notes">
-<p>Before thinning, fuel loads were relatively similar across treatments.</p>
-<p>After thinning, differences emerged due to the conversion of live biomass into surface fuels.</p>
-<p>Treatments that promoted more growth ultimately produced more slash.</p>
+<p>Before thinning, fine dead fuel loads were relatively similar across treatments. But sprout growth can serve as ladder fuels.</p>
+<p>After thinning, treatments that promoted more growth ultimately produced more slash = fine dead fuels.</p>
 <p>This illustrates a key trade-off in multiaged management between promoting regeneration and managing fuel hazards.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -967,15 +1199,16 @@ Figure&nbsp;3
 <li><p>Canopy openness strongly drives sprout growth and development</p></li>
 <li><p>Redwood responds most strongly; tanoak more shade tolerant</p></li>
 <li><p>High retention reduces redwood advantage</p></li>
-<li><p>Treatments that promote growth also increase fuel loads after thinning</p></li>
+<li><p>Treatments that promote growth also increase ladder fuels before thinning and fine dead fuel loads after thinning</p></li>
 <li><p>Multiaged management requires balancing regeneration and fuel hazard</p></li>
 </ul>
 <aside class="notes">
-<p>The primary driver across all analyses was canopy openness.</p>
+<p>We explored canopy openness as the primary driver across all analyses</p>
 <p>Redwood showed the strongest response to increased light, while tanoak was more tolerant of shaded conditions.</p>
 <p>Higher retention levels reduced redwood’s competitive advantage, suggesting a potential threshold where tanoak becomes more competitive.</p>
 <p>At the same time, treatments that promoted the most growth also resulted in greater fuel accumulation following thinning.</p>
 <p>This highlights a key trade-off in multiaged management: promoting regeneration and stand development can increase short-term fuel hazards, requiring careful integration of silviculture and fuels management.</p>
+<p>This will likely require the use of active tending and prescribed fire to manage these fuels.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -991,12 +1224,9 @@ Figure&nbsp;3
 <section id="future-directions" class="slide level2">
 <h2>Future Directions</h2>
 <ul>
-<li>Incorporate light and microclimate measurements<br>
-</li>
-<li>Improve estimation of vegetation fuel loads<br>
-</li>
-<li>Evaluate fire behavior implications directly<br>
-</li>
+<li>Incorporate light and microclimate measurements (especially aspect)</li>
+<li>Improve estimation of vegetation fuel loads</li>
+<li>Evaluate fire behavior implications directly</li>
 <li>Integrate Indigenous fire stewardship perspectives</li>
 </ul>
 <aside class="notes">
@@ -1004,7 +1234,9 @@ Figure&nbsp;3
 <p>Improving methods for estimating vegetation fuel loading would strengthen links between productivity and fuels.</p>
 <p>Testing how these fuel differences influence fire behavior will be critical.</p>
 <p>There is also an important opportunity to integrate Indigenous fire stewardship into future research and management approaches.</p>
-<p>“Ultimately, managing these systems requires balancing the conditions that promote regeneration with those that reduce fuel hazard.”</p>
+<p>I did not engage with the Northern Pomo during this experiment. Hopefully, future studies will to: - share knowledge, - help to build capacity, and - align research and modeling with tribal knowledge and values.</p>
+<p>This research represents a first step (for western science) towards exploring the synergy between silviculture and fire-based management (pyrosilviculture) in coast redwood forests. Once fire has been applied to this experiment and the results are observed, we will essentially have one data point supporting our understanding of redwood pyrosiviculture. This further emphasizes the value of traditional knowledge developed over centuries.</p>
+<p>Ultimately, understanding the balance of conditions that promote regeneration with those that reduce fuel hazard is a long term objective, and I hope this study can serve as a valuable baseline.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -1017,8 +1249,41 @@ Figure&nbsp;3
           display:block!important;
       }</style></aside>
 </section>
-<section id="questions" class="slide level2 center">
+<section id="questions" class="slide level2">
 <h2>Questions?</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img data-src="../figures/calfire.png" width="220"> <img data-src="../figures/cci.png" width="250"></p>
+</div><div class="column" style="width:60%;">
+<p><img data-src="../figures/crew.jpg"></p>
+</div></div>
+</section>
+<section id="hurdle-gamma-distribution" class="slide level2">
+<h2>Hurdle gamma distribution</h2>
+<aside class="notes">
+<p>A “hurdle gamma” distribution is used for models of basal area and fuels because these data, conditional on the model, were right skewed, continuous, but also had zeros.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<ul>
+<li>A continuous right-skewed distribution that allows zeros</li>
+<li>used in basal area and fuels models.</li>
+</ul>
+<p><span class="math display">\[
+f(y_i \mid \pi_i, \mu_i, \phi_i) =
+\begin{cases}
+1-\pi_i &amp; \text{if } y_i = 0 \\
+\pi_i \cdot \text{Gamma}(y_i \mid \mu_i, \phi_i) &amp; \text{if } y_i &gt; 0
+\end{cases}
+\]</span></p>
 
 
 </section>
