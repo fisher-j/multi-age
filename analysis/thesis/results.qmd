@@ -350,8 +350,7 @@ Other species (grand fir, madrone, and California wax-myrtle) occurred at low
 densities across plots. Most plots contained few individuals, though one LD
 macro plot had notably higher counts. Basal area for other species was low
 across treatments overall, with HD tending to be highest and HA lowest, while GS
-and LD were intermediate.
-
+and LD were intermediate @fig-regen-ba.
 
 
 <!-- Redwood regeneration basal area showed the greatest treatment response. 
@@ -586,15 +585,14 @@ rw_to_ht_mean <-
   deframe()
 ```
 
-The model selected based on AIC lacks a treatment x species interaction,
-suggesting that there is not evidence that treatments affected species
-differentially. It also lacks a treatment x year interaction. This means that
-there was not enough evidence to support that treatment was related to changes
-in growth rate.
+The selected model includes a treatment × species interaction,
+although this interaction was not statisticaly significant at the α=0.05 level,
+it was important for our study questions. I did not include a species × year
+interaction.
 
 The inclusion of treatment factors in the model (0.001 ≤ p < 0.03) indicated that
 the levels of treatment were associated with different growth rates across
-species and years. And the species x year interaction (p < 0.001) suggested that
+species and years. And the species × year interaction (p < 0.001) suggested that
 changes in growth rates were different for redwood and tanoak
 (@fig-sprout-ht-inc-treat).
 
@@ -773,7 +771,7 @@ ht_year_10_mean <-
   deframe()
 ```
 
-Because the best model did not contain a species x treatment interaction for the
+Because the best model did not contain a species × treatment interaction for the
 mean response, treatment comparisons were parallel between species. The GS
 treatment resulted in greater heights in year 10 than the other treatments
 (0.001 < p < 0.05). Predicted mean height for redwood ranged from 
@@ -986,12 +984,15 @@ Unlike pre-commercial thinning resulted in greater stratification of treatments
 `r round(mean(map_dbl(discard_at(fuel_post_means$onehr, "ha"), ~pluck(.x, "estimate"))), 1)`
 Mg ha^-1^, but the HA treatment was lower than these at about
 `r fuel_post_means$onehr$ha$estimate` Mg ha^-1^ 
-(p <= `r fuel_post_compare$onehr[["ha - gs"]]$p.value`).
+(p ≤ `r fuel_post_compare$onehr[["gs - ha"]]$p.value`).
 
 The GS treatment had the greatest 10-hr fuel loading with `r fuel_post_means$tenhr$gs$estimate` Mg ha^-1^, which was
-greater than the LD, HA, and HD treatments by  `r fuel_post_compare$tenhr[["gs - ld"]]$estimate`, `r fuel_post_compare$tenhr[["gs - ha"]]$estimate`, and `r fuel_post_compare$tenhr[["gs - hd"]]$estimate` Mg ha^-1^, respectively (
-p = `r fuel_post_compare$tenhr[["gs - ld"]]$p.value`, 
-p  < 0.001, and
+greater than the LD, HA, and HD treatments by  
+`r fuel_post_compare$tenhr[["gs - ld"]]$estimate`, 
+`r fuel_post_compare$tenhr[["gs - ha"]]$estimate`, and 
+`r fuel_post_compare$tenhr[["gs - hd"]]$estimate` Mg ha^-1^, respectively 
+(p = `r fuel_post_compare$tenhr[["gs - ld"]]$p.value`, 
+p  < 0.001, and 
 p = `r fuel_post_compare$tenhr[["gs - hd"]]$p.value`).
 The LD treatment also had about `r fuel_post_compare$tenhr[["ld - hd"]]$estimate` 
 Mg ha^-1^ more 10-hr fuels that the HD treatment 
@@ -1002,7 +1003,7 @@ treatment, with an average of about `r fuel_post_means$hundhr$gs$estimate` Mg ha
 which was about `r fuel_post_compare$hundhr[["gs - hd"]]$estimate` Mg ha^-1^ 
 greater than the HD treatment (p = `r fuel_post_compare$hundhr[["gs - hd"]]$p.value`).
 
-Thousand-hour fuels were greatest in the HD treatment, with an average of about `r fuel_post_means$thoushr$hd$estimate` Mg ha^-1^, which was about `r abs(fuel_post_compare$thoushr[["ld - hd"]]$estimate)` Mg ha^-1^ greater than the LD and HA treatments (p <= `r fuel_post_compare$thoushr[["ha - hd"]]$p.value`). The GS treatment was intermediate.
+Thousand-hour fuels were greatest in the HD treatment, with an average of about `r fuel_post_means$thoushr$hd$estimate` Mg ha^-1^, which was about `r abs(fuel_post_compare$thoushr[["ld - hd"]]$estimate)` Mg ha^-1^ greater than the LD and HA treatments (p ≤ `r fuel_post_compare$thoushr[["ha - hd"]]$p.value`). The GS treatment was intermediate.
 
 Fuel loading for live vegetation was similar across treatments at around 
 `r round(mean(map_dbl(fuel_post_means$onehr, ~pluck(.x, "estimate"))), 1)`
