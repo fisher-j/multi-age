@@ -25,7 +25,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -105,6 +125,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./content-plan.html"> 
 <span class="menu-text">Content plan</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./editorial-log.html"> 
+<span class="menu-text">Editorial log</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -123,7 +147,11 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#study-area-and-design" id="toc-study-area-and-design" class="nav-link" data-scroll-target="#study-area-and-design">Study area and design</a></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a></li>
+  </ul></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
   <ul class="collapse">
   <li><a href="#regeneration-under-varying-overstory-retention" id="toc-regeneration-under-varying-overstory-retention" class="nav-link" data-scroll-target="#regeneration-under-varying-overstory-retention">Regeneration under varying overstory retention</a></li>
@@ -177,33 +205,45 @@ The section files define the intended narrative and source map.
 -->
 <section id="abstract" class="level1">
 <h1>Abstract</h1>
-<p>Draft after the main-text results, figures, and supplementary material are defined. The abstract should state the study setting, retained-overstory design, regeneration findings, and the role of fuel measurements as reference conditions without overstating treatment comparisons.</p>
+<p>Forest managers using retention forestry need information on regeneration and fuel development to design productive stands in fire-adapted ecosystems. We analyzed 10-year remeasurement data from the Redwood Multiaged Experiment in Jackson Demonstration State Forest, California. The experiment compared group selection, aggregated retention, and low- and high-density dispersed retention treatments and measured regeneration, sprout growth, and surface fuel loading.</p>
+<p>Redwood regeneration responded strongly to increasing canopy openness, whereas tanoak responses were more modest. Fuel measurements describe conditions before and after precommercial thinning and provide reference values for future fire and fuels modeling in these redwood systems. The manuscript will evaluate how overstory retention affects regeneration while presenting fuel components in a form useful for integrated silviculture and fire management.</p>
+<!-- This is a thesis-derived starter abstract. Revise after publication-specific
+fuel components, figures, and supplementary material are finalized. -->
 </section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Frame the paper around the management challenge of developing regeneration in multiaged redwood stands while characterizing fuel conditions relevant to fire adapted ecosystems. Draw selectively from the thesis introduction: retain the silvicultural basis for overstory retention and redwood/tanoak regeneration; compress general background that does not advance the study question.</p>
-<p>End with focused objectives and expectations for regeneration and the fuel reference dataset. Refine wording only after the publication analyses are specified.</p>
+<p>Developing and maintaining multiaged stand structures requires silvicultural systems that create and sustain cohorts of different ages within the same stand <span class="citation" data-cites="oharaSilvicultureStructuralDiversity1998 schutzSilviculturalToolsDevelop2002">(<a href="#ref-oharaSilvicultureStructuralDiversity1998" role="doc-biblioref">O’Hara, 1998</a>; <a href="#ref-schutzSilviculturalToolsDevelop2002" role="doc-biblioref">Schütz, 2002</a>)</span>. Retention systems can retain a range of tree densities in dispersed or aggregated patterns and can be used to maintain multiaged stands or transform formerly even-aged stands <span class="citation" data-cites="mitchellRetentionSystemReconciling2002">(<a href="#ref-mitchellRetentionSystemReconciling2002" role="doc-biblioref">Mitchell &amp; Beese, 2002</a>)</span>.</p>
+<p>Coast redwood (<em>Sequoia sempervirens</em>) is well suited to this objective because it regenerates reliably by stump sprouting and can grow beneath a retained overstory. Its response to light is nevertheless important: reduced access to light can limit sprout vigor and persistence <span class="citation" data-cites="berrillUnderstoryLightPredicts2018 mumaDynamicsStumpSprout2022 oharaUnderstoryStumpSprout2007">(<a href="#ref-berrillUnderstoryLightPredicts2018" role="doc-biblioref">Berrill et al., 2018</a>; <a href="#ref-mumaDynamicsStumpSprout2022" role="doc-biblioref">Muma et al., 2022</a>; <a href="#ref-oharaUnderstoryStumpSprout2007" role="doc-biblioref">O’Hara et al., 2007</a>)</span>. Tanoak (<em>Notholithocarpus densiflorus</em>) is also shade tolerant and a vigorous resprouter, making its response relevant to both stand development and management of competing vegetation <span class="citation" data-cites="berrillDevelopmentRedwoodRegeneration2021 oharaRegenerationDynamicsCoast2017">(<a href="#ref-berrillDevelopmentRedwoodRegeneration2021" role="doc-biblioref">Berrill et al., 2021</a>; <a href="#ref-oharaRegenerationDynamicsCoast2017" role="doc-biblioref">O’Hara et al., 2017</a>)</span>.</p>
+<p>Silvicultural decisions that promote regeneration also influence the fuel conditions in which later management and fire occur. This paper therefore examines regeneration under varying overstory retention and describes surface fuel conditions as reference information for future fire-modeling and management studies.</p>
+<p>We use 10-year measurements from the Redwood Multiaged Experiment to evaluate regeneration responses among retention treatments and to report fuel conditions before and after precommercial thinning. The regeneration analysis provides the primary basis for inference; fuel components will be presented in a publication-specific form after their analytical specification is reviewed.</p>
 </section>
 <section id="methods" class="level1">
 <h1>Methods</h1>
-<p>Retain the site, study design, regeneration measurements, sprout measurements, fuel sampling, and precommercial-thinning context required to understand the study. Use the thesis methods as the source of record while reducing procedural detail that is not necessary for reproducibility or interpretation in the main text.</p>
-<p>Publication-specific analytical specifications will be added only after the fuel-component revision is designed and reviewed.</p>
+<section id="study-area-and-design" class="level2">
+<h2 class="anchored" data-anchor-id="study-area-and-design">Study area and design</h2>
+<p>The experiment is located in the Jackson Demonstration State Forest in coastal northern California. Four harvest treatments were replicated at four sites in 2012: group selection (GS), high-density dispersed retention (HD), high-density aggregated retention (HA), and low-density dispersed retention (LD). The retained-overstory treatments targeted post-harvest relative densities of 13% or 21%; group selection created a 1-ha opening with a lightly thinned buffer. These treatments were designed to examine alternative pathways for developing multiaged redwood stands <span class="citation" data-cites="berrillSimulatingMultiagedCoast2009 reinekePerfectionStanddensityIndex1933">(<a href="#ref-berrillSimulatingMultiagedCoast2009" role="doc-biblioref">Berrill &amp; O’Hara, 2009</a>; <a href="#ref-reinekePerfectionStanddensityIndex1933" role="doc-biblioref">Reineke, 1933</a>)</span>.</p>
+<p>Ten years after harvest, regeneration plots and fuel transects were established within each 0.2-ha treatment macro plot. Regeneration measurements characterized redwood, tanoak, and Douglas-fir; fuel transects characterized dead surface fuels and live vegetation. The plots were remeasured after precommercial thinning, which released selected conifers from competing trees and shrubs.</p>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<p>The final publication methods will identify the regeneration models retained from the thesis and the revised fuel-component specifications separately. Detailed sampling procedures, model diagnostics, and expanded comparisons will be retained as supplementary material where they are needed for reproducibility but not for interpretation of the main findings.</p>
+</section>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
 <section id="regeneration-under-varying-overstory-retention" class="level2">
 <h2 class="anchored" data-anchor-id="regeneration-under-varying-overstory-retention">Regeneration under varying overstory retention</h2>
-<p>Present regeneration outcomes first. The thesis results provide the starting material for basal area, Douglas-fir occurrence, and sprout-height summaries; their final wording, figures, and any revised summaries remain subject to modeling review.</p>
+<p>The thesis results provide the starting material for basal area, Douglas-fir occurrence, and sprout-height summaries. At 10 years after harvest, redwood regeneration was greatest in the most open treatment and declined with greater overstory retention. Tanoak responses were comparatively modest, and Douglas-fir regeneration was less frequent. The final figures and summaries will retain these results only after the publication presentation and modeling review are complete.</p>
 </section>
 <section id="fuel-conditions-as-reference-values" class="level2">
 <h2 class="anchored" data-anchor-id="fuel-conditions-as-reference-values">Fuel conditions as reference values</h2>
-<p>Present fuel conditions second. Separate fuel components where the new publication analysis supports that distinction. Emphasize measurements that are useful as reference values for future fire modeling, while retaining comparison with prior studies only where it improves interpretation.</p>
+<p>Fuel conditions are reported second to support interpretation of the silvicultural treatments and to provide reference values for subsequent fire and fuels studies. The thesis found comparatively few treatment differences in fine dead fuels before precommercial thinning, whereas vegetation fuels were greater in more open treatments. The publication analysis will separate fuel components that were previously combined and will limit treatment-comparison emphasis to findings that aid interpretation.</p>
 </section>
 </section>
 <section id="discussion" class="level1">
 <h1>Discussion</h1>
-<p>Interpret regeneration responses in relation to overstory retention and the silvicultural objective of developing a new cohort. Then explain how the fuel dataset complements that objective by describing conditions that others can use in fire and fuels work.</p>
-<p>The discussion should integrate silviculture with fire and fuels management without adding claims beyond the reviewed analyses and cited literature.</p>
+<p>The discussion will first interpret regeneration responses in relation to the silvicultural objective of developing a new redwood cohort beneath varying levels of retained overstory. It will then explain how the fuel dataset complements that objective by characterizing conditions that others can use in fire and fuels work.</p>
+<p>This structure treats silviculture and fire management as linked management questions while keeping conclusions within the support of the reviewed analyses and cited literature.</p>
 </section>
 <section id="conclusions" class="level1">
 <h1>Conclusions</h1>
@@ -214,9 +254,41 @@ The section files define the intended narrative and source map.
 <p>Potential supplementary material includes expanded model outputs, detailed pairwise comparisons, additional fuel-component tables, supplemental figures, and procedures that are useful for reproducibility but not essential to the main narrative. Final contents will be chosen after the manuscript and revised fuel analysis are settled.</p>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-berrillSimulatingMultiagedCoast2009" class="csl-entry" role="listitem">
+Berrill, J.-P., &amp; O’Hara, K. L. (2009). Simulating multiaged coast redwood stand development: interactions between regeneration, structure, and productivity. <em>Western Journal of Applied Forestry</em>, <em>24</em>(1), 24–32. <a href="https://doi.org/10.1093/wjaf/24.1.24">https://doi.org/10.1093/wjaf/24.1.24</a>
+</div>
+<div id="ref-berrillUnderstoryLightPredicts2018" class="csl-entry" role="listitem">
+Berrill, J.-P., Schneider, K., Dagley, C. M., &amp; Webb, L. A. (2018). Understory light predicts stump sprout growth in mixed multiaged stands in north coastal California. <em>New Forests</em>, <em>49</em>(6), 815–828. <a href="https://doi.org/10.1007/s11056-018-9636-6">https://doi.org/10.1007/s11056-018-9636-6</a>
+</div>
+<div id="ref-berrillDevelopmentRedwoodRegeneration2021" class="csl-entry" role="listitem">
+Berrill, J.-P., Webb, L. A., DeYoung, K. L., Dagley, C. M., Bodle, C. G., &amp; Simpson, S. M. (2021). Development of redwood regeneration after conifer partial harvest and hardwood management. <em>Forest Science</em>, <em>67</em>(1), 72–82. <a href="https://doi.org/10.1093/forsci/fxaa031">https://doi.org/10.1093/forsci/fxaa031</a>
+</div>
+<div id="ref-mitchellRetentionSystemReconciling2002" class="csl-entry" role="listitem">
+Mitchell, S. J., &amp; Beese, W. J. (2002). The retention system: reconciling variable retention with the principles of silvicultural systems. <em>The Forestry Chronicle</em>, <em>78</em>(3), 397–403. <a href="https://doi.org/10.5558/tfc78397-3">https://doi.org/10.5558/tfc78397-3</a>
+</div>
+<div id="ref-mumaDynamicsStumpSprout2022" class="csl-entry" role="listitem">
+Muma, R., Webb, L. A., Zald, H. S. J., Boston, K., Dagley, C. M., &amp; Berrill, J.-P. (2022). Dynamics of stump sprout regeneration after transformation to multiaged management in coast redwood forests. <em>Forest Ecology and Management</em>, <em>515</em>, 120236. <a href="https://doi.org/10.1016/j.foreco.2022.120236">https://doi.org/10.1016/j.foreco.2022.120236</a>
+</div>
+<div id="ref-oharaSilvicultureStructuralDiversity1998" class="csl-entry" role="listitem">
+O’Hara, K. L. (1998). Silviculture for structural diversity: a new look at multiaged systems. <em>Journal of Forestry</em>, <em>96</em>(7), 4–10. <a href="https://doi.org/10.1093/jof/96.7.4a">https://doi.org/10.1093/jof/96.7.4a</a>
+</div>
+<div id="ref-oharaRegenerationDynamicsCoast2017" class="csl-entry" role="listitem">
+O’Hara, K. L., Cox, L., Nikolaeva, S., Bauer, J., &amp; Hedges, R. (2017). Regeneration dynamics of coast redwood, a sprouting conifer species: a review with implications for management and restoration. <em>Forests</em>, <em>8</em>(5), 144. <a href="https://doi.org/10.3390/f8050144">https://doi.org/10.3390/f8050144</a>
+</div>
+<div id="ref-oharaUnderstoryStumpSprout2007" class="csl-entry" role="listitem">
+O’Hara, K. L., Stancioiu, P. T., &amp; Spencer, M. A. (2007). Understory stump sprout development under variable canopy density and leaf area in coast redwood. <em>Forest Ecology and Management</em>, <em>244</em>(1), 76–85. <a href="https://doi.org/10.1016/j.foreco.2007.03.062">https://doi.org/10.1016/j.foreco.2007.03.062</a>
+</div>
+<div id="ref-reinekePerfectionStanddensityIndex1933" class="csl-entry" role="listitem">
+Reineke, L. H. (1933). Perfecting a stand-density index for even-aged forest. <em>Journal of Agricultural Research</em>, <em>46</em>, 627–638. <a href="https://www.fs.usda.gov/treesearch/pubs/60134">https://www.fs.usda.gov/treesearch/pubs/60134</a>
+</div>
+<div id="ref-schutzSilviculturalToolsDevelop2002" class="csl-entry" role="listitem">
+Schütz, J.-P. (2002). Silvicultural tools to develop irregular and diverse forest structures. <em>Forestry: An International Journal of Forest Research</em>, <em>75</em>(4), 329–337. <a href="https://doi.org/10.1093/forestry/75.4.329">https://doi.org/10.1093/forestry/75.4.329</a>
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
