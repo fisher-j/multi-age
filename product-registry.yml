@@ -1,0 +1,31 @@
+# Product registry for the Redwood Multiaged Experiment repository.
+#
+# Legacy products continue to use their established Quarto profiles. The
+# publication is a standalone Quarto project. This file documents the common
+# render interface without changing legacy project paths.
+products:
+  lab-book:
+    source: analysis/
+    command: quarto render --profile analysis
+    output: docs/
+    status: legacy-compatible
+  thesis:
+    source: analysis/
+    command: quarto render --profile thesis
+    output: docs/
+    status: frozen-source
+  committee-slides:
+    source: analysis/
+    command: quarto render --profile presentation
+    output: docs/
+    status: legacy-compatible
+  thesis-defense-slides:
+    source: analysis/
+    command: quarto render --profile defense
+    output: docs/
+    status: legacy-compatible
+  publication:
+    source: publication/
+    command: quarto render
+    output: docs/publication/
+    status: active-development

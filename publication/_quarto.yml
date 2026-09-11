@@ -1,0 +1,34 @@
+project:
+  type: website
+  output-dir: ../docs/publication
+  pre-render:
+    - cmd.exe /c "..\analysis\scripts\sync_zotero_library.bat"
+  render:
+    - index.qmd
+    - manuscript.qmd
+    - content-plan.qmd
+
+execute:
+  freeze: auto
+
+# The complete Zotero export is synchronized and versioned in analysis/.
+# Publication rendering uses that repository snapshot without maintaining a
+# second bibliography copy.
+bibliography: ../analysis/zotero_library.json
+csl: ../analysis/apa.csl
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+
+website:
+  title: Publication manuscript development
+  navbar:
+    left:
+      - href: index.qmd
+        text: Overview
+      - href: manuscript.qmd
+        text: Manuscript structure
+      - href: content-plan.qmd
+        text: Content plan
