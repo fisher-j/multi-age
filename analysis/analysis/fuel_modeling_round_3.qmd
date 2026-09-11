@@ -32,9 +32,9 @@ fuel_class_labels <- c(
   tenhr = "10-hr",
   hundhr = "100-hr",
   thoushr = "1,000-hr",
-  dufflitter = "Duff & Litter",
+  dufflitter = "Duff & litter",
   veg = "Vegetation",
-  veg_diff = "Vegetation Difference"
+  veg_diff = "Vegetation difference"
 )
 
 fuel_class_labels2 <- imap(
@@ -122,7 +122,7 @@ correct_contrast_order <- function(pred_levels, contrast_levels) {
 }
 ```
 
-### Pre-pct
+### Pre-PCT
 
 ```{r}
 
@@ -251,13 +251,13 @@ mutate(fuel_pre_summaries, pairs = list(as_tibble(pairs(emmobj)))) |>
   knitr::kable()
 ```
 
-### Post-pct
+### Post-PCT
 
 All fuel classes have zeros, except for dufflitter, but this fuel class is not
-really valid for post-pct data---we don't have a depth to load equation suitable
+really valid for post-PCT data---we don't have a depth to load equation suitable
 for how litter depth was gathered.
 
-The veg_diff (pre-pct minus post-pct live vegetation) resulted in some negative
+The veg_diff (pre-PCT minus post-pct live vegetation) resulted in some negative
 values, these are mostly < 2.5 Mg/ha, and I think are attributable to
 measurement error. I'm simply converting negative values to zero.
 
@@ -348,7 +348,7 @@ fuel_tmb$post |>
   })
 ```
 
-Post-pct resulted in greater stratification of treatments. One-hour fuels were
+Post-PCT resulted in greater stratification of treatments. One-hour fuels were
 generally around 2.4 Mg ha^-1^, but the HA treatment had around half of that
 amount (p = 0.01 --- p = 0.02). The GS treatment had the greatest 10-hr fuel
 loading with 8.8 Mg ha^-1^, which was about 1.6, 2.3 and 2.9 times greater than

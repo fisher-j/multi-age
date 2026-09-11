@@ -191,7 +191,7 @@ transects were established parallel to the macro plot edges. Live fuels
 were estimated in 1-meter radius "stations" at the 5- and 9-meter
 locations along each transect.
 
-Following year 10 measurements, all plots received a pre-commercial
+Following year 10 measurements, all plots received a precommercial
 thinning treatment where the objective was to release merchantable
 conifers such as redwood and Douglas-fir from competition. Competing
 trees and shrubs were cut, lopped, and scattered within the measurement

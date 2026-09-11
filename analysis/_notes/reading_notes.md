@@ -522,19 +522,19 @@ and testing these with
 
 ## 2023-12-21
 
-### Multi-aged management
+### Multiaged management
 
 @mitchellRetentionSystemReconciling2002 discuss variable retention as it is
 practiced in Canada. They emphasize the need for updated silvicultural practices
 to match the shift in forest management objectives towards ecosystem function.
 
 @noletComparingEffectsEven2018 indicates that there is not much support the
-ecological benefits of multi-aged silviculture, and echos some of the same
+ecological benefits of multiaged silviculture, and echos some of the same
 sentiments as @apletEvenVsUnevenAged1994 regarding the need for both approaches
 as well as protected areas. This same sentiment can be found in
 @schutzSilviculturalToolsDevelop2002
 
-I started off my reading in multi-aged management with:
+I started off my reading in multiaged management with:
 
 @mumaDynamicsStumpSprout2022 followed by @oharaUnderstoryStumpSprout2007 and
 finally @oharaDynamicsCoastRedwood2010, which seems to be basically a copy of

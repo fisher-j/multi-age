@@ -334,9 +334,12 @@ local({
       ggplot2::theme(plot.title = ggplot2::element_text(size = 20))
     )
   }
-  plot_design("macro") + title("Sprout heights") +
-    plot_design("regen") + title("Regen. density") +
-    plot_design(c("samp_cyl", "transect")) + title("Fuels")
+  plot_design("macro") +
+    title("Sprout heights") +
+    plot_design("regen") +
+    title("Regen. density") +
+    plot_design(c("samp_cyl", "transect")) +
+    title("Fuels")
 })
 ```
 :::{.notes}
@@ -419,24 +422,23 @@ mht18emmeans |>
   ) |>
   rename(any_of(c(lower.CL = "asymp.LCL", upper.CL = "asymp.UCL"))) |>
   ggplot(aes(year, response, color = spp, fill = spp, group = spp)) +
-    geom_line() +
-    facet_wrap(~ treat, nrow = 1) +
-    geom_ribbon(
-      aes(ymin = lower.CL, ymax = upper.CL, color = NULL),
-      alpha = .2
-    ) +
-    stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
-    scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
-    theme_gray(base_size = 20) +
-    theme(
-      plot.background = element_blank(),
-      legend.background = element_blank(),
-      legend.position = "bottom"
-    ) +
-    labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species") +
-    scale_x_continuous(breaks = c(1, 5, 10)) +
-    coord_cartesian(xlim = c(1, 11))
-
+  geom_line() +
+  facet_wrap(~treat, nrow = 1) +
+  geom_ribbon(
+    aes(ymin = lower.CL, ymax = upper.CL, color = NULL),
+    alpha = .2
+  ) +
+  stat_slab(data = dht, aes(year, ht), alpha = 0.4) +
+  scale_color_brewer(palette = "Set2", aesthetics = c("color", "fill")) +
+  theme_gray(base_size = 20) +
+  theme(
+    plot.background = element_blank(),
+    legend.background = element_blank(),
+    legend.position = "bottom"
+  ) +
+  labs(x = "Year", y = "Height (m)", color = "Species", fill = "Species") +
+  scale_x_continuous(breaks = c(1, 5, 10)) +
+  coord_cartesian(xlim = c(1, 11))
 ```
 :::{.notes}
 - redwood is growing faster than tanoak
@@ -481,7 +483,8 @@ local({
     geom_pointrange(
       aes(y = response, ymin = lower.CL, ymax = upper.CL),
       data = mht18_compare,
-      color = "gray50", position = position_nudge(x = -0.07),
+      color = "gray50",
+      position = position_nudge(x = -0.07),
       size = 0.7,
       linewidth = 1,
       show.legend = FALSE
@@ -493,7 +496,12 @@ local({
       position = position_nudge(x = -0.3, y = 0.2),
       size = 6
     ) +
-    labs(x = "Treatment", y = "Height (m)", color = "Species", fill = "Species") +
+    labs(
+      x = "Treatment",
+      y = "Height (m)",
+      color = "Species",
+      fill = "Species"
+    ) +
     theme_gray(base_size = 20) +
     theme(
       panel.spacing = unit(0, "lines"),
@@ -504,7 +512,6 @@ local({
       # legend.position = "bottom"
     )
 })
-
 ```
 :::{.notes}
 Our data were only sufficient to detect a statistical difference for height in
@@ -526,9 +533,10 @@ library(forcats)
 
 load("./regen_visualize.rda")
 
-raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) { 
+raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
   generate_facet_totals <- function(data) {
-    summarize(data,
+    summarize(
+      data,
       .by = treat,
       n = paste("Total: ", round(n() * per_ha["treat"]))
     )
@@ -536,7 +544,10 @@ raw_hist2 <- function(group, bin_breaks, scale_breaks, text_pos) {
   regen |>
     filter({{ group }}) |>
     ggplot(aes(dbh, fill = spp)) +
-    stat_bin(aes(y = after_stat(count) * per_ha["treat"]), breaks = bin_breaks) +
+    stat_bin(
+      aes(y = after_stat(count) * per_ha["treat"]),
+      breaks = bin_breaks
+    ) +
     ggpp::geom_text_npc(
       data = generate_facet_totals,
       aes(npcx = "center", npcy = "top", label = n, fill = NULL),
@@ -559,8 +570,7 @@ raw_hist2(dbh < 5, seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
   theme(
     plot.background = element_blank(),
     legend.background = element_blank()
-  ) 
-
+  )
 ```
 :::{.notes}
 - the number of tanoak in the smallest size class increases with greater
@@ -579,15 +589,22 @@ local({
   bin_breaks <- seq(0, 17.5, 2.5)
   scale_breaks <- seq(0, 15, 5)
   facet_total_label <- function(data) {
-    summarize(data,
+    summarize(
+      data,
       .by = treat,
       ba_ha = round(sum(per_ha["treat"] * for_const(dbh)), 1)
     )
   }
   colors <- spp_col(regen, scales::brewer_pal, palette = "Set2")
   regen |>
-    ggplot(aes(dbh, fill = forcats::fct_reorder(spp, dbh, .fun = ~sum(.x^2)))) +
-    stat_bin(aes(weight = per_ha["treat"] * for_const(dbh)), breaks = bin_breaks) +
+    ggplot(aes(
+      dbh,
+      fill = forcats::fct_reorder(spp, dbh, .fun = ~ sum(.x^2))
+    )) +
+    stat_bin(
+      aes(weight = per_ha["treat"] * for_const(dbh)),
+      breaks = bin_breaks
+    ) +
     ggpp::geom_text_npc(
       data = facet_total_label,
       mapping = aes(npcx = "center", npcy = "top", label = ba_ha, fill = NULL),
@@ -606,7 +623,6 @@ local({
       legend.background = element_blank(),
     )
 })
-
 ```
 :::{.notes}
 - This emphasizes the decreasing trend in redwood abundance
@@ -628,7 +644,7 @@ library(ggplot2)
 
 local({
   data <- expected_predictions
-  data|>
+  data |>
     tidyr::unnest(pred) |>
     ggplot(aes(pred, treatment)) +
     tidybayes::stat_halfeye(normalize = "panels") +
@@ -637,14 +653,13 @@ local({
       panel_limits = tidyr::unnest(dplyr::select(data, lims), lims)
     ) +
     scale_y_discrete(labels = toupper) +
-    labs(x = expression(Load~(Mg%.%ha^-1)), y = "Treatment") +
+    labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Treatment") +
     theme_grey(base_size = 20) +
     theme(
       plot.background = element_blank(),
       legend.background = element_blank()
     )
 })
-
 ```
 :::{.notes}
 - 1hr fuels are slightly higher in HD and HA and lower in LD and GS. Likely due
@@ -667,21 +682,20 @@ local({
     unnest(c(pred)) |>
     ggplot(aes(x = pred, y = contrast)) +
     tidybayes::stat_halfeye(normalize = "panels") +
-    geom_vline(aes(xintercept = rope))  +
-    geom_vline(aes(xintercept = -rope))  +
+    geom_vline(aes(xintercept = rope)) +
+    geom_vline(aes(xintercept = -rope)) +
     facet_wrap(~class, scales = "free_x", labeller = fuel_class_labeller) +
     coord_cartesian_panels(
       panel_limits = unnest(dplyr::select(d, lims), lims)
     ) +
     scale_y_discrete(labels = toupper) +
-    labs(x = expression(Load~(Mg%.%ha^-1)), y = "Treatment") +
+    labs(x = expression(Load ~ (Mg %.% ha^-1)), y = "Treatment") +
     theme_gray(base_size = 20) +
     theme(
       plot.background = element_blank(),
       legend.background = element_blank()
     )
 })
-
 ```
 :::{.notes}
 - 1hr HA > GS, and almost HA > LD. Also HD almost > GS
@@ -699,7 +713,7 @@ local({
 
 ## My questions
 
-- How to add post-pct to the story
+- How to add post-PCT to the story
 - Potential questions generated by regen. distributions
 - "Asking questions" of the height model: confidence intervals
 
@@ -763,15 +777,24 @@ plot_design("samp_cyl")
 #| fig-width: 8
 #| fig-height: 5.5
 
-raw_hist2(dbh < 5 & treat %in% c("gs", "hd"), seq(0, 17.5, 2.5), seq(0, 15, 5), c(2.5, 6000)) /
-  raw_hist2(dbh >= 5 & treat %in% c("gs", "hd"), seq(0, 17.5, 2.5), seq(0, 15, 5), c(27, 600)) +
+raw_hist2(
+  dbh < 5 & treat %in% c("gs", "hd"),
+  seq(0, 17.5, 2.5),
+  seq(0, 15, 5),
+  c(2.5, 6000)
+) /
+  raw_hist2(
+    dbh >= 5 & treat %in% c("gs", "hd"),
+    seq(0, 17.5, 2.5),
+    seq(0, 15, 5),
+    c(27, 600)
+  ) +
   theme(strip.text = element_blank()) +
   plot_layout(axis_titles = "collect", axes = "collect_x") &
   theme(
     plot.background = element_blank(),
     legend.background = element_blank()
   )
-
 ```
 
 ---

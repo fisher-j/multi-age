@@ -6,7 +6,7 @@
   calculating litter load and slash load.
 - Discussion: significance of tracking fuel loads to pyro-silviculture
   - accounting for fire potential given specific silvicultural
-    objectives/system (multi-aged) as opposed to just "thinning"
+    objectives/system (multiaged) as opposed to just "thinning"
 
 @mumaDynamicsStumpSprout2022:
 - Our study

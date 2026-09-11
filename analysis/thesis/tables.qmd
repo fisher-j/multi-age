@@ -19,7 +19,6 @@ library(tidyr)
 library(tinytable)
 ```
 
-
 ## Regeneration
 
 ### Basal area
@@ -223,11 +222,13 @@ conditional: fuel_load ~ treatment + (1 | site/macro/corner)
 ```
 :::
 
-### Pre-pct
+### Pre-PCT
 
 ```{r}
 #| label: tbl-fuel-pre-pct-mod
-#| tbl-cap: Dispersion and hurdle component specifications for six fuel classes before pct.
+#| tbl-cap: >
+#|   Dispersion and hurdle component specifications for six fuel classes before
+#|   PCT.
 
 fuel_tmb$pre |>
   transmute(
@@ -249,7 +250,7 @@ fuel_tmb$pre |>
 #| label: tbl-fuel-pre-pct-means
 #| tbl-cap: >
 #|  Estimated marginal means (Mg ha^-1^) for six fuel classes and four overstory
-#|  treatments 10 years after partial harvest and prior to pre-commercial
+#|  treatments 10 years after partial harvest and prior to precommercial
 #|  thinning (PCT). The asymptotic 95% confidence intervals are based on the
 #|  normal approximation.
 
@@ -267,7 +268,7 @@ fuel_tmb$pre |>
 ```{r}
 #| label: tbl-fuel-pre-pct-compare
 #| tbl-cap: >
-#|   Pairwise comparisons of treatments for six fuel classes before pct.
+#|   Pairwise comparisons of treatments for six fuel classes before PCT.
 #|   P-values were adjusted for multiple comparisons using the Tukey method and
 #|   are based on normal approximations.
 
@@ -286,7 +287,7 @@ fuel_tmb$pre |>
 ```{r}
 #| label: tbl-fuel-pre-pct-grand-means
 #| tbl-cap: >
-#|   Modeled grand means Mg ha^-1^ of fuel loading 10 years after harvest and
+#|   Modeled grand means (Mg ha^-1^) of fuel loading 10 years after harvest and
 #|   prior to PCT. The asymptotic 95% confidence intervals are based on the
 #|   normal approximation.
 
@@ -301,12 +302,12 @@ fuel_tmb$pre |>
 ```
 
 
-### Post-pct
+### Post-PCT
 
 
 ```{r}
 #| label: tbl-fuel-post-pct
-#| tbl-cap: Model specifications for six fuel classes after pct.
+#| tbl-cap: Model specifications for six fuel classes after PCT.
 fuel_tmb$post |>
   transmute(
     class = fuel_class_labels[as.character(class)],
@@ -327,7 +328,7 @@ fuel_tmb$post |>
 #| label: tbl-fuel-post-pct-means
 #| tbl-cap: >
 #|  Estimated marginal means (Mg ha^-1^) for six fuel classes and four overstory
-#|  treatments 10 years after partial harvest and after pre-commercial
+#|  treatments 10 years after partial harvest and after precommercial
 #|  thinning (PCT). The asymptotic 95% confidence intervals are based on the
 #|  normal approximation.
 
@@ -350,7 +351,7 @@ fuel_tmb$post |>
 ```{r}
 #| label: tbl-fuel-post-pct-compare
 #| tbl-cap: >
-#|   Pairwise comparisons of treatments for six fuel classes after pct. P-values
+#|   Pairwise comparisons of treatments for six fuel classes after PCT. P-values
 #|   were adjusted for multiple comparisons using the Tukey method and are based
 #|   on normal approximations.
 

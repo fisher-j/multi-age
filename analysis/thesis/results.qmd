@@ -274,7 +274,7 @@ marginaleffects_to_emmeans <- function(
 
 ## Regeneration
 
-### Basal area density
+### Basal area
 
 ```{r}
 regen_all <- marginaleffects_to_emmeans(
@@ -335,7 +335,7 @@ together (data not shown). Although trends in means follow the expected pattern
 of greater regeneration with less retention.
 
 Redwood regeneration showed the strongest apparent treatment response, with the
-greatest basal area observed in the GS treatment. LD and HD treatments were
+greatest basal area observed in the GS treatment. LD and HA treatments were
 intermediate, while HD tended to have the lowest redwood basal area.
 
 Tanoak regeneration basal area was intermediate relative to redwood and
@@ -393,9 +393,9 @@ treatments were intermediate. -->
 ```{r}
 #| label: fig-regen-ba
 #| fig-cap: >
-#|   Basal area density (m^2^ ha^-1^) modeled at the vegetation plot level for
-#|   four harvest treatments and four species classes (n = 16). Gray bars
-#|   represent the asymtotic 95% confidence interval (α = 0.05), black dots
+#|   Understory Basal area (m^2^ ha^-1^) modeled at the vegetation plot
+#|   level for four harvest treatments and four species classes (n = 16). Gray
+#|   bars represent the asymtotic 95% confidence interval (α = 0.05), black dots
 #|   indicate the mean, and blue arrows provide a means of assessing the
 #|   statistical significance of pairwise differences among treatments within a
 #|   species (panels). Arrows are drawn so that when two arrows just meet, the
@@ -474,18 +474,18 @@ ha^-1^ in the LD treatment (p = `r rw_to_pairs$ld[[1]]$p.value`), and about
 slightly higher tanoak basal area (p = `r abs(rw_to_pairs$hd[[1]]$p.value)`).
 -->
 
-@fig-regen-ba-rw-to highlights the rapid decline in redwood basal area density
+@fig-regen-ba-rw-to highlights the rapid decline in redwood basal area 
 relative to tanoak with increasing overstory retention. It also illustrates the
-greater uncertainty associated with redwood basal area density in the GS
+greater uncertainty associated with redwood basal area in the GS
 treatment, as reflected by the wider confidence intervals compared to those of
 tanoak.
 
 ```{r}
 #| label: fig-regen-ba-rw-to
 #| fig-cap: >
-#|   Basal area density (m^2^ ha^-1^) modeled at the vegetation plot level for
-#|   four harvest treatments and two species classes (n = 16). Gray bars
-#|   represent the 95% confidence interval (asymtotic, based on normal
+#|   Understory Basal area (m^2^ ha^-1^) modeled at the vegetation plot
+#|   level for four harvest treatments and two species classes (n = 16). Gray
+#|   bars represent the 95% confidence interval (asymtotic, based on normal
 #|   approximation), black dots---the mean, and non-overlapping blue arrows
 #|   signify statistical significance (α = 0.05) of comparisons between species
 #|   redwood and tanoak within a treatment. While none of the differences were
@@ -536,6 +536,8 @@ fig_df_counts <- emm_to_df_emm(df_counts) |>
   mutate(across(where(is.double), \(x) x * per_ha["corner"])) |>
   ggplot(emm_mapping(x = level)) +
   draw_emm_emm() +
+  scale_x_discrete(labels = toupper) +
+  expand_limits(y = 0) +
   labs(x = "Treatment", y = expression(Density ~ (stems %.% ha^-1)))
 
 fig_df_counts
@@ -585,16 +587,15 @@ rw_to_ht_mean <-
   deframe()
 ```
 
-The selected model includes a treatment × species interaction,
-although this interaction was not statisticaly significant at the α=0.05 level,
-it was important for our study questions. I did not include a species × year
-interaction.
+The selected model included a treatment × species interaction because, although
+this interaction was not statistically significant at the α=0.05 level, it was
+important for our study questions.
 
 The inclusion of treatment factors in the model (0.001 ≤ p < 0.03) indicated that
 the levels of treatment were associated with different growth rates across
 species and years. And the species × year interaction (p < 0.001) suggested that
 changes in growth rates were different for redwood and tanoak
-(@fig-sprout-ht-inc-treat).
+(@fig-sprout-ht-inc-treat, @fig-sprout-ht-inc-year).
 
 For tanoak, height increment was greatest in the GS treatment at 
 `r rw_to_ht_mean$LIDE$GS$estimate` m yr^-1^. 
@@ -609,7 +610,7 @@ treatments. Height increment for redwood in the GS treatment was
 `r rw_to_ht_mean$SESE$GS$estimate` m yr^-1^, 
 which was about `r rw_to_ht_pairs$SESE[["GS - HD"]]$estimate` m yr^-1^ greater than in the HD
 treatment (p = `r rw_to_ht_pairs$SESE[["GS - HD"]]$p.value`). 
-Additionally, there was evidence that the GS treatment led to greater height increment than
+Though not statistically supported, the GS treatment mean height increment was greater than
 the LD treatment by about `r rw_to_ht_pairs$SESE[["GS - LD"]]$estimate` m yr^-1^
 (p = `r rw_to_ht_pairs$SESE[["GS - LD"]]$p.value`). And the LD treatment was
 higher than the HA treatment by about `r rw_to_ht_pairs$SESE[["LD - HA"]]$estimate` m yr^-1^ 
@@ -704,7 +705,7 @@ period (@fig-sprout-ht-inc-year).
 #|   years 1 to 5, and years 5 to 10 after harvest, plotted alongside actual
 #|   data (small dots). Gray bars represent asymtotic (normal approximation)
 #|   confidence intervals and statistical significance (α = 0.05) is indicated
-#|   by non-overlapping blue arrows for a period (x-axis) within a growth period
+#|   by non-overlapping blue arrows for a period (x-axis) for each species
 #|   (panel). Both tanoak and redwood exhibited a slight decrease in height
 #|   increment from the first to second periods.
 
@@ -813,7 +814,7 @@ fig_sprout_ht_yr_10
 
 ## Fuels
 
-### Pre-pct
+### Pre-PCT
 
 ```{r}
 
@@ -875,15 +876,15 @@ Mg ha^-1^.
 
 One-hour fuels were highest in the HA treatment, with an expected value of 
 `r fuel_pre_means$onehr$ha$estimate` Mg ha^-1^, which was about 
-`r fuel_pre_compare$onehr[["ha - gs"]]$estimate` Mg ha^-1^ greater than in the
+`r abs(fuel_pre_compare$onehr[["gs - ha"]]$estimate)` Mg ha^-1^ greater than in the
 GS treatment (p = `r fuel_pre_compare$onehr[["gs - ha"]]$p.value`). One-hour
 fuels in the LD and HD treatments were intermediate but the LD was more similar
 to the GS and the HD was more similar to the HA treatment.
 
-Ten, hundred and thousand-hour fuels were statistically,
-very similar across treatments (p ≥ 0.7). Treatment averages had 
-maximum differences of around 1, 3, and 10 Mg ha^-1^ for ten, hundred, and thousand-hour fuels,
-respectively. 
+Ten, hundred and thousand-hour fuels were statistically very similar across
+treatments (p ≥ 0.7). The largest differences between treatment averages were
+about 1 (GS - HD), 3 (GS - HD), and 16 Mg ha^-1^ (GS - LD) for ten, hundred, and
+thousand-hour fuels, respectively.
 
 Vegetative fuel loading was greatest in the GS treatment, with an
 expected value of `r fuel_pre_means$veg$gs$estimate` Mg ha^-1^, which was about `r fuel_pre_compare$veg[["gs - ha"]]$estimate` Mg ha^-1^ greater than in the HA
@@ -896,14 +897,14 @@ treatments were intermediate.
 #| fig-height: 5
 #| fig-width: 6.3
 #| fig-cap: >
-#|   Estimated marginal means (black dots) confidence intervals (gray bands) and
-#|   comparisons (blue arrows) of surface fuel loading across four treatments
-#|   for six different fuel-class models. Non-overlapping blue arrows indicates
-#|   statistical significance at the α = 0.05 level for treatments within a fuel
-#|   class (panels). Differences between treatments for most classes were small
-#|   and/or statistically unsupported, except for 1-hr and vegetation fuels for
-#|   GS and HA treatment comparisons, where 1-hr was lower in the GS treatment
-#|   and vegetation was higher.
+#|   Pre-PCT estimated marginal means (black dots) confidence intervals (gray
+#|   bands) and comparisons (blue arrows) of surface fuel loading 10 years after
+#|   harvest across four treatments for six different fuel-class models.
+#|   Non-overlapping blue arrows indicates statistical significance at the α =
+#|   0.05 level for treatments within a fuel class (panels). Differences between
+#|   treatments for most classes were small and/or statistically unsupported,
+#|   except for 1-hr and vegetation fuels for GS and HA treatment comparisons,
+#|   where 1-hr was lower in the GS treatment and vegetation was higher.
 
 fig_fuel_pre_pct <- fuel_tmb$pre |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
@@ -921,10 +922,11 @@ fig_fuel_pre_pct <- fuel_tmb$pre |>
 
 fig_fuel_pre_pct |>
   patchwork::wrap_plots() +
-  patchwork::plot_layout(axes = "collect")
+  patchwork::plot_layout(axes = "collect") &
+  theme(plot.title = element_text(size = 11))
 ```
 
-### Post-pct
+### Post-PCT
 
 ```{r}
 fuel_tmb$post <- mutate(
@@ -975,27 +977,28 @@ fuel_post_means <-
 # [1] "estimate"  "SE"        "df"        "asymp.LCL" "asymp.UCL"
 ```
 
-Unlike pre-pct fuel loading which differed little among treatments in terms of
+Unlike pre-PCT fuel loading which differed little among treatments in terms of
 fine dead surface fuels, the PCT treatment resulted in additional fine dead
-surface fuels that differed significantly among treatments. Whereas vegetation
+surface fuels that differed significantly among treatments. Conversely, vegetation
 fuel loading was reduced and differences between treatments were lessened.
-Unlike pre-commercial thinning resulted in greater stratification of treatments
-(@fig-fuel-post-pct). One-hour fuels for most treatments were around 
+(@fig-fuel-post-pct). 
+
+One-hour fuels for most treatments were around 
 `r round(mean(map_dbl(discard_at(fuel_post_means$onehr, "ha"), ~pluck(.x, "estimate"))), 1)`
 Mg ha^-1^, but the HA treatment was lower than these at about
 `r fuel_post_means$onehr$ha$estimate` Mg ha^-1^ 
 (p ≤ `r fuel_post_compare$onehr[["gs - ha"]]$p.value`).
 
 The GS treatment had the greatest 10-hr fuel loading with `r fuel_post_means$tenhr$gs$estimate` Mg ha^-1^, which was
-greater than the LD, HA, and HD treatments by  
-`r fuel_post_compare$tenhr[["gs - ld"]]$estimate`, 
-`r fuel_post_compare$tenhr[["gs - ha"]]$estimate`, and 
-`r fuel_post_compare$tenhr[["gs - hd"]]$estimate` Mg ha^-1^, respectively 
-(p = `r fuel_post_compare$tenhr[["gs - ld"]]$p.value`, 
-p  < 0.001, and 
+greater than the LD, HA, and HD treatments by
+`r fuel_post_compare$tenhr[["gs - ld"]]$estimate`,
+`r fuel_post_compare$tenhr[["gs - ha"]]$estimate`, and
+`r fuel_post_compare$tenhr[["gs - hd"]]$estimate` Mg ha^-1^, respectively
+(p = `r fuel_post_compare$tenhr[["gs - ld"]]$p.value`,
+p  < 0.001, and
 p = `r fuel_post_compare$tenhr[["gs - hd"]]$p.value`).
-The LD treatment also had about `r fuel_post_compare$tenhr[["ld - hd"]]$estimate` 
-Mg ha^-1^ more 10-hr fuels that the HD treatment 
+The LD treatment also had about `r fuel_post_compare$tenhr[["ld - hd"]]$estimate`
+Mg ha^-1^ more 10-hr fuels that the HD treatment
 (p = `r fuel_post_compare$tenhr[["ld - hd"]]$p.value`). 
 
 Hundred-hour fuels followed a similar trend as the 10-hr fuels. They were greatest in the GS
@@ -1005,33 +1008,34 @@ greater than the HD treatment (p = `r fuel_post_compare$hundhr[["gs - hd"]]$p.va
 
 Thousand-hour fuels were greatest in the HD treatment, with an average of about `r fuel_post_means$thoushr$hd$estimate` Mg ha^-1^, which was about `r abs(fuel_post_compare$thoushr[["ld - hd"]]$estimate)` Mg ha^-1^ greater than the LD and HA treatments (p ≤ `r fuel_post_compare$thoushr[["ha - hd"]]$p.value`). The GS treatment was intermediate.
 
-Fuel loading for live vegetation was similar across treatments at around 
+While recorded fuel loading after PCT
+ was similar across treatments (about 
 `r round(mean(map_dbl(fuel_post_means$onehr, ~pluck(.x, "estimate"))), 1)`
-Mg ha^-1^.  
-
-The difference in vegetation loading before and after PCT was greatest in the GS treatment at
-about `r fuel_post_means$veg_diff$gs$estimate` Mg ha^-1^, which was 
-greater than the HA and HD treatments by about 
+Mg ha^-1^), the difference in vegetation loading before and after PCT (the
+decrease in fuel loading) was
+greatest in the GS treatment at about 
+`r fuel_post_means$veg_diff$gs$estimate` Mg ha^-1^, 
+which was greater than the HA and HD treatments by about 
 `r round(mean(map_dbl(keep_at(fuel_post_compare$veg_diff, c("gs - ha", "gs - hd")), "estimate")), 0)` 
 Mg ha^-1^ (p = `r fuel_post_compare$veg_diff[["gs - hd"]]$p.value` and 
 p = `r fuel_post_compare$veg_diff[["gs - ha"]]$p.value`, respectively). 
-The LD treatment was intermediate.
+The LD treatment was intermediate (@fig-fuel-post-pct).
 
 ```{r}
 #| label: fig-fuel-post-pct
 #| fig-height: 5
 #| fig-width: 6.3
 #| fig-cap: >
-#|   Estimated marginal means (black dots), 95% confidence intervals (asymtotic,
-#|   gray bars) and statistical comparisons (blue arrows) of fuel loading across
-#|   four treatments for six different fuel-class models. Non-overlapping blue
-#|   arrows indicates statistical significance at the α = 0.05 level within a
-#|   fuel class (panels). Vegetation difference equals the transect level
-#|   difference in vegetation load in the pre and post-pct conditions. This
-#|   represents slash fuels recruited to the forest floor following the
-#|   pre-commercial thinning. Loading was more differentianted following PCT,
-#|   where 1-hr, 10-hr, 100-hr, and vegetation difference were all higher in the
-#|   GS treatment.
+#|   Post-PCT estimated marginal means (black dots), 95% confidence intervals
+#|   (asymtotic, gray bars) and statistical comparisons (blue arrows) of fuel
+#|   loading 10 years after harvest across four treatments for six different
+#|   fuel-class models. Non-overlapping blue arrows indicates statistical
+#|   significance at the α = 0.05 level within a fuel class (panels). Vegetation
+#|   difference equals the transect level difference in vegetation load in the
+#|   pre and post-PCT conditions. This represents slash fuels recruited to the
+#|   forest floor following the precommercial thinning. Loading was more
+#|   differentianted following PCT, where 1-hr, 10-hr, 100-hr, and vegetation
+#|   difference were all higher in the GS treatment.
 
 fig_fuel_post_pct <- fuel_tmb$post |>
   mutate(class = fuel_class_labels[as.character(class)]) |>
@@ -1049,7 +1053,8 @@ fig_fuel_post_pct <- fuel_tmb$post |>
 
 fig_fuel_post_pct |>
   patchwork::wrap_plots() +
-  patchwork::plot_layout(axes = "collect")
+  patchwork::plot_layout(axes = "collect") &
+  theme(plot.title = element_text(size = 11))
 ```
 
 ### Pre-post commercial thinning comparison
@@ -1059,8 +1064,8 @@ predictably leading to varying increases in loading across 1- 10- and 100-hr
 fuels. Specifically PCT led to a small increase in average 100-hr fuel loading,
 only for the GS treatment, increased 10-hr fuels in the GS and LD treatments,
 and increased 1-hr fuels for all but the HA treatment
-(@fig-fuel-pct-comparison). However these results were not statistically
-comparable, due to slightly different model structures.
+(@fig-fuel-pct-comparison). However pre- and post-PCT results were not
+statistically comparable, due to slightly different model structures.
 
 ```{r}
 #| label: fig-fuel-pct-comparison
