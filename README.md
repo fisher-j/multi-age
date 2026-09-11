@@ -23,6 +23,12 @@ and output location. On Windows, `render-products.bat <product>` provides a
 common entry point for rendering one product. Use `render-products.bat` without
 an argument to see the supported product names.
 
+`render-legacy-regression.bat <product> [directory]` creates a disposable copy
+of the current Git revision and renders a legacy product there. Use it when a
+full regression check could otherwise rewrite generated legacy objects in the
+active worktree. The copy is retained for inspection and can be removed after
+review.
+
 Publication-specific analyses and generated objects belong under
 `analysis/outputs/publication/` and `analysis/scripts/publication/`. Do not
 move or overwrite the thesis-era model objects and rendered artifacts while the
