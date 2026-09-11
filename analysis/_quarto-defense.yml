@@ -1,6 +1,8 @@
 project:
   type: website
-  pre-render: cp _index.qmd index.qmd
+  pre-render:
+    - cmd.exe /c "scripts\sync_zotero_library.bat"
+    - cp _index.qmd index.qmd
   output-dir: ../docs
   render:
     - "thesis-defense/thesis-defense.qmd"

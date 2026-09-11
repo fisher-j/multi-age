@@ -1,6 +1,7 @@
 project:
   type: website
-  pre-render: 
+  pre-render:
+    - cmd.exe /c "scripts\sync_zotero_library.bat"
     - cp _index.qmd index.qmd
     - cmd.exe /c "scripts\make_git_log.bat"
   output-dir: ../docs

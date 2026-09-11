@@ -12,7 +12,8 @@ format:
     toc-depth: 4
 
 project:
-  pre-render: 
+  pre-render:
+    - cmd.exe /c "scripts\sync_zotero_library.bat"
     - cp thesis/_index.qmd index.qmd
   output-dir: ../docs
   type: book

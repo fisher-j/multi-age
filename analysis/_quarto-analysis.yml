@@ -3,7 +3,9 @@ format:
     toc-depth: 4
 
 project:
-  pre-render: cp analysis/_index.qmd index.qmd
+  pre-render:
+    - cmd.exe /c "scripts\sync_zotero_library.bat"
+    - cp analysis/_index.qmd index.qmd
   output-dir: ../docs
   type: book
   post-render: 
