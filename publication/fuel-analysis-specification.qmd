@@ -1,0 +1,57 @@
+---
+title: Fuel-analysis specification
+---
+
+This is a pre-analysis specification for publication development. It records
+the existing pipeline and proposed decisions; it does not modify data or
+generate publication results.
+
+## Existing thesis-era handling to preserve as a reference
+
+`analysis/analysis/fuel_modeling_round_3.qmd` labels and models 1-hour,
+10-hour, 100-hour, 1,000-hour, duff-and-litter, vegetation, and vegetation
+difference classes. Duff and litter are combined as `dufflitter`. The
+post-precommercial-thinning workflow excludes `dufflitter` because the existing
+script notes that the collected litter-depth information is not suitable for its
+load equation. The workflow also converts nonpositive `veg_diff` values to zero
+before fitting the post-treatment models.
+
+These choices define the historical thesis analysis. They must remain
+reproducible and must not be overwritten.
+
+## Publication decisions to make before coding
+
+1. Identify exactly which raw measurement fields can support separate reporting
+   of duff, litter, live vegetation, and each dead-fuel time-lag class at each
+   measurement phase.
+2. Decide whether the publication's primary fuel product is modeled treatment
+   estimates, descriptive/reference summaries, or both. The current direction
+   favors reference summaries, with treatment comparisons retained only when
+   they aid interpretation.
+3. Specify how pre- and post-precommercial-thinning observations will be
+   presented: as distinct reference phases, a paired change analysis, or both.
+4. Define how zero values, missing values, and any negative derived differences
+   will be handled, including sensitivity checks where that choice could affect
+   interpretation.
+5. Select a small set of units, component definitions, and uncertainty measures
+   suitable for reuse in future fire-modeling studies.
+
+## Required publication outputs
+
+- A data dictionary for each published fuel component and its units.
+- A reproducible publication-specific derived dataset in
+  `analysis/outputs/publication/data/`.
+- A written model or summary specification in
+  `analysis/scripts/publication/`.
+- Main-text reference figures/tables and supplemental detail, both stored under
+  `analysis/outputs/publication/`.
+- A comparison note describing any material difference between thesis-era and
+  publication-era component definitions or estimates.
+
+## Guardrails
+
+- Do not modify `analysis/analysis/fuel_modeling_round_3.qmd` or overwrite
+  `analysis/fuel_modeling_round_3.rda`.
+- Do not alter raw data in `data/`.
+- Record analytical changes in `publication/editorial-log.qmd` before they are
+  used in manuscript text.

@@ -1,10 +1,94 @@
 [
   {
-    "objectID": "editorial-log.html",
-    "href": "editorial-log.html",
-    "title": "Editorial and analytical change log",
+    "objectID": "fuel-analysis-specification.html",
+    "href": "fuel-analysis-specification.html",
+    "title": "Fuel-analysis specification",
     "section": "",
-    "text": "This log distinguishes changes to manuscript presentation from changes that could affect results or interpretation.\n\n\n\n\n\n\n\n\n\nType\nScope\nStatus\nThesis source or dependency\n\n\n\n\nEditorial\nRegeneration-first narrative and fuels-as-reference framing\nIn progress\nanalysis/thesis/introduction.qmd, analysis/thesis/discussion.qmd\n\n\nEditorial\nCondensed starter abstract, introduction, and methods\nIn progress\nanalysis/thesis/_index.qmd, analysis/thesis/introduction.qmd, analysis/thesis/methods.qmd\n\n\nEditorial\nSupplement boundary for expanded models and tables\nPlanned\nanalysis/thesis/tables.qmd\n\n\nAnalytical\nSeparation of previously combined fuel components\nPlanned\nLegacy fuel wrangling and modeling sources in analysis/analysis/\n\n\nAnalytical\nPublication-specific fuel models, figures, and tables\nPlanned\nanalysis/outputs/publication/ and analysis/scripts/publication/\n\n\nAnalytical\nRegeneration model review only if needed\nDeferred\nanalysis/sprout_modeling.rda, analysis/regen_visualize.rda\n\n\n\nNo entry in this log authorizes alteration of raw data or thesis-era generated objects."
+    "text": "This is a pre-analysis specification for publication development. It records the existing pipeline and proposed decisions; it does not modify data or generate publication results."
+  },
+  {
+    "objectID": "fuel-analysis-specification.html#existing-thesis-era-handling-to-preserve-as-a-reference",
+    "href": "fuel-analysis-specification.html#existing-thesis-era-handling-to-preserve-as-a-reference",
+    "title": "Fuel-analysis specification",
+    "section": "Existing thesis-era handling to preserve as a reference",
+    "text": "Existing thesis-era handling to preserve as a reference\nanalysis/analysis/fuel_modeling_round_3.qmd labels and models 1-hour, 10-hour, 100-hour, 1,000-hour, duff-and-litter, vegetation, and vegetation difference classes. Duff and litter are combined as dufflitter. The post-precommercial-thinning workflow excludes dufflitter because the existing script notes that the collected litter-depth information is not suitable for its load equation. The workflow also converts nonpositive veg_diff values to zero before fitting the post-treatment models.\nThese choices define the historical thesis analysis. They must remain reproducible and must not be overwritten."
+  },
+  {
+    "objectID": "fuel-analysis-specification.html#publication-decisions-to-make-before-coding",
+    "href": "fuel-analysis-specification.html#publication-decisions-to-make-before-coding",
+    "title": "Fuel-analysis specification",
+    "section": "Publication decisions to make before coding",
+    "text": "Publication decisions to make before coding\n\nIdentify exactly which raw measurement fields can support separate reporting of duff, litter, live vegetation, and each dead-fuel time-lag class at each measurement phase.\nDecide whether the publication’s primary fuel product is modeled treatment estimates, descriptive/reference summaries, or both. The current direction favors reference summaries, with treatment comparisons retained only when they aid interpretation.\nSpecify how pre- and post-precommercial-thinning observations will be presented: as distinct reference phases, a paired change analysis, or both.\nDefine how zero values, missing values, and any negative derived differences will be handled, including sensitivity checks where that choice could affect interpretation.\nSelect a small set of units, component definitions, and uncertainty measures suitable for reuse in future fire-modeling studies."
+  },
+  {
+    "objectID": "fuel-analysis-specification.html#required-publication-outputs",
+    "href": "fuel-analysis-specification.html#required-publication-outputs",
+    "title": "Fuel-analysis specification",
+    "section": "Required publication outputs",
+    "text": "Required publication outputs\n\nA data dictionary for each published fuel component and its units.\nA reproducible publication-specific derived dataset in analysis/outputs/publication/data/.\nA written model or summary specification in analysis/scripts/publication/.\nMain-text reference figures/tables and supplemental detail, both stored under analysis/outputs/publication/.\nA comparison note describing any material difference between thesis-era and publication-era component definitions or estimates."
+  },
+  {
+    "objectID": "fuel-analysis-specification.html#guardrails",
+    "href": "fuel-analysis-specification.html#guardrails",
+    "title": "Fuel-analysis specification",
+    "section": "Guardrails",
+    "text": "Guardrails\n\nDo not modify analysis/analysis/fuel_modeling_round_3.qmd or overwrite analysis/fuel_modeling_round_3.rda.\nDo not alter raw data in data/.\nRecord analytical changes in publication/editorial-log.qmd before they are used in manuscript text."
+  },
+  {
+    "objectID": "figure-table-plan.html",
+    "href": "figure-table-plan.html",
+    "title": "Main-text figure and table plan",
+    "section": "",
+    "text": "This is a publication planning document. It identifies the role of each display; it does not select final results, change estimates, or approve a new fuel analysis."
+  },
+  {
+    "objectID": "figure-table-plan.html#main-text-figures",
+    "href": "figure-table-plan.html#main-text-figures",
+    "title": "Main-text figure and table plan",
+    "section": "Main-text figures",
+    "text": "Main-text figures\n\n\n\n\n\n\n\n\n\nWorking figure\nPurpose in manuscript\nThesis source\nPublication action\n\n\n\n\nStudy design\nOrient readers to the Jackson Demonstration State Forest study area and treatment/sampling layout.\nanalysis/thesis/methods.qmd, Figures 2.1–2.2\nRetain one clear design figure; consider moving the second map/layout figure to supplement if the combined design can remain legible.\n\n\nRegeneration response\nShow redwood and tanoak understory density/basal-area response to overstory retention.\nfig-regen-ba-rw-to in analysis/thesis/results.qmd\nRetain and simplify as the lead results figure; omit secondary species classes from the main figure unless essential.\n\n\nSprout development\nShow treatment and/or time pattern in redwood and tanoak sprout height.\nfig-sprout-ht-inc-treat, fig-sprout-ht-inc-year, fig-sprout-ht-yr-10\nCombine only if the resulting display answers one management question; otherwise retain the clearest single response figure and move the others to supplement.\n\n\nFuel reference profile\nReport disaggregated fuel components at the measurement phases relevant to fire-modeling use.\nfig-fuel-pre-pct, fig-fuel-post-pct, fig-fuel-pct-comparison\nReplace after the publication-specific component specification and model/summarization review. Emphasize values and uncertainty; show treatment comparisons only when interpretively useful.\n\n\nOptional thinning context\nShow the before/after context if it materially clarifies fuel conditions after precommercial thinning.\nfig-fuel-pct-comparison\nInclude only if it remains central after fuel reanalysis; otherwise place in supplement.\n\n\n\nThe working target is four main-text figures, with a fifth only if the precommercial-thinning comparison is necessary to understand the reference conditions."
+  },
+  {
+    "objectID": "figure-table-plan.html#main-text-tables",
+    "href": "figure-table-plan.html#main-text-tables",
+    "title": "Main-text figure and table plan",
+    "section": "Main-text tables",
+    "text": "Main-text tables\n\n\n\n\n\n\n\n\n\nWorking table\nPurpose in manuscript\nThesis source\nPublication action\n\n\n\n\nTreatment and sampling design\nGive treatment labels, retained-overstory targets, plot replication, and measurement timing.\nanalysis/thesis/methods.qmd\nCreate a compact new table; do not reproduce procedural detail already visible in the design figure.\n\n\nRegeneration summary\nProvide the small set of estimated values needed to support the lead regeneration figure.\ntbl-regen-ba-grand-means, sprout tables in analysis/thesis/tables.qmd\nCreate only if figure annotations cannot communicate the estimates adequately.\n\n\nFuel reference values\nProvide disaggregated fuel-component values, units, phase, and uncertainty for reuse by other studies.\nFuel mean and grand-mean tables in analysis/thesis/tables.qmd\nCreate after the publication-specific fuel definitions and summaries are finalized."
+  },
+  {
+    "objectID": "figure-table-plan.html#supplementary-displays",
+    "href": "figure-table-plan.html#supplementary-displays",
+    "title": "Main-text figure and table plan",
+    "section": "Supplementary displays",
+    "text": "Supplementary displays\nThe supplement is the default location for the current detailed model listings, dispersion/hurdle specifications, full pairwise-comparison tables, Douglas-fir detail, secondary sprout figures, and expanded pre/post fuel comparisons. This preserves reproducibility without requiring each item to carry the main silvicultural narrative."
+  },
+  {
+    "objectID": "content-plan.html",
+    "href": "content-plan.html",
+    "title": "Thesis to publication content plan",
+    "section": "",
+    "text": "This plan guides editorial restructuring only. It does not change the completed thesis, data, models, or reported results."
+  },
+  {
+    "objectID": "content-plan.html#editorial-guardrails",
+    "href": "content-plan.html#editorial-guardrails",
+    "title": "Thesis to publication content plan",
+    "section": "Editorial guardrails",
+    "text": "Editorial guardrails\n\nPreserve citation keys unless a verified bibliographic correction is needed.\nDistinguish editorial revision from analytical revision in commit messages and the publication change log.\nDo not alter raw data or thesis-era generated objects.\nDo not present a new result until its publication-specific analysis and supporting figure or table have been reviewed."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Publication manuscript development",
+    "section": "",
+    "text": "This standalone Quarto project is the publication-development workspace for the Redwood Multiaged Experiment. It is intentionally separate from the legacy profile-driven project in analysis/.\nThe manuscript will retain the thesis as its substantive starting point while being reorganized around a regeneration-first pyro-silviculture narrative. Fuel conditions will be reported as disaggregated reference values that can support future fire-modeling work."
+  },
+  {
+    "objectID": "index.html#working-boundaries",
+    "href": "index.html#working-boundaries",
+    "title": "Publication manuscript development",
+    "section": "Working boundaries",
+    "text": "Working boundaries\nThis project does not execute or alter the thesis-era analyses. Future publication-specific derived data, model objects, figures, and tables will be written to ../analysis/outputs/publication/. Shared raw data, utilities, figures, and bibliography resources remain in their established repository locations until a stable shared interface is deliberately extracted."
   },
   {
     "objectID": "manuscript.html",
@@ -42,31 +126,24 @@
     "text": "Fuel conditions as reference values\nFuel conditions are reported second to support interpretation of the silvicultural treatments and to provide reference values for subsequent fire and fuels studies. The thesis found comparatively few treatment differences in fine dead fuels before precommercial thinning, whereas vegetation fuels were greater in more open treatments. The publication analysis will separate fuel components that were previously combined and will limit treatment-comparison emphasis to findings that aid interpretation."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Publication manuscript development",
+    "objectID": "editorial-log.html",
+    "href": "editorial-log.html",
+    "title": "Editorial and analytical change log",
     "section": "",
-    "text": "This standalone Quarto project is the publication-development workspace for the Redwood Multiaged Experiment. It is intentionally separate from the legacy profile-driven project in analysis/.\nThe manuscript will retain the thesis as its substantive starting point while being reorganized around a regeneration-first pyro-silviculture narrative. Fuel conditions will be reported as disaggregated reference values that can support future fire-modeling work."
+    "text": "This log distinguishes changes to manuscript presentation from changes that could affect results or interpretation.\n\n\n\n\n\n\n\n\n\nType\nScope\nStatus\nThesis source or dependency\n\n\n\n\nEditorial\nRegeneration-first narrative and fuels-as-reference framing\nIn progress\nanalysis/thesis/introduction.qmd, analysis/thesis/discussion.qmd\n\n\nEditorial\nCondensed starter abstract, introduction, and methods\nIn progress\nanalysis/thesis/_index.qmd, analysis/thesis/introduction.qmd, analysis/thesis/methods.qmd\n\n\nEditorial\nSupplement boundary for expanded models and tables\nPlanned\nanalysis/thesis/tables.qmd\n\n\nAnalytical\nSeparation of previously combined fuel components\nPlanned\nLegacy fuel wrangling and modeling sources in analysis/analysis/\n\n\nAnalytical\nPublication-specific fuel models, figures, and tables\nPlanned\nanalysis/outputs/publication/ and analysis/scripts/publication/\n\n\nAnalytical\nRegeneration model review only if needed\nDeferred\nanalysis/sprout_modeling.rda, analysis/regen_visualize.rda\n\n\n\nNo entry in this log authorizes alteration of raw data or thesis-era generated objects."
   },
   {
-    "objectID": "index.html#working-boundaries",
-    "href": "index.html#working-boundaries",
-    "title": "Publication manuscript development",
-    "section": "Working boundaries",
-    "text": "Working boundaries\nThis project does not execute or alter the thesis-era analyses. Future publication-specific derived data, model objects, figures, and tables will be written to ../analysis/outputs/publication/. Shared raw data, utilities, figures, and bibliography resources remain in their established repository locations until a stable shared interface is deliberately extracted."
-  },
-  {
-    "objectID": "content-plan.html",
-    "href": "content-plan.html",
-    "title": "Thesis to publication content plan",
+    "objectID": "compression-map.html",
+    "href": "compression-map.html",
+    "title": "Section compression map",
     "section": "",
-    "text": "This plan guides editorial restructuring only. It does not change the completed thesis, data, models, or reported results."
+    "text": "This map defines editorial choices for the thesis-derived publication draft. The classifications are provisional and do not remove material from the thesis."
   },
   {
-    "objectID": "content-plan.html#editorial-guardrails",
-    "href": "content-plan.html#editorial-guardrails",
-    "title": "Thesis to publication content plan",
-    "section": "Editorial guardrails",
-    "text": "Editorial guardrails\n\nPreserve citation keys unless a verified bibliographic correction is needed.\nDistinguish editorial revision from analytical revision in commit messages and the publication change log.\nDo not alter raw data or thesis-era generated objects.\nDo not present a new result until its publication-specific analysis and supporting figure or table have been reviewed."
+    "objectID": "compression-map.html#page-budget-working-guide",
+    "href": "compression-map.html#page-budget-working-guide",
+    "title": "Section compression map",
+    "section": "Page-budget working guide",
+    "text": "Page-budget working guide\nThe current target is a manuscript of approximately 30 or more double-spaced pages including main-text figures and tables. Until journal requirements are applied, use this planning allocation: introduction 4–5 pages; methods 4–5; results 7–9 including displays; discussion and conclusions 6–8; references and front matter 4–6. Supplementary material is outside this working allocation."
   }
 ]
