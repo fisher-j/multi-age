@@ -21,9 +21,14 @@ reproducible and must not be overwritten.
 
 ## Publication decisions to make before coding
 
-1. Identify exactly which raw measurement fields can support separate reporting
-   of duff, litter, live vegetation, and each dead-fuel time-lag class at each
-   measurement phase.
+1. **Approved derivation boundary.** Use the read-only thesis cleaned input
+   `analysis/summarize_collected_data.rda` to derive publication-specific
+   components. Retain woody and herbaceous vegetation separately in both
+   phases. Derive pre-PCT litter and duff from total forest-floor depth and the
+  estimated litter percentage using Finney and Martin (1993), model 3; report
+  duff as total modeled forest-floor load minus modeled litter load. Retain any
+  shallow-layer boundary handling in the publication data dictionary and audit
+  output rather than silently modifying the source measurements.
 2. Produce phase-specific reference estimates and a clearly defined pre/post-PCT
    contrast. Retain modeled treatment estimates or comparisons where they
    clarify overstory-retention or PCT-management implications.
@@ -37,6 +42,17 @@ reproducible and must not be overwritten.
 5. Select a small set of units, component definitions, and uncertainty measures
    suitable for transparent reuse across silvicultural, fuels, fire, and
    potential modeling applications.
+
+## Current phase-specific decisions
+
+- Do not calculate or report post-PCT litter or duff loads. Although fields are
+  present, slash and suspended green foliage make the post-PCT forest-floor
+  boundary unsuitable for the pre-PCT depth-to-load interpretation.
+- Treat matched-transect pre-PCT minus post-PCT woody standing vegetation as
+  the primary PCT contrast. Describe it initially as an inferred potential
+  surface-fuel contribution rather than a direct slash-load measurement.
+- Retain fuel-bed depth for a protocol-comparability review; do not label it
+  slash depth until that review is complete.
 
 ## Required publication outputs
 
