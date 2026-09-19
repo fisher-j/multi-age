@@ -19,9 +19,12 @@ that their established rendering behavior is preserved. The developing
 publication is a standalone Quarto project in `publication/`.
 
 `product-registry.yml` records each product's source location, render command,
-and output location. On Windows, `render-products.bat <product>` provides a
-common entry point for rendering one product. Use `render-products.bat` without
-an argument to see the supported product names.
+and output location. On Windows, `render-products.bat <product> [Quarto render
+options]` provides a common entry point for rendering one product. Use
+`render-products.bat` without an argument to see the supported product names.
+For focused legacy checks, render only the needed format; for example,
+`render-products.bat thesis --to pdf` avoids building the thesis HTML and DOCX
+products during a PDF iteration.
 
 `render-legacy-regression.bat <product> [directory]` creates a disposable copy
 of the current Git revision and renders a legacy product there. Use it when a

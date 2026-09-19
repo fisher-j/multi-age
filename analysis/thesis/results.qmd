@@ -395,7 +395,7 @@ treatments were intermediate. -->
 #| fig-cap: >
 #|   Understory density (m^2^ ha^-1^) modeled at the vegetation plot
 #|   level for four harvest treatments and four species classes (n = 16). Gray
-#|   bars represent the asymptotic 95% confidence interval (α = 0.05), black dots
+#|   bars represent the asymptotic 95% confidence interval ($\alpha$ = 0.05), black dots
 #|   indicate the mean, and blue arrows provide a means of assessing the
 #|   statistical significance of pairwise differences among treatments within a
 #|   species (panels). Arrows are drawn so that when two arrows just meet, the
@@ -487,7 +487,7 @@ tanoak.
 #|   level for four harvest treatments and two species classes (n = 16). Gray
 #|   bars represent the 95% confidence interval (asymptotic, based on normal
 #|   approximation), black dots---the mean, and non-overlapping blue arrows
-#|   signify statistical significance (α = 0.05) of comparisons between species
+#|   signify statistical significance ($\alpha$ = 0.05) of comparisons between species
 #|   redwood and tanoak within a treatment. While none of the differences were
 #|   statistically supported, this figure highlights the decreasing difference
 #|   between redwood and tanoak with increasing overstory retention.
@@ -588,10 +588,10 @@ rw_to_ht_mean <-
 ```
 
 The selected model included a treatment × species interaction because, although
-this interaction was not statistically significant at the α=0.05 level, it was
+this interaction was not statistically significant at the $\alpha$ = 0.05 level, it was
 important for our study questions.
 
-The inclusion of treatment factors in the model (0.001 ≤ p < 0.03) indicated that
+The inclusion of treatment factors in the model (0.001 $\le$ p < 0.03) indicated that
 the levels of treatment were associated with different growth rates across
 species and years. And the species × year interaction (p < 0.001) suggested that
 changes in growth rates were different for redwood and tanoak
@@ -624,7 +624,7 @@ higher than the HA treatment by about `r rw_to_ht_pairs$SESE[["LD - HA"]]$estima
 #|   Estimated marginal means for the effect of harvest treatment (x-axis) on
 #|   redwood and tanoak sprout height increment (y-axis), averaged over two
 #|   growth periods, ten years after harvest. Gray bars represent asymptotic
-#|   (normal approximation) confidence intervals and statistical significance (α
+#|   (normal approximation) confidence intervals and statistical significance ($\alpha$
 #|   = 0.05) is indicated by non-overlapping blue arrows for species (panels)
 #|   between treatments. Height increment decreased with overstory retention
 #|   where GS > LD > (HA & HD). The difference between GS, and HA and HD were
@@ -704,7 +704,7 @@ period (@fig-sprout-ht-inc-year).
 #|   tanoak sprout height increment, averaged over four harvest treatments, from
 #|   years 1 to 5, and years 5 to 10 after harvest, plotted alongside actual
 #|   data (small dots). Gray bars represent asymptotic (normal approximation)
-#|   confidence intervals and statistical significance (α = 0.05) is indicated
+#|   confidence intervals and statistical significance ($\alpha$ = 0.05) is indicated
 #|   by non-overlapping blue arrows for a period (x-axis) for each species
 #|   (panel). Both tanoak and redwood exhibited a slight decrease in height
 #|   increment from the first to second periods.
@@ -780,7 +780,7 @@ treatment resulted in greater heights in year 10 than the other treatments
 `r ht_year_10_mean$SESE$HD$estimate` m in the HD treatment. For tanoak, predicted mean height
 ranged from `r ht_year_10_mean$LIDE$GS$estimate` m in the GS treatment to 
 `r ht_year_10_mean$LIDE$HD$estimate` m in the HD treatment. Predicted mean
-heights followed the pattern GS > LD > HA ≥ HD (@fig-sprout-ht-yr-10).
+heights followed the pattern GS > LD > HA $\ge$ HD (@fig-sprout-ht-yr-10).
 
 ```{r}
 #| label: fig-sprout-ht-yr-10
@@ -882,7 +882,7 @@ fuels in the LD and HD treatments were intermediate but the LD was more similar
 to the GS and the HD was more similar to the HA treatment.
 
 Ten, hundred and thousand-hour fuels were statistically very similar across
-treatments (p ≥ 0.7). The largest differences between treatment averages were
+treatments (p $\ge$ 0.7). The largest differences between treatment averages were
 about 1 (GS - HD), 3 (GS - HD), and 16 Mg ha^-1^ (GS - LD) for ten, hundred, and
 thousand-hour fuels, respectively.
 
@@ -900,7 +900,7 @@ treatments were intermediate.
 #|   Pre-PCT estimated marginal means (black dots) confidence intervals (gray
 #|   bands) and comparisons (blue arrows) of surface fuel loading 10 years after
 #|   harvest across four treatments for six different fuel-class models.
-#|   Non-overlapping blue arrows indicates statistical significance at the α =
+#|   Non-overlapping blue arrows indicates statistical significance at the $\alpha$ =
 #|   0.05 level for treatments within a fuel class (panels). Differences between
 #|   treatments for most classes were small and/or statistically unsupported,
 #|   except for 1-hr and vegetation fuels for GS and HA treatment comparisons,
@@ -987,7 +987,7 @@ One-hour fuels for most treatments were around
 `r round(mean(map_dbl(discard_at(fuel_post_means$onehr, "ha"), ~pluck(.x, "estimate"))), 1)`
 Mg ha^-1^, but the HA treatment was lower than these at about
 `r fuel_post_means$onehr$ha$estimate` Mg ha^-1^ 
-(p ≤ `r fuel_post_compare$onehr[["gs - ha"]]$p.value`).
+(p $\le$ `r fuel_post_compare$onehr[["gs - ha"]]$p.value`).
 
 The GS treatment had the greatest 10-hr fuel loading with `r fuel_post_means$tenhr$gs$estimate` Mg ha^-1^, which was
 greater than the LD, HA, and HD treatments by
@@ -1006,7 +1006,7 @@ treatment, with an average of about `r fuel_post_means$hundhr$gs$estimate` Mg ha
 which was about `r fuel_post_compare$hundhr[["gs - hd"]]$estimate` Mg ha^-1^ 
 greater than the HD treatment (p = `r fuel_post_compare$hundhr[["gs - hd"]]$p.value`).
 
-Thousand-hour fuels were greatest in the HD treatment, with an average of about `r fuel_post_means$thoushr$hd$estimate` Mg ha^-1^, which was about `r abs(fuel_post_compare$thoushr[["ld - hd"]]$estimate)` Mg ha^-1^ greater than the LD and HA treatments (p ≤ `r fuel_post_compare$thoushr[["ha - hd"]]$p.value`). The GS treatment was intermediate.
+Thousand-hour fuels were greatest in the HD treatment, with an average of about `r fuel_post_means$thoushr$hd$estimate` Mg ha^-1^, which was about `r abs(fuel_post_compare$thoushr[["ld - hd"]]$estimate)` Mg ha^-1^ greater than the LD and HA treatments (p $\le$ `r fuel_post_compare$thoushr[["ha - hd"]]$p.value`). The GS treatment was intermediate.
 
 While recorded fuel loading after PCT
  was similar across treatments (about 
@@ -1030,7 +1030,7 @@ The LD treatment was intermediate (@fig-fuel-post-pct).
 #|   (asymptotic, gray bars) and statistical comparisons (blue arrows) of fuel
 #|   loading 10 years after harvest across four treatments for six different
 #|   fuel-class models. Non-overlapping blue arrows indicates statistical
-#|   significance at the α = 0.05 level within a fuel class (panels). Vegetation
+#|   significance at the $\alpha$ = 0.05 level within a fuel class (panels). Vegetation
 #|   difference equals the transect level difference in vegetation load in the
 #|   pre and post-PCT conditions. This represents slash fuels recruited to the
 #|   forest floor following the precommercial thinning. Loading was more
