@@ -29,6 +29,9 @@ reproducible and must not be overwritten.
   duff as total modeled forest-floor load minus modeled litter load. Retain any
   shallow-layer boundary handling in the publication data dictionary and audit
   output rather than silently modifying the source measurements.
+   Carry forward unchanged 1-, 10-, 100-, and 1,000-hour load classes from the
+   read-only thesis `analysis/calculate_fuel_load.rda` object; do not use that
+   object's combined forest-floor or vegetation columns.
 2. Produce phase-specific reference estimates and a clearly defined pre/post-PCT
    contrast. Retain modeled treatment estimates or comparisons where they
    clarify overstory-retention or PCT-management implications.
@@ -53,6 +56,26 @@ reproducible and must not be overwritten.
   surface-fuel contribution rather than a direct slash-load measurement.
 - Retain fuel-bed depth for a protocol-comparability review; do not label it
   slash depth until that review is complete.
+
+## Fixed experimental-design structure for model exploration
+
+For phase-specific nonnegative fuel-component models, retain treatment as the
+fixed effect and use random intercepts for site, site-by-treatment block, and
+corner nested within block: `(1 | site) + (1 | site:treatment) + (1 |
+site:treatment:corner)`. Select the conditional family, zero-inflation formula,
+and dispersion formula after component-specific diagnostics; do not simplify
+the random-effects structure merely to improve a fit. The matched woody PCT
+contrast is signed and therefore requires its own response-family review rather
+than an automatic zero-inflated Gamma model.
+
+## Model-testing record
+
+Publication scripts will retain every attempted candidate's formula, family,
+zero-inflation and dispersion formulas, warnings, Hessian status, AIC, and
+DHARMa uniformity, dispersion, outlier, and zero-inflation tests. AIC leaders
+are provisional only; the final model-selection log must document diagnostic
+review, complexity, and scientific rationale for each retained or rejected
+candidate.
 
 ## Required publication outputs
 

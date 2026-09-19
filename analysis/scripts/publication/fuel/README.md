@@ -7,10 +7,17 @@ Run the derivation from `analysis/`:
 
 ```bat
 Rscript scripts/publication/fuel/01-derive-components.R
+Rscript scripts/publication/fuel/02-explore-components.R
+Rscript scripts/publication/fuel/03-fit-phase-components.R
+Rscript scripts/publication/fuel/04-fit-woody-pct-models.R
+Rscript scripts/publication/fuel/05-evaluate-and-select-models.R
 ```
 
 `01-derive-components.R` reads `summarize_collected_data.rda` as a read-only
-input and writes only beneath `outputs/publication/fuel/`.
+input. It carries the unchanged 1-, 10-, 100-, and 1,000-hour components from
+the read-only thesis `calculate_fuel_load.rda` object, but does not use that
+object's combined duff/litter or vegetation columns. It writes only beneath
+`outputs/publication/fuel/`.
 
 Current analytical decisions:
 
@@ -29,5 +36,12 @@ Current analytical decisions:
   not yet interpreted as slash depth.
 
 No model family, dispersion structure, zero process, or random-effects
-selection is specified here. Those decisions follow component derivation and
-quality-control review.
+selection is made by the derivation script. `02-explore-components.R` fixes the
+random-intercept structure dictated by the design: site, site-by-treatment
+block, and corner nested within block. It reports zeros and spread by component
+and proposes zero-inflation and dispersion candidates without fitting models.
+
+The fitting scripts preserve every attempted candidate in a model registry with
+its formula, family, zero and dispersion formulas, warnings, AIC, and DHARMa
+tests. `05-evaluate-and-select-models.R` identifies only provisional AIC
+leaders; final selection requires documented diagnostic and scientific review.

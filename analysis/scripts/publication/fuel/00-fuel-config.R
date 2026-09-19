@@ -7,6 +7,7 @@
 publication_fuel_paths <- function(analysis_root) {
   list(
     input = file.path(analysis_root, "summarize_collected_data.rda"),
+    legacy_load_input = file.path(analysis_root, "calculate_fuel_load.rda"),
     output = file.path(analysis_root, "outputs", "publication", "fuel"),
     data = file.path(analysis_root, "outputs", "publication", "fuel", "data"),
     manifests = file.path(

@@ -24,6 +24,15 @@ if (!exists("d", envir = input_env, inherits = FALSE)) {
   stop("The thesis input object does not contain `d`.")
 }
 transects <- input_env$d$transects
+
+# The legacy object supplies unchanged dead-woody classes only. Its combined
+# duff/litter and vegetation columns are deliberately not used here.
+legacy_load_env <- new.env(parent = emptyenv())
+load(paths$legacy_load_input, envir = legacy_load_env)
+if (!exists("total_load", envir = legacy_load_env, inherits = FALSE)) {
+  stop("The thesis legacy load object does not contain `total_load`.")
+}
+legacy_total_load <- legacy_load_env$total_load
 ids <- publication_fuel_ids
 
 # Keep the field measurements intact for audit. Post-PCT forest-floor values
@@ -139,11 +148,23 @@ vegetation_components <- vegetation_station |>
     .by = c("phase", all_of(ids), "component")
   )
 
+dead_woody_components <- legacy_total_load |>
+  select(phase, all_of(ids), onehr, tenhr, hundhr, thoushr) |>
+  pivot_longer(
+    cols = c(onehr, tenhr, hundhr, thoushr),
+    names_to = "component",
+    values_to = "load_mgha"
+  ) |>
+  mutate(
+    derivation = "Unchanged thesis-era dead-woody load carried forward from calculate_fuel_load.rda"
+  )
+
 # Phase comes from the identifiers retained above. Restrict the exported long
 # component table to reportable component/phase combinations.
 fuel_components_transect <- bind_rows(
   forest_floor_components,
-  vegetation_components
+  vegetation_components,
+  dead_woody_components
 ) |>
   mutate(
     component = factor(
@@ -227,18 +248,19 @@ saveRDS(fuel_paired_transect, file.path(paths$data, "fuel-paired-transect.rds"))
 write_csv(pairing_qc, file.path(paths$data, "fuel-pairing-qc.csv"))
 write_csv(data_dictionary, file.path(paths$data, "fuel-component-data-dictionary.csv"))
 
-writeLines(
-  c(
-    "input: summarize_collected_data.rda",
-    "publication_derivation: scripts/publication/fuel/01-derive-components.R",
-    "forest_floor_loads: pre-PCT only",
-    "forest_floor_method: Finney-Martin 1993 model 3 cumulative-load partition",
-    paste0(
-      "litter-load-boundary-cases: ",
-      sum(forest_floor_pre_station$litter_load_bounded_at_zero)
-    ),
-    "post-PCT-forest-floor-loads: deliberately omitted pending protocol validity",
-    "PCT-primary-contrast: pre-PCT minus post-PCT woody standing vegetation"
+provenance_lines <- c(
+  "input: summarize_collected_data.rda",
+  "legacy-dead-woody-input: calculate_fuel_load.rda",
+  "publication_derivation: scripts/publication/fuel/01-derive-components.R",
+  "forest_floor_loads: pre-PCT only",
+  "forest_floor_method: Finney-Martin 1993 model 3 cumulative-load partition",
+  paste0(
+    "litter-load-boundary-cases: ",
+    sum(forest_floor_pre_station$litter_load_bounded_at_zero)
   ),
-  file.path(paths$manifests, "input-provenance.yml")
+  "post-PCT-forest-floor-loads: deliberately omitted pending protocol validity",
+  "PCT-primary-contrast: pre-PCT minus post-PCT woody standing vegetation"
 )
+provenance_connection <- file(file.path(paths$manifests, "input-provenance.yml"), open = "wb")
+writeLines(provenance_lines, provenance_connection, sep = "\n", useBytes = TRUE)
+close(provenance_connection)
