@@ -5,12 +5,8 @@ project:
     - cmd.exe /c "..\analysis\scripts\sync_zotero_library.bat"
   render:
     - index.qmd
+    - workflow.qmd
     - manuscript.qmd
-    - content-plan.qmd
-    - editorial-log.qmd
-    - figure-table-plan.qmd
-    - compression-map.qmd
-    - fuel-analysis-specification.qmd
 
 execute:
   freeze: auto
@@ -32,15 +28,7 @@ website:
     left:
       - href: index.qmd
         text: Overview
+      - href: workflow.qmd
+        text: Workflow and review
       - href: manuscript.qmd
         text: Manuscript structure
-      - href: content-plan.qmd
-        text: Content plan
-      - href: editorial-log.qmd
-        text: Editorial log
-      - href: figure-table-plan.qmd
-        text: Figures and tables
-      - href: compression-map.qmd
-        text: Compression map
-      - href: fuel-analysis-specification.qmd
-        text: Fuel analysis plan
