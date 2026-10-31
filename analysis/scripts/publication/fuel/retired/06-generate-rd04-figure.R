@@ -1,5 +1,5 @@
-# Generate the R-D04 publication figure: the full disaggregated pre-/post-PCT
-# fuel inventory. This publication-only step reads saved F-01 model artifacts
+# Generate the RD04 publication figure: the full disaggregated pre-/post-PCT
+# fuel inventory. This publication-only step reads saved F01 model artifacts
 # and writes only below outputs/publication/fuel/.
 
 script_argument <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
@@ -193,7 +193,7 @@ file.copy(
 )
 
 provenance <- c(
-  "task: R-D04",
+  "task: RD04",
   "figure: figures/rd04-fuel-phase-pct-inventory.png",
   "estimates: tables/rd04-fuel-model-estimates.csv",
   "intervals: 95% normal-approximation intervals propagated from prediction covariance",

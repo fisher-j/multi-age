@@ -1,4 +1,4 @@
-# Generate the R-D04 inventory with a consistent integrated mean-load estimand.
+# Generate the RD04 inventory with a consistent integrated mean-load estimand.
 # Run from analysis/: Rscript scripts/publication/fuel/08-generate-rd04-integrated-figure.R
 script_argument <- grep("^--file=", commandArgs(FALSE), value = TRUE)
 stopifnot(length(script_argument) == 1L)
@@ -156,7 +156,7 @@ file.copy(
 )
 
 provenance <- c(
-  "task: R-D04",
+  "task: RD04",
   "generator: scripts/publication/fuel/08-generate-rd04-integrated-figure.R",
   "figure: figures/rd04-fuel-phase-pct-inventory.png",
   "estimates: tables/rd04-fuel-model-estimates.csv",

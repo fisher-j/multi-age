@@ -1,4 +1,4 @@
-# Retired R-D04 generator
+# Retired RD04 generator
 
 `06-generate-rd04-figure.R` preserves the original zero-random-effect figure
 implementation as a historical audit input. Do not execute it. The active

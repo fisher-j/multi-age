@@ -1,4 +1,4 @@
-# Read-only audit of the fitted R-D04 models and thesis fuel predictions.
+# Read-only audit of the fitted RD04 models and thesis fuel predictions.
 # Run from analysis/: Rscript scripts/publication/fuel/07-audit-rd04-inference.R
 # Historical zero-effect estimates are read from the retired generator.
 script_argument <- grep("^--file=", commandArgs(FALSE), value = TRUE)
@@ -183,7 +183,7 @@ comparison <- audit |>
 write_csv(comparison, file.path(audit_dir, "thesis-rd04-deadwood-comparison.csv"))
 
 stopifnot(identical(original_hash, tools::md5sum(original_script)))
-writeLines(c("R-D04 inference audit; existing fitted models; no refitting or model selection.",
+writeLines(c("RD04 inference audit; existing fitted models; no refitting or model selection.",
              paste("Original script MD5:", unname(original_hash)),
              "Integrated SEs include beta, betazi, and log-SD covariance via sdr$cov.fixed.",
              "Intervals describe estimated means, not new-site or new-observation predictions.",

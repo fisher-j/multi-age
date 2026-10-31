@@ -47,7 +47,7 @@ its formula, family, zero and dispersion formulas, warnings, AIC, and DHARMa
 tests. `05-evaluate-and-select-models.R` identifies only provisional AIC
 leaders; final selection requires documented diagnostic and scientific review.
 
-### R-D04 inference audit
+### RD04 inference audit
 
 The active figure generator is `08-generate-rd04-integrated-figure.R`. All
 panels report equally site-weighted expected loads integrated over all fitted
@@ -57,12 +57,12 @@ change intervals use the response scale, with full parameter covariance in
 both cases. Shared functions are in `rd04-inference-utils.R`.
 
 Run `Rscript scripts/publication/fuel/07-audit-rd04-inference.R` from `analysis/`
-to reproduce the thesis fuel Results grids, compare the original R-D04
+to reproduce the thesis fuel Results grids, compare the original RD04
 zero-random-effect predictions with `marginaleffects`, and demonstrate
 random-effect-integrated means with both nonlinear `marginaleffects`
 inference and independently derived custom delta-method gradients. Results
 and session information are written to `outputs/publication/fuel/inference-audit/`.
 The original generator is archived under `retired/` for historical comparison;
 its former entry point stops with migration instructions. Saved models and
-thesis files are preserved. The R-D04 workflow card records the implemented
+thesis files are preserved. The RD04 workflow card records the implemented
 mean-load interpretation, both computational routes, and Methods wording.
