@@ -54,6 +54,14 @@ def validate_outputs(project, outputs, domains, require_models=False):
         if not domain_root.is_dir():
             errors.append(f"Output directory missing: {domain}")
             continue
+        for path in domain_root.rglob("*provenance.yml"):
+            for line in path.read_text(encoding="utf-8").splitlines():
+                key, separator, value = line.partition(": ")
+                if separator and key in ("generator", "publication_derivation") and ".qmd#" in value:
+                    source, label = value.split("#", 1)
+                    source_path = project / source
+                    if not source_path.is_file() or f"#| label: {label}\n" not in source_path.read_text(encoding="utf-8"):
+                        errors.append(f"Provenance references a missing calculation: {value}")
         for path in sorted(domain_root.rglob("*.csv")):
             relative = path.relative_to(outputs).as_posix()
             try:

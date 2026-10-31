@@ -59,6 +59,17 @@ class PublicationValidationTests(unittest.TestCase):
             data.write_bytes(b"value\n2\n")
             self.assertTrue(checks.validate_exports(root))
 
+    def test_provenance_must_name_an_existing_qmd_calculation(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self.project(root)
+            (root / "task-rd04.qmd").write_text("```{r}\n#| label: rd04-08-figure\n1\n```\n", encoding="utf-8")
+            provenance = root / "outputs/fuel/figure-provenance.yml"
+            provenance.write_text("generator: task-rd04.qmd#rd04-08-figure\n", encoding="utf-8")
+            self.assertFalse(checks.validate_outputs(root, root / "outputs", ["fuel"]))
+            provenance.write_text("generator: task-rd04.qmd#f01-08-figure\n", encoding="utf-8")
+            self.assertTrue(checks.validate_outputs(root, root / "outputs", ["fuel"]))
+
 
 if __name__ == "__main__":
     unittest.main()

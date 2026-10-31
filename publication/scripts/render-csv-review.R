@@ -7,7 +7,7 @@ render_csv_review <- function(relative) {
     gsub('"', "&quot;", text, fixed = TRUE)
   }
   data <- read.csv(
-    file.path("..", relative), colClasses = "character", na.strings = NULL,
+    task_artifact(relative), colClasses = "character", na.strings = NULL,
     check.names = FALSE, strip.white = FALSE, fileEncoding = "UTF-8-BOM"
   )
   name <- escape_html(basename(relative))

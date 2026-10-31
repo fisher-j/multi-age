@@ -1,15 +1,23 @@
+params:
+  recompute:
+    value: []
+
 project:
   type: website
+  execute-dir: project
   output-dir: ../docs/publication
   pre-render:
-    - python scripts/prepare-workflow.py
+    - python scripts/render-hooks.py pre
     - cmd.exe /c "..\analysis\scripts\sync_zotero_library.bat"
+  post-render:
+    - python scripts/render-hooks.py post
   resources:
     - repo-files/**
   render:
+    - task-f01.qmd
+    - task-rd04.qmd
     - index.qmd
     - workflow.qmd
-    - pipeline-fuel.qmd
     - task-list.qmd
     - task-*.qmd
     - manuscript.qmd
@@ -20,6 +28,8 @@ execute:
   # Display chunks read saved tables, not analytical fits. Refresh their values
   # when upstream output changes, even if the prose has not changed.
   freeze: false
+  cache: false
+  error: false
 
 bibliography: ../analysis/zotero_library.json
 csl: ../analysis/apa.csl
@@ -45,8 +55,6 @@ website:
       contents:
         - href: workflow.qmd
           text: Overview
-        - href: pipeline-fuel.qmd
-          text: Fuel pipeline map
         - href: task-list.qmd
           text: Task register and task list
         - section: Dedicated task pages

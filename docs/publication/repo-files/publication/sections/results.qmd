@@ -17,7 +17,7 @@ Results narrative and sprout-height displays remain in development.
 #| label: rt03-fuel-narrative-values
 #| include: false
 fuel_results <- read.csv(
-  "outputs/fuel/tables/rd04-fuel-model-estimates.csv",
+  task_artifact("outputs/fuel/tables/rd04-fuel-model-estimates.csv"),
   stringsAsFactors = FALSE
 )
 fuel_components <- c(
@@ -158,5 +158,5 @@ comparison, the phase transition does not isolate a causal PCT effect.
 #|   covariance. It is an inferred potential surface-fuel contribution, not
 #|   direct slash load. Panel-specific y-scales are used.
 
-knitr::include_graphics("assets/rd04-fuel-phase-pct-inventory.png")
+knitr::include_graphics(task_artifact("assets/rd04-fuel-phase-pct-inventory.png"))
 ```

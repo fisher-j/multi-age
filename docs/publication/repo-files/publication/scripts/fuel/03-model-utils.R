@@ -32,7 +32,9 @@ fit_and_diagnose <- function(
     ziformula_label,
     dispformula,
     dispformula_label,
-    paths) {
+    paths,
+    simulation_n,
+    simulation_seed) {
   output_paths <- model_output_paths(paths)
   warnings <- character()
   fit <- tryCatch(
@@ -79,7 +81,7 @@ fit_and_diagnose <- function(
 
   saveRDS(fit, file.path(output_paths$models, paste0(model_id, ".rds")))
   simulation <- tryCatch(
-    publication_simulate_residuals(fit, n = 1000, seed = 20260918),
+    publication_simulate_residuals(fit, n = simulation_n, seed = simulation_seed),
     error = function(error) error
   )
   if (inherits(simulation, "error")) {

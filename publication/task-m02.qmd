@@ -1,7 +1,19 @@
 ---
 title: "M02 — regeneration and sprout methods"
+params:
+  recompute:
+    value: []
 sidebar: workflow
 ---
+
+```{r}
+#| label: publication-render-setup
+#| include: false
+source("scripts/task-execution.R")
+publication_setup(params$recompute)
+source("scripts/render-csv-review.R")
+```
+
 
 {{< include _task-metadata/m02-status.qmd >}}
 

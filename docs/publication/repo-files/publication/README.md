@@ -5,7 +5,7 @@ Its top navigation contains **Development workflow** and **Manuscript draft**,
 each with a dedicated sidebar. The repository's legacy products are separate.
 
 - `workflow.qmd`: process overview, repository map, and documentation responsibilities.
-- `pipeline-fuel.qmd`: compact execution/dependency map linking authoritative steps.
+- `task-f01.qmd` and `task-rd04.qmd`: executable fuel accounts, in that order.
 - `tasks.json`: index metadata (statuses, targets, short summaries, dependencies,
   and file roles); detailed analytical documentation belongs in task QMDs.
 - `task-list.qmd`: generated register and task summaries; do not edit directly.
@@ -38,34 +38,37 @@ Actual namespace loads and installed DESCRIPTION versions are checked against
 the publication lock; broad startup package scans are disabled because sandbox
 permission checks can misreport missing packages.
 
-## Independent calculations
+## Independent calculations and selective review
 
-From the repository root:
+The [fuel operational guide](scripts/fuel/README.md) documents native Quarto
+profiles, whole-task selection, staging, prerequisites and promotion. Review is
+the default: calculation code is displayed while evidence is read from saved
+artifacts; fitted-model caches are unnecessary. Recompute F01 and RD04 with:
 
 ```bat
-run-publication.bat restore
-run-publication.bat all
-run-publication.bat check
-render-products.bat publication --to html
-python publication/scripts/check-website.py
+render-products.bat publication --profile recompute --execute-params recompute-fuel.yml --to html
 ```
 
-`fuel` and `regeneration` run their respective pipelines. Fuel order is
-01, 02, 03, 04, 05, 07, 08; regeneration order is 01, 02, 03, 05, 04.
-The runner uses committed exports under `inputs/thesis/`, scripts under
-`scripts/fuel/` and `scripts/regeneration/`, and canonical outputs under
-`outputs/`. Thesis model objects and thesis renv are not calculation dependencies.
-See [the input contract](inputs/thesis/README.md) for the separate export operation.
+A native parameter file such as `recompute: [RD04]` changes only selected tasks.
+Unselected pages review canonical outputs; selected producers supply staged
+outputs to all consumers. Fingerprints identify changed upstream inputs without
+silently recomputing downstream tasks or accepting models. A selected producer's
+missing outputs are errors, never canonical fallbacks.
 
-Recomputation starts with empty model/output directories under `.runs/`.
-Each stage stops on failure. Existing numerical checks verify predictions,
-gradients, integration, covariance and assembly within the owning scripts.
-Before promotion, validation checks declared outputs, complete CSV structure,
-finite estimates, ordered intervals, nonnegative SEs and registered fuel-model
-files. `check` validates saved outputs without requiring local model caches;
-`--require-models` additionally checks fitted-model files after recomputation.
-The runner refuses to overwrite an existing run directory; archive it before
-a deliberate rerun.
+Pre-render hooks check exports/environment and prepare staging. Native execution
+parameters are checked in shared document setup before calculations. Post-render
+hooks validate outputs and private model/data files, refresh staged downloads,
+then promote selected tasks only. Failed renders do not promote. HTML remains in
+`.runs/<run-name>/site`; render normally after promotion for the canonical site.
+Use `--output-dir .runs/<new-run-name>/site` for another run; existing execution
+records are never overwritten.
+
+`run-publication.bat fuel` delegates to this render. `all` runs fuel followed by
+regeneration, validating/promoting each domain independently. `regeneration`
+retains its existing sequence (01, 02, 03, 05, 04), staging and checks.
+`check` validates saved outputs without requiring model caches; `--require-models`
+on the Python checker additionally checks models. Existing prediction, gradient,
+integration and covariance checks remain in the owning QMD calculations.
 
 `publication/renv.lock`, maintained publication scripts, committed thesis
 exports and canonical `outputs/` define the single authoritative publication
@@ -106,12 +109,12 @@ step and link to them from consumers; record a consumer's own use or wording
 decision on that consumer's page. Manuscript prose still lives in shared
 `sections/` sources, which can contain subsections maintained by different tasks.
 
-The fuel map links the complete sequence. F01 owns derivation through candidate
+F01 followed by RD04 defines the fuel analytical sequence. F01 owns derivation through candidate
 evaluation (stages 01-05); RD04 owns prediction/inference, display, and retired
 figure history (stages 07-08 and historical 06); RT03 owns fuel Results claims.
 The pipeline README contains execution instructions and links to those records.
-There is no continuous review page. If a combined view later improves code-agent
-work, build it with Quarto includes of the step-owned sections, never copies.
+There is no pipeline map, continuous review page, or separate analytical runner.
+Scientific specifications and orchestration live directly in the task pages.
 
 Fuel task metadata distinguishes these roles:
 
@@ -129,12 +132,22 @@ The rendered file lists and download bundle include both owned and consumed
 files. Register only explicitly reviewable artifacts; binary model objects and
 raw data are not added to downloads by discovering their directories.
 
-F01 includes `sections/f01-pipeline-review.qmd`; RD04 includes
-`sections/rd04-inference-review.qmd` and `sections/rd04-source-review.qmd`.
-Original R scripts are included in plain code fences. The RD04 Lua filter nests
-the retired README's headings. CSV chunks read each step's `outputs` metadata
-using `scripts/render-csv-review.R`, preserving every saved cell. Add source
-includes to the owning review section and register its files/outputs there.
+F01 and RD04 contain their calculation chunks directly, in document order.
+Reusable helpers have complete collapsed source reviews. Calculation chunks have
+unique labels, are displayed in both modes, and are checked against QMD source.
+CSV reviews preserve every cell. Shared manuscript prose and the companion table
+remain presentation includes.
+
+`recomputable` opts a task into selection; `calculation_chunks` records its ordered
+labels. `private_inputs` and `private_outputs` inventory model/data files and
+execution manifests without adding downloads. Selected tasks record source and
+input artifact hashes. QMD parameter defaults are declared in each document for
+knitr; the project uses the same empty-list default.
+`execution_manifest` names each task's private provenance record. Reusable
+rendering infrastructure does not determine the task's scientific run order.
+
+QMD downloads use `.qmd.txt` so Quarto treats them as source downloads, not extra
+render targets; their manifest records the original repository path.
 
 The pre-render preparation rejects duplicate output ownership and invalid
 upstream task IDs. Website validation checks complete source and CSV review

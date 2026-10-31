@@ -1,15 +1,26 @@
 ---
 title: "F01 — fuel-component separation and model exploration"
+params:
+  recompute:
+    value: []
 sidebar: workflow
 ---
+
+```{r}
+#| label: publication-render-setup
+#| include: false
+source("scripts/task-execution.R")
+publication_setup(params$recompute)
+source("scripts/render-csv-review.R")
+```
+
 
 {{< include _task-metadata/f01-status.qmd >}}
 
 <span id="f01-record"></span>
 
 This page owns the fuel-component derivation, exploration, candidate fitting,
-and provisional model-review record. The [fuel pipeline map](pipeline-fuel.qmd)
-connects it to [RD04 inference and display](task-rd04.qmd) and
+and provisional model-review record. The analytical sequence continues with [RD04 inference and display](task-rd04.qmd) and
 [RT03 Results writing](task-rt03.qmd); those steps own their subsequent decisions.
 
 ## Original objective and guardrails
@@ -28,40 +39,893 @@ candidate and diagnostic; do not treat an AIC leader as a selected model.
   standing vegetation—an inferred potential surface-fuel contribution, not a
   direct slash-load measurement.
 
-## Inputs and analyses performed
+## Execution and inputs {#publication-execution}
 
-### Publication execution {#publication-execution}
+This page is the authoritative run order for F01. Review is the default;
+select `F01` in Quarto's `recompute` parameter under the `recompute` profile
+to execute all five stages once. Each calculation remains visible in either mode.
+Publication R 4.6.2, the unchanged lockfile and committed thesis exports define
+the calculation environment. Outputs are staged and validated before promotion.
 
-Publication R 4.6.2 and `publication/renv.lock` define the sole publication
-environment. F01 runs the maintained scripts under `publication/scripts/fuel/`
-from committed thesis exports. Current outputs and in-stage computational
-checks are authoritative; previous-environment publication replay, snapshots,
-acceptance and difference artifacts have been retired. Scientific specifications
-and provisional model-review states are unchanged.
+## 01 — Derive components and audit pairing
 
-Stages 01–05 use the publication environment and write beneath
-`publication/outputs/fuel/` after verification. Committed thesis exports provide
-collected measurements (`fuel-measurements.rds`) and unchanged 1-, 10-, 100-,
-and 1,000-hour loads (`fuel-deadwood-loads.rds`). The original sources are
-`analysis/summarize_collected_data.rda` and `analysis/calculate_fuel_load.rda`;
-their combined forest-floor and vegetation load columns are not exported.
-See [the export contract](repo-files/publication/inputs/thesis/README.md).
+**Purpose.** Separate reportable fuel components and construct matched transect records.
 
-Stage 01 derives component loads and audits transect pairing. The pre-PCT
-forest-floor partition uses Finney and Martin (1993), model 3, with recorded
-total depth and estimated litter percentage. Negative shallow-extrapolation
-values are bounded at zero and retained in the station-level audit. Fuel-bed
-depth is retained for later protocol-comparability review and is not yet
-interpreted as slash depth. Station and transect data are saved under `data/`
-as `.rds` files; the downloadable dictionary and pairing CSV describe them.
+**Rationale.** Partition pre-PCT forest floor with Finney–Martin model 3, bound negative shallow litter extrapolations at zero, keep woody/herbaceous cover-height loads separate, and carry exported deadwood loads forward unchanged. Omit post-PCT litter/duff; standing woody reduction is potential contribution, not measured slash.
 
-Stage 02 reports zeros and spread by component and proposes zero and dispersion
-candidates without fitting models. The design fixes random intercepts for site,
-site-by-treatment block, and corner nested within block. Stages 03–04 fit the
-phase-component and matched woody candidates. Each attempted fit records its
-formula, family, zero/dispersion formulas, warnings, AIC, and DHARMa tests.
-Stage 05 compares candidates and records provisional AIC leaders. Saved fitted
-models and registries are the handoff to RD04, not a final scientific selection.
+<details data-review-source="publication/task-f01.qmd#f01-01-derive-components">
+<summary>Calculation — f01-01-derive-components</summary>
+
+```{r}
+#| label: f01-01-derive-components
+#| eval: !expr task_selected("F01")
+#| echo: true
+#| warning: false
+#| message: false
+task_begin("F01")
+source("scripts/fuel/00-fuel-config.R")
+task_progress("f01-01-derive-components")
+local({
+# Finney and Martin (1993), model 3: cumulative forest-floor mass (Mg ha^-1)
+# from the surface to depth ds_cm within a profile of total depth dp_cm.
+# The model is used only for the pre-PCT forest-floor measurements, where the
+# recorded total depth and estimated litter proportion describe the forest floor.
+# Its fitted range does not support a negative cumulative mass; the derivation
+# script records and bounds such rare shallow-layer extrapolations at zero.
+finney_martin_cumulative_load <- function(ds_cm, dp_cm) {
+  result <- 6.461 * ds_cm^1.07 - 0.254 * dp_cm
+  result[ds_cm == 0] <- 0
+  result
+}
+
+publication_root <- .publication_render$root
+script_dir <- file.path(publication_root, "scripts", "fuel")
+paths_common <- publication_paths(publication_root)
+
+library(dplyr)
+library(readr)
+library(tidyr)
+
+paths <- publication_fuel_paths(publication_root)
+dir.create(paths$data, recursive = TRUE, showWarnings = FALSE)
+dir.create(paths$manifests, recursive = TRUE, showWarnings = FALSE)
+
+# Typed, checksum-validated exports from the separate thesis operation.
+transects <- readRDS(paths$input)
+legacy_total_load <- readRDS(paths$legacy_load_input)
+ids <- publication_fuel_ids
+
+# Keep the field measurements intact for audit. Post-PCT forest-floor values
+# are retained here but deliberately receive no duff/litter load conversion.
+forest_floor_station <- transects |>
+  select(phase, all_of(ids), matches("^(duff_litter|pct_litter|fbd)[12]$")) |>
+  pivot_longer(
+    cols = matches("^(duff_litter|pct_litter|fbd)[12]$"),
+    names_to = c(".value", "station"),
+    names_pattern = "(.*?)([12])$"
+  ) |>
+  transmute(
+    phase,
+    across(all_of(ids)),
+    station = as.integer(station),
+    total_forest_floor_depth_cm = duff_litter,
+    estimated_litter_fraction = pct_litter / 100,
+    estimated_litter_depth_cm = total_forest_floor_depth_cm * estimated_litter_fraction,
+    estimated_duff_depth_cm = total_forest_floor_depth_cm - estimated_litter_depth_cm,
+    fuel_bed_depth_cm = fbd,
+    forest_floor_load_eligible = phase == "prepct"
+  )
+
+if (any(forest_floor_station$estimated_litter_fraction < 0 |
+  forest_floor_station$estimated_litter_fraction > 1, na.rm = TRUE)) {
+  stop("Estimated litter fractions fall outside [0, 1].")
+}
+
+# Finney and Martin's cumulative curve partitions the pre-PCT total profile at
+# the estimated litter/duff boundary. These are model-derived loads, not direct
+# independent bulk-density measurements of the two layers.
+forest_floor_pre_station <- forest_floor_station |>
+  filter(forest_floor_load_eligible) |>
+  mutate(
+    total_forest_floor_load_mgha = finney_martin_cumulative_load(
+      total_forest_floor_depth_cm,
+      total_forest_floor_depth_cm
+    ),
+    litter_load_mgha = finney_martin_cumulative_load(
+      estimated_litter_depth_cm,
+      total_forest_floor_depth_cm
+    ),
+    litter_load_raw_mgha = litter_load_mgha,
+    litter_load_bounded_at_zero = litter_load_raw_mgha < 0,
+    litter_load_mgha = pmax(litter_load_raw_mgha, 0),
+    duff_load_mgha = total_forest_floor_load_mgha - litter_load_mgha
+  )
+
+if (any(forest_floor_pre_station$duff_load_mgha < 0, na.rm = TRUE)) {
+  stop("Finney-Martin component calculation produced a negative duff load; inspect the input depths before proceeding.")
+}
+
+forest_floor_components <- forest_floor_pre_station |>
+  select(phase, all_of(ids), station, litter_load_mgha, duff_load_mgha) |>
+  pivot_longer(
+    cols = ends_with("_load_mgha"),
+    names_to = "component",
+    values_to = "load_mgha"
+  ) |>
+  mutate(
+    component = recode(
+      component,
+      litter_load_mgha = "litter",
+      duff_load_mgha = "duff"
+    ),
+    derivation = "Finney-Martin 1993 model 3 cumulative-load partition"
+  ) |>
+  summarise(
+    load_mgha = mean(load_mgha),
+    n_stations = sum(!is.na(load_mgha)),
+    derivation = first(derivation),
+    .by = c(all_of(ids), "phase", "component")
+  )
+
+# FireMon-style vegetation calculations remain separate by physiognomic class.
+vegetation_station <- transects |>
+  select(
+    phase,
+    all_of(ids),
+    matches("^(live_woody|dead_woody|avg_w_ht|live_herb|dead_herb|avg_h_ht)[12]$")
+  ) |>
+  pivot_longer(
+    cols = -c(phase, all_of(ids)),
+    names_to = c(".value", "station"),
+    names_pattern = "(.*?)([12])$"
+  ) |>
+  mutate(
+    woody_height_m = if_else(live_woody == 0 & dead_woody == 0, 0, avg_w_ht),
+    herb_height_m = if_else(live_herb == 0 & dead_herb == 0, 0, avg_h_ht),
+    woody_load_mgha = ((live_woody + dead_woody) / 100) * woody_height_m * 18,
+    herb_load_mgha = ((live_herb + dead_herb) / 100) * herb_height_m * 8
+  ) |>
+  select(phase, all_of(ids), station, woody_load_mgha, herb_load_mgha)
+
+vegetation_components <- vegetation_station |>
+  pivot_longer(
+    cols = ends_with("_load_mgha"),
+    names_to = "component",
+    values_to = "load_mgha"
+  ) |>
+  mutate(
+    component = recode(
+      component,
+      woody_load_mgha = "woody_vegetation",
+      herb_load_mgha = "herbaceous_vegetation"
+    ),
+    derivation = "FireMon cover-height bulk-density calculation retained by component"
+  ) |>
+  summarise(
+    load_mgha = mean(load_mgha),
+    n_stations = sum(!is.na(load_mgha)),
+    derivation = first(derivation),
+    .by = c("phase", all_of(ids), "component")
+  )
+
+dead_woody_components <- legacy_total_load |>
+  select(phase, all_of(ids), onehr, tenhr, hundhr, thoushr) |>
+  pivot_longer(
+    cols = c(onehr, tenhr, hundhr, thoushr),
+    names_to = "component",
+    values_to = "load_mgha"
+  ) |>
+  mutate(
+    derivation = "Unchanged thesis-era dead-woody load carried forward from calculate_fuel_load.rda"
+  )
+
+# Phase comes from the identifiers retained above. Restrict the exported long
+# component table to reportable component/phase combinations.
+fuel_components_transect <- bind_rows(
+  forest_floor_components,
+  vegetation_components,
+  dead_woody_components
+) |>
+  mutate(
+    component = factor(
+      component,
+      levels = c("litter", "duff", "onehr", "tenhr", "hundhr", "thoushr", "woody_vegetation", "herbaceous_vegetation")
+    )
+  ) |>
+  arrange(phase, site, treatment, corner, azi, component)
+
+# Explicit pre/post joins replace the thesis-era lexical phase ordering used to
+# construct veg_diff. The primary PCT contrast is woody standing vegetation
+# reduction; it is an inferred surface-fuel contribution, not direct slash load.
+vegetation_wide <- fuel_components_transect |>
+  filter(component %in% c("woody_vegetation", "herbaceous_vegetation")) |>
+  select(all_of(ids), phase, component, load_mgha) |>
+  pivot_wider(
+    names_from = c(component, phase),
+    values_from = load_mgha,
+    names_sep = "_"
+  )
+
+fuel_bed_depth_phase <- forest_floor_station |>
+  summarise(
+    fuel_bed_depth_cm = mean(fuel_bed_depth_cm),
+    n_fuel_bed_stations = sum(!is.na(fuel_bed_depth_cm)),
+    .by = c("phase", all_of(ids))
+  ) |>
+  pivot_wider(
+    names_from = phase,
+    values_from = c(fuel_bed_depth_cm, n_fuel_bed_stations),
+    names_sep = "_"
+  )
+
+fuel_paired_transect <- vegetation_wide |>
+  filter(
+    !is.na(woody_vegetation_prepct),
+    !is.na(woody_vegetation_postpct)
+  ) |>
+  inner_join(fuel_bed_depth_phase, by = ids) |>
+  mutate(
+    woody_standing_reduction_mgha = woody_vegetation_prepct - woody_vegetation_postpct,
+    herbaceous_vegetation_change_mgha = herbaceous_vegetation_postpct - herbaceous_vegetation_prepct,
+    interpretation = "Woody standing-vegetation reduction is an inferred potential surface-fuel contribution; it is not a direct slash-load measurement."
+  )
+
+pairing_qc <- bind_rows(
+  transmute(distinct(filter(vegetation_wide, !is.na(woody_vegetation_prepct)), across(all_of(ids))), status = "pre-PCT woody observation"),
+  transmute(distinct(filter(vegetation_wide, !is.na(woody_vegetation_postpct)), across(all_of(ids))), status = "post-PCT woody observation"),
+  transmute(anti_join(
+    distinct(filter(vegetation_wide, !is.na(woody_vegetation_prepct)), across(all_of(ids))),
+    distinct(filter(vegetation_wide, !is.na(woody_vegetation_postpct)), across(all_of(ids))),
+    by = ids
+  ), status = "pre-PCT woody observation without post-PCT match"),
+  transmute(anti_join(
+    distinct(filter(vegetation_wide, !is.na(woody_vegetation_postpct)), across(all_of(ids))),
+    distinct(filter(vegetation_wide, !is.na(woody_vegetation_prepct)), across(all_of(ids))),
+    by = ids
+  ), status = "post-PCT woody observation without pre-PCT match"),
+  transmute(distinct(fuel_paired_transect, across(all_of(ids))), status = "matched woody pair")
+) |>
+  count(status, name = "n_transects")
+
+data_dictionary <- tibble(
+  component = c("litter", "duff", "woody_vegetation", "herbaceous_vegetation", "woody_standing_reduction_mgha", "fuel_bed_depth_cm"),
+  unit = c("Mg ha^-1", "Mg ha^-1", "Mg ha^-1", "Mg ha^-1", "Mg ha^-1", "cm"),
+  reporting_phase = c("pre-PCT only", "pre-PCT only", "pre-PCT and post-PCT", "pre-PCT and post-PCT", "matched pre/post", "measurement retained for protocol review"),
+  definition = c(
+    "Model-derived upper forest-floor load using Finney-Martin cumulative model 3 and the estimated litter-depth boundary. Negative shallow-layer extrapolations are bounded at zero and retained in the station-level audit output.",
+    "Model-derived lower forest-floor load: total Finney-Martin forest-floor load minus modeled litter load. Two shallow estimated litter layers were bounded at zero after the equation returned negative mass.",
+    "FireMon-style cover-height estimate using the existing woody bulk-density constant.",
+    "FireMon-style cover-height estimate using the existing herbaceous bulk-density constant.",
+    "Pre-PCT minus post-PCT woody standing vegetation; inferred potential surface-fuel contribution, not direct slash load.",
+    "Recorded field value; do not interpret as slash depth until protocol comparability is confirmed."
+  )
+)
+
+saveRDS(forest_floor_station, file.path(paths$data, "forest-floor-measurements-station.rds"))
+saveRDS(forest_floor_pre_station, file.path(paths$data, "forest-floor-pre-components-station.rds"))
+saveRDS(fuel_components_transect, file.path(paths$data, "fuel-components-transect.rds"))
+saveRDS(fuel_paired_transect, file.path(paths$data, "fuel-paired-transect.rds"))
+write_csv(pairing_qc, file.path(paths$data, "fuel-pairing-qc.csv"))
+write_csv(data_dictionary, file.path(paths$data, "fuel-component-data-dictionary.csv"))
+
+provenance_lines <- c(
+  "input: publication/inputs/thesis/fuel-measurements.rds",
+  "legacy-dead-woody-input: publication/inputs/thesis/fuel-deadwood-loads.rds",
+  "export_manifest: publication/inputs/thesis/manifest.json",
+  "publication_derivation: task-f01.qmd#f01-01-derive-components",
+  "forest_floor_loads: pre-PCT only",
+  "forest_floor_method: Finney-Martin 1993 model 3 cumulative-load partition",
+  paste0(
+    "litter-load-boundary-cases: ",
+    sum(forest_floor_pre_station$litter_load_bounded_at_zero)
+  ),
+  "post-PCT-forest-floor-loads: deliberately omitted pending protocol validity",
+  "PCT-primary-contrast: pre-PCT minus post-PCT woody standing vegetation"
+)
+provenance_connection <- file(file.path(paths$manifests, "input-provenance.yml"), open = "wb")
+writeLines(provenance_lines, provenance_connection, sep = "\n", useBytes = TRUE)
+close(provenance_connection)
+})
+```
+
+</details>
+
+**Evidence.** The complete saved cells are available below.
+
+```{r}
+#| label: f01-01-derive-components-evidence
+#| echo: false
+#| results: asis
+render_csv_review("publication/outputs/fuel/data/fuel-component-data-dictionary.csv")
+render_csv_review("publication/outputs/fuel/data/fuel-pairing-qc.csv")
+```
+
+**Interpretation and review state.** The dictionary and pairing audit define the subsequent model inputs; fuel-bed depth remains available for protocol review.
+
+## 02 — Explore component distributions
+
+**Purpose.** Describe zeros, spread, and replication before fitting.
+
+**Rationale.** Keep the design random intercepts fixed. The exploration candidate CSVs are advisory specifications; the fitting stage below explicitly constructs its candidate set from the data.
+
+<details data-review-source="publication/task-f01.qmd#f01-02-explore-components">
+<summary>Calculation — f01-02-explore-components</summary>
+
+```{r}
+#| label: f01-02-explore-components
+#| eval: !expr task_selected("F01")
+#| echo: true
+#| warning: false
+#| message: false
+task_progress("f01-02-explore-components")
+local({
+publication_root <- .publication_render$root
+script_dir <- file.path(publication_root, "scripts", "fuel")
+paths_common <- publication_paths(publication_root)
+
+library(dplyr)
+library(readr)
+
+paths <- publication_fuel_paths(publication_root)
+components <- readRDS(file.path(paths$data, "fuel-components-transect.rds"))
+paired <- readRDS(file.path(paths$data, "fuel-paired-transect.rds"))
+
+add_design_groups <- function(data) {
+  data |>
+    mutate(
+      block = interaction(site, treatment, drop = TRUE),
+      design_corner = interaction(site, treatment, corner, drop = TRUE)
+    )
+}
+
+component_data <- components |>
+  mutate(component = as.character(component)) |>
+  add_design_groups()
+
+component_summary <- component_data |>
+  summarise(
+    n_transects = n(),
+    n_sites = n_distinct(site),
+    n_blocks = n_distinct(block),
+    n_corners = n_distinct(design_corner),
+    n_zero = sum(load_mgha == 0, na.rm = TRUE),
+    prop_zero = mean(load_mgha == 0, na.rm = TRUE),
+    n_missing = sum(is.na(load_mgha)),
+    mean_mgha = mean(load_mgha, na.rm = TRUE),
+    sd_mgha = sd(load_mgha, na.rm = TRUE),
+    variance_mgha = var(load_mgha, na.rm = TRUE),
+    cv = if_else(mean_mgha > 0, sd_mgha / mean_mgha, NA_real_),
+    min_mgha = min(load_mgha, na.rm = TRUE),
+    q25_mgha = quantile(load_mgha, 0.25, na.rm = TRUE, names = FALSE),
+    median_mgha = median(load_mgha, na.rm = TRUE),
+    q75_mgha = quantile(load_mgha, 0.75, na.rm = TRUE, names = FALSE),
+    max_mgha = max(load_mgha, na.rm = TRUE),
+    .by = c("phase", "component", "treatment")
+  ) |>
+  arrange(phase, component, treatment)
+
+component_candidates <- component_data |>
+  summarise(
+    n_zero = sum(load_mgha == 0, na.rm = TRUE),
+    n_transects = n(),
+    n_missing = sum(is.na(load_mgha)),
+    .by = c("phase", "component")
+  ) |>
+  mutate(
+    response_type = "nonnegative continuous load",
+    fixed_effects = "treatment",
+    random_effects = "(1 | site) + (1 | site:treatment) + (1 | site:treatment:corner)",
+    conditional_family = if_else(n_zero > 0, "ziGamma(link = log)", "Gamma(link = log)"),
+    zero_inflation_candidates = if_else(
+      n_zero > 0,
+      "~1; consider ~treatment only if zero-process diagnostics and replication support it",
+      "none unless later diagnostics identify a structural-zero process"
+    ),
+    dispersion_candidates = "~1 first; compare ~treatment only if residual dispersion diagnostics support it",
+    status = if_else(
+      n_missing > 0,
+      "candidate specifications only; resolve missing values before model fitting",
+      "candidate specifications only; no model fitted"
+    )
+  ) |>
+  arrange(phase, component)
+
+paired_data <- paired |>
+  add_design_groups()
+
+paired_summary <- paired_data |>
+  summarise(
+    n_pairs = n(),
+    n_sites = n_distinct(site),
+    n_blocks = n_distinct(block),
+    n_corners = n_distinct(design_corner),
+    n_negative = sum(woody_standing_reduction_mgha < 0, na.rm = TRUE),
+    n_zero = sum(woody_standing_reduction_mgha == 0, na.rm = TRUE),
+    n_positive = sum(woody_standing_reduction_mgha > 0, na.rm = TRUE),
+    mean_mgha = mean(woody_standing_reduction_mgha, na.rm = TRUE),
+    sd_mgha = sd(woody_standing_reduction_mgha, na.rm = TRUE),
+    min_mgha = min(woody_standing_reduction_mgha, na.rm = TRUE),
+    median_mgha = median(woody_standing_reduction_mgha, na.rm = TRUE),
+    max_mgha = max(woody_standing_reduction_mgha, na.rm = TRUE),
+    .by = treatment
+  ) |>
+  arrange(treatment)
+
+paired_candidate <- tibble(
+  response = "woody_standing_reduction_mgha",
+  response_type = "signed matched pre-PCT minus post-PCT contrast",
+  fixed_effects = "treatment",
+  random_effects = "(1 | site) + (1 | site:treatment) + (1 | site:treatment:corner)",
+  conditional_family = "Do not use Gamma automatically; select a signed-response model after distribution diagnostics.",
+  zero_inflation_candidates = "Not applicable to a signed contrast without a separate two-part estimand.",
+  dispersion_candidates = "Assess residual dispersion after selecting a signed-response family.",
+  status = "candidate specification only; no model fitted"
+)
+
+write_csv(component_summary, file.path(paths$data, "fuel-component-exploration-summary.csv"))
+write_csv(component_candidates, file.path(paths$manifests, "fuel-component-model-candidates.csv"))
+write_csv(paired_summary, file.path(paths$data, "woody-pct-contrast-exploration-summary.csv"))
+write_csv(paired_candidate, file.path(paths$manifests, "woody-pct-contrast-model-candidate.csv"))
+})
+```
+
+</details>
+
+**Evidence.** The complete saved cells are available below.
+
+```{r}
+#| label: f01-02-explore-components-evidence
+#| echo: false
+#| results: asis
+render_csv_review("publication/outputs/fuel/data/fuel-component-exploration-summary.csv")
+render_csv_review("publication/outputs/fuel/data/woody-pct-contrast-exploration-summary.csv")
+render_csv_review("publication/outputs/fuel/manifests/fuel-component-model-candidates.csv")
+render_csv_review("publication/outputs/fuel/manifests/woody-pct-contrast-model-candidate.csv")
+```
+
+**Interpretation and review state.** These summaries describe observed loads; they neither fit nor accept a model.
+
+## 03 — Fit phase-component candidates
+
+**Purpose.** Fit every predeclared phase-component candidate and retain its diagnostics.
+
+**Rationale.** Use Gamma/log for positive loads and zero-inflated Gamma/log where zeros occur, retaining the existing zero-count threshold and post-PCT 100-hour sensitivities. Preserve all attempted fits and warnings. DHARMa uses 1,000 unconditional simulations with seed 20260918.
+
+<details data-review-source="publication/task-f01.qmd#f01-03-fit-phase-components">
+<summary>Calculation — f01-03-fit-phase-components</summary>
+
+```{r}
+#| label: f01-03-fit-phase-components
+#| eval: !expr task_selected("F01")
+#| echo: true
+#| warning: false
+#| message: false
+task_progress("f01-03-fit-phase-components")
+local({
+# Preserve the fresh-Rscript RNG boundary of this historical fitting stage.
+# DHARMa 0.5.0 consumes an extra draw when .Random.seed is initially absent.
+if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
+  rm(".Random.seed", envir = .GlobalEnv)
+publication_root <- .publication_render$root
+script_dir <- file.path(publication_root, "scripts", "fuel")
+paths_common <- publication_paths(publication_root)
+
+source(file.path(script_dir, "03-model-utils.R"))
+
+library(dplyr)
+library(purrr)
+library(readr)
+
+paths <- publication_fuel_paths(publication_root)
+output_paths <- model_output_paths(paths)
+# This stage owns all pre/post phase-component artifacts. Clear only its prior
+# artifacts so an idempotent rerun cannot retain a candidate no longer tested.
+for (directory in c(output_paths$models, output_paths$diagnostics)) {
+  stale <- list.files(directory, pattern = "^(pre|post)pct_", full.names = TRUE)
+  if (length(stale)) file.remove(stale)
+}
+components <- readRDS(file.path(paths$data, "fuel-components-transect.rds")) |>
+  mutate(
+    component = as.character(component),
+    block = interaction(site, treatment, drop = TRUE),
+    design_corner = interaction(site, treatment, corner, drop = TRUE)
+  )
+
+design_formula <- load_mgha ~ treatment +
+  (1 | site) + (1 | block) + (1 | design_corner)
+
+fit_component_candidates <- function(data, phase_value, component_value) {
+  model_data <- data |>
+    filter(
+      .data$phase == .env$phase_value,
+      .data$component == .env$component_value,
+      !is.na(load_mgha)
+    )
+  zero_count <- sum(model_data$load_mgha == 0)
+  prefix <- paste(phase_value, component_value, sep = "_")
+
+  candidates <- list()
+  if (zero_count > 0) {
+    candidates[["base"]] <- list(glmmTMB::ziGamma(link = "log"), "ziGamma(link = log)", ~1, "~1", ~1, "~1")
+    candidates[["disp_treatment"]] <- list(glmmTMB::ziGamma(link = "log"), "ziGamma(link = log)", ~1, "~1", ~treatment, "~treatment")
+    if (zero_count >= 8) {
+      candidates[["zi_treatment"]] <- list(glmmTMB::ziGamma(link = "log"), "ziGamma(link = log)", ~treatment, "~treatment", ~1, "~1")
+    }
+  } else {
+    candidates[["base"]] <- list(Gamma(link = "log"), "Gamma(link = log)", ~0, "~0", ~1, "~1")
+    candidates[["disp_treatment"]] <- list(Gamma(link = "log"), "Gamma(link = log)", ~0, "~0", ~treatment, "~treatment")
+  }
+
+  # The thesis used site plus treatment in both the zero and dispersion
+  # submodels for post-PCT 100-hour fuels. Retain that candidate and add one
+  # deliberately more complex site-by-treatment dispersion sensitivity check.
+  if (phase_value == "postpct" && component_value == "hundhr") {
+    candidates[["zi_treatment_site_disp_treatment_site"]] <- list(
+      glmmTMB::ziGamma(link = "log"), "ziGamma(link = log)",
+      ~treatment + site, "~treatment + site",
+      ~treatment + site, "~treatment + site"
+    )
+    candidates[["zi_treatment_site_disp_treatment_site_interaction"]] <- list(
+      glmmTMB::ziGamma(link = "log"), "ziGamma(link = log)",
+      ~treatment + site, "~treatment + site",
+      ~treatment * site, "~treatment * site"
+    )
+  }
+
+  imap_dfr(candidates, function(candidate, candidate_name) {
+    fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+      model_id = paste(prefix, candidate_name, sep = "_"),
+      response = component_value,
+      analysis = paste(phase_value, "phase-specific component", sep = ": "),
+      data = model_data,
+      formula = design_formula,
+      family = candidate[[1]],
+      family_label = candidate[[2]],
+      ziformula = candidate[[3]],
+      ziformula_label = candidate[[4]],
+      dispformula = candidate[[5]],
+      dispformula_label = candidate[[6]],
+      paths = paths
+    )
+  })
+}
+
+registry <- components |>
+  distinct(phase, component) |>
+  arrange(phase, component) |>
+  pmap_dfr(function(phase, component) {
+    fit_component_candidates(components, phase, component)
+  })
+
+write_csv(registry, file.path(paths$manifests, "phase-component-model-registry.csv"))
+})
+```
+
+</details>
+
+**Evidence.** The complete saved cells are available below.
+
+```{r}
+#| label: f01-03-fit-phase-components-evidence
+#| echo: false
+#| results: asis
+render_csv_review("publication/outputs/fuel/manifests/phase-component-model-registry.csv")
+```
+
+**Interpretation and review state.** Convergence and diagnostic follow-up remain visible in the registry; a successful fit is not scientific acceptance.
+
+## 04 — Fit matched woody candidates
+
+**Purpose.** Represent both joint woody phase loads and signed matched reduction.
+
+**Rationale.** The joint model retains transect pairing. Signed reduction also has Gaussian and Student-t candidates; it is not automatically a Gamma response. Keep the existing zero/dispersion candidate sets and diagnostic protocol.
+
+<details data-review-source="publication/task-f01.qmd#f01-04-fit-woody-pct-models">
+<summary>Calculation — f01-04-fit-woody-pct-models</summary>
+
+```{r}
+#| label: f01-04-fit-woody-pct-models
+#| eval: !expr task_selected("F01")
+#| echo: true
+#| warning: false
+#| message: false
+task_progress("f01-04-fit-woody-pct-models")
+local({
+# This stage formerly started in a separate Rscript process. Restore its empty
+# initial RNG state; the diagnostic seed and unconditional simulations are unchanged.
+if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
+  rm(".Random.seed", envir = .GlobalEnv)
+publication_root <- .publication_render$root
+script_dir <- file.path(publication_root, "scripts", "fuel")
+paths_common <- publication_paths(publication_root)
+
+source(file.path(script_dir, "03-model-utils.R"))
+
+library(dplyr)
+library(readr)
+library(tidyr)
+
+paths <- publication_fuel_paths(publication_root)
+output_paths <- model_output_paths(paths)
+# This stage owns all repeated-woody and paired-contrast artifacts.
+for (directory in c(output_paths$models, output_paths$diagnostics)) {
+  stale <- list.files(directory, pattern = "^woody_", full.names = TRUE)
+  if (length(stale)) file.remove(stale)
+}
+paired <- readRDS(file.path(paths$data, "fuel-paired-transect.rds")) |>
+  mutate(
+    block = interaction(site, treatment, drop = TRUE),
+    design_corner = interaction(site, treatment, corner, drop = TRUE),
+    transect_id = interaction(site, treatment, corner, azi, drop = TRUE)
+  )
+
+woody_long <- paired |>
+  select(site, treatment, corner, azi, block, design_corner, transect_id, woody_vegetation_prepct, woody_vegetation_postpct) |>
+  pivot_longer(
+    cols = starts_with("woody_vegetation_"),
+    names_to = "phase",
+    names_prefix = "woody_vegetation_",
+    values_to = "load_mgha"
+  ) |>
+  mutate(phase = factor(phase, levels = c("prepct", "postpct")))
+
+phase_formula <- load_mgha ~ phase * treatment +
+  (1 | site) + (1 | block) + (1 | design_corner) + (1 | transect_id)
+
+phase_registry <- bind_rows(
+  fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+    "woody_phase_zigamma_zi1_disp1",
+    "woody vegetation load",
+    "matched repeated-measures phase model",
+    woody_long,
+    phase_formula,
+    glmmTMB::ziGamma(link = "log"),
+    "ziGamma(link = log)",
+    ~1,
+    "~1",
+    ~1,
+    "~1",
+    paths
+  ),
+  fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+    "woody_phase_zigamma_ziphase_disp1",
+    "woody vegetation load",
+    "matched repeated-measures phase model",
+    woody_long,
+    phase_formula,
+    glmmTMB::ziGamma(link = "log"),
+    "ziGamma(link = log)",
+    ~phase,
+    "~phase",
+    ~1,
+    "~1",
+    paths
+  ),
+  fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+    "woody_phase_zigamma_zi1_dispphase",
+    "woody vegetation load",
+    "matched repeated-measures phase model",
+    woody_long,
+    phase_formula,
+    glmmTMB::ziGamma(link = "log"),
+    "ziGamma(link = log)",
+    ~1,
+    "~1",
+    ~phase,
+    "~phase",
+    paths
+  )
+)
+
+delta_formula <- woody_standing_reduction_mgha ~ treatment +
+  (1 | site) + (1 | block) + (1 | design_corner)
+
+delta_registry <- bind_rows(
+  fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+    "woody_delta_gaussian",
+    "woody standing-vegetation reduction",
+    "signed matched pre-minus-post contrast",
+    paired,
+    delta_formula,
+    gaussian(),
+    "Gaussian(identity)",
+    ~0,
+    "~0",
+    ~1,
+    "~1",
+    paths
+  ),
+  fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+    "woody_delta_gaussian_disp_treatment",
+    "woody standing-vegetation reduction",
+    "signed matched pre-minus-post contrast",
+    paired,
+    delta_formula,
+    gaussian(),
+    "Gaussian(identity)",
+    ~0,
+    "~0",
+    ~treatment,
+    "~treatment",
+    paths
+  ),
+  fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+    "woody_delta_student_t",
+    "woody standing-vegetation reduction",
+    "signed matched pre-minus-post contrast",
+    paired,
+    delta_formula,
+    glmmTMB::t_family(),
+    "Student-t(identity)",
+    ~0,
+    "~0",
+    ~1,
+    "~1",
+    paths
+  ),
+  fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+    "woody_delta_student_t_disp_treatment",
+    "woody standing-vegetation reduction",
+    "signed matched pre-minus-post contrast",
+    paired,
+    delta_formula,
+    glmmTMB::t_family(),
+    "Student-t(identity)",
+    ~0,
+    "~0",
+    ~treatment,
+    "~treatment",
+    paths
+  ),
+  fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+    "woody_delta_student_t_disp_treatment_site",
+    "woody standing-vegetation reduction",
+    "signed matched pre-minus-post contrast",
+    paired,
+    delta_formula,
+    glmmTMB::t_family(),
+    "Student-t(identity)",
+    ~0,
+    "~0",
+    ~treatment + site,
+    "~treatment + site",
+    paths
+  ),
+  fit_and_diagnose(
+      simulation_n = 1000, simulation_seed = 20260918,
+    "woody_delta_student_t_disp_treatment_site_interaction",
+    "woody standing-vegetation reduction",
+    "signed matched pre-minus-post contrast",
+    paired,
+    delta_formula,
+    glmmTMB::t_family(),
+    "Student-t(identity)",
+    ~0,
+    "~0",
+    ~treatment * site,
+    "~treatment * site",
+    paths
+  )
+)
+
+write_csv(bind_rows(phase_registry, delta_registry), file.path(paths$manifests, "woody-pct-model-registry.csv"))
+})
+```
+
+</details>
+
+**Evidence.** The complete saved cells are available below.
+
+```{r}
+#| label: f01-04-fit-woody-pct-models-evidence
+#| echo: false
+#| results: asis
+render_csv_review("publication/outputs/fuel/manifests/woody-pct-model-registry.csv")
+```
+
+**Interpretation and review state.** RD04 uses the joint phase model for consistent woody means and their covariance-aware difference; the signed candidates remain auditable comparisons.
+
+## 05 — Evaluate provisional model leaders
+
+**Purpose.** Compare attempted candidates and identify provisional AIC leaders.
+
+**Rationale.** Rank within response/analysis groups while retaining convergence and DHARMa evidence. AIC rank does not override scientific review.
+
+<details data-review-source="publication/task-f01.qmd#f01-05-evaluate-and-select-models">
+<summary>Calculation — f01-05-evaluate-and-select-models</summary>
+
+```{r}
+#| label: f01-05-evaluate-and-select-models
+#| eval: !expr task_selected("F01")
+#| echo: true
+#| warning: false
+#| message: false
+task_progress("f01-05-evaluate-and-select-models")
+local({
+publication_root <- .publication_render$root
+script_dir <- file.path(publication_root, "scripts", "fuel")
+paths_common <- publication_paths(publication_root)
+
+library(dplyr)
+library(readr)
+
+paths <- publication_fuel_paths(publication_root)
+registry_files <- c(
+  file.path(paths$manifests, "phase-component-model-registry.csv"),
+  file.path(paths$manifests, "woody-pct-model-registry.csv")
+)
+if (!all(file.exists(registry_files))) {
+  stop("Run 03-fit-phase-components.R and 04-fit-woody-pct-models.R first.")
+}
+
+registry <- bind_rows(lapply(registry_files, read_csv, show_col_types = FALSE)) |>
+  mutate(
+    comparison_group = paste(response, analysis, sep = " | ")
+  ) |>
+  mutate(
+    aic_rank = if_else(fit_status == "fit", rank(aic, ties.method = "min"), NA_real_),
+    delta_aic = if_else(
+      fit_status == "fit",
+      aic - min(aic[fit_status == "fit"], na.rm = TRUE),
+      NA_real_
+    ),
+    .by = comparison_group
+  ) |>
+  arrange(comparison_group, aic_rank, model_id)
+
+selection_log <- registry |>
+  filter(fit_status == "fit", aic_rank == 1) |>
+  mutate(
+    diagnostic_follow_up = rowSums(
+      across(starts_with("dharma_"), ~ !is.na(.x) & .x < 0.05)
+    ) > 0
+  ) |>
+  transmute(
+    response,
+    analysis,
+    provisional_aic_leader = model_id,
+    aic,
+    pd_hessian,
+    dharma_uniformity_p,
+    dharma_dispersion_p,
+    dharma_outlier_p,
+    dharma_zero_inflation_p,
+    selection_status = case_when(
+      !pd_hessian ~ "rejected pending convergence resolution",
+      diagnostic_follow_up ~ "requires diagnostic follow-up",
+      TRUE ~ "eligible for scientific review"
+    ),
+    selection_rationale = "This is the AIC-leading predeclared candidate, not a final selection. Retain only after diagnostic and scientific review."
+  )
+
+write_csv(registry, file.path(paths$manifests, "model-comparison.csv"))
+write_csv(selection_log, file.path(paths$manifests, "model-selection-log.csv"))
+})
+task_complete("F01")
+```
+
+</details>
+
+**Evidence.** The complete saved cells are available below.
+
+```{r}
+#| label: f01-05-evaluate-and-select-models-evidence
+#| echo: false
+#| results: asis
+render_csv_review("publication/outputs/fuel/manifests/model-comparison.csv")
+render_csv_review("publication/outputs/fuel/manifests/model-selection-log.csv")
+```
+
+**Interpretation and review state.** Saved models, full comparisons and provisional leaders are the handoff to RD04; no final model selection is made here.
 
 ## Decisions made
 
@@ -86,7 +950,7 @@ the displayed definitions and the downloadable record remain aligned.
 #| tbl-cap: "Publication fuel-component dictionary generated by F01."
 
 dictionary <- read.csv(
-  "outputs/fuel/data/fuel-component-data-dictionary.csv",
+  task_artifact("outputs/fuel/data/fuel-component-data-dictionary.csv"),
   check.names = FALSE
 )
 knitr::kable(dictionary, format = "html", escape = TRUE)
@@ -108,7 +972,7 @@ when deciding whether to accept, revise, or replace a leader.
 #| tbl-cap: "Provisional AIC-leading fuel models generated by F01; all remain eligible for scientific review, not final selections."
 
 leaders <- read.csv(
-  "outputs/fuel/manifests/model-selection-log.csv",
+  task_artifact("outputs/fuel/manifests/model-selection-log.csv"),
   check.names = FALSE
 )
 leaders <- leaders[, c("response", "analysis", "provisional_aic_leader",
@@ -120,7 +984,7 @@ names(leaders) <- c("Response", "Analysis", "Provisional leader",
 knitr::kable(leaders, format = "html", digits = 3, escape = TRUE)
 ```
 
-{{< include sections/f01-pipeline-review.qmd >}}
+
 
 ## Generated artifacts and implementation history
 
@@ -130,7 +994,7 @@ knitr::kable(leaders, format = "html", digits = 3, escape = TRUE)
 | Exploration summaries | Raw phase-by-treatment summaries and matched woody PCT contrast. | [Fuel data artifacts](#f01-files) |
 | Model-selection log | The rendered provisional register above. | [Current local CSV](repo-files/publication/outputs/fuel/manifests/model-selection-log.csv) |
 | Candidate registry and diagnostics | Full auditable model search. | [Manifests](#f01-files) · [diagnostics](#f01-files) |
-| Reproducible analytical stages | Publication-only derivation, exploration, fitting, and evaluation. | [F01 code and outputs](#f01-pipeline-review) · [full pipeline map](pipeline-fuel.qmd) |
+| Reproducible analytical stages | Publication-only derivation, exploration, fitting, and evaluation. | [F01 code and outputs](#f01-pipeline-review) · [RD04](task-rd04.qmd) |
 | Initial derivation | Establishes component derivation and the pairing audit. | [Commit `bde965b`](https://github.com/fisher-j/multi-age/commit/bde965b) |
 | Completed exploration and model record | Carries dead-woody classes forward and records all candidates/diagnostics. | [Commit `5f80aaf`](https://github.com/fisher-j/multi-age/commit/5f80aaf) |
 
@@ -147,5 +1011,70 @@ pairing checks, all attempted candidates, and diagnostics. Completion of F01
 does not accept the provisional leaders. Final scientific model review remains
 open through the downstream review record; changes to component derivation or
 candidate fitting must be documented here before regenerating dependent outputs.
+
+
+## Reusable helpers and source review {#f01-pipeline-review}
+
+<details data-review-source="publication/scripts/publication-paths.R">
+<summary>publication-paths.R</summary>
+
+[Download source](repo-files/publication/scripts/publication-paths.R)
+
+````r
+{{< include scripts/publication-paths.R >}}
+````
+
+</details>
+
+<details data-review-source="publication/scripts/fuel/00-fuel-config.R">
+<summary>00-fuel-config.R</summary>
+
+[Download source](repo-files/publication/scripts/fuel/00-fuel-config.R)
+
+````r
+{{< include scripts/fuel/00-fuel-config.R >}}
+````
+
+</details>
+
+<details data-review-source="publication/scripts/fuel/03-model-utils.R">
+<summary>03-model-utils.R</summary>
+
+[Download source](repo-files/publication/scripts/fuel/03-model-utils.R)
+
+````r
+{{< include scripts/fuel/03-model-utils.R >}}
+````
+
+</details>
+
+<details data-review-source="publication/scripts/task-execution.R">
+<summary>task-execution.R</summary>
+
+[Download source](repo-files/publication/scripts/task-execution.R)
+
+````r
+{{< include scripts/task-execution.R >}}
+````
+
+</details>
+
+<details data-review-source="publication/scripts/verify-environment.R">
+<summary>verify-environment.R</summary>
+
+[Download source](repo-files/publication/scripts/verify-environment.R)
+
+````r
+{{< include scripts/verify-environment.R >}}
+````
+
+</details>
+
+```{r}
+#| label: f01-execution-review
+#| echo: false
+#| results: asis
+task_review_state("F01")
+```
 
 {{< include _task-metadata/f01-files.qmd >}}

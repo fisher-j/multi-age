@@ -130,12 +130,6 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pipeline-fuel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Fuel pipeline map</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./task-list.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Task register and task list</span></a>
   </div>
@@ -385,10 +379,10 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="documentation-responsibilities" class="level2">
 <h2 class="anchored" data-anchor-id="documentation-responsibilities">Documentation responsibilities</h2>
-<p>The <a href="./pipeline-fuel.html">fuel pipeline map</a> connects the complete analytical and writing sequence. Each step’s QMD and its included review sections own the detailed record: purpose/scope, inputs/dependencies, analyses performed, outputs/findings, decisions/rationale, implications/handoff, and review state/history. Update the originating step when its analysis or decision changes; downstream steps link to that record and explain their own use of it.</p>
+<p>The analytical sequence starts with <a href="./task-f01.html">F01</a>, followed by <a href="./task-rd04.html">RD04</a> and <a href="./task-rt03.html">RT03 Results writing</a>. Each step’s executable QMD owns the detailed record: purpose/scope, inputs/dependencies, analyses performed, outputs/findings, decisions/rationale, implications/handoff, and review state/history. Update the originating step when its analysis or decision changes; downstream steps link to that record and explain their own use of it.</p>
 <p>F01 owns fuel derivation, exploration, candidate fitting, and provisional model leaders. RD04 owns prediction/inference, uncertainty, the figure/estimates, and retired display history. RT03 owns the Results claims and qualifications. M03 and D03 will own manuscript Methods wording and management interpretation when their queued work begins. Consuming an upstream artifact does not transfer its ownership or accept its provisional scientific decisions.</p>
-<p>For the developed fuel records, <code>tasks.json</code> separates produced <code>outputs</code> from consumed <code>inputs</code> and lists <code>depends_on</code> task IDs. File lists and the pipeline map provide navigation; analytical explanations remain on their owning pages. Task summaries are concise descriptions of those records, not another decision log. The pipeline README supplies operational commands and links back to the step documentation.</p>
-<p>A continuous pipeline review is not maintained. If it becomes useful for code-agent work, assemble it with Quarto includes of the same step-owned sections. See the <a href="repo-files/publication/README.md">maintenance guide</a> for file roles, include conventions, and ownership checks.</p>
+<p>For the developed fuel records, <code>tasks.json</code> separates produced <code>outputs</code> from consumed <code>inputs</code> and lists <code>depends_on</code> task IDs. Task introductions and file lists provide navigation; analytical explanations remain on their owning pages. Task summaries are concise descriptions of those records, not another decision log. The pipeline README supplies operational commands and links back to the step documentation.</p>
+<p>Calculation specifications and order live directly in each owning task page. Quarto selects whole pages for recomputation through native execution parameters; unselected pages review saved artifacts. There is no pipeline map, combined analytical account, or document-execution loop. See the <a href="repo-files/publication/README.md">maintenance guide</a> for modes and validation.</p>
 </section>
 <section id="working-boundaries" class="level2">
 <h2 class="anchored" data-anchor-id="working-boundaries">Working boundaries</h2>

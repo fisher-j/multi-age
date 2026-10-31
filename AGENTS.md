@@ -1,4 +1,4 @@
-# Rendering
+## Rendering
 
 - From the repository root, render with
   `.\render-products.bat publication --to html`, then validate with
@@ -23,16 +23,39 @@
   falsely report missing packages. If needed, compare readable package
   `DESCRIPTION` versions against `analysis/renv.lock`.
 
-# Documentation ownership
+## Development philosophy
 
-- Start fuel work with `publication/pipeline-fuel.qmd` for execution order and
-  dependencies, then read the owning task QMD and its included review sections.
-- F01 owns component derivation, exploration, candidate fitting, and provisional
-  model leaders; RD04 owns prediction/inference, uncertainty, figure/table
-  outputs, and retired display history; RT03 owns fuel Results claims.
-- Update analyses, outputs, decisions, implications, and review states in the
-  owning task record first. Consumers link to upstream decisions and document
-  their own use. Keep `tasks.json` summaries and file roles aligned with that record.
-- Keep the pipeline overview as a map. If a combined review becomes useful,
-  assemble it with Quarto includes of step-owned sections, not copied content.
-- See `publication/README.md` for metadata roles and validation requirements.
+This project prioritizes simplicity, maintainability, and rapid iteration.
+
+- Implement the simplest correct solution that satisfies the stated requirements.
+- Avoid speculative abstractions, general-purpose frameworks, configuration layers, and infrastructure for hypothetical future needs.
+- Prefer straightforward functions and existing project patterns over new classes or architectural layers.
+- Do not introduce new dependencies, tooling, scripts, or documentation files unless they provide a clear current benefit.
+- Favor deleting obsolete code over preserving backward compatibility when the affected interface is not an established external contract.
+- Do not preserve unused APIs, wrappers, fallbacks, or legacy behavior merely as a precaution.
+- Keep changes focused. Do not expand the task into unrelated cleanup or infrastructure work.
+- Prefer refactoring existing code over adding parallel implementations.
+
+## Testing and verification
+
+- Add tests for meaningful behavior, important edge cases, and previously observed bugs.
+- Prefer behavioral tests over tests coupled to implementation details.
+- Avoid duplicative tests and exhaustive coverage of trivial helpers.
+- During development, run the narrowest relevant tests and checks.
+- Run broader verification before release or when changes affect shared interfaces.
+- Do not add new test infrastructure without a demonstrated need.
+- Report what was tested and what was not.
+
+## Refactoring
+
+- Treat reducing complexity and removing obsolete code as positive outcomes.
+- For internal, nonproduction interfaces, breaking changes are acceptable when they simplify the design.
+- Update affected callers and tests rather than automatically adding compatibility wrappers.
+- Preserve data integrity, security, and explicitly identified production contracts.
+- When multiple approaches work, prefer the one with fewer moving parts and lower future maintenance cost.
+
+## Scope and completion
+
+- Do not add optional features or safeguards beyond the stated requirements without a concrete justification.
+- When a proposed abstraction or new infrastructure adds significant complexity, briefly explain the trade-off before implementing it.
+- Stop once the requested behavior is implemented and appropriately verified.

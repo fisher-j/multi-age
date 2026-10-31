@@ -1,8 +1,20 @@
 ---
 title: Development workflow
+params:
+  recompute:
+    value: []
 subtitle: Overview, review sequence, and repository map
 sidebar: workflow
 ---
+
+```{r}
+#| label: publication-render-setup
+#| include: false
+source("scripts/task-execution.R")
+publication_setup(params$recompute)
+source("scripts/render-csv-review.R")
+```
+
 
 This overview describes the publication-development process. The
 [task register and task list](task-list.qmd) summarize the work, and each task
@@ -74,8 +86,8 @@ decisions continue to follow the workflow above.
 
 ## Documentation responsibilities {#documentation-responsibilities}
 
-The [fuel pipeline map](pipeline-fuel.qmd) connects the complete analytical and
-writing sequence. Each step's QMD and its included review sections own the
+The analytical sequence starts with [F01](task-f01.qmd), followed by
+[RD04](task-rd04.qmd) and [RT03 Results writing](task-rt03.qmd). Each step's executable QMD owns the
 detailed record: purpose/scope, inputs/dependencies, analyses performed,
 outputs/findings, decisions/rationale, implications/handoff, and review
 state/history. Update the originating step when its analysis or decision changes;
@@ -89,16 +101,16 @@ their queued work begins. Consuming an upstream artifact does not transfer its
 ownership or accept its provisional scientific decisions.
 
 For the developed fuel records, `tasks.json` separates produced `outputs` from
-consumed `inputs` and lists `depends_on` task IDs. File lists and the pipeline
-map provide navigation; analytical explanations remain on their owning pages.
+consumed `inputs` and lists `depends_on` task IDs. Task introductions and file lists provide navigation; analytical explanations remain on their owning pages.
 Task summaries are concise descriptions of those records, not another decision
 log. The pipeline README supplies operational commands and links back to the
 step documentation.
 
-A continuous pipeline review is not maintained. If it becomes useful for
-code-agent work, assemble it with Quarto includes of the same step-owned
-sections. See the [maintenance guide](repo-files/publication/README.md) for file
-roles, include conventions, and ownership checks.
+Calculation specifications and order live directly in each owning task page.
+Quarto selects whole pages for recomputation through native execution parameters;
+unselected pages review saved artifacts. There is no pipeline map, combined
+analytical account, or document-execution loop. See the
+[maintenance guide](repo-files/publication/README.md) for modes and validation.
 
 ## Working boundaries
 

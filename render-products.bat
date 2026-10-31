@@ -5,13 +5,13 @@ set "PRODUCT=%~1"
 
 if "%PRODUCT%"=="" goto :usage
 
-shift
+shift /1
 set "RENDER_ARGS="
 
 :collect_args
 if "%~1"=="" goto :select_product
-set "RENDER_ARGS=%RENDER_ARGS% %~1"
-shift
+set "RENDER_ARGS=%RENDER_ARGS% %1"
+shift /1
 goto :collect_args
 
 :select_product
@@ -52,6 +52,7 @@ pushd "%~dp0publication"
 if errorlevel 1 exit /b 1
 quarto render %RENDER_ARGS%
 set "RESULT=%ERRORLEVEL%"
+if not "%RESULT%"=="0" python scripts/render-hooks.py failed
 popd
 exit /b %RESULT%
 

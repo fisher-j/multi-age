@@ -1,7 +1,19 @@
 ---
 title: "RT03 — fuel Results narrative"
+params:
+  recompute:
+    value: []
 sidebar: workflow
 ---
+
+```{r}
+#| label: publication-render-setup
+#| include: false
+source("scripts/task-execution.R")
+publication_setup(params$recompute)
+source("scripts/render-csv-review.R")
+```
+
 
 {{< include _task-metadata/rt03-status.qmd >}}
 
@@ -13,7 +25,7 @@ This page owns the fuel Results narrative and its decisions about which claims
 to report and how to qualify them. It consumes the
 [F01 component/model record](task-f01.qmd) and
 [RD04 inference and display record](task-rd04.qmd#rd04-inference-review).
-The [fuel pipeline map](pipeline-fuel.qmd) connects these steps. The shared
+The [F01](task-f01.qmd) and [RD04](task-rd04.qmd) task pages own their execution order and handoff. The shared
 `sections/results.qmd` contains other topics too; RT03 maintains its fuel subsection.
 
 The current instruction authorizes the fuel

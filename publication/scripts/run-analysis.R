@@ -9,6 +9,17 @@ if (command == "restore") {
   renv::restore(prompt = FALSE)
   quit(status = 0L)
 }
+if (command %in% c("fuel", "all")) {
+  # Quarto alone owns document execution/order; this is a compatibility alias.
+  status <- system2("quarto", c("render", "--profile", "recompute", "--to", "html",
+                               "--execute-params", "recompute-fuel.yml"))
+  if (status != 0L) {
+    system2("python", c("scripts/render-hooks.py", "failed"))
+    stop("Fuel recompute render failed; inspect publication/.runs/recompute.")
+  }
+  if (command == "fuel") quit(status = 0L)
+  command <- "regeneration"
+}
 stopifnot(grepl(paste0(root, "/renv/library/"),
                normalizePath(.libPaths()[1], winslash = "/"), fixed = TRUE),
           !any(grepl("analysis/renv", .libPaths(), fixed = TRUE)))
@@ -39,10 +50,7 @@ if (dir.exists(staging)) stop("Staging directory already exists: ", staging,
                              ". Inspect/archive it before rerunning this command.")
 dir.create(output, recursive = TRUE)
 Sys.setenv(PUBLICATION_OUTPUT_ROOT = output)
-sequences <- list(fuel = c("01-derive-components.R", "02-explore-components.R",
-  "03-fit-phase-components.R", "04-fit-woody-pct-models.R", "05-evaluate-and-select-models.R",
-  "07-audit-rd04-inference.R", "08-generate-rd04-integrated-figure.R"),
-  regeneration = c("01-generate-rd02-display.R", "02-compare-rd02-random-effects.R",
+sequences <- list(regeneration = c("01-generate-rd02-display.R", "02-compare-rd02-random-effects.R",
     "03-compare-rd02-separate-species.R", "05-fit-selected-species-models.R",
     "04-assemble-rd02-sensitivity.R"))
 domains <- if (command == "all") names(sequences) else command

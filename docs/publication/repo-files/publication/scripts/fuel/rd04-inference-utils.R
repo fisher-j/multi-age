@@ -1,5 +1,12 @@
 # Keep valid nested identifiers from one observed row per site/treatment/phase.
 # These identifiers do not contribute fitted random effects when re.form=NA.
+write_publication_lines <- function(text, path) {
+  connection <- file(path, open = "wb")
+  on.exit(close(connection))
+  writeLines(enc2utf8(sub("[[:blank:]]+$", "", text)), connection,
+             sep = "\n", useBytes = TRUE)
+}
+
 reference_grid <- function(model, phase = NULL) {
   keys <- intersect(c("site", "treatment", "phase"), names(model$frame))
   grid <- distinct(model$frame, across(all_of(keys)), .keep_all = TRUE)

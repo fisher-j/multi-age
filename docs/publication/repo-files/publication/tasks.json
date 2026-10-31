@@ -5,16 +5,15 @@
     "status": "Completed — analytical record",
     "target": "Reproducible component/model record",
     "files": [
+      "publication/task-f01.qmd",
       "publication/scripts/publication-paths.R",
       "publication/scripts/fuel/00-fuel-config.R",
-      "publication/scripts/fuel/01-derive-components.R",
-      "publication/scripts/fuel/02-explore-components.R",
-      "publication/scripts/fuel/03-fit-phase-components.R",
       "publication/scripts/fuel/03-model-utils.R",
-      "publication/scripts/fuel/04-fit-woody-pct-models.R",
-      "publication/scripts/fuel/05-evaluate-and-select-models.R"
+      "publication/scripts/task-execution.R",
+      "publication/scripts/verify-environment.R",
+      "publication/scripts/render-hooks.py"
     ],
-    "summary": "The [component definitions](task-f01.qmd#decisions-made) separate vegetation components and pre-PCT litter/duff, omitting post-PCT forest-floor estimates. The [analytical source review](task-f01.qmd#f01-pipeline-review) contains derivation, exploration, candidate-fitting code, and their complete CSV outputs. The [model-review register](task-f01.qmd#rendered-provisional-model-review-register) reports provisional AIC leaders, not final selections. Prediction, inference, and display decisions belong to [RD04](task-rd04.qmd#rd04-inference-review); the [pipeline map](pipeline-fuel.qmd) links the complete sequence. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow.",
+    "summary": "The [component definitions](task-f01.qmd#decisions-made) separate vegetation components and pre-PCT litter/duff, omitting post-PCT forest-floor estimates. The [executable analytical sequence](task-f01.qmd#publication-execution) integrates derivation, exploration, candidate-fitting code, and complete CSV evidence; reusable helpers have their own source review. The [model-review register](task-f01.qmd#rendered-provisional-model-review-register) reports provisional AIC leaders, not final selections. Prediction, inference, and display decisions belong to [RD04](task-rd04.qmd#rd04-inference-review); the task pages own calculation order and selective recomputation. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task independently or render its saved evidence.",
     "outputs": [
       "publication/outputs/fuel/data/fuel-component-data-dictionary.csv",
       "publication/outputs/fuel/data/fuel-pairing-qc.csv",
@@ -78,7 +77,26 @@
       "publication/inputs/thesis/data-dictionary.csv"
     ],
     "depends_on": [],
-    "inline_review": true
+    "inline_review": true,
+    "private_inputs": [
+      "publication/inputs/thesis/fuel-measurements.rds",
+      "publication/inputs/thesis/fuel-deadwood-loads.rds"
+    ],
+    "private_outputs": [
+      "publication/outputs/fuel/data/*.rds",
+      "publication/outputs/fuel/models/*.rds",
+      "publication/outputs/fuel/manifests/input-provenance.yml",
+      "publication/outputs/fuel/manifests/f01-execution.json"
+    ],
+    "recomputable": true,
+    "calculation_chunks": [
+      "f01-01-derive-components",
+      "f01-02-explore-components",
+      "f01-03-fit-phase-components",
+      "f01-04-fit-woody-pct-models",
+      "f01-05-evaluate-and-select-models"
+    ],
+    "execution_manifest": "publication/outputs/fuel/manifests/f01-execution.json"
   },
   {
     "id": "RD04",
@@ -86,17 +104,14 @@
     "status": "Figure complete; companion table pending review",
     "target": "Nine-panel figure, estimates table, and CSV",
     "files": [
-      "publication/scripts/fuel/08-generate-rd04-integrated-figure.R",
-      "publication/scripts/fuel/07-audit-rd04-inference.R",
+      "publication/task-rd04.qmd",
       "publication/scripts/fuel/rd04-inference-utils.R",
       "publication/scripts/fuel/retired/README.md",
       "publication/sections/rd04-fuel-estimates-table.qmd",
-      "publication/sections/rd04-inference-review.qmd",
       "publication/scripts/fuel/06-generate-rd04-figure.R",
-      "publication/scripts/fuel/retired/06-generate-rd04-figure.R",
-      "publication/sections/rd04-source-review.qmd"
+      "publication/scripts/fuel/retired/06-generate-rd04-figure.R"
     ],
-    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. The [complete source and output review](task-rd04.qmd#rd04-source-review) owns the inference-audit and figure scripts, retired implementation, and all audit/estimate CSVs; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow.",
+    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. Executable audit and figure calculations appear beside their evidence in task order. The [helper and historical source review](task-rd04.qmd#rd04-source-review) preserves inference functions and the retired implementation; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task from saved F01 models while other tasks remain in review mode.",
     "outputs": [
       "publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
@@ -118,7 +133,21 @@
     "depends_on": [
       "F01"
     ],
-    "inline_review": true
+    "inline_review": true,
+    "private_inputs": [
+      "publication/outputs/fuel/models/*.rds"
+    ],
+    "private_outputs": [
+      "publication/outputs/fuel/inference-audit/session-info.txt",
+      "publication/outputs/fuel/manifests/rd04-figure-session-info.txt",
+      "publication/outputs/fuel/manifests/rd04-execution.json"
+    ],
+    "recomputable": true,
+    "calculation_chunks": [
+      "rd04-07-audit-rd04-inference",
+      "rd04-08-generate-rd04-integrated-figure"
+    ],
+    "execution_manifest": "publication/outputs/fuel/manifests/rd04-execution.json"
   },
   {
     "id": "RD02",
@@ -200,7 +229,7 @@
       "publication/sections/rd04-fuel-estimates-table.qmd",
       "analysis/thesis/results.qmd",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
-      "publication/scripts/fuel/08-generate-rd04-integrated-figure.R"
+      "publication/task-rd04.qmd"
     ],
     "outputs": [],
     "depends_on": [
@@ -250,8 +279,7 @@
     "target": "1–1.5 manuscript pages",
     "files": [
       "publication/sections/methods.qmd",
-      "publication/scripts/fuel/README.md",
-      "publication/sections/rd04-inference-review.qmd"
+      "publication/scripts/fuel/README.md"
     ],
     "summary": "Following RT03, the proposal documents fuel-component definitions, the phase boundary, matched woody contrast, uncertainty/model decisions, and limits on causal interpretation. The planned 1–1.5-page Methods subsection must match the reviewed fuel caption and Results claims, with component/model diagnostics linked through F01 and prediction/inference decisions through RD04."
   },

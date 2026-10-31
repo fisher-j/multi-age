@@ -3,6 +3,7 @@
 import csv
 import hashlib
 import json
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -30,7 +31,7 @@ class Document(HTMLParser):
             }
         if self.review_source:
             review = self.review_sources[self.review_source]
-            if tag == "code":
+            if tag == "code" and "sourceCode" in attrs.get("class", ""):
                 self.in_code = True
             if tag == "tr":
                 review["rows"].append([])
@@ -107,13 +108,25 @@ def check():
                     path for path in task["files"] + task.get("outputs", [])
                     if path.endswith((".R", ".csv"))
                 }
+                chunks = calculation_chunks(project / f"task-{key}.qmd")
+                expected_labels = task.get("calculation_chunks", [])
+                if list(chunks) != expected_labels:
+                    errors.append(f"{task['id']}: calculation chunk order/coverage differs from metadata")
+                expected.update(f"publication/task-{key}.qmd#{label}" for label in chunks)
                 if set(reviews) != expected:
                     errors.append(f"{task['id']}: inline review must include exactly its maintained R scripts and produced CSVs")
                 for relative, review in reviews.items():
-                    source = project.parent / relative
+                    source = project.parent / relative.split("#")[0]
+                    if not source.is_file():
+                        errors.append(f"{task['id']}: rendered review source no longer exists: {relative}")
+                        continue
                     if not review["collapsed"]:
                         errors.append(f"{task['id']}: review should start collapsed: {relative}")
-                    if source.suffix == ".R":
+                    if "#" in relative:
+                        label = relative.split("#", 1)[1]
+                        if label not in chunks or review["code"].rstrip("\n") != chunks[label].rstrip("\n"):
+                            errors.append(f"{task['id']}: rendered calculation differs from source: {label}")
+                    elif source.suffix == ".R":
                         if review["code"].rstrip("\n") != source.read_text(encoding="utf-8").rstrip("\n"):
                             errors.append(f"{task['id']}: rendered code differs from source: {relative}")
                     else:
@@ -136,7 +149,7 @@ def check():
         copied = output / "repo-files" / item["path"]
         if not copied.is_file() or hashlib.sha256(copied.read_bytes()).hexdigest() != item["sha256"]:
             errors.append(f"Download differs from recorded source: {item['path']}")
-        source = project.parent / item["path"]
+        source = project.parent / item.get("source", item["path"])
         if hashlib.sha256(source.read_bytes()).hexdigest() != item["sha256"]:
             errors.append(f"Download is stale relative to local repository: {item['path']}")
     if errors:
@@ -147,6 +160,18 @@ def check():
     )
     print(f"Checked {len(documents)} pages, task-section anchors, local links, "
           f"{len(manifest)} current downloads, and complete inline source reviews ({reviews}).")
+
+
+def calculation_chunks(source):
+    result = {}
+    for match in re.finditer(r"```\{r\}\n((?:#\|[^\n]*\n)*)(.*?)\n```", source.read_text(encoding="utf-8"), re.S):
+        options, code = match.groups()
+        label = re.search(r"#\| label: (.+)", options)
+        if label and re.search(r"#\| eval: !expr task_selected\(", options):
+            if label[1] in result:
+                raise ValueError(f"Duplicate calculation label: {label[1]}")
+            result[label[1]] = code
+    return result
 
 
 if __name__ == "__main__":

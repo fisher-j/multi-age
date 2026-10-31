@@ -1,7 +1,19 @@
 ---
 title: Publication manuscript development
+params:
+  recompute:
+    value: []
 sidebar: false
 ---
+
+```{r}
+#| label: publication-render-setup
+#| include: false
+source("scripts/task-execution.R")
+publication_setup(params$recompute)
+source("scripts/render-csv-review.R")
+```
+
 
 This is the publication workspace for the Redwood Multiaged Experiment. The
 manuscript develops a regeneration-first narrative with phase-specific fuel
