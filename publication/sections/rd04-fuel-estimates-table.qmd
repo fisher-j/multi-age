@@ -1,0 +1,51 @@
+```{r}
+#| label: tbl-rd04-fuel-estimates
+#| echo: false
+#| warning: false
+#| message: false
+#| tbl-cap: >
+#|   Companion values for the RD04 fuel inventory (candidate appendix table).
+#|   Entries are mean (lower, upper 95% confidence limits), in Mg ha^-1^. GS = group
+#|   selection; LD = low-density dispersed retention; HA = high-density
+#|   aggregated retention; HD = high-density dispersed retention. Load means
+#|   include modeled zeros, integrate over all fitted random intercepts, and
+#|   equally weight the four study-site contexts. The signed woody reduction
+#|   is pre-PCT minus post-PCT from the joint matched phase model, retaining
+#|   pre/post covariance; it is a potential surface-fuel contribution, not
+#|   measured slash. Load intervals use the log-scale delta method; reduction
+#|   intervals use the response-scale delta method. These are intervals for
+#|   means, not prediction intervals. Models remain provisional; intervals
+#|   exclude model-selection and component-derivation uncertainty. Post-PCT
+#|   litter and duff are not estimated.
+
+fuel_table_source <- read.csv(
+  "../analysis/outputs/publication/fuel/tables/rd04-fuel-model-estimates.csv",
+  stringsAsFactors = FALSE
+)
+fuel_table_keys <- c("component", "phase", "treatment")
+stopifnot(nrow(fuel_table_source) == 60L,
+          !anyDuplicated(fuel_table_source[fuel_table_keys]),
+          all(is.finite(as.matrix(fuel_table_source[c("estimate", "lcl", "ucl")]))),
+          all(fuel_table_source$lcl <= fuel_table_source$estimate),
+          all(fuel_table_source$ucl >= fuel_table_source$estimate))
+fuel_table_rows <- unique(fuel_table_source[c("component", "phase")])
+stopifnot(nrow(fuel_table_rows) == 15L)
+fuel_table <- fuel_table_rows
+for (trt in c("gs", "ld", "ha", "hd")) {
+  values <- vapply(seq_len(nrow(fuel_table_rows)), function(i) {
+    cell <- fuel_table_source[
+      fuel_table_source$component == fuel_table_rows$component[i] &
+      fuel_table_source$phase == fuel_table_rows$phase[i] &
+      fuel_table_source$treatment == trt, ]
+    stopifnot(nrow(cell) == 1L)
+    sprintf("%.2f (%.2f, %.2f)", cell$estimate, cell$lcl, cell$ucl)
+  }, character(1))
+  fuel_table[[toupper(trt)]] <- values
+}
+fuel_table$component <- sub(" (pre-PCT only)", "", fuel_table$component, fixed = TRUE)
+fuel_table$component[fuel_table$phase == "Vegetation difference"] <-
+  "Woody standing-vegetation reduction"
+fuel_table$phase[fuel_table$phase == "Vegetation difference"] <- "Pre minus post"
+names(fuel_table)[1:2] <- c("Component", "Phase")
+knitr::kable(fuel_table, row.names = FALSE, align = c("l", "l", rep("r", 4)))
+```

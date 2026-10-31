@@ -1,23 +1,23 @@
-#### Prediction and interpretation review {#rd04-inference-review}
+## Prediction and interpretation review {#rd04-inference-review}
 
 **Implemented approach:** use **study-standardized, population-averaged
 expected loads** as the baseline for mean fuel loading in comparable systems.
 Integrate over the fitted random-intercept distributions and include modeled
 zeros, with equal weights for the four study-site contexts. Retain the historical
 zero-random-effect predictions as a clearly labeled reference/sensitivity
-summary in the audit. R-D04 now uses this integrated interpretation throughout,
+summary in the audit. RD04 now uses this integrated interpretation throughout,
 with woody mean change derived from the joint phase model; the fitted load
 models remain provisional pending scientific review. The original generator
 has been retired in favor of `08-generate-rd04-integrated-figure.R`.
 
-##### What the prediction arguments actually do
+### What the prediction arguments actually do
 
 | Calculation | Quantity estimated | Appropriate interpretation |
 |---|---|---|
 | `re.form = NULL` with known grouping IDs | Expected response conditional on fitted random effects for those sites, blocks, corners, and transects | Conditions in the sampled units; average over an explicitly weighted set of these units if that is the target |
 | `re.form = NA` (or `~0`) | Expected response with all random effects set to zero | A reference at the center of the latent random-effect distribution |
 | `re.form = NULL`, with selected random-only grouping variables set to `NA` in `newdata` | Retains known-group effects for the remaining grouping variables and sets the selected groups' effects to zero | A conditional reference, e.g., a known site with zero lower-level effects |
-| Integrate expected responses over the fitted random-effect distribution | Arithmetic expected load for a population of exchangeable sampling units | The model-based mean-load baseline used in R-D04 |
+| Integrate expected responses over the fitted random-effect distribution | Arithmetic expected load for a population of exchangeable sampling units | The model-based mean-load baseline used in RD04 |
 
 `marginaleffects` passes the random-effect arguments to the fitted model's
 prediction method. Its `by` argument and `avg_predictions()` average the
@@ -45,7 +45,7 @@ affect variability and estimation but are not additional multipliers of this
 response mean. Gamma sampling variability should not receive a lognormal
 residual-variance correction.
 
-##### Alignment of the thesis code and interpretation
+### Alignment of the thesis code and interpretation
 
 The controlling Results function is `marginaleffects_to_emmeans()` in
 `analysis/thesis/results.qmd`: **both predictions and comparisons use
@@ -62,7 +62,7 @@ not the calls controlling the thesis Results.
 | Methods: estimates apply to equal proportions of similar sites, specifically north- and south-facing aspects | Equal site weights are explicit for fuel grids. Zeroing site random effects does not reproduce an aspect mixture on a nonlinear response scale; aspect was not a fixed adjustment variable. Transport requires an exchangeability assumption beyond the prediction settings. |
 | Fuel Results: “expected value” and “estimated marginal means” | Valid if identified as site-standardized expectations **at zero random effects**. Too broad if read as arithmetic population-average loads across forest heterogeneity. |
 | Discussion: compare “average” loads with other forest studies | State whether each value is an observed mean, a zero-effect reference, or an integrated model mean, and check component definitions and sampling protocols. These quantities are not interchangeable. |
-| Post-PCT caption: vegetation difference “represents slash fuels recruited to the forest floor” | Overstates the measurement: standing-vegetation reduction is an inferred potential contribution, not measured slash deposition. R-D04's qualified caption is better aligned. |
+| Post-PCT caption: vegetation difference “represents slash fuels recruited to the forest floor” | Overstates the measurement: standing-vegetation reduction is an inferred potential contribution, not measured slash deposition. RD04's qualified caption is better aligned. |
 | Results: pre/post estimates are not statistically comparable because model structures differ | Different structures alone do not prevent comparison. Formal phase differences need an explicit common estimand and their covariance, accounting for pairing. Separate phase CIs do not supply a paired change test. |
 | Discussion/conclusions: PCT “resulted in” or “generated” the observed dead-fuel changes | The observed transition supports association; attributing all change to PCT requires the design/time assumptions. No unthinned contemporaneous comparison is used by these predictions. |
 
@@ -84,18 +84,18 @@ Mg/ha**. The Discussion value may be an observed summary, but it should not be
 presented as the grand mean of these particular model predictions without a
 separate source. The audit preserves all reproduced thesis fuel estimates.
 
-##### How R-D04 compares with the thesis
+### How RD04 compares with the thesis
 
-The original R-D04 and thesis fuel Results used the **same zero-random-effect
+The original RD04 and thesis fuel Results used the **same zero-random-effect
 target** and equal-site weighting. Both used valid prediction grids: the thesis
-expanded the observed treatment and site levels, and R-D04 retained observed
+expanded the observed treatment and site levels, and RD04 retained observed
 rows with valid nested identifiers, one per site/treatment/phase. Neither
 approach introduced a grid discrepancy for these zero-effect predictions.
-The updated R-D04 retains equal-site weighting and integrates over random
+The updated RD04 retains equal-site weighting and integrates over random
 effects. Every phase-specific mean averages four site contexts; post-PCT
 100-hour fuel additionally retains fixed site effects in its zero component.
 
-Numerical changes from the thesis to the original R-D04 arose from revised
+Numerical changes from the thesis to the original RD04 arose from revised
 fitted models and component definitions, not a switch from `marginaleffects`
 to custom prediction. The updated figure also changes the estimand by
 integrating over random effects. The directly comparable deadwood example
@@ -107,14 +107,14 @@ below separates these changes. Values are Mg/ha, GS treatment.
 #| message: false
 old_new <- read.csv("../analysis/outputs/publication/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv")
 old_new <- old_new[old_new$treatment == "gs", c("component", "phase", "thesis_reference", "reference_custom", "integrated_custom")]
-names(old_new) <- c("Component", "Phase", "Thesis reference", "Original R-D04 reference", "Current integrated mean")
+names(old_new) <- c("Component", "Phase", "Thesis reference", "Original RD04 reference", "Current integrated mean")
 knitr::kable(old_new, digits = 2, row.names = FALSE)
 ```
 
 Combined thesis vegetation and forest-floor estimates do not directly match
 the new woody/herbaceous and litter/duff components.
 
-##### Implemented target and worked demonstration
+### Implemented target and worked demonstration
 
 For a treatment $t$, phase $h$, and equally weighted site contexts $s$, define
 
@@ -217,7 +217,7 @@ reference estimates. Outputs and the R/package session record are in
 
 </details>
 
-##### Methods wording
+### Methods wording
 
 For the implemented population-average baseline:
 

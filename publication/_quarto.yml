@@ -2,18 +2,24 @@ project:
   type: website
   output-dir: ../docs/publication
   pre-render:
+    - python scripts/prepare-workflow.py
     - cmd.exe /c "..\analysis\scripts\sync_zotero_library.bat"
+  resources:
+    - repo-files/**
   render:
     - index.qmd
     - workflow.qmd
+    - task-list.qmd
+    - task-*.qmd
     - manuscript.qmd
+    - manuscript-full.qmd
+    - draft-*.qmd
 
 execute:
-  freeze: auto
+  # Display chunks read saved tables, not analytical fits. Refresh their values
+  # when upstream output changes, even if the prose has not changed.
+  freeze: false
 
-# The complete Zotero export is synchronized and versioned in analysis/.
-# Publication rendering uses that repository snapshot without maintaining a
-# second bibliography copy.
 bibliography: ../analysis/zotero_library.json
 csl: ../analysis/apa.csl
 
@@ -26,9 +32,83 @@ website:
   title: Publication manuscript development
   navbar:
     left:
-      - href: index.qmd
-        text: Overview
       - href: workflow.qmd
-        text: Workflow and review
+        text: Development workflow
       - href: manuscript.qmd
-        text: Manuscript structure
+        text: Manuscript draft
+  sidebar:
+    - id: workflow
+      title: Development workflow
+      style: docked
+      collapse-level: 1
+      contents:
+        - href: workflow.qmd
+          text: Overview
+        - href: task-list.qmd
+          text: Task register and task list
+        - section: Dedicated task pages
+          contents:
+            - href: task-f01.qmd
+              text: "F01 — fuel-component separation and model exploration"
+            - href: task-rd04.qmd
+              text: "RD04 — fuel phase and PCT display"
+            - href: task-rd02.qmd
+              text: "RD02 — regeneration basal-area/density display"
+            - href: task-rd03.qmd
+              text: "RD03 — sprout-height display"
+            - href: task-rt01.qmd
+              text: "RT01 — regeneration Results narrative"
+            - href: task-rt02.qmd
+              text: "RT02 — sprout-height Results narrative"
+            - href: task-rt03.qmd
+              text: "RT03 — fuel Results narrative"
+            - href: task-md01.qmd
+              text: "MD01 — study design display"
+            - href: task-m01.qmd
+              text: "M01 — study area and experimental design"
+            - href: task-m02.qmd
+              text: "M02 — regeneration and sprout methods"
+            - href: task-m03.qmd
+              text: "M03 — fuel methods and estimand"
+            - href: task-d01.qmd
+              text: "D01 — regeneration cohort discussion"
+            - href: task-d02.qmd
+              text: "D02 — sprout development discussion"
+            - href: task-d03.qmd
+              text: "D03 — fuels and PCT-management discussion"
+            - href: task-d04.qmd
+              text: "D04 — limits, integration, and future work"
+            - href: task-i01.qmd
+              text: "I01 — management problem and study purpose"
+            - href: task-i02.qmd
+              text: "I02 — regeneration and retention context"
+            - href: task-i03.qmd
+              text: "I03 — fuels context and questions"
+            - href: task-s01.qmd
+              text: "S01 — supplement and machine-readable outputs"
+            - href: task-c01.qmd
+              text: "C01 — conclusions"
+            - href: task-a01.qmd
+              text: "A01 — abstract and title"
+    - id: manuscript
+      title: Manuscript draft
+      style: docked
+      contents:
+        - href: manuscript.qmd
+          text: Overview
+        - href: draft-abstract.qmd
+          text: Abstract
+        - href: draft-introduction.qmd
+          text: Introduction
+        - href: draft-methods.qmd
+          text: Methods
+        - href: draft-results.qmd
+          text: Results
+        - href: draft-discussion.qmd
+          text: Discussion
+        - href: draft-conclusions.qmd
+          text: Conclusions
+        - href: draft-supplement.qmd
+          text: Supplementary material
+        - href: manuscript-full.qmd
+          text: Full manuscript

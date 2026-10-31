@@ -1,0 +1,51 @@
+---
+title: "RD02 — regeneration basal-area/density display"
+sidebar: workflow
+---
+
+{{< include _task-metadata/rd02-status.qmd >}}
+
+<span id="rd02-record"></span>
+
+Redwood, tanoak, Douglas-fir, and other species are each modeled with
+`ba_ha ~ treat + (1 | site/treat)`, using zero-inflated Gamma responses and
+category-specific zero and dispersion intercepts. The choice follows the
+biological interpretation of separate species responses and variances.
+There are four sites, 16 macro plots, and 64 vegetation-plot observations
+per category; no plot-level random effect is included.
+
+## Selected display and supplement
+
+{{< include sections/rd02-regeneration-display.qmd >}}
+
+The RW/TO display is in the
+[Results body](draft-results.qmd#rd02-regeneration-display-draft), and all 16
+species-by-treatment means and intervals are in the
+[supplement table](draft-supplement.qmd#tbl-rd02-selected-species-estimates).
+Means include zeros and integrate over fitted site and macro-plot random
+effects. The earlier joint fit is retained in the comparison record below.
+
+{{< include sections/rd02-random-effects-review.qmd >}}
+
+{{< include sections/rd02-separate-species-review.qmd >}}
+
+<details>
+<summary>Selected-model source and diagnostics</summary>
+
+The publication-only pipeline fits four separate categories from the saved
+regeneration data. All 16 means pass prediction, gradient, and integration
+checks; the RW/TO estimates reproduce the separate-species sensitivity fits.
+Thesis files and earlier joint-model artifacts remain unchanged.
+
+[Estimates](assets/rd02-selected/tables/rd02-selected-species-estimates.csv),
+[fit register](assets/rd02-selected/tables/rd02-selected-species-fit-register.csv),
+[diagnostics](assets/rd02-selected/tables/rd02-selected-species-diagnostics.csv),
+[variance components](assets/rd02-selected/tables/rd02-selected-species-variances.csv),
+[optimizer checks](assets/rd02-selected/tables/rd02-selected-species-optimizer-checks.csv),
+[generator](assets/rd02-selected/05-fit-selected-species-models.R),
+[provenance](assets/rd02-selected/manifests/rd02-selected-species-provenance.yml), and
+[figure PDF](assets/rd02-selected/figures/rd02-selected-species-basal-area.pdf).
+
+</details>
+
+{{< include _task-metadata/rd02-files.qmd >}}

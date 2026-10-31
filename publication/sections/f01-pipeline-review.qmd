@@ -1,0 +1,190 @@
+## Pipeline documentation, code, and outputs {#f01-pipeline-review}
+
+The documentation below includes the current pipeline README directly. Expand a
+script to review its complete source, or a CSV to inspect every row and column.
+These sections read the original repository files on each website render.
+Model leaders remain provisional pending scientific review.
+
+[Download the pipeline README](repo-files/analysis/scripts/publication/fuel/README.md).
+
+::: {.included-readme heading-offset="2"}
+{{< include ../analysis/scripts/publication/fuel/README.md >}}
+:::
+
+### Complete pipeline scripts
+
+Configuration and shared helpers are included with the numbered stages.
+Stage 06 is a retired entry point; stage 08 is the active figure generator.
+The archived implementation is shown separately for historical review.
+
+<details data-review-source="analysis/scripts/publication/fuel/00-fuel-config.R">
+<summary>00-fuel-config.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/00-fuel-config.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/00-fuel-config.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/01-derive-components.R">
+<summary>01-derive-components.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/01-derive-components.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/01-derive-components.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/02-explore-components.R">
+<summary>02-explore-components.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/02-explore-components.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/02-explore-components.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/03-fit-phase-components.R">
+<summary>03-fit-phase-components.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/03-fit-phase-components.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/03-fit-phase-components.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/03-model-utils.R">
+<summary>03-model-utils.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/03-model-utils.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/03-model-utils.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/04-fit-woody-pct-models.R">
+<summary>04-fit-woody-pct-models.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/04-fit-woody-pct-models.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/04-fit-woody-pct-models.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/05-evaluate-and-select-models.R">
+<summary>05-evaluate-and-select-models.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/05-evaluate-and-select-models.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/05-evaluate-and-select-models.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/06-generate-rd04-figure.R">
+<summary>06-generate-rd04-figure.R — retired entry point</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/06-generate-rd04-figure.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/06-generate-rd04-figure.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/07-audit-rd04-inference.R">
+<summary>07-audit-rd04-inference.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/07-audit-rd04-inference.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/07-audit-rd04-inference.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R">
+<summary>08-generate-rd04-integrated-figure.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/rd04-inference-utils.R">
+<summary>rd04-inference-utils.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/rd04-inference-utils.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/rd04-inference-utils.R >}}
+````
+
+</details>
+
+#### Archived figure implementation
+
+::: {.included-readme heading-offset="4"}
+{{< include ../analysis/scripts/publication/fuel/retired/README.md >}}
+:::
+
+[Download the retirement note](repo-files/analysis/scripts/publication/fuel/retired/README.md).
+
+<details data-review-source="analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R">
+<summary>06-generate-rd04-figure.R — retired (historical implementation)</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R >}}
+````
+
+</details>
+
+### Complete CSV summaries and outputs {#f01-csv-review}
+
+Tables read the saved CSVs directly, preserving full numeric precision and
+missing-value labels. Scroll within wide or long tables to inspect all values;
+the download retains the original CSV. The RD04 audit and estimate tables
+continue the modeling record through inference and display.
+
+```{r}
+#| label: f01-csv-source-review
+#| echo: false
+#| results: asis
+#| warning: false
+#| message: false
+
+source("scripts/render-csv-review.R", encoding = "UTF-8")
+tasks <- jsonlite::fromJSON("tasks.json", simplifyVector = FALSE)
+fuel_task <- Filter(function(task) task$id == "F01", tasks)[[1]]
+groups <- c(
+  data = "Component definitions, pairing, and exploration",
+  manifests = "Model candidates, registries, and provisional leaders",
+  `inference-audit` = "RD04 inference audit",
+  tables = "RD04 figure estimates"
+)
+for (directory in names(groups)) {
+  cat("\n#### ", groups[[directory]], "\n\n", sep = "")
+  prefix <- paste0("analysis/outputs/publication/fuel/", directory, "/")
+  paths <- sort(unlist(fuel_task$files))
+  paths <- paths[startsWith(paths, prefix) & endsWith(paths, ".csv")]
+  for (path in paths) render_csv_review(path)
+}
+```

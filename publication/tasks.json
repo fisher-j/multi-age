@@ -1,0 +1,345 @@
+[
+  {
+    "id": "F01",
+    "title": "fuel-component separation and model exploration",
+    "status": "Completed — analytical record",
+    "target": "Reproducible component/model record",
+    "files": [
+      "analysis/scripts/publication/fuel/README.md",
+      "analysis/scripts/publication/fuel/00-fuel-config.R",
+      "analysis/scripts/publication/fuel/01-derive-components.R",
+      "analysis/scripts/publication/fuel/02-explore-components.R",
+      "analysis/scripts/publication/fuel/03-fit-phase-components.R",
+      "analysis/scripts/publication/fuel/03-model-utils.R",
+      "analysis/scripts/publication/fuel/04-fit-woody-pct-models.R",
+      "analysis/scripts/publication/fuel/05-evaluate-and-select-models.R",
+      "analysis/scripts/publication/fuel/06-generate-rd04-figure.R",
+      "analysis/scripts/publication/fuel/07-audit-rd04-inference.R",
+      "analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R",
+      "analysis/scripts/publication/fuel/rd04-inference-utils.R",
+      "analysis/scripts/publication/fuel/retired/README.md",
+      "analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R",
+      "analysis/outputs/publication/fuel/data/fuel-component-data-dictionary.csv",
+      "analysis/outputs/publication/fuel/data/fuel-pairing-qc.csv",
+      "analysis/outputs/publication/fuel/data/fuel-component-exploration-summary.csv",
+      "analysis/outputs/publication/fuel/data/woody-pct-contrast-exploration-summary.csv",
+      "analysis/outputs/publication/fuel/manifests/fuel-component-model-candidates.csv",
+      "analysis/outputs/publication/fuel/manifests/woody-pct-contrast-model-candidate.csv",
+      "analysis/outputs/publication/fuel/manifests/phase-component-model-registry.csv",
+      "analysis/outputs/publication/fuel/manifests/woody-pct-model-registry.csv",
+      "analysis/outputs/publication/fuel/manifests/model-selection-log.csv",
+      "analysis/outputs/publication/fuel/manifests/model-comparison.csv",
+      "analysis/outputs/publication/fuel/inference-audit/model-structures.csv",
+      "analysis/outputs/publication/fuel/inference-audit/rd04-estimand-comparison.csv",
+      "analysis/outputs/publication/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv",
+      "analysis/outputs/publication/fuel/inference-audit/thesis-reference-reproduction.csv",
+      "analysis/outputs/publication/fuel/inference-audit/woody-mean-change-comparison.csv",
+      "analysis/outputs/publication/fuel/tables/rd04-fuel-model-estimates.csv",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_herbaceous_vegetation_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_herbaceous_vegetation_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_herbaceous_vegetation_zi_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_hundhr_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_hundhr_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_hundhr_zi_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_hundhr_zi_treatment_site_disp_treatment_site-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_hundhr_zi_treatment_site_disp_treatment_site_interaction-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_onehr_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_onehr_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_tenhr_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_tenhr_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_thoushr_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_thoushr_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_thoushr_zi_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_woody_vegetation_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/postpct_woody_vegetation_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_duff_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_duff_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_herbaceous_vegetation_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_herbaceous_vegetation_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_herbaceous_vegetation_zi_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_hundhr_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_hundhr_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_hundhr_zi_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_litter_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_litter_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_onehr_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_onehr_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_tenhr_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_tenhr_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_thoushr_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_thoushr_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_thoushr_zi_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_woody_vegetation_base-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/prepct_woody_vegetation_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/woody_delta_gaussian-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/woody_delta_gaussian_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/woody_delta_student_t-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/woody_delta_student_t_disp_treatment-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/woody_delta_student_t_disp_treatment_site-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/woody_delta_student_t_disp_treatment_site_interaction-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/woody_phase_zigamma_zi1_disp1-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/woody_phase_zigamma_zi1_dispphase-dharma.png",
+      "analysis/outputs/publication/fuel/diagnostics/woody_phase_zigamma_ziphase_disp1-dharma.png"
+    ],
+    "summary": "The [component definitions](task-f01.qmd#decisions-made) separate woody and herbaceous vegetation in both phases, split pre-PCT litter and duff, and omit post-PCT forest-floor estimates. Component derivation, pairing checks, exploration, and candidate fitting are preserved in the analytical record. The [model-review register](task-f01.qmd#rendered-provisional-model-review-register) reports provisional AIC leaders alongside diagnostics; it does not select final models. The [rendered pipeline review](task-f01.qmd#f01-pipeline-review) integrates the current README, complete scripts (including shared helpers and retired code), and all saved summary, model-register, inference-audit, and estimate CSVs in collapsible sections."
+  },
+  {
+    "id": "RD04",
+    "title": "fuel phase and PCT display",
+    "status": "Figure complete; companion table pending review",
+    "target": "Nine-panel figure, estimates table, and CSV",
+    "files": [
+      "analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R",
+      "analysis/scripts/publication/fuel/07-audit-rd04-inference.R",
+      "analysis/scripts/publication/fuel/rd04-inference-utils.R",
+      "analysis/scripts/publication/fuel/retired/README.md",
+      "analysis/outputs/publication/fuel/figures/rd04-fuel-phase-pct-inventory.png",
+      "analysis/outputs/publication/fuel/tables/rd04-fuel-model-estimates.csv",
+      "analysis/outputs/publication/fuel/manifests/rd04-figure-provenance.yml",
+      "analysis/outputs/publication/fuel/inference-audit/rd04-estimand-comparison.csv",
+      "analysis/outputs/publication/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv",
+      "analysis/outputs/publication/fuel/inference-audit/woody-mean-change-comparison.csv",
+      "publication/sections/rd04-fuel-estimates-table.qmd",
+      "publication/sections/rd04-inference-review.qmd"
+    ],
+    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review."
+  },
+  {
+    "id": "RD02",
+    "title": "regeneration basal-area/density display",
+    "status": "Separate models selected; displays pending review",
+    "target": "RW/TO Results figure and all-species supplement table",
+    "files": [
+      "analysis/scripts/publication/regeneration/README.md",
+      "analysis/scripts/publication/regeneration/01-generate-rd02-display.R",
+      "analysis/scripts/publication/regeneration/02-compare-rd02-random-effects.R",
+      "analysis/scripts/publication/regeneration/03-compare-rd02-separate-species.R",
+      "analysis/scripts/publication/regeneration/04-assemble-rd02-sensitivity.R",
+      "analysis/scripts/publication/regeneration/05-fit-selected-species-models.R",
+      "analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
+      "analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-fit-register.csv",
+      "analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv",
+      "analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv",
+      "analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-optimizer-checks.csv",
+      "analysis/outputs/publication/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml",
+      "analysis/outputs/publication/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv",
+      "analysis/outputs/publication/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv",
+      "publication/sections/rd02-regeneration-display.qmd",
+      "publication/sections/rd02-species-estimates-table.qmd"
+    ],
+    "summary": "The [overall sensitivity review](task-rd02.qmd#rd02-random-effects-review) examines joint random-effect structures and same-data species comparisons; the [focused RW/TO comparison](task-rd02.qmd#rd02-separate-species-review) examines separate fitting and species-specific variances. The [recorded selection](task-rd02.qmd#rd02-review-recommendation) uses four separate zero-inflated Gamma models with site and nested macro-plot intercepts. Prediction, gradient, integration, and optimizer checks accompany the RW/TO Results figure and all-category supplement estimates; display review remains open."
+  },
+  {
+    "id": "RD03",
+    "title": "sprout-height display",
+    "status": "Queued",
+    "target": "1 figure, combined only if readable",
+    "files": [
+      "analysis/thesis/results.qmd",
+      "analysis/analysis/sprout_modeling.qmd",
+      "analysis/analysis/sprout_data_exploration.qmd"
+    ],
+    "summary": "The proposal reviews treatment, temporal, and 10-year redwood/tanoak sprout-height displays together, retaining the smallest set that preserves their distinct messages. The task page identifies the three thesis source figures and requires the chosen display to distinguish treatment from time without repeating the basal-area/density result."
+  },
+  {
+    "id": "RT01",
+    "title": "regeneration Results narrative",
+    "status": "Queued — after RD02",
+    "target": "1–2 manuscript pages",
+    "files": [
+      "publication/sections/results.qmd",
+      "publication/sections/rd02-regeneration-display.qmd",
+      "analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv"
+    ],
+    "summary": "After RD02 acceptance, the proposal is to draft a 1–2-page regeneration Results subsection around the accepted display, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Every quantitative claim must be traceable to an accepted display or linked table."
+  },
+  {
+    "id": "RT02",
+    "title": "sprout-height Results narrative",
+    "status": "Queued — after RD03",
+    "target": "1–1.5 manuscript pages",
+    "files": [
+      "publication/sections/results.qmd",
+      "analysis/thesis/results.qmd",
+      "analysis/analysis/sprout_modeling.qmd"
+    ],
+    "summary": "After RD03 acceptance, the proposal is to report redwood and tanoak height/time findings in a distinct 1–1.5-page Results subsection. Combining it with RT01 remains conditional on one shared display and a clearer common message; the narrative must add sprout-development evidence without restating basal-area/density findings."
+  },
+  {
+    "id": "RT03",
+    "title": "fuel Results narrative",
+    "status": "Pending review",
+    "target": "1.5–2 manuscript pages",
+    "files": [
+      "publication/sections/results.qmd",
+      "publication/sections/rd04-fuel-estimates-table.qmd",
+      "analysis/thesis/results.qmd",
+      "analysis/outputs/publication/fuel/tables/rd04-fuel-model-estimates.csv",
+      "analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R"
+    ],
+    "summary": "The fuel Results draft follows the thesis pre-PCT, post-PCT, and vegetation-transition sequence using current publication values. The [source and review decisions](task-rt03.qmd#implemented-source-and-review-decisions) document separated components, integrated means, covariance-aware woody changes, and replacement of inherited significance claims with descriptive rankings. Inline values and the companion table share the canonical CSV; the draft remains pending review, with explicit limits on slash and causal PCT interpretations."
+  },
+  {
+    "id": "MD01",
+    "title": "study design display",
+    "status": "Queued — Methods stage",
+    "target": "1 compact figure or table",
+    "files": [
+      "publication/sections/methods.qmd",
+      "analysis/thesis/methods.qmd"
+    ],
+    "summary": "The proposed design display combines study area, treatment layout, and sampling logic if the result remains legible, with the second map or layout moved to the supplement. Its review criterion is that readers can identify the four treatments, replication, and measurement phases without consulting the text."
+  },
+  {
+    "id": "M01",
+    "title": "study area and experimental design",
+    "status": "Queued — after MD01",
+    "target": "1–1.5 manuscript pages",
+    "files": [
+      "publication/sections/methods.qmd",
+      "analysis/thesis/methods.qmd"
+    ],
+    "summary": "Following MD01 acceptance, the proposal retains the setting, four treatments, replication, timing, and PCT context needed to understand the accepted results. A 1–1.5-page Methods subsection and compact design table should make every displayed variable and phase traceable to the experimental design."
+  },
+  {
+    "id": "M02",
+    "title": "regeneration and sprout methods",
+    "status": "Queued — after RT01/RT02",
+    "target": "1–1.5 manuscript pages",
+    "files": [
+      "publication/sections/methods.qmd",
+      "publication/sections/supplement.qmd",
+      "analysis/scripts/publication/regeneration/README.md",
+      "analysis/analysis/sprout_modeling.qmd"
+    ],
+    "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02."
+  },
+  {
+    "id": "M03",
+    "title": "fuel methods and estimand",
+    "status": "Queued — after RT03",
+    "target": "1–1.5 manuscript pages",
+    "files": [
+      "publication/sections/methods.qmd",
+      "analysis/scripts/publication/fuel/README.md",
+      "publication/sections/rd04-inference-review.qmd"
+    ],
+    "summary": "Following RT03, the proposal documents fuel-component definitions, the phase boundary, matched woody contrast, uncertainty/model decisions, and limits on causal interpretation. The planned 1–1.5-page Methods subsection must match the reviewed fuel caption and Results claims, with diagnostic detail linked through F01 and the supplement."
+  },
+  {
+    "id": "D01",
+    "title": "regeneration cohort discussion",
+    "status": "Queued — after regeneration Results/Methods",
+    "target": "1.5–2 manuscript pages",
+    "files": [
+      "publication/sections/discussion.qmd",
+      "analysis/thesis/discussion.qmd",
+      "publication/sections/results.qmd"
+    ],
+    "summary": "The proposed 1.5–2-page discussion interprets redwood and tanoak regeneration under retained overstory as evidence about developing a new cohort in multiaged stands. It tightens the thesis discussion around accepted basal-area/density findings and their uncertainty, with each inference grounded in Results and cited context."
+  },
+  {
+    "id": "D02",
+    "title": "sprout development discussion",
+    "status": "Queued — after sprout Results/Methods",
+    "target": "1–1.5 manuscript pages",
+    "files": [
+      "publication/sections/discussion.qmd",
+      "analysis/thesis/discussion.qmd",
+      "analysis/analysis/sprout_modeling.qmd"
+    ],
+    "summary": "The proposed sprout discussion connects accepted height patterns to light, retention, and cohort development. Its 1–1.5 pages must explain what the height evidence adds beyond basal area; combining it with D01 depends on whether the reviewed results support one inseparable management message."
+  },
+  {
+    "id": "D03",
+    "title": "fuels and PCT-management discussion",
+    "status": "Queued — after fuel Results/Methods",
+    "target": "1.5–2 manuscript pages",
+    "files": [
+      "publication/sections/discussion.qmd",
+      "publication/sections/results.qmd",
+      "analysis/thesis/discussion.qmd"
+    ],
+    "summary": "The proposed 1.5–2-page discussion connects phase-specific fuel conditions and the matched woody contrast to silvicultural, fuels, and fire-management questions. It must distinguish potential surface-fuel contribution from directly measured slash and keep interpretation within the reviewed design."
+  },
+  {
+    "id": "D04",
+    "title": "limits, integration, and future work",
+    "status": "Queued",
+    "target": "0.5–1 manuscript page",
+    "files": [
+      "publication/sections/discussion.qmd",
+      "publication/sections/methods.qmd"
+    ],
+    "summary": "The proposed closing Discussion subsection integrates the limitations governing regeneration and fuel interpretation, then identifies targeted future work. Its 0.5–1-page allocation is intended to resolve caveats from the topical discussions without repeating detailed model results."
+  },
+  {
+    "id": "I01",
+    "title": "management problem and study purpose",
+    "status": "Queued — after Discussion",
+    "target": "1–1.5 manuscript pages",
+    "files": [
+      "publication/sections/introduction.qmd",
+      "analysis/thesis/introduction.qmd"
+    ],
+    "summary": "After Discussion, the proposal condenses the multiaged-silviculture framing into the management problem, study purpose, and scope supported by accepted findings."
+  },
+  {
+    "id": "I02",
+    "title": "regeneration and retention context",
+    "status": "Queued — after Discussion",
+    "target": "1–1.5 manuscript pages",
+    "files": [
+      "publication/sections/introduction.qmd",
+      "analysis/thesis/introduction.qmd"
+    ],
+    "summary": "After Discussion, the proposal retains the sprouting, light, and retention background needed to motivate D01/D02, removing broader context that does not serve the study question."
+  },
+  {
+    "id": "I03",
+    "title": "fuels context and questions",
+    "status": "Queued — after Discussion",
+    "target": "1–1.5 manuscript pages",
+    "files": [
+      "publication/sections/introduction.qmd",
+      "publication/sections/results.qmd",
+      "analysis/thesis/introduction.qmd"
+    ],
+    "summary": "The proposal focuses fuel background on phase-specific reference conditions and the PCT question, excluding broad fire-management claims unsupported by the study. Together I01–I03 target a 4–5-page Introduction whose final questions are answered by accepted Results."
+  },
+  {
+    "id": "S01",
+    "title": "supplement and machine-readable outputs",
+    "status": "Queued — after main displays",
+    "target": "Inventory and links",
+    "files": [
+      "publication/sections/supplement.qmd",
+      "publication/sections/rd02-species-estimates-table.qmd",
+      "publication/sections/rd04-fuel-estimates-table.qmd",
+      "analysis/outputs/publication/README.md"
+    ],
+    "summary": "The proposed inventory covers material excluded from the main text: model registries, diagnostics, pairwise comparisons, optional Douglas-fir detail, expanded fuel components, and machine-readable phase values. Each retained item is to be linked from its accepted main-text counterpart after the main displays are reviewed."
+  },
+  {
+    "id": "C01",
+    "title": "conclusions",
+    "status": "Queued — after Discussion",
+    "target": "≤0.5 manuscript page",
+    "files": [
+      "publication/sections/conclusions.qmd",
+      "publication/sections/discussion.qmd"
+    ],
+    "summary": "After Discussion, the proposal is to write a short conclusion restricted to management implications directly supported by the accepted regeneration, sprout, and fuel results."
+  },
+  {
+    "id": "A01",
+    "title": "abstract and title",
+    "status": "Queued — last",
+    "target": "Abstract and final title",
+    "files": [
+      "publication/sections/abstract.qmd",
+      "publication/manuscript-full.qmd"
+    ],
+    "summary": "The proposal drafts the abstract from the accepted Results, Methods, Discussion, and Conclusions, then sets the final title after the abstract stabilizes. This is the last task in the backwards-writing sequence."
+  }
+]

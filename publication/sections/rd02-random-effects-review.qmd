@@ -1,0 +1,96 @@
+## Overall model sensitivity {#rd02-random-effects-review}
+
+**Comparison record.** The comparison includes three joint structures—site by
+species, full design nesting, and both together—fitted to all four species
+(256 rows) and to RW/TO only (128 rows). Separate RW and TO fits use site and
+macro-plot random intercepts, with the plot-level effect omitted. The selected
+four-category separate models are included in the 256-row comparison. AIC ranks
+models within each dataset; the separate pair combines both species'
+likelihoods and parameter counts.
+
+```{r}
+#| label: rd02-comparison-values
+#| include: false
+rd02_cmp_dir <- "../analysis/outputs/publication/regeneration/overall-sensitivity"
+rd02_cmp_fit <- read.csv(file.path(rd02_cmp_dir, "tables/rd02-overall-model-comparison.csv"))
+rd02_cmp_means <- read.csv(file.path(rd02_cmp_dir, "tables/rd02-overall-integrated-estimates.csv"))
+rd02_scope_label <- c(`Four-species fits` = "4 species (256)", `RW/TO fits` = "RW/TO (128)")
+rd02_aic <- function(id) {
+  value <- rd02_cmp_fit$AIC[rd02_cmp_fit$model_id == id]
+  stopifnot(length(value) == 1L)
+  sprintf("%.2f", value)
+}
+rd02_mean_ci <- function(id, species, treatment) {
+  value <- subset(rd02_cmp_means, model_id == id & spp == species & treat == treatment)
+  stopifnot(nrow(value) == 1L)
+  sprintf("%.2f (%.2f, %.2f)", value$estimate, value$lcl, value$ucl)
+}
+```
+
+```{r}
+#| label: tbl-rd02-random-effects-fit
+#| echo: false
+#| tbl-cap: "Sensitivity-model fit. Delta AIC is calculated within each dataset. Separate-species rows combine independent category likelihoods and parameter counts: 32 parameters for four categories, 16 for RW/TO. The selected primary analysis is marked. All component fits converged with positive-definite Hessians."
+rd02_fit_table <- data.frame(
+  Data = unname(rd02_scope_label[rd02_cmp_fit$fit_scope]),
+  Model = ifelse(rd02_cmp_fit$selected_primary,
+                 paste0(rd02_cmp_fit$model_label, " (selected)"), rd02_cmp_fit$model_label),
+  Parameters = rd02_cmp_fit$k,
+  AIC = rd02_cmp_fit$AIC,
+  `Delta AIC` = rd02_cmp_fit$delta_AIC_within_scope,
+  check.names = FALSE
+)
+knitr::kable(rd02_fit_table, digits = 2, row.names = FALSE)
+```
+
+```{r}
+#| label: fig-rd02-random-effects-comparison
+#| echo: false
+#| out-width: "100%"
+#| fig-cap: >
+#|   Overall basal-area sensitivity. Top panels show joint fits and the
+#|   selected separate models for all four categories; bottom panels show
+#|   RW/TO joint fits and separate species models with site
+#|   and macro-plot random intercepts. Points are arithmetic means including
+#|   modeled zeros and integrated over fitted random effects; ranges are
+#|   approximate 95% confidence intervals from the full-covariance log-scale
+#|   delta method. Vertical scales differ between panels.
+knitr::include_graphics("assets/rd02-sensitivity/figures/rd02-overall-sensitivity.png")
+```
+
+Notable patterns across the comparisons:
+
+- **Treatment patterns persist.** Redwood means follow GS > LD > HA > HD;
+  tanoak means follow GS > LD > HD > HA. The redwood–tanoak ranking within HD
+  changes under shared full nesting, so that species comparison is sensitive
+  to model structure.
+- **Separate species show different site variation.** Site SDs are about 0.72
+  for RW and 0.16 for TO; macro-plot variances approach zero. RW has a wider GS
+  interval, while TO intervals are narrower than in the lead draft. Removing
+  the plot-level effect leaves means and intervals unchanged at two decimals
+  and lowers the separate pair's AIC by 4.00 to
+  `r rd02_aic("separate_site_macro_pair")`, slightly below joint full nesting
+  (`r rd02_aic("joint_full_nested_rwto")`). Site-by-species remains lowest
+  within both datasets.
+- **Diagnostics are broadly consistent.** Uniformity, dispersion, and
+  zero-frequency checks show no flags across models. Only the four-species
+  thesis fit has an outlier flag: p = 0.015 with 1,000 simulations and about
+  0.050 with 10,000, with different observations flagged. The RW/TO refits and
+  separate models show no outlier flags. Alternative-optimizer checks agree.
+
+<details>
+<summary>Data and reproducible code</summary>
+
+[Fit comparisons](assets/rd02-sensitivity/tables/rd02-overall-model-comparison.csv),
+[means and intervals](assets/rd02-sensitivity/tables/rd02-overall-integrated-estimates.csv),
+[variance components](assets/rd02-sensitivity/tables/rd02-overall-variance-components.csv),
+[diagnostic tests](assets/rd02-sensitivity/tables/rd02-overall-dharma-tests.csv),
+[figure PDF](assets/rd02-sensitivity/figures/rd02-overall-sensitivity.pdf),
+[assembly code](assets/rd02-sensitivity/04-assemble-rd02-sensitivity.R),
+[input checksums](assets/rd02-sensitivity/manifests/rd02-overall-inputs.csv), and
+[provenance](assets/rd02-sensitivity/manifests/rd02-overall-provenance.yml).
+The fitting scripts are available for the
+[joint comparison](assets/rd02-comparison/02-compare-rd02-random-effects.R) and
+[separate-species comparison](assets/rd02-species/03-compare-rd02-separate-species.R).
+
+</details>

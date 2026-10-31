@@ -1,0 +1,40 @@
+## Separate RW and TO models {#rd02-separate-species-review}
+
+Each species uses `ba_ha ~ treat + (1 | site/treat)`: site and nested macro-plot
+intercepts, zero-inflated Gamma responses, and species-specific zero and
+dispersion intercepts. The plot-level random effect is omitted.
+
+The focused comparison shows the main difference: separate fitting increases
+RW's GS mean and uncertainty, while TO changes less. Separate-model GS means
+are `r rd02_mean_ci("separate_site_macro_pair", "rw", "gs")` for RW and
+`r rd02_mean_ci("separate_site_macro_pair", "to", "gs")` m² ha⁻¹ for TO
+(mean and 95% CI).
+
+```{r}
+#| label: fig-rd02-separate-species-comparison
+#| echo: false
+#| out-width: "100%"
+#| fig-cap: >
+#|   Focused species-model sensitivity: the earlier joint four-species fit,
+#|   joint RW/TO full nesting, and separate species fits with site and
+#|   macro-plot random intercepts. Points are random-effect-integrated means
+#|   including zeros; ranges are approximate 95% confidence intervals.
+#|   Vertical scales differ between species.
+knitr::include_graphics("assets/rd02-species/figures/rd02-separate-species-comparison.png")
+```
+
+## Summary and model decision {#rd02-review-recommendation}
+
+**Selected approach.** Fit redwood, tanoak, Douglas-fir, and other species
+separately with treatment as a fixed effect and site and nested macro-plot
+random intercepts. This choice prioritizes biological interpretation and
+species-specific variance estimation. The RW/TO figure is in the Results;
+all-category values are in the supplement. The joint-model comparisons remain
+as sensitivity evidence.
+
+All four selected fits converge with positive-definite Hessians and no flags
+in the overall residual checks. Macro-plot variances approach zero; site
+variation differs substantially among categories, with Douglas-fir also near
+zero. Means include zeros and integrate over both random effects. Four sites
+still limit variance precision; interval stability remains a useful bootstrap
+check before final inferential claims.

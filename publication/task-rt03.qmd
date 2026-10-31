@@ -1,0 +1,42 @@
+---
+title: "RT03 — fuel Results narrative"
+sidebar: workflow
+---
+
+{{< include _task-metadata/rt03-status.qmd >}}
+
+<span id="rt03-record"></span>
+
+The current instruction authorizes the fuel
+narrative and companion-table draft. The
+[Results subsection in the working manuscript](draft-results.qmd#rt03-fuel-results)
+now reports phase-specific fuel reference means followed by the matched woody
+standing-vegetation contrast. Its working allocation is 1.5–2 manuscript pages,
+approximately 500 words excluding the figure, table, captions, and review note;
+final pagination depends on journal formatting.
+
+## Implemented source and review decisions
+
+| Source or finding | Implementation in RT03 |
+|---|---|
+| Thesis `analysis/thesis/results.qmd`, fuel subsections | Retain the pre-PCT, post-PCT, and vegetation-transition sequence, using current publication values throughout. |
+| Revised component definitions | Report woody and herbaceous vegetation separately; distinguish modeled litter and duff before PCT; omit post-PCT forest-floor estimates. |
+| RD04 inference review | Use equally site-weighted, random-effect-integrated arithmetic mean loads including zeros, rather than the thesis zero-random-effect references. |
+| Joint woody phase model | Report its four pre-minus-post mean reductions and covariance-aware confidence intervals, consistent with the woody load panel. Do not use the separate Student-t difference-model estimates. |
+| Thesis significance and causal wording | Replace inherited p-values with descriptive treatment rankings. Report exclusion of zero only for the four computed woody-change intervals; dead-fuel phase comparisons have no paired-change tests here. |
+| Slash and design interpretation | Describe potential surface-fuel contribution, not measured slash deposition; avoid attributing the entire phase transition to PCT. |
+| Numerical provenance | Draw inline narrative values and the shared companion table from `rd04-fuel-model-estimates.csv`; do not carry forward the unsourced coarse-wood grand mean noted in the audit. |
+
+**Review products:** the fuel Results draft, existing nine-panel figure and
+caption, and the companion [values table](draft-supplement.qmd#tbl-rd04-fuel-estimates). The
+table source is `sections/rd04-fuel-estimates-table.qmd`; it can be moved to an
+appendix without changing the numerical source.
+
+**Acceptance tests:** each quantitative claim is traceable to the current
+figure/CSV; point-estimate rankings are not presented as pairwise tests;
+intervals describe uncertainty in means, not new-transect variation; the
+standing-woody contrast is not a direct slash measure or an isolated causal
+PCT effect. Scientific model acceptance and table placement remain open for
+review. RT03 is not marked accepted or complete by drafting it.
+
+{{< include _task-metadata/rt03-files.qmd >}}
