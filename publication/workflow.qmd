@@ -63,13 +63,13 @@ The [download manifest](repo-files/manifest.json) records file checksums.
 | Repository location | Purpose and current entry points |
 |---|---|
 | `publication/` | Website configuration, task pages, and draft section wrappers. [Site maintenance guide](repo-files/publication/README.md). |
-| `publication/sections/` | Shared manuscript sections and included review displays/tables. [Results source](repo-files/publication/sections/results.qmd) · [Methods source](repo-files/publication/sections/methods.qmd). |
+| `publication/sections/` | Shared manuscript sections and included review displays/tables. `results.qmd` and `methods.qmd`. |
 | `publication/tasks.json` | Task status, targets, summaries of the detailed task records, and current file lists. [Task metadata](repo-files/publication/tasks.json). |
 | `publication/scripts/fuel/` | Component derivation, model exploration, inference audit, and active integrated figure generator. [Fuel pipeline guide](repo-files/publication/scripts/fuel/README.md). |
 | `publication/scripts/regeneration/` | Selected separate-species models and historical sensitivity comparisons. [Regeneration pipeline guide](repo-files/publication/scripts/regeneration/README.md). |
 | `publication/outputs/` | Publication-only derived data, model records, figures, tables, and provenance. [Output conventions](repo-files/publication/outputs/README.md). |
 | `analysis/thesis/` and `analysis/analysis/` | Thesis prose and legacy analytical sources; linked from the tasks that use them. [Repository overview](repo-files/README.md). |
-| `docs/publication/` | Rendered publication website, produced by `render-products.bat publication --to html`. |
+| `docs/publication/` | Rendered publication website; see the publication guide for rendering. |
 
 ## Keeping task records current
 
@@ -103,8 +103,8 @@ ownership or accept its provisional scientific decisions.
 For the developed fuel records, `tasks.json` separates produced `outputs` from
 consumed `inputs` and lists `depends_on` task IDs. Task introductions and file lists provide navigation; analytical explanations remain on their owning pages.
 Task summaries are concise descriptions of those records, not another decision
-log. The pipeline README supplies operational commands and links back to the
-step documentation.
+log. The [publication guide](repo-files/publication/README.md) supplies operational
+commands and links back to the step documentation.
 
 Calculation specifications and order live directly in each owning task page.
 Quarto selects whole pages for recomputation through native execution parameters;

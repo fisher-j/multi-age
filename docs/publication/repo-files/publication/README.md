@@ -28,6 +28,7 @@ From the repository root, run:
 
 ```bat
 render-products.bat publication --to html
+python publication/scripts/check-website.py
 ```
 
 The wrapper explicitly selects publication R 4.6.2 and activates this directory's
@@ -37,12 +38,14 @@ neither wrapper changes the machine PATH. An explicit `R_LIBS_USER` is preserved
 Actual namespace loads and installed DESCRIPTION versions are checked against
 the publication lock; broad startup package scans are disabled because sandbox
 permission checks can misreport missing packages.
+Before installing packages or restoring renv, check `.libPaths()` and actual
+`requireNamespace()` calls in `publication/`. Use `run-publication.bat restore`
+when restoration is needed; do not restore or update the thesis renv for
+publication work.
 
 ## Independent calculations and selective review
 
-The [fuel operational guide](scripts/fuel/README.md) documents native Quarto
-profiles, whole-task selection, staging, prerequisites and promotion. Review is
-the default: calculation code is displayed while evidence is read from saved
+Review is the default: calculation code is displayed while evidence is read from saved
 artifacts; fitted-model caches are unnecessary. Recompute F01 and RD04 with:
 
 ```bat
@@ -55,6 +58,13 @@ outputs to all consumers. Fingerprints identify changed upstream inputs without
 silently recomputing downstream tasks or accepting models. A selected producer's
 missing outputs are errors, never canonical fallbacks.
 
+Parameter-file paths are relative to `publication/`, where the wrapper runs
+Quarto. `recompute: []` reviews everything. Only F01 and RD04 currently support
+whole-task recomputation; nonempty selections require `--profile recompute`.
+Quarto orders F01 before RD04 and gives each page its own R session. Selection
+never expands implicitly: RD04 alone needs saved F01 models; F01 alone does not
+regenerate RD04 estimates.
+
 Pre-render hooks check exports/environment and prepare staging. Native execution
 parameters are checked in shared document setup before calculations. Post-render
 hooks validate outputs and private model/data files, refresh staged downloads,
@@ -66,6 +76,10 @@ records are never overwritten.
 `run-publication.bat fuel` delegates to this render. `all` runs fuel followed by
 regeneration, validating/promoting each domain independently. `regeneration`
 retains its existing sequence (01, 02, 03, 05, 04), staging and checks.
+Run `run-publication.bat regeneration` from the repository root for that
+sequence. Individual regeneration scripts can also be run or sourced from
+`publication/` in its R environment, for example
+`Rscript scripts/regeneration/01-generate-rd02-display.R`.
 `check` validates saved outputs without requiring model caches; `--require-models`
 on the Python checker additionally checks models. Existing prediction, gradient,
 integration and covariance checks remain in the owning QMD calculations.
@@ -96,6 +110,10 @@ Add current-file links as `[label](repo-files/path/from/repository/root.ext)`.
 Only explicitly linked files are bundled; directory walks do not expose model
 objects or raw data. Keep historical commit links labeled as history. Linked
 downloads are snapshots refreshed on render, not live filesystem editors.
+Rmd and QMD documents stay in the repository and are listed as plain paths,
+without downloadable copies. Analytical pages retain displayed calculation code.
+Figures read canonical `outputs/` files directly; linked CSVs and other review
+downloads are copied from their canonical paths into `repo-files/` at render time.
 
 R display chunks read the current saved CSVs on each render. They do not refit
 models. Run analytical pipelines separately when new model output is required.
@@ -112,7 +130,8 @@ decision on that consumer's page. Manuscript prose still lives in shared
 F01 followed by RD04 defines the fuel analytical sequence. F01 owns derivation through candidate
 evaluation (stages 01-05); RD04 owns prediction/inference, display, and retired
 figure history (stages 07-08 and historical 06); RT03 owns fuel Results claims.
-The pipeline README contains execution instructions and links to those records.
+This README owns execution instructions; pipeline guides link here and to the
+task records.
 There is no pipeline map, continuous review page, or separate analytical runner.
 Scientific specifications and orchestration live directly in the task pages.
 
@@ -128,8 +147,8 @@ Fuel task metadata distinguishes these roles:
 
 Tasks without these role fields retain their existing related-file lists until
 their records are developed; a related-file link does not declare ownership.
-The rendered file lists and download bundle include both owned and consumed
-files. Register only explicitly reviewable artifacts; binary model objects and
+The rendered file lists include both owned and consumed files; source documents
+are plain path references. Register only explicitly reviewable artifacts; binary model objects and
 raw data are not added to downloads by discovering their directories.
 
 F01 and RD04 contain their calculation chunks directly, in document order.
@@ -145,9 +164,6 @@ input artifact hashes. QMD parameter defaults are declared in each document for
 knitr; the project uses the same empty-list default.
 `execution_manifest` names each task's private provenance record. Reusable
 rendering infrastructure does not determine the task's scientific run order.
-
-QMD downloads use `.qmd.txt` so Quarto treats them as source downloads, not extra
-render targets; their manifest records the original repository path.
 
 The pre-render preparation rejects duplicate output ownership and invalid
 upstream task IDs. Website validation checks complete source and CSV review

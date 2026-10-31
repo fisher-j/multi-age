@@ -16,7 +16,8 @@ Rendered products are published at
 The repository contains related but independent scholarly products. The legacy
 products remain in `analysis/` and retain their existing Quarto profiles so
 that their established rendering behavior is preserved. The developing
-publication is a standalone Quarto project in `publication/`.
+publication is a standalone Quarto project in `publication/`. Its execution
+and maintenance instructions live in [publication/README.md](publication/README.md).
 
 `product-registry.yml` records each product's source location, render command,
 and output location. On Windows, `render-products.bat <product> [Quarto render

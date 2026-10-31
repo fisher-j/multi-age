@@ -85,6 +85,8 @@ def check():
             if url.scheme or url.netloc or link.startswith("/"):
                 continue
             target = (page.parent / unquote(url.path)).resolve() if url.path else page
+            if target.name.lower().endswith((".rmd", ".qmd", ".rmd.txt", ".qmd.txt")):
+                errors.append(f"{page.name}: analytical source download link remains: {link}")
             if target.is_dir():
                 target /= "index.html"
             if not target.is_file():
@@ -141,6 +143,9 @@ def check():
         if task_list and (key not in task_list.ids or f"#{key}" not in task_list.register_links):
             errors.append(f"Task register must link to the task list entry: {key}")
     manifest = json.loads((output / "repo-files/manifest.json").read_text(encoding="utf-8"))
+    for path in output.rglob("*"):
+        if path.is_file() and path.name.lower().endswith((".rmd", ".qmd", ".rmd.txt", ".qmd.txt")):
+            errors.append(f"Analytical source document remains published: {path.relative_to(output)}")
     registered = {item["path"] for item in manifest} | {"manifest.json"}
     for path in (output / "repo-files").rglob("*"):
         if path.is_file() and path.relative_to(output / "repo-files").as_posix() not in registered:

@@ -105,8 +105,12 @@ def prepare():
             if title:
                 files.append(f"\n### {title}\n")
             for path in paths:
-                download = path + ".txt" if path.endswith(".qmd") else path
-                files.append(f"- [{path}](repo-files/{download})")
+                if path.lower().endswith((".rmd", ".qmd")):
+                    if not (REPOSITORY / path).is_file():
+                        raise FileNotFoundError(f"Repository source document is missing: {path}")
+                    files.append(f"- `{path}`")
+                else:
+                    files.append(f"- [{path}](repo-files/{path})")
         files.append("\n</details>\n")
         files.append(f"\n[Back to this task in the task list](task-list.qmd#{key}).\n")
         write_if_changed(PROJECT / "_task-metadata" / f"{key}-files.qmd", "\n".join(files))
@@ -127,14 +131,15 @@ def prepare():
     for relative in sorted(paths - {"manifest.json"}):
         if Path(relative).is_absolute() or ".." in Path(relative).parts:
             raise ValueError(f"Repository download path must be relative without '..': {relative}")
-        source_relative = relative[:-4] if relative.endswith(".qmd.txt") else relative
-        source = (REPOSITORY / source_relative).resolve()
+        if relative.lower().endswith((".rmd", ".qmd", ".rmd.txt", ".qmd.txt")):
+            raise ValueError(f"Analytical source documents are not published as downloads: {relative}")
+        source = (REPOSITORY / relative).resolve()
         if not source.is_relative_to(REPOSITORY) or not source.is_file():
             raise FileNotFoundError(f"Linked repository file is missing or outside the repo: {relative}")
         destination = bundle / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
-        manifest.append({"path": relative, "source": source_relative,
+        manifest.append({"path": relative, "source": relative,
                          "sha256": hashlib.sha256(source.read_bytes()).hexdigest()})
     # Quarto may retain resources from earlier renders. Remove downloads whose
     # links were removed from the source, in both the input and published bundle.

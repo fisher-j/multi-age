@@ -36,9 +36,6 @@ task_root <- function(id) {
 }
 task_artifact <- function(relative) {
   relative <- sub("^publication/", "", relative)
-  if (startsWith(relative, "assets/rd04-fuel-phase-pct-inventory.png")) {
-    relative <- "outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png"
-  }
   owner <- Filter(function(task) {
     patterns <- sub("^publication/", "", c(unlist(task$outputs), unlist(task$private_outputs)))
     any(vapply(patterns, function(pattern) grepl(utils::glob2rx(pattern), relative), logical(1)))

@@ -51,9 +51,7 @@ figure <- ggplot(display, aes(treat, estimate, ymin = lcl, ymax = ucl,
 figure_path <- file.path(out, "figures/rd02-regeneration-basal-area.png")
 ggsave(figure_path, figure, width = 7, height = 4.4, dpi = 320, bg = "white")
 ggsave(sub("png$", "pdf", figure_path), figure, width = 7, height = 4.4)
-asset <- file.path(paths_common$assets, "", basename(figure_path))
-stopifnot(file.copy(figure_path, asset, overwrite = TRUE),
-          identical(unname(tools::md5sum(input)), unname(input_hash)))
+stopifnot(identical(unname(tools::md5sum(input)), unname(input_hash)))
 
 provenance <- list(
   task = "RD02", status = "Draft pending scientific and display review",
@@ -74,17 +72,6 @@ provenance <- list(
 )
 yaml::write_yaml(provenance, file.path(out, "manifests/rd02-figure-provenance.yml"))
 capture.output(sessionInfo(), file = file.path(out, "manifests/rd02-session-info.txt"))
-# Bundle linked review downloads inside the Quarto project so they also work
-# from docs/publication/ and on the published website.
-download_dir <- file.path(paths_common$assets, "rd02")
-dir.create(download_dir, recursive = TRUE, showWarnings = FALSE)
-downloads <- c(
-  list.files(file.path(out, "tables"), full.names = TRUE),
-  list.files(file.path(out, "inference-audit"), full.names = TRUE),
-  list.files(file.path(out, "manifests"), full.names = TRUE),
-  sub("png$", "pdf", figure_path), script_file, file.path(script_dir, "README.md")
-)
-stopifnot(all(file.copy(downloads, download_dir, overwrite = TRUE)))
 message("RD02: verified 16 species/treatment cells; generated eight-cell lead figure. Multiplier = ",
         signif(multiplier, 6))
 print(as.data.frame(display[, c("spp", "treat", "estimate", "lcl", "ucl")]))

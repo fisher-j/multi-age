@@ -6,11 +6,9 @@ publication_paths <- function(root) {
   root <- normalizePath(root, winslash = "/", mustWork = TRUE)
   staged <- Sys.getenv("PUBLICATION_OUTPUT_ROOT")
   output <- if (nzchar(staged)) staged else file.path(root, "outputs")
-  assets <- if (nzchar(staged)) file.path(dirname(output), "assets") else file.path(root, "assets")
   dir.create(output, recursive = TRUE, showWarnings = FALSE)
-  dir.create(assets, recursive = TRUE, showWarnings = FALSE)
   list(root = root, input = file.path(root, "inputs", "thesis"),
-       output = normalizePath(output, winslash = "/"), assets = assets)
+       output = normalizePath(output, winslash = "/"))
 }
 
 # The current publication specification requires unconditional simulation;

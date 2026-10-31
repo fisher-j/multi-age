@@ -53,7 +53,7 @@ Sys.setenv(PUBLICATION_OUTPUT_ROOT = output)
 sequences <- list(regeneration = c("01-generate-rd02-display.R", "02-compare-rd02-random-effects.R",
     "03-compare-rd02-separate-species.R", "05-fit-selected-species-models.R",
     "04-assemble-rd02-sensitivity.R"))
-domains <- if (command == "all") names(sequences) else command
+domains <- command
 capture.output(sessionInfo(), file = file.path(staging, "session-info.txt"))
 execution <- list(command = command, r = R.version.string, libraries = .libPaths(),
   lock_md5 = unname(tools::md5sum("renv.lock")),
@@ -91,12 +91,6 @@ for (domain in domains) {
     dir.create(dirname(target), recursive = TRUE, showWarnings = FALSE)
     stopifnot(file.copy(file, target, overwrite = TRUE))
   }
-}
-assets <- file.path(staging, "assets")
-for (file in list.files(assets, recursive = TRUE, full.names = TRUE)) {
-  target <- file.path(root, "assets", substring(file, nchar(assets) + 2L))
-  dir.create(dirname(target), recursive = TRUE, showWarnings = FALSE)
-  stopifnot(file.copy(file, target, overwrite = TRUE))
 }
 execution$status <- "verified_and_promoted"
 record_execution()

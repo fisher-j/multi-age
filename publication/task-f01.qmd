@@ -864,7 +864,7 @@ registry_files <- c(
   file.path(paths$manifests, "woody-pct-model-registry.csv")
 )
 if (!all(file.exists(registry_files))) {
-  stop("Run 03-fit-phase-components.R and 04-fit-woody-pct-models.R first.")
+  stop("F01 candidate fits are missing; recompute this task from the beginning. See publication/README.md.")
 }
 
 registry <- bind_rows(lapply(registry_files, read_csv, show_col_types = FALSE)) |>

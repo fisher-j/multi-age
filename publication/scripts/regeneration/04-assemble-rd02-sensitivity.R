@@ -177,11 +177,4 @@ yaml::write_yaml(list(
   figure = "Two species columns; fitting-data scopes in rows; panel-specific vertical scales"
 ), file.path(out, "manifests/rd02-overall-provenance.yml"))
 stopifnot(identical(unname(tools::md5sum(inputs)), unname(hashes)))
-download_dir <- file.path(paths_common$assets, "rd02-sensitivity")
-for (directory in c("tables", "figures", "manifests")) {
-  target <- file.path(download_dir, directory)
-  dir.create(target, recursive = TRUE, showWarnings = FALSE)
-  stopifnot(all(file.copy(list.files(file.path(out, directory), full.names = TRUE), target, overwrite = TRUE)))
-}
-stopifnot(file.copy(script_file, download_dir, overwrite = TRUE))
 message("Assembled eight configurations, 96 unchanged mean/interval cells, and 64 focal figure points.")

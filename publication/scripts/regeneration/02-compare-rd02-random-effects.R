@@ -264,17 +264,6 @@ yaml::write_yaml(provenance, file.path(out, "manifests/rd02-comparison-provenanc
 capture.output(sessionInfo(), file = file.path(out, "manifests/rd02-comparison-session-info.txt"))
 stopifnot(identical(unname(tools::md5sum(input)), unname(input_hash)),
           identical(unname(tools::md5sum(lead_files)), unname(lead_hashes)))
-# Publish only review artifacts; fitted models and simulations stay in the
-# analysis output directory (RDS files follow the repository's ignore policy).
-download_dir <- file.path(paths_common$assets, "rd02-comparison")
-for (directory in c("tables", "figures", "diagnostics", "manifests")) {
-  target <- file.path(download_dir, directory)
-  dir.create(target, recursive = TRUE, showWarnings = FALSE)
-  stopifnot(all(file.copy(list.files(file.path(out, directory), full.names = TRUE),
-                         target, overwrite = TRUE)))
-}
-stopifnot(all(file.copy(c(script_file, file.path(script_dir, "README.md")),
-                       download_dir, overwrite = TRUE)))
 message("Comparison complete; original thesis input unchanged.")
 print(comparison)
 print(variance_table)

@@ -11,9 +11,44 @@ from unittest.mock import patch
 spec = importlib.util.spec_from_file_location("hooks", Path(__file__).with_name("render-hooks.py"))
 hooks = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(hooks)
+spec = importlib.util.spec_from_file_location("workflow", Path(__file__).with_name("prepare-workflow.py"))
+workflow = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(workflow)
 
 
 class TaskExecutionTests(unittest.TestCase):
+    def test_source_documents_are_listed_without_downloads_and_old_copies_are_pruned(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            project = root / "publication"
+            project.mkdir()
+            sources = ["publication/task-f01.qmd", "publication/history.Rmd"]
+            for name in sources:
+                (root / name).write_text("Historical analytical source")
+            csv = project / "estimates.csv"
+            csv.write_text("estimate\n1\n")
+            hooks.write(project / "tasks.json", [dict(id="F01", title="Fuel", status="Review",
+                target="Figure", summary="Review", files=sources + ["publication/estimates.csv"])])
+            for bundle in (project / "repo-files", root / "docs/publication/repo-files"):
+                bundle.mkdir(parents=True)
+                for name in ("old.qmd", "old.qmd.txt", "old.Rmd"):
+                    (bundle / name).write_text("Old source download")
+            with patch.object(workflow, "PROJECT", project), patch.object(workflow, "REPOSITORY", root), \
+                    patch.dict("os.environ", {"QUARTO_PROFILE": ""}), redirect_stdout(StringIO()):
+                workflow.prepare()
+                metadata = (project / "_task-metadata/f01-files.qmd").read_text()
+                for name in sources:
+                    self.assertIn(f"`{name}`", metadata)
+                    self.assertNotIn(f"](repo-files/{name}", metadata)
+                manifest = hooks.read(project / "repo-files/manifest.json")
+                self.assertEqual([entry["path"] for entry in manifest], ["publication/estimates.csv"])
+                self.assertEqual((project / "repo-files/publication/estimates.csv").read_bytes(), csv.read_bytes())
+                self.assertFalse(list((root / "docs/publication/repo-files").iterdir()))
+                for name in ("history.Rmd", "task-f01.qmd", "task-f01.qmd.txt"):
+                    (project / "task-f01.qmd").write_text(f"[Source](repo-files/publication/{name})")
+                    with self.assertRaisesRegex(ValueError, "not published as downloads"):
+                        workflow.prepare()
+
     def tasks(self):
         return [dict(id="F01", recomputable=True, outputs=["publication/outputs/fuel/data.csv"],
                      private_outputs=["publication/outputs/fuel/models/*.rds"]),
@@ -145,13 +180,15 @@ class TaskExecutionTests(unittest.TestCase):
             data.parent.mkdir(parents=True)
             data.write_text("old")
             hooks.write(root / "outputs/fuel/rd04-execution.json",
-                        dict(input_sha256={"outputs/fuel/data.csv": hooks.sha(data)}))
+                        dict(input_sha256={"outputs/fuel/data.csv": hooks.sha(data)},
+                             source_sha256={"publication/scripts/removed-entry.R": "old checksum"}))
             data.write_text("changed")
             output = StringIO()
             with redirect_stdout(output):
                 hooks.review("RD04")
             self.assertIn("Upstream inputs have changed", output.getvalue())
             self.assertIn("no recalculation", output.getvalue())
+            self.assertIn("publication/scripts/removed-entry.R", output.getvalue())
 
 
 if __name__ == "__main__":

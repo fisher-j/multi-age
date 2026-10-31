@@ -3757,7 +3757,7 @@ Calculation — f01-05-evaluate-and-select-models
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(paths<span class="sc">$</span>manifests, <span class="st">"woody-pct-model-registry.csv"</span>)</span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(<span class="fu">file.exists</span>(registry_files))) {</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Run 03-fit-phase-components.R and 04-fit-woody-pct-models.R first."</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"F01 candidate fits are missing; recompute this task from the beginning. See publication/README.md."</span>)</span>
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>registry <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">lapply</span>(registry_files, read_csv, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)) <span class="sc">|&gt;</span></span>
@@ -5474,18 +5474,16 @@ publication-paths.R
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  root <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(root, <span class="at">winslash =</span> <span class="st">"/"</span>, <span class="at">mustWork =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  staged <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">"PUBLICATION_OUTPUT_ROOT"</span>)</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  output <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">nzchar</span>(staged)) staged <span class="cf">else</span> <span class="fu">file.path</span>(root, <span class="st">"outputs"</span>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  assets <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">nzchar</span>(staged)) <span class="fu">file.path</span>(<span class="fu">dirname</span>(output), <span class="st">"assets"</span>) <span class="cf">else</span> <span class="fu">file.path</span>(root, <span class="st">"assets"</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(output, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(assets, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">root =</span> root, <span class="at">input =</span> <span class="fu">file.path</span>(root, <span class="st">"inputs"</span>, <span class="st">"thesis"</span>),</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">output =</span> <span class="fu">normalizePath</span>(output, <span class="at">winslash =</span> <span class="st">"/"</span>), <span class="at">assets =</span> assets)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># The current publication specification requires unconditional simulation;</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># the locked DHARMa version supports this argument explicitly.</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>publication_simulate_residuals <span class="ot">&lt;-</span> <span class="cf">function</span>(fittedModel, ...) {</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  DHARMa<span class="sc">::</span><span class="fu">simulateResiduals</span>(fittedModel, <span class="at">simulateREs =</span> <span class="st">"unconditional"</span>, ...)</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(output, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">root =</span> root, <span class="at">input =</span> <span class="fu">file.path</span>(root, <span class="st">"inputs"</span>, <span class="st">"thesis"</span>),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">output =</span> <span class="fu">normalizePath</span>(output, <span class="at">winslash =</span> <span class="st">"/"</span>))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># The current publication specification requires unconditional simulation;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># the locked DHARMa version supports this argument explicitly.</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>publication_simulate_residuals <span class="ot">&lt;-</span> <span class="cf">function</span>(fittedModel, ...) {</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  DHARMa<span class="sc">::</span><span class="fu">simulateResiduals</span>(fittedModel, <span class="at">simulateREs =</span> <span class="st">"unconditional"</span>, ...)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <details data-review-source="publication/scripts/fuel/00-fuel-config.R">
 <summary>
@@ -5687,45 +5685,42 @@ task-execution.R
 <span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>task_artifact <span class="ot">&lt;-</span> <span class="cf">function</span>(relative) {</span>
 <span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>  relative <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"^publication/"</span>, <span class="st">""</span>, relative)</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">startsWith</span>(relative, <span class="st">"assets/rd04-fuel-phase-pct-inventory.png"</span>)) {</span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>    relative <span class="ot">&lt;-</span> <span class="st">"outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png"</span></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>  owner <span class="ot">&lt;-</span> <span class="fu">Filter</span>(<span class="cf">function</span>(task) {</span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    patterns <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"^publication/"</span>, <span class="st">""</span>, <span class="fu">c</span>(<span class="fu">unlist</span>(task<span class="sc">$</span>outputs), <span class="fu">unlist</span>(task<span class="sc">$</span>private_outputs)))</span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">any</span>(<span class="fu">vapply</span>(patterns, <span class="cf">function</span>(pattern) <span class="fu">grepl</span>(utils<span class="sc">::</span><span class="fu">glob2rx</span>(pattern), relative), <span class="fu">logical</span>(<span class="dv">1</span>)))</span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>  }, .publication_render<span class="sc">$</span>tasks)</span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(owner) <span class="sc">&gt;</span> <span class="dv">1</span>L) <span class="fu">stop</span>(<span class="st">"Multiple artifact owners: "</span>, relative)</span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  path <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">length</span>(owner) <span class="sc">&amp;&amp;</span> <span class="fu">task_selected</span>(owner[[<span class="dv">1</span>]]<span class="sc">$</span>id))</span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">file.path</span>(<span class="fu">task_root</span>(owner[[<span class="dv">1</span>]]<span class="sc">$</span>id), <span class="fu">sub</span>(<span class="st">"^outputs/"</span>, <span class="st">""</span>, relative)) <span class="cf">else</span></span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">file.path</span>(.publication_render<span class="sc">$</span>root, relative)</span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(path)) <span class="fu">stop</span>(<span class="st">"Required saved artifact missing: "</span>, path, <span class="st">". Recompute its producing task explicitly."</span>)</span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>  path</span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>task_begin <span class="ot">&lt;-</span> <span class="cf">function</span>(id) {</span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">task_selected</span>(id))</span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.setenv</span>(<span class="at">PUBLICATION_OUTPUT_ROOT =</span> <span class="fu">task_root</span>(id))</span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">source</span>(<span class="st">"scripts/publication-paths.R"</span>, <span class="at">local =</span> .GlobalEnv)</span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>  jsonlite<span class="sc">::</span><span class="fu">write_json</span>(<span class="fu">list</span>(<span class="at">pid =</span> <span class="fu">Sys.getpid</span>(), <span class="at">r =</span> R.version.string, <span class="at">libraries =</span> <span class="fu">.libPaths</span>()),</span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">file.path</span>(.publication_render<span class="sc">$</span>run, <span class="fu">paste0</span>(id, <span class="st">"-r-session.json"</span>)),</span>
-<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>                       <span class="at">pretty =</span> <span class="cn">TRUE</span>, <span class="at">auto_unbox =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>  status <span class="ot">&lt;-</span> <span class="fu">system2</span>(<span class="st">"python"</span>, <span class="fu">c</span>(<span class="st">"scripts/render-hooks.py"</span>, <span class="st">"begin"</span>, id))</span>
-<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="sc">!=</span> <span class="dv">0</span>L) <span class="fu">stop</span>(<span class="st">"Could not begin task "</span>, id)</span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>task_complete <span class="ot">&lt;-</span> <span class="cf">function</span>(id) {</span>
-<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>  status <span class="ot">&lt;-</span> <span class="fu">system2</span>(<span class="st">"python"</span>, <span class="fu">c</span>(<span class="st">"scripts/render-hooks.py"</span>, <span class="st">"complete"</span>, id))</span>
-<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="sc">!=</span> <span class="dv">0</span>L) <span class="fu">stop</span>(<span class="st">"Could not record completed task "</span>, id)</span>
-<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>task_progress <span class="ot">&lt;-</span> <span class="cf">function</span>(label) {</span>
-<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>  status <span class="ot">&lt;-</span> <span class="fu">system2</span>(<span class="st">"python"</span>, <span class="fu">c</span>(<span class="st">"scripts/render-hooks.py"</span>, <span class="st">"progress"</span>, label))</span>
-<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="sc">!=</span> <span class="dv">0</span>L) <span class="fu">stop</span>(<span class="st">"Could not record step "</span>, label)</span>
-<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>task_review_state <span class="ot">&lt;-</span> <span class="cf">function</span>(id) {</span>
-<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>  status <span class="ot">&lt;-</span> <span class="fu">system2</span>(<span class="st">"python"</span>, <span class="fu">c</span>(<span class="st">"scripts/render-hooks.py"</span>, <span class="st">"review"</span>, id), <span class="at">stdout =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(<span class="fu">attr</span>(status, <span class="st">"status"</span>)) <span class="sc">&amp;&amp;</span> <span class="fu">attr</span>(status, <span class="st">"status"</span>) <span class="sc">!=</span> <span class="dv">0</span>L)</span>
-<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Could not verify saved input fingerprints for "</span>, id)</span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="fu">paste</span>(status, <span class="at">collapse =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>  owner <span class="ot">&lt;-</span> <span class="fu">Filter</span>(<span class="cf">function</span>(task) {</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>    patterns <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"^publication/"</span>, <span class="st">""</span>, <span class="fu">c</span>(<span class="fu">unlist</span>(task<span class="sc">$</span>outputs), <span class="fu">unlist</span>(task<span class="sc">$</span>private_outputs)))</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">any</span>(<span class="fu">vapply</span>(patterns, <span class="cf">function</span>(pattern) <span class="fu">grepl</span>(utils<span class="sc">::</span><span class="fu">glob2rx</span>(pattern), relative), <span class="fu">logical</span>(<span class="dv">1</span>)))</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>  }, .publication_render<span class="sc">$</span>tasks)</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(owner) <span class="sc">&gt;</span> <span class="dv">1</span>L) <span class="fu">stop</span>(<span class="st">"Multiple artifact owners: "</span>, relative)</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>  path <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">length</span>(owner) <span class="sc">&amp;&amp;</span> <span class="fu">task_selected</span>(owner[[<span class="dv">1</span>]]<span class="sc">$</span>id))</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">file.path</span>(<span class="fu">task_root</span>(owner[[<span class="dv">1</span>]]<span class="sc">$</span>id), <span class="fu">sub</span>(<span class="st">"^outputs/"</span>, <span class="st">""</span>, relative)) <span class="cf">else</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">file.path</span>(.publication_render<span class="sc">$</span>root, relative)</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(path)) <span class="fu">stop</span>(<span class="st">"Required saved artifact missing: "</span>, path, <span class="st">". Recompute its producing task explicitly."</span>)</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>  path</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>task_begin <span class="ot">&lt;-</span> <span class="cf">function</span>(id) {</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">task_selected</span>(id))</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.setenv</span>(<span class="at">PUBLICATION_OUTPUT_ROOT =</span> <span class="fu">task_root</span>(id))</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">source</span>(<span class="st">"scripts/publication-paths.R"</span>, <span class="at">local =</span> .GlobalEnv)</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>  jsonlite<span class="sc">::</span><span class="fu">write_json</span>(<span class="fu">list</span>(<span class="at">pid =</span> <span class="fu">Sys.getpid</span>(), <span class="at">r =</span> R.version.string, <span class="at">libraries =</span> <span class="fu">.libPaths</span>()),</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">file.path</span>(.publication_render<span class="sc">$</span>run, <span class="fu">paste0</span>(id, <span class="st">"-r-session.json"</span>)),</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>                       <span class="at">pretty =</span> <span class="cn">TRUE</span>, <span class="at">auto_unbox =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>  status <span class="ot">&lt;-</span> <span class="fu">system2</span>(<span class="st">"python"</span>, <span class="fu">c</span>(<span class="st">"scripts/render-hooks.py"</span>, <span class="st">"begin"</span>, id))</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="sc">!=</span> <span class="dv">0</span>L) <span class="fu">stop</span>(<span class="st">"Could not begin task "</span>, id)</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>task_complete <span class="ot">&lt;-</span> <span class="cf">function</span>(id) {</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>  status <span class="ot">&lt;-</span> <span class="fu">system2</span>(<span class="st">"python"</span>, <span class="fu">c</span>(<span class="st">"scripts/render-hooks.py"</span>, <span class="st">"complete"</span>, id))</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="sc">!=</span> <span class="dv">0</span>L) <span class="fu">stop</span>(<span class="st">"Could not record completed task "</span>, id)</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>task_progress <span class="ot">&lt;-</span> <span class="cf">function</span>(label) {</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>  status <span class="ot">&lt;-</span> <span class="fu">system2</span>(<span class="st">"python"</span>, <span class="fu">c</span>(<span class="st">"scripts/render-hooks.py"</span>, <span class="st">"progress"</span>, label))</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (status <span class="sc">!=</span> <span class="dv">0</span>L) <span class="fu">stop</span>(<span class="st">"Could not record step "</span>, label)</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>task_review_state <span class="ot">&lt;-</span> <span class="cf">function</span>(id) {</span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>  status <span class="ot">&lt;-</span> <span class="fu">system2</span>(<span class="st">"python"</span>, <span class="fu">c</span>(<span class="st">"scripts/render-hooks.py"</span>, <span class="st">"review"</span>, id), <span class="at">stdout =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(<span class="fu">attr</span>(status, <span class="st">"status"</span>)) <span class="sc">&amp;&amp;</span> <span class="fu">attr</span>(status, <span class="st">"status"</span>) <span class="sc">!=</span> <span class="dv">0</span>L)</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Could not verify saved input fingerprints for "</span>, id)</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="fu">paste</span>(status, <span class="at">collapse =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <details data-review-source="publication/scripts/verify-environment.R">
 <summary>
@@ -5757,6 +5752,7 @@ verify-environment.R
 <span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <p><strong>Execution: Reviewing saved outputs; no recalculation.</strong> Recorded input fingerprints match the active upstream artifacts.</p>
+<p>Maintained sources differ from the recorded producing versions. The saved evidence has not been recalculated from these edits. - <code>publication/task-f01.qmd</code> - <code>publication/scripts/publication-paths.R</code> - <code>publication/scripts/task-execution.R</code> - <code>publication/scripts/render-hooks.py</code></p>
 </section>
 <section id="f01-files" class="level2">
 <h2 class="anchored" data-anchor-id="f01-files">Current repository files</h2>
@@ -5768,7 +5764,7 @@ Browse current source files and outputs
 <section id="maintained-sources" class="level3">
 <h3 class="anchored" data-anchor-id="maintained-sources">Maintained sources</h3>
 <ul>
-<li><a href="repo-files/publication/task-f01.qmd.txt">publication/task-f01.qmd</a></li>
+<li><code>publication/task-f01.qmd</code></li>
 <li><a href="repo-files/publication/scripts/publication-paths.R">publication/scripts/publication-paths.R</a></li>
 <li><a href="repo-files/publication/scripts/fuel/00-fuel-config.R">publication/scripts/fuel/00-fuel-config.R</a></li>
 <li><a href="repo-files/publication/scripts/fuel/03-model-utils.R">publication/scripts/fuel/03-model-utils.R</a></li>

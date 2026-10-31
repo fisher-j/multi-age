@@ -3850,39 +3850,28 @@ Calculation — rd04-08-generate-rd04-integrated-figure
 <span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">file.path</span>(figures_dir, <span class="st">"rd04-fuel-phase-pct-inventory.png"</span>), figure, <span class="at">width =</span> <span class="fl">10.5</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
 <span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a><span class="co"># The analysis output above is canonical. A byte-identical site asset makes the</span></span>
-<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a><span class="co"># current review figure available in the rendered Quarto website without asking</span></span>
-<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a><span class="co"># the published site to reach outside its output directory.</span></span>
-<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>site_assets_dir <span class="ot">&lt;-</span> paths_common<span class="sc">$</span>assets</span>
-<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(site_assets_dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a><span class="fu">file.copy</span>(</span>
-<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(figures_dir, <span class="st">"rd04-fuel-phase-pct-inventory.png"</span>),</span>
-<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(site_assets_dir, <span class="st">"rd04-fuel-phase-pct-inventory.png"</span>),</span>
-<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
-<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>provenance <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>  <span class="st">"task: RD04"</span>,</span>
-<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>  <span class="st">"generator: task-rd04.qmd#rd04-08-generate-rd04-integrated-figure"</span>,</span>
-<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a>  <span class="st">"figure: figures/rd04-fuel-phase-pct-inventory.png"</span>,</span>
-<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a>  <span class="st">"estimates: tables/rd04-fuel-model-estimates.csv"</span>,</span>
-<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>  <span class="st">"estimand: site-standardized random-effect-integrated mean load including modeled zeros"</span>,</span>
-<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>  <span class="st">"random_effects: analytically integrated over all fitted independent Gaussian random intercepts"</span>,</span>
-<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>  <span class="st">"site_averaging: equal weights for the four observed study-site contexts"</span>,</span>
-<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>  <span class="st">"load_intervals: 95% log-scale delta-method confidence intervals for integrated means"</span>,</span>
-<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>  <span class="st">"difference_intervals: 95% response-scale delta-method confidence intervals with joint pre/post covariance"</span>,</span>
-<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a>  <span class="st">"parameter_covariance: full sdr$cov.fixed including zero-process coefficients and log random-effect SDs"</span>,</span>
-<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>  <span class="st">"difference_panel: integrated matched woody mean difference from the same repeated-phase model as woody load panels"</span>,</span>
-<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a>  <span class="st">"difference_model: woody_phase_zigamma_ziphase_disp1"</span>,</span>
-<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a>  <span class="st">"pre_pct_only: litter; duff"</span>,</span>
-<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"model_ids: "</span>, <span class="fu">paste</span>(spec<span class="sc">$</span>model_id, <span class="at">collapse =</span> <span class="st">"; "</span>)),</span>
-<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a>  <span class="st">"selection_status: existing AIC-leading load models used for draft figure; scientific review remains pending"</span></span>
-<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a><span class="fu">write_publication_lines</span>(provenance, <span class="fu">file.path</span>(paths<span class="sc">$</span>manifests, <span class="st">"rd04-figure-provenance.yml"</span>))</span>
-<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a><span class="fu">write_publication_lines</span>(<span class="fu">c</span>(provenance, <span class="st">""</span>, <span class="fu">sub</span>(<span class="st">"[[:blank:]]+$"</span>, <span class="st">""</span>, <span class="fu">capture.output</span>(<span class="fu">sessionInfo</span>()))),</span>
-<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>           <span class="fu">file.path</span>(paths<span class="sc">$</span>manifests, <span class="st">"rd04-figure-session-info.txt"</span>))</span>
-<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a><span class="fu">task_complete</span>(<span class="st">"RD04"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>provenance <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>  <span class="st">"task: RD04"</span>,</span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>  <span class="st">"generator: task-rd04.qmd#rd04-08-generate-rd04-integrated-figure"</span>,</span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>  <span class="st">"figure: figures/rd04-fuel-phase-pct-inventory.png"</span>,</span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>  <span class="st">"estimates: tables/rd04-fuel-model-estimates.csv"</span>,</span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>  <span class="st">"estimand: site-standardized random-effect-integrated mean load including modeled zeros"</span>,</span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>  <span class="st">"random_effects: analytically integrated over all fitted independent Gaussian random intercepts"</span>,</span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>  <span class="st">"site_averaging: equal weights for the four observed study-site contexts"</span>,</span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>  <span class="st">"load_intervals: 95% log-scale delta-method confidence intervals for integrated means"</span>,</span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>  <span class="st">"difference_intervals: 95% response-scale delta-method confidence intervals with joint pre/post covariance"</span>,</span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>  <span class="st">"parameter_covariance: full sdr$cov.fixed including zero-process coefficients and log random-effect SDs"</span>,</span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>  <span class="st">"difference_panel: integrated matched woody mean difference from the same repeated-phase model as woody load panels"</span>,</span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>  <span class="st">"difference_model: woody_phase_zigamma_ziphase_disp1"</span>,</span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>  <span class="st">"pre_pct_only: litter; duff"</span>,</span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"model_ids: "</span>, <span class="fu">paste</span>(spec<span class="sc">$</span>model_id, <span class="at">collapse =</span> <span class="st">"; "</span>)),</span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a>  <span class="st">"selection_status: existing AIC-leading load models used for draft figure; scientific review remains pending"</span></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a><span class="fu">write_publication_lines</span>(provenance, <span class="fu">file.path</span>(paths<span class="sc">$</span>manifests, <span class="st">"rd04-figure-provenance.yml"</span>))</span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a><span class="fu">write_publication_lines</span>(<span class="fu">c</span>(provenance, <span class="st">""</span>, <span class="fu">sub</span>(<span class="st">"[[:blank:]]+$"</span>, <span class="st">""</span>, <span class="fu">capture.output</span>(<span class="fu">sessionInfo</span>()))),</span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>           <span class="fu">file.path</span>(paths<span class="sc">$</span>manifests, <span class="st">"rd04-figure-session-info.txt"</span>))</span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a><span class="fu">task_complete</span>(<span class="st">"RD04"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </details>
 <p><strong>Evidence.</strong> The complete saved cells are available below.</p>
@@ -5012,236 +5001,229 @@ rd04-inference-utils.R
 </details>
 <section id="retired-display-history" class="level3">
 <h3 class="anchored" data-anchor-id="retired-display-history">Retired display history</h3>
-<details data-review-source="publication/scripts/fuel/06-generate-rd04-figure.R">
-<summary>
-06-generate-rd04-figure.R — retired entry point
-</summary>
-<p><a href="repo-files/publication/scripts/fuel/06-generate-rd04-figure.R">Download source</a></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retired entry point. The historical implementation is retained only for audit.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stop</span>(<span class="st">"This generator is retired. Recompute RD04 through Quarto's recompute profile and native execution parameters; see scripts/fuel/README.md."</span>, <span class="at">call. =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
 <details data-review-source="publication/scripts/fuel/retired/06-generate-rd04-figure.R">
 <summary>
 06-generate-rd04-figure.R — retired (historical implementation)
 </summary>
 <p><a href="repo-files/publication/scripts/fuel/retired/06-generate-rd04-figure.R">Download source</a></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the RD04 publication figure: the full disaggregated pre-/post-PCT</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fuel inventory. This publication-only step reads saved F01 model artifacts</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and writes only below outputs/publication/fuel/.</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>script_argument <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"^--file="</span>, <span class="fu">commandArgs</span>(<span class="at">trailingOnly =</span> <span class="cn">FALSE</span>), <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(script_argument) <span class="sc">!=</span> <span class="dv">1</span>L) <span class="fu">stop</span>(<span class="st">"Run with Rscript scripts/publication/fuel/06-generate-rd04-figure.R"</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>script_dir <span class="ot">&lt;-</span> <span class="fu">dirname</span>(<span class="fu">normalizePath</span>(<span class="fu">sub</span>(<span class="st">"^--file="</span>, <span class="st">""</span>, script_argument)))</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>analysis_root <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(<span class="fu">file.path</span>(script_dir, <span class="st">".."</span>, <span class="st">".."</span>, <span class="st">".."</span>))</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">file.path</span>(script_dir, <span class="st">"00-fuel-config.R"</span>))</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmmTMB)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>paths <span class="ot">&lt;-</span> <span class="fu">publication_fuel_paths</span>(analysis_root)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>output_root <span class="ot">&lt;-</span> paths<span class="sc">$</span>output</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>models_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(output_root, <span class="st">"models"</span>)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>figures_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(output_root, <span class="st">"figures"</span>)</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>tables_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(output_root, <span class="st">"tables"</span>)</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(figures_dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(tables_dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>selection <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(paths<span class="sc">$</span>manifests, <span class="st">"model-selection-log.csv"</span>), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>model_ids <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_onehr =</span> <span class="st">"prepct_onehr_disp_treatment"</span>,</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_onehr =</span> <span class="st">"postpct_onehr_base"</span>,</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_tenhr =</span> <span class="st">"prepct_tenhr_base"</span>,</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_tenhr =</span> <span class="st">"postpct_tenhr_base"</span>,</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_hundhr =</span> <span class="st">"prepct_hundhr_base"</span>,</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_hundhr =</span> <span class="st">"postpct_hundhr_zi_treatment_site_disp_treatment_site_interaction"</span>,</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_thoushr =</span> <span class="st">"prepct_thoushr_base"</span>,</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_thoushr =</span> <span class="st">"postpct_thoushr_zi_treatment"</span>,</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">woody_phase =</span> <span class="st">"woody_phase_zigamma_ziphase_disp1"</span>,</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_herbaceous =</span> <span class="st">"prepct_herbaceous_vegetation_base"</span>,</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_herbaceous =</span> <span class="st">"postpct_herbaceous_vegetation_base"</span>,</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_litter =</span> <span class="st">"prepct_litter_disp_treatment"</span>,</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_duff =</span> <span class="st">"prepct_duff_base"</span>,</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">woody_difference =</span> <span class="st">"woody_delta_student_t_disp_treatment_site_interaction"</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>missing_models <span class="ot">&lt;-</span> model_ids[<span class="sc">!</span><span class="fu">file.exists</span>(<span class="fu">file.path</span>(models_dir, <span class="fu">paste0</span>(model_ids, <span class="st">".rds"</span>)))]</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(missing_models)) <span class="fu">stop</span>(<span class="st">"Missing selected model files: "</span>, <span class="fu">paste</span>(missing_models, <span class="at">collapse =</span> <span class="st">", "</span>))</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict at every observed site-by-treatment (and phase, where relevant)</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="co"># combination, excluding random effects. Average the balanced site predictions</span></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="co"># within each plotted treatment/phase and propagate their prediction covariance</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="co"># to retain model-based uncertainty for the displayed marginal estimate.</span></span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>model_estimates <span class="ot">&lt;-</span> <span class="cf">function</span>(model_id, component, <span class="at">phase =</span> <span class="cn">NULL</span>, <span class="at">difference =</span> <span class="cn">FALSE</span>) {</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(models_dir, <span class="fu">paste0</span>(model_id, <span class="st">".rds"</span>)))</span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>  phase_label <span class="ot">&lt;-</span> <span class="cf">if</span> (difference) {</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Vegetation difference"</span></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">identical</span>(phase, <span class="st">"prepct"</span>)) {</span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pre-PCT"</span></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Post-PCT"</span></span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>  frame <span class="ot">&lt;-</span> model<span class="sc">$</span>frame</span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>  focal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="cf">if</span> (<span class="st">"phase"</span> <span class="sc">%in%</span> <span class="fu">names</span>(frame)) <span class="st">"phase"</span>)</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>  grid_columns <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">c</span>(<span class="st">"site"</span>, focal), <span class="fu">names</span>(frame))</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>  grid <span class="ot">&lt;-</span> frame <span class="sc">|&gt;</span></span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(grid_columns)), <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(phase) <span class="sc">&amp;&amp;</span> <span class="st">"phase"</span> <span class="sc">%in%</span> <span class="fu">names</span>(grid)) {</span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>    grid <span class="ot">&lt;-</span> <span class="fu">filter</span>(grid, .data<span class="sc">$</span>phase <span class="sc">==</span> .env<span class="sc">$</span>phase)</span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>  prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>    model,</span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> grid,</span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"response"</span>,</span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">se.fit =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">cov.fit =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">re.form =</span> <span class="cn">NA</span>,</span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">allow.new.levels =</span> <span class="cn">TRUE</span></span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>  grid <span class="ot">&lt;-</span> <span class="fu">mutate</span>(grid, <span class="at">estimate_site =</span> <span class="fu">as.numeric</span>(prediction<span class="sc">$</span>fit))</span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>  group_columns <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"phase"</span>), <span class="fu">names</span>(grid))</span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>  groups <span class="ot">&lt;-</span> grid <span class="sc">|&gt;</span></span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">row_id =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(group_columns))) <span class="sc">|&gt;</span></span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">row_ids =</span> <span class="fu">list</span>(row_id), <span class="at">estimate =</span> <span class="fu">mean</span>(estimate_site), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>  groups <span class="ot">&lt;-</span> groups <span class="sc">|&gt;</span></span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>      <span class="at">se =</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(prediction<span class="sc">$</span>cov.fit[row_ids[[<span class="dv">1</span>]], row_ids[[<span class="dv">1</span>]], <span class="at">drop =</span> <span class="cn">FALSE</span>]) <span class="sc">/</span> <span class="fu">length</span>(row_ids[[<span class="dv">1</span>]])<span class="sc">^</span><span class="dv">2</span>),</span>
-<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>      <span class="at">lcl =</span> estimate <span class="sc">-</span> stats<span class="sc">::</span><span class="fu">qnorm</span>(<span class="fl">0.975</span>) <span class="sc">*</span> se,</span>
-<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">ucl =</span> estimate <span class="sc">+</span> stats<span class="sc">::</span><span class="fu">qnorm</span>(<span class="fl">0.975</span>) <span class="sc">*</span> se</span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>      <span class="at">component =</span> component,</span>
-<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">model_id =</span> model_id,</span>
-<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">estimand =</span> <span class="cf">if</span> (difference) <span class="st">"matched woody vegetation difference (pre-PCT minus post-PCT)"</span> <span class="cf">else</span> <span class="st">"phase-specific expected load"</span>,</span>
-<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">phase =</span> phase_label,</span>
-<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">lcl =</span> <span class="cf">if</span> (difference) lcl <span class="cf">else</span> <span class="fu">pmax</span>(<span class="dv">0</span>, lcl),</span>
-<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>      <span class="at">treatment =</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"gs"</span>, <span class="st">"ld"</span>, <span class="st">"ha"</span>, <span class="st">"hd"</span>))</span>
-<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(groups, component, phase, treatment, estimate, se, lcl, ucl, model_id, estimand)</span>
-<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>paired_components <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_onehr"</span>]], <span class="st">"1-hour fuel"</span>, <span class="st">"prepct"</span>),</span>
-<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_onehr"</span>]], <span class="st">"1-hour fuel"</span>, <span class="st">"postpct"</span>),</span>
-<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_tenhr"</span>]], <span class="st">"10-hour fuel"</span>, <span class="st">"prepct"</span>),</span>
-<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_tenhr"</span>]], <span class="st">"10-hour fuel"</span>, <span class="st">"postpct"</span>),</span>
-<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_hundhr"</span>]], <span class="st">"100-hour fuel"</span>, <span class="st">"prepct"</span>),</span>
-<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_hundhr"</span>]], <span class="st">"100-hour fuel"</span>, <span class="st">"postpct"</span>),</span>
-<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_thoushr"</span>]], <span class="st">"1,000-hour fuel"</span>, <span class="st">"prepct"</span>),</span>
-<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_thoushr"</span>]], <span class="st">"1,000-hour fuel"</span>, <span class="st">"postpct"</span>),</span>
-<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"woody_phase"</span>]], <span class="st">"Woody vegetation"</span>, <span class="st">"prepct"</span>),</span>
-<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"woody_phase"</span>]], <span class="st">"Woody vegetation"</span>, <span class="st">"postpct"</span>),</span>
-<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_herbaceous"</span>]], <span class="st">"Herbaceous vegetation"</span>, <span class="st">"prepct"</span>),</span>
-<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_herbaceous"</span>]], <span class="st">"Herbaceous vegetation"</span>, <span class="st">"postpct"</span>)</span>
-<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a>pre_only_components <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_litter"</span>]], <span class="st">"Litter (pre-PCT only)"</span>, <span class="st">"prepct"</span>),</span>
-<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_duff"</span>]], <span class="st">"Duff (pre-PCT only)"</span>, <span class="st">"prepct"</span>)</span>
-<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a>difference_component <span class="ot">&lt;-</span> <span class="fu">model_estimates</span>(</span>
-<span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a>  model_ids[[<span class="st">"woody_difference"</span>]],</span>
-<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Woody vegetation difference (pre-PCT minus post-PCT)"</span>,</span>
-<span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a>  <span class="at">difference =</span> <span class="cn">TRUE</span></span>
-<span id="cb5-127"><a href="#cb5-127" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-128"><a href="#cb5-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-129"><a href="#cb5-129" aria-hidden="true" tabindex="-1"></a>estimates <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(paired_components, pre_only_components, difference_component) <span class="sc">|&gt;</span></span>
-<span id="cb5-130"><a href="#cb5-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-131"><a href="#cb5-131" aria-hidden="true" tabindex="-1"></a>    <span class="at">phase =</span> <span class="fu">factor</span>(phase, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Pre-PCT"</span>, <span class="st">"Post-PCT"</span>, <span class="st">"Vegetation difference"</span>)),</span>
-<span id="cb5-132"><a href="#cb5-132" aria-hidden="true" tabindex="-1"></a>    <span class="at">component =</span> <span class="fu">factor</span>(component, <span class="at">levels =</span> <span class="fu">c</span>(</span>
-<span id="cb5-133"><a href="#cb5-133" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1-hour fuel"</span>, <span class="st">"10-hour fuel"</span>, <span class="st">"100-hour fuel"</span>, <span class="st">"1,000-hour fuel"</span>,</span>
-<span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Woody vegetation"</span>, <span class="st">"Herbaceous vegetation"</span>, <span class="st">"Litter (pre-PCT only)"</span>,</span>
-<span id="cb5-135"><a href="#cb5-135" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Duff (pre-PCT only)"</span>, <span class="st">"Woody vegetation difference (pre-PCT minus post-PCT)"</span></span>
-<span id="cb5-136"><a href="#cb5-136" aria-hidden="true" tabindex="-1"></a>    ))</span>
-<span id="cb5-137"><a href="#cb5-137" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-138"><a href="#cb5-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-139"><a href="#cb5-139" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(estimates, <span class="fu">file.path</span>(tables_dir, <span class="st">"rd04-fuel-model-estimates.csv"</span>))</span>
-<span id="cb5-140"><a href="#cb5-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-141"><a href="#cb5-141" aria-hidden="true" tabindex="-1"></a>phase_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Pre-PCT"</span> <span class="ot">=</span> <span class="st">"#C96F38"</span>, <span class="st">"Post-PCT"</span> <span class="ot">=</span> <span class="st">"#3F51B5"</span>)</span>
-<span id="cb5-142"><a href="#cb5-142" aria-hidden="true" tabindex="-1"></a>phase_position <span class="ot">&lt;-</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.52</span>)</span>
-<span id="cb5-143"><a href="#cb5-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-144"><a href="#cb5-144" aria-hidden="true" tabindex="-1"></a>phase_panel <span class="ot">&lt;-</span> <span class="cf">function</span>(component_name) {</span>
-<span id="cb5-145"><a href="#cb5-145" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">filter</span>(estimates, .data<span class="sc">$</span>component <span class="sc">==</span> .env<span class="sc">$</span>component_name)</span>
-<span id="cb5-146"><a href="#cb5-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> estimate, <span class="at">ymin =</span> lcl, <span class="at">ymax =</span> ucl, <span class="at">color =</span> phase, <span class="at">group =</span> phase)) <span class="sc">+</span></span>
-<span id="cb5-147"><a href="#cb5-147" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_linerange</span>(<span class="at">linewidth =</span> <span class="fl">2.2</span>, <span class="at">position =</span> phase_position) <span class="sc">+</span></span>
-<span id="cb5-148"><a href="#cb5-148" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="dv">21</span>, <span class="at">fill =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">stroke =</span> <span class="fl">0.6</span>, <span class="at">position =</span> phase_position) <span class="sc">+</span></span>
-<span id="cb5-149"><a href="#cb5-149" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> phase_colors, <span class="at">drop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb5-150"><a href="#cb5-150" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="at">gs =</span> <span class="st">"GS"</span>, <span class="at">ld =</span> <span class="st">"LD"</span>, <span class="at">ha =</span> <span class="st">"HA"</span>, <span class="at">hd =</span> <span class="st">"HD"</span>)) <span class="sc">+</span></span>
-<span id="cb5-151"><a href="#cb5-151" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> component_name, <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="fu">expression</span>(Load <span class="sc">~</span> (Mg <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>))) <span class="sc">+</span></span>
-<span id="cb5-152"><a href="#cb5-152" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
-<span id="cb5-153"><a href="#cb5-153" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb5-154"><a href="#cb5-154" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>),</span>
-<span id="cb5-155"><a href="#cb5-155" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-156"><a href="#cb5-156" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span></span>
-<span id="cb5-157"><a href="#cb5-157" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-160"><a href="#cb5-160" aria-hidden="true" tabindex="-1"></a>difference_panel <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb5-161"><a href="#cb5-161" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> difference_component</span>
-<span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> estimate, <span class="at">ymin =</span> lcl, <span class="at">ymax =</span> ucl)) <span class="sc">+</span></span>
-<span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"gray45"</span>, <span class="at">linewidth =</span> <span class="fl">0.45</span>) <span class="sc">+</span></span>
-<span id="cb5-164"><a href="#cb5-164" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_linerange</span>(<span class="at">color =</span> <span class="st">"#5A4A42"</span>, <span class="at">linewidth =</span> <span class="fl">2.2</span>) <span class="sc">+</span></span>
-<span id="cb5-165"><a href="#cb5-165" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="dv">21</span>, <span class="at">fill =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">stroke =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb5-166"><a href="#cb5-166" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="at">gs =</span> <span class="st">"GS"</span>, <span class="at">ld =</span> <span class="st">"LD"</span>, <span class="at">ha =</span> <span class="st">"HA"</span>, <span class="at">hd =</span> <span class="st">"HD"</span>)) <span class="sc">+</span></span>
-<span id="cb5-167"><a href="#cb5-167" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb5-168"><a href="#cb5-168" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Woody vegetation difference</span><span class="sc">\n</span><span class="st">(pre-PCT minus post-PCT)"</span>,</span>
-<span id="cb5-169"><a href="#cb5-169" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb5-170"><a href="#cb5-170" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">expression</span>(Load <span class="sc">~</span> difference <span class="sc">~</span> (Mg <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>))</span>
-<span id="cb5-171"><a href="#cb5-171" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb5-172"><a href="#cb5-172" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
-<span id="cb5-173"><a href="#cb5-173" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>), <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb5-174"><a href="#cb5-174" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-175"><a href="#cb5-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-176"><a href="#cb5-176" aria-hidden="true" tabindex="-1"></a>component_order <span class="ot">&lt;-</span> <span class="fu">levels</span>(estimates<span class="sc">$</span>component)</span>
-<span id="cb5-177"><a href="#cb5-177" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">lapply</span>(component_order[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>], phase_panel)</span>
-<span id="cb5-178"><a href="#cb5-178" aria-hidden="true" tabindex="-1"></a>plots[[<span class="dv">9</span>]] <span class="ot">&lt;-</span> <span class="fu">difference_panel</span>()</span>
-<span id="cb5-179"><a href="#cb5-179" aria-hidden="true" tabindex="-1"></a>figure <span class="ot">&lt;-</span> <span class="fu">wrap_plots</span>(plots, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">+</span></span>
-<span id="cb5-180"><a href="#cb5-180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span>
-<span id="cb5-181"><a href="#cb5-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-182"><a href="#cb5-182" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">file.path</span>(figures_dir, <span class="st">"rd04-fuel-phase-pct-inventory.png"</span>), figure, <span class="at">width =</span> <span class="fl">10.5</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
-<span id="cb5-183"><a href="#cb5-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-184"><a href="#cb5-184" aria-hidden="true" tabindex="-1"></a><span class="co"># The analysis output above is canonical. A byte-identical site asset makes the</span></span>
-<span id="cb5-185"><a href="#cb5-185" aria-hidden="true" tabindex="-1"></a><span class="co"># current review figure available in the rendered Quarto website without asking</span></span>
-<span id="cb5-186"><a href="#cb5-186" aria-hidden="true" tabindex="-1"></a><span class="co"># the published site to reach outside its output directory.</span></span>
-<span id="cb5-187"><a href="#cb5-187" aria-hidden="true" tabindex="-1"></a>site_assets_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">dirname</span>(analysis_root), <span class="st">"publication"</span>, <span class="st">"assets"</span>)</span>
-<span id="cb5-188"><a href="#cb5-188" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(site_assets_dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-189"><a href="#cb5-189" aria-hidden="true" tabindex="-1"></a><span class="fu">file.copy</span>(</span>
-<span id="cb5-190"><a href="#cb5-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(figures_dir, <span class="st">"rd04-fuel-phase-pct-inventory.png"</span>),</span>
-<span id="cb5-191"><a href="#cb5-191" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(site_assets_dir, <span class="st">"rd04-fuel-phase-pct-inventory.png"</span>),</span>
-<span id="cb5-192"><a href="#cb5-192" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
-<span id="cb5-193"><a href="#cb5-193" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-194"><a href="#cb5-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-195"><a href="#cb5-195" aria-hidden="true" tabindex="-1"></a>provenance <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb5-196"><a href="#cb5-196" aria-hidden="true" tabindex="-1"></a>  <span class="st">"task: RD04"</span>,</span>
-<span id="cb5-197"><a href="#cb5-197" aria-hidden="true" tabindex="-1"></a>  <span class="st">"figure: figures/rd04-fuel-phase-pct-inventory.png"</span>,</span>
-<span id="cb5-198"><a href="#cb5-198" aria-hidden="true" tabindex="-1"></a>  <span class="st">"estimates: tables/rd04-fuel-model-estimates.csv"</span>,</span>
-<span id="cb5-199"><a href="#cb5-199" aria-hidden="true" tabindex="-1"></a>  <span class="st">"intervals: 95% normal-approximation intervals propagated from prediction covariance"</span>,</span>
-<span id="cb5-200"><a href="#cb5-200" aria-hidden="true" tabindex="-1"></a>  <span class="st">"site_averaging: balanced average of population-level predictions across observed sites"</span>,</span>
-<span id="cb5-201"><a href="#cb5-201" aria-hidden="true" tabindex="-1"></a>  <span class="st">"paired_components: 1-hour; 10-hour; 100-hour; 1,000-hour; woody vegetation; herbaceous vegetation"</span>,</span>
-<span id="cb5-202"><a href="#cb5-202" aria-hidden="true" tabindex="-1"></a>  <span class="st">"pre_pct_only: litter; duff"</span>,</span>
-<span id="cb5-203"><a href="#cb5-203" aria-hidden="true" tabindex="-1"></a>  <span class="st">"difference_panel: matched woody vegetation pre-PCT minus post-PCT"</span>,</span>
-<span id="cb5-204"><a href="#cb5-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"model_ids: "</span>, <span class="fu">paste</span>(model_ids, <span class="at">collapse =</span> <span class="st">"; "</span>)),</span>
-<span id="cb5-205"><a href="#cb5-205" aria-hidden="true" tabindex="-1"></a>  <span class="st">"selection_status: AIC-leading candidates used for draft figure; scientific review remains pending"</span></span>
-<span id="cb5-206"><a href="#cb5-206" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-207"><a href="#cb5-207" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(provenance, <span class="fu">file.path</span>(paths<span class="sc">$</span>manifests, <span class="st">"rd04-figure-provenance.yml"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the RD04 publication figure: the full disaggregated pre-/post-PCT</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fuel inventory. This publication-only step reads saved F01 model artifacts</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and writes only below outputs/publication/fuel/.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>script_argument <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"^--file="</span>, <span class="fu">commandArgs</span>(<span class="at">trailingOnly =</span> <span class="cn">FALSE</span>), <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(script_argument) <span class="sc">!=</span> <span class="dv">1</span>L) <span class="fu">stop</span>(<span class="st">"Run with Rscript scripts/publication/fuel/06-generate-rd04-figure.R"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>script_dir <span class="ot">&lt;-</span> <span class="fu">dirname</span>(<span class="fu">normalizePath</span>(<span class="fu">sub</span>(<span class="st">"^--file="</span>, <span class="st">""</span>, script_argument)))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>analysis_root <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(<span class="fu">file.path</span>(script_dir, <span class="st">".."</span>, <span class="st">".."</span>, <span class="st">".."</span>))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">file.path</span>(script_dir, <span class="st">"00-fuel-config.R"</span>))</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmmTMB)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>paths <span class="ot">&lt;-</span> <span class="fu">publication_fuel_paths</span>(analysis_root)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>output_root <span class="ot">&lt;-</span> paths<span class="sc">$</span>output</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>models_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(output_root, <span class="st">"models"</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>figures_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(output_root, <span class="st">"figures"</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>tables_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(output_root, <span class="st">"tables"</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(figures_dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(tables_dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>selection <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(paths<span class="sc">$</span>manifests, <span class="st">"model-selection-log.csv"</span>), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>model_ids <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_onehr =</span> <span class="st">"prepct_onehr_disp_treatment"</span>,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_onehr =</span> <span class="st">"postpct_onehr_base"</span>,</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_tenhr =</span> <span class="st">"prepct_tenhr_base"</span>,</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_tenhr =</span> <span class="st">"postpct_tenhr_base"</span>,</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_hundhr =</span> <span class="st">"prepct_hundhr_base"</span>,</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_hundhr =</span> <span class="st">"postpct_hundhr_zi_treatment_site_disp_treatment_site_interaction"</span>,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_thoushr =</span> <span class="st">"prepct_thoushr_base"</span>,</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_thoushr =</span> <span class="st">"postpct_thoushr_zi_treatment"</span>,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">woody_phase =</span> <span class="st">"woody_phase_zigamma_ziphase_disp1"</span>,</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_herbaceous =</span> <span class="st">"prepct_herbaceous_vegetation_base"</span>,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">postpct_herbaceous =</span> <span class="st">"postpct_herbaceous_vegetation_base"</span>,</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_litter =</span> <span class="st">"prepct_litter_disp_treatment"</span>,</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">prepct_duff =</span> <span class="st">"prepct_duff_base"</span>,</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">woody_difference =</span> <span class="st">"woody_delta_student_t_disp_treatment_site_interaction"</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>missing_models <span class="ot">&lt;-</span> model_ids[<span class="sc">!</span><span class="fu">file.exists</span>(<span class="fu">file.path</span>(models_dir, <span class="fu">paste0</span>(model_ids, <span class="st">".rds"</span>)))]</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(missing_models)) <span class="fu">stop</span>(<span class="st">"Missing selected model files: "</span>, <span class="fu">paste</span>(missing_models, <span class="at">collapse =</span> <span class="st">", "</span>))</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict at every observed site-by-treatment (and phase, where relevant)</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co"># combination, excluding random effects. Average the balanced site predictions</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co"># within each plotted treatment/phase and propagate their prediction covariance</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co"># to retain model-based uncertainty for the displayed marginal estimate.</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>model_estimates <span class="ot">&lt;-</span> <span class="cf">function</span>(model_id, component, <span class="at">phase =</span> <span class="cn">NULL</span>, <span class="at">difference =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(models_dir, <span class="fu">paste0</span>(model_id, <span class="st">".rds"</span>)))</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>  phase_label <span class="ot">&lt;-</span> <span class="cf">if</span> (difference) {</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Vegetation difference"</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">identical</span>(phase, <span class="st">"prepct"</span>)) {</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pre-PCT"</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Post-PCT"</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  frame <span class="ot">&lt;-</span> model<span class="sc">$</span>frame</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>  focal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="cf">if</span> (<span class="st">"phase"</span> <span class="sc">%in%</span> <span class="fu">names</span>(frame)) <span class="st">"phase"</span>)</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  grid_columns <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">c</span>(<span class="st">"site"</span>, focal), <span class="fu">names</span>(frame))</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  grid <span class="ot">&lt;-</span> frame <span class="sc">|&gt;</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(grid_columns)), <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(phase) <span class="sc">&amp;&amp;</span> <span class="st">"phase"</span> <span class="sc">%in%</span> <span class="fu">names</span>(grid)) {</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    grid <span class="ot">&lt;-</span> <span class="fu">filter</span>(grid, .data<span class="sc">$</span>phase <span class="sc">==</span> .env<span class="sc">$</span>phase)</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    model,</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> grid,</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"response"</span>,</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">se.fit =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">cov.fit =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">re.form =</span> <span class="cn">NA</span>,</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">allow.new.levels =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>  grid <span class="ot">&lt;-</span> <span class="fu">mutate</span>(grid, <span class="at">estimate_site =</span> <span class="fu">as.numeric</span>(prediction<span class="sc">$</span>fit))</span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>  group_columns <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">c</span>(<span class="st">"treatment"</span>, <span class="st">"phase"</span>), <span class="fu">names</span>(grid))</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>  groups <span class="ot">&lt;-</span> grid <span class="sc">|&gt;</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">row_id =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(group_columns))) <span class="sc">|&gt;</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">row_ids =</span> <span class="fu">list</span>(row_id), <span class="at">estimate =</span> <span class="fu">mean</span>(estimate_site), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>  groups <span class="ot">&lt;-</span> groups <span class="sc">|&gt;</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>      <span class="at">se =</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(prediction<span class="sc">$</span>cov.fit[row_ids[[<span class="dv">1</span>]], row_ids[[<span class="dv">1</span>]], <span class="at">drop =</span> <span class="cn">FALSE</span>]) <span class="sc">/</span> <span class="fu">length</span>(row_ids[[<span class="dv">1</span>]])<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>      <span class="at">lcl =</span> estimate <span class="sc">-</span> stats<span class="sc">::</span><span class="fu">qnorm</span>(<span class="fl">0.975</span>) <span class="sc">*</span> se,</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">ucl =</span> estimate <span class="sc">+</span> stats<span class="sc">::</span><span class="fu">qnorm</span>(<span class="fl">0.975</span>) <span class="sc">*</span> se</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>      <span class="at">component =</span> component,</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">model_id =</span> model_id,</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">estimand =</span> <span class="cf">if</span> (difference) <span class="st">"matched woody vegetation difference (pre-PCT minus post-PCT)"</span> <span class="cf">else</span> <span class="st">"phase-specific expected load"</span>,</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">phase =</span> phase_label,</span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">lcl =</span> <span class="cf">if</span> (difference) lcl <span class="cf">else</span> <span class="fu">pmax</span>(<span class="dv">0</span>, lcl),</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>      <span class="at">treatment =</span> <span class="fu">factor</span>(treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"gs"</span>, <span class="st">"ld"</span>, <span class="st">"ha"</span>, <span class="st">"hd"</span>))</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(groups, component, phase, treatment, estimate, se, lcl, ucl, model_id, estimand)</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>paired_components <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_onehr"</span>]], <span class="st">"1-hour fuel"</span>, <span class="st">"prepct"</span>),</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_onehr"</span>]], <span class="st">"1-hour fuel"</span>, <span class="st">"postpct"</span>),</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_tenhr"</span>]], <span class="st">"10-hour fuel"</span>, <span class="st">"prepct"</span>),</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_tenhr"</span>]], <span class="st">"10-hour fuel"</span>, <span class="st">"postpct"</span>),</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_hundhr"</span>]], <span class="st">"100-hour fuel"</span>, <span class="st">"prepct"</span>),</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_hundhr"</span>]], <span class="st">"100-hour fuel"</span>, <span class="st">"postpct"</span>),</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_thoushr"</span>]], <span class="st">"1,000-hour fuel"</span>, <span class="st">"prepct"</span>),</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_thoushr"</span>]], <span class="st">"1,000-hour fuel"</span>, <span class="st">"postpct"</span>),</span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"woody_phase"</span>]], <span class="st">"Woody vegetation"</span>, <span class="st">"prepct"</span>),</span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"woody_phase"</span>]], <span class="st">"Woody vegetation"</span>, <span class="st">"postpct"</span>),</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_herbaceous"</span>]], <span class="st">"Herbaceous vegetation"</span>, <span class="st">"prepct"</span>),</span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"postpct_herbaceous"</span>]], <span class="st">"Herbaceous vegetation"</span>, <span class="st">"postpct"</span>)</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>pre_only_components <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_litter"</span>]], <span class="st">"Litter (pre-PCT only)"</span>, <span class="st">"prepct"</span>),</span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model_estimates</span>(model_ids[[<span class="st">"prepct_duff"</span>]], <span class="st">"Duff (pre-PCT only)"</span>, <span class="st">"prepct"</span>)</span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>difference_component <span class="ot">&lt;-</span> <span class="fu">model_estimates</span>(</span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a>  model_ids[[<span class="st">"woody_difference"</span>]],</span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Woody vegetation difference (pre-PCT minus post-PCT)"</span>,</span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>  <span class="at">difference =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>estimates <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(paired_components, pre_only_components, difference_component) <span class="sc">|&gt;</span></span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>    <span class="at">phase =</span> <span class="fu">factor</span>(phase, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Pre-PCT"</span>, <span class="st">"Post-PCT"</span>, <span class="st">"Vegetation difference"</span>)),</span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>    <span class="at">component =</span> <span class="fu">factor</span>(component, <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1-hour fuel"</span>, <span class="st">"10-hour fuel"</span>, <span class="st">"100-hour fuel"</span>, <span class="st">"1,000-hour fuel"</span>,</span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Woody vegetation"</span>, <span class="st">"Herbaceous vegetation"</span>, <span class="st">"Litter (pre-PCT only)"</span>,</span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Duff (pre-PCT only)"</span>, <span class="st">"Woody vegetation difference (pre-PCT minus post-PCT)"</span></span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(estimates, <span class="fu">file.path</span>(tables_dir, <span class="st">"rd04-fuel-model-estimates.csv"</span>))</span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a>phase_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Pre-PCT"</span> <span class="ot">=</span> <span class="st">"#C96F38"</span>, <span class="st">"Post-PCT"</span> <span class="ot">=</span> <span class="st">"#3F51B5"</span>)</span>
+<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a>phase_position <span class="ot">&lt;-</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.52</span>)</span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a>phase_panel <span class="ot">&lt;-</span> <span class="cf">function</span>(component_name) {</span>
+<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">filter</span>(estimates, .data<span class="sc">$</span>component <span class="sc">==</span> .env<span class="sc">$</span>component_name)</span>
+<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> estimate, <span class="at">ymin =</span> lcl, <span class="at">ymax =</span> ucl, <span class="at">color =</span> phase, <span class="at">group =</span> phase)) <span class="sc">+</span></span>
+<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_linerange</span>(<span class="at">linewidth =</span> <span class="fl">2.2</span>, <span class="at">position =</span> phase_position) <span class="sc">+</span></span>
+<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="dv">21</span>, <span class="at">fill =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">stroke =</span> <span class="fl">0.6</span>, <span class="at">position =</span> phase_position) <span class="sc">+</span></span>
+<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> phase_colors, <span class="at">drop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="at">gs =</span> <span class="st">"GS"</span>, <span class="at">ld =</span> <span class="st">"LD"</span>, <span class="at">ha =</span> <span class="st">"HA"</span>, <span class="at">hd =</span> <span class="st">"HD"</span>)) <span class="sc">+</span></span>
+<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> component_name, <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="fu">expression</span>(Load <span class="sc">~</span> (Mg <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>))) <span class="sc">+</span></span>
+<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb4-154"><a href="#cb4-154" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>),</span>
+<span id="cb4-155"><a href="#cb4-155" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-156"><a href="#cb4-156" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb4-157"><a href="#cb4-157" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-158"><a href="#cb4-158" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-159"><a href="#cb4-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-160"><a href="#cb4-160" aria-hidden="true" tabindex="-1"></a>difference_panel <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-161"><a href="#cb4-161" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> difference_component</span>
+<span id="cb4-162"><a href="#cb4-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> estimate, <span class="at">ymin =</span> lcl, <span class="at">ymax =</span> ucl)) <span class="sc">+</span></span>
+<span id="cb4-163"><a href="#cb4-163" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"gray45"</span>, <span class="at">linewidth =</span> <span class="fl">0.45</span>) <span class="sc">+</span></span>
+<span id="cb4-164"><a href="#cb4-164" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_linerange</span>(<span class="at">color =</span> <span class="st">"#5A4A42"</span>, <span class="at">linewidth =</span> <span class="fl">2.2</span>) <span class="sc">+</span></span>
+<span id="cb4-165"><a href="#cb4-165" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="dv">21</span>, <span class="at">fill =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">stroke =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb4-166"><a href="#cb4-166" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="at">gs =</span> <span class="st">"GS"</span>, <span class="at">ld =</span> <span class="st">"LD"</span>, <span class="at">ha =</span> <span class="st">"HA"</span>, <span class="at">hd =</span> <span class="st">"HD"</span>)) <span class="sc">+</span></span>
+<span id="cb4-167"><a href="#cb4-167" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb4-168"><a href="#cb4-168" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Woody vegetation difference</span><span class="sc">\n</span><span class="st">(pre-PCT minus post-PCT)"</span>,</span>
+<span id="cb4-169"><a href="#cb4-169" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-170"><a href="#cb4-170" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">expression</span>(Load <span class="sc">~</span> difference <span class="sc">~</span> (Mg <span class="sc">%.%</span> ha<span class="sc">^-</span><span class="dv">1</span>))</span>
+<span id="cb4-171"><a href="#cb4-171" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb4-172"><a href="#cb4-172" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb4-173"><a href="#cb4-173" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>), <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb4-174"><a href="#cb4-174" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-175"><a href="#cb4-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-176"><a href="#cb4-176" aria-hidden="true" tabindex="-1"></a>component_order <span class="ot">&lt;-</span> <span class="fu">levels</span>(estimates<span class="sc">$</span>component)</span>
+<span id="cb4-177"><a href="#cb4-177" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">lapply</span>(component_order[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>], phase_panel)</span>
+<span id="cb4-178"><a href="#cb4-178" aria-hidden="true" tabindex="-1"></a>plots[[<span class="dv">9</span>]] <span class="ot">&lt;-</span> <span class="fu">difference_panel</span>()</span>
+<span id="cb4-179"><a href="#cb4-179" aria-hidden="true" tabindex="-1"></a>figure <span class="ot">&lt;-</span> <span class="fu">wrap_plots</span>(plots, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">+</span></span>
+<span id="cb4-180"><a href="#cb4-180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span>
+<span id="cb4-181"><a href="#cb4-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-182"><a href="#cb4-182" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">file.path</span>(figures_dir, <span class="st">"rd04-fuel-phase-pct-inventory.png"</span>), figure, <span class="at">width =</span> <span class="fl">10.5</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
+<span id="cb4-183"><a href="#cb4-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-184"><a href="#cb4-184" aria-hidden="true" tabindex="-1"></a><span class="co"># The analysis output above is canonical. A byte-identical site asset makes the</span></span>
+<span id="cb4-185"><a href="#cb4-185" aria-hidden="true" tabindex="-1"></a><span class="co"># current review figure available in the rendered Quarto website without asking</span></span>
+<span id="cb4-186"><a href="#cb4-186" aria-hidden="true" tabindex="-1"></a><span class="co"># the published site to reach outside its output directory.</span></span>
+<span id="cb4-187"><a href="#cb4-187" aria-hidden="true" tabindex="-1"></a>site_assets_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">dirname</span>(analysis_root), <span class="st">"publication"</span>, <span class="st">"assets"</span>)</span>
+<span id="cb4-188"><a href="#cb4-188" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(site_assets_dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-189"><a href="#cb4-189" aria-hidden="true" tabindex="-1"></a><span class="fu">file.copy</span>(</span>
+<span id="cb4-190"><a href="#cb4-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(figures_dir, <span class="st">"rd04-fuel-phase-pct-inventory.png"</span>),</span>
+<span id="cb4-191"><a href="#cb4-191" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(site_assets_dir, <span class="st">"rd04-fuel-phase-pct-inventory.png"</span>),</span>
+<span id="cb4-192"><a href="#cb4-192" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-193"><a href="#cb4-193" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-194"><a href="#cb4-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-195"><a href="#cb4-195" aria-hidden="true" tabindex="-1"></a>provenance <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-196"><a href="#cb4-196" aria-hidden="true" tabindex="-1"></a>  <span class="st">"task: RD04"</span>,</span>
+<span id="cb4-197"><a href="#cb4-197" aria-hidden="true" tabindex="-1"></a>  <span class="st">"figure: figures/rd04-fuel-phase-pct-inventory.png"</span>,</span>
+<span id="cb4-198"><a href="#cb4-198" aria-hidden="true" tabindex="-1"></a>  <span class="st">"estimates: tables/rd04-fuel-model-estimates.csv"</span>,</span>
+<span id="cb4-199"><a href="#cb4-199" aria-hidden="true" tabindex="-1"></a>  <span class="st">"intervals: 95% normal-approximation intervals propagated from prediction covariance"</span>,</span>
+<span id="cb4-200"><a href="#cb4-200" aria-hidden="true" tabindex="-1"></a>  <span class="st">"site_averaging: balanced average of population-level predictions across observed sites"</span>,</span>
+<span id="cb4-201"><a href="#cb4-201" aria-hidden="true" tabindex="-1"></a>  <span class="st">"paired_components: 1-hour; 10-hour; 100-hour; 1,000-hour; woody vegetation; herbaceous vegetation"</span>,</span>
+<span id="cb4-202"><a href="#cb4-202" aria-hidden="true" tabindex="-1"></a>  <span class="st">"pre_pct_only: litter; duff"</span>,</span>
+<span id="cb4-203"><a href="#cb4-203" aria-hidden="true" tabindex="-1"></a>  <span class="st">"difference_panel: matched woody vegetation pre-PCT minus post-PCT"</span>,</span>
+<span id="cb4-204"><a href="#cb4-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"model_ids: "</span>, <span class="fu">paste</span>(model_ids, <span class="at">collapse =</span> <span class="st">"; "</span>)),</span>
+<span id="cb4-205"><a href="#cb4-205" aria-hidden="true" tabindex="-1"></a>  <span class="st">"selection_status: AIC-leading candidates used for draft figure; scientific review remains pending"</span></span>
+<span id="cb4-206"><a href="#cb4-206" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-207"><a href="#cb4-207" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(provenance, <span class="fu">file.path</span>(paths<span class="sc">$</span>manifests, <span class="st">"rd04-figure-provenance.yml"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </section>
 <section id="retirement-record" class="level3">
 <h3 class="anchored" data-anchor-id="retirement-record">Retirement record</h3>
 <section id="retired-rd04-generator" class="level4 included-readme" data-heading-offset="3">
 <h4 class="anchored" data-anchor-id="retired-rd04-generator">Retired RD04 generator</h4>
-<p><code>06-generate-rd04-figure.R</code> preserves the original zero-random-effect figure implementation as a historical audit input. Do not execute it. The active generator is the stage-08 calculation in <code>publication/task-rd04.qmd</code>; the old entry point stops with current instructions. The stage-07 calculation on that same task page reads only the archived model map and function definitions for historical comparison. The archived implementation itself remains unchanged.</p>
+<p><code>06-generate-rd04-figure.R</code> preserves the original zero-random-effect figure implementation as a historical audit input. Do not execute it. The active generator is the stage-08 calculation in <code>publication/task-rd04.qmd</code>. The stage-07 calculation on that same task page reads only the archived model map and function definitions for historical comparison. The archived implementation itself remains unchanged.</p>
 </section>
 <p><a href="repo-files/publication/scripts/fuel/retired/README.md">Download the retirement note</a>.</p>
 <p><strong>Execution: Reviewing saved outputs; no recalculation.</strong> Recorded input fingerprints match the active upstream artifacts.</p>
+<p>Maintained sources differ from the recorded producing versions. The saved evidence has not been recalculated from these edits. - <code>publication/task-rd04.qmd</code> - <code>publication/scripts/fuel/retired/README.md</code> - <code>publication/scripts/fuel/06-generate-rd04-figure.R</code></p>
 </section>
 </section>
 <section id="rd04-files" class="level2">
@@ -5255,11 +5237,10 @@ Browse current source files and outputs
 <section id="maintained-sources" class="level3">
 <h3 class="anchored" data-anchor-id="maintained-sources">Maintained sources</h3>
 <ul>
-<li><a href="repo-files/publication/task-rd04.qmd.txt">publication/task-rd04.qmd</a></li>
+<li><code>publication/task-rd04.qmd</code></li>
 <li><a href="repo-files/publication/scripts/fuel/rd04-inference-utils.R">publication/scripts/fuel/rd04-inference-utils.R</a></li>
 <li><a href="repo-files/publication/scripts/fuel/retired/README.md">publication/scripts/fuel/retired/README.md</a></li>
-<li><a href="repo-files/publication/sections/rd04-fuel-estimates-table.qmd.txt">publication/sections/rd04-fuel-estimates-table.qmd</a></li>
-<li><a href="repo-files/publication/scripts/fuel/06-generate-rd04-figure.R">publication/scripts/fuel/06-generate-rd04-figure.R</a></li>
+<li><code>publication/sections/rd04-fuel-estimates-table.qmd</code></li>
 <li><a href="repo-files/publication/scripts/fuel/retired/06-generate-rd04-figure.R">publication/scripts/fuel/retired/06-generate-rd04-figure.R</a></li>
 </ul>
 </section>

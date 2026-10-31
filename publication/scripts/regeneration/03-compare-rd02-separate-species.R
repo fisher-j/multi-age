@@ -237,14 +237,6 @@ provenance <- list(
 yaml::write_yaml(provenance, file.path(out, "manifests/rd02-species-comparison-provenance.yml"))
 capture.output(sessionInfo(), file = file.path(out, "manifests/rd02-species-comparison-session-info.txt"))
 stopifnot(identical(unname(tools::md5sum(protected)), unname(protected_hashes)))
-download_dir <- file.path(paths_common$assets, "rd02-species")
-for (directory in c("tables", "diagnostics", "figures", "manifests")) {
-  target <- file.path(download_dir, directory)
-  dir.create(target, recursive = TRUE, showWarnings = FALSE)
-  stopifnot(all(file.copy(list.files(file.path(out, directory), full.names = TRUE), target, overwrite = TRUE)))
-}
-stopifnot(all(file.copy(c(script_file, file.path(script_dir, "README.md")),
-                       download_dir, overwrite = TRUE)))
 print(comparison)
 print(filter(variances, model_id %in% c("rw_site_macro", "to_site_macro")))
 print(filter(diagnostics, model_id %in% c("rw_site_macro", "to_site_macro")))

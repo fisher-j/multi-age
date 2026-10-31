@@ -199,15 +199,6 @@ provenance <- list(
 yaml::write_yaml(provenance, file.path(out, "manifests/rd02-selected-species-provenance.yml"))
 capture.output(sessionInfo(), file = file.path(out, "manifests/rd02-selected-species-session-info.txt"))
 stopifnot(identical(unname(tools::md5sum(protected)), unname(protected_hashes)))
-asset_root <- file.path(paths_common$assets, "")
-stopifnot(file.copy(file.path(out, "figures", paste0(figure_name, ".png")), asset_root, overwrite = TRUE))
-download_dir <- file.path(asset_root, "rd02-selected")
-for (directory in c("tables", "diagnostics", "figures", "manifests")) {
-  target <- file.path(download_dir, directory)
-  dir.create(target, recursive = TRUE, showWarnings = FALSE)
-  stopifnot(all(file.copy(list.files(file.path(out, directory), full.names = TRUE), target, overwrite = TRUE)))
-}
-stopifnot(file.copy(script_file, download_dir, overwrite = TRUE))
 print(fit_table)
 print(diagnostics)
 print(as.data.frame(select(estimates, species, treat, estimate, lcl, ucl)))

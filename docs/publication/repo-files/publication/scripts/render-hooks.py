@@ -223,7 +223,8 @@ def review(task_id):
         print("Saved model fingerprints cannot be checked because local fitted-model caches are unavailable. "
               "The saved tables and figures remain reviewable.")
     changed_sources = [name for name, checksum in manifest.get("source_sha256", {}).items()
-                       if sha(PROJECT / relative(name)) != checksum]
+                       if not (PROJECT / relative(name)).is_file()
+                       or sha(PROJECT / relative(name)) != checksum]
     if changed_sources:
         print("\nMaintained sources differ from the recorded producing versions. "
               "The saved evidence has not been recalculated from these edits.")
@@ -331,9 +332,6 @@ def post():
     for task in tasks:
         if task["id"] in state["selected"]:
             files.extend((p, PROJECT / p.relative_to(run)) for p in task_files(task, run))
-    if "RD04" in state["selected"]:
-        files.append((run / "outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
-                      PROJECT / "assets/rd04-fuel-phase-pct-inventory.png"))
     promote(files, run)
     state["status"] = "verified_and_promoted"
     write(run / "execution.json", state)
