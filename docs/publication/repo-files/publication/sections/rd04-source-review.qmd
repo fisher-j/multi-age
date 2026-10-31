@@ -1,0 +1,105 @@
+## Inference and display code and outputs {#rd04-source-review}
+
+This section is the authoritative source review for RD04 prediction, inference,
+and display implementation. It reads the original scripts and saved CSVs on
+every render. The [F01 analytical record](task-f01.qmd#f01-pipeline-review)
+owns the upstream component derivation and fitted-model candidates; the
+[fuel pipeline map](pipeline-fuel.qmd) shows their dependencies.
+
+### Complete RD04 scripts
+
+Stage 07 audits inference; stage 08 generates the current integrated-mean
+figure and estimates. Their shared inference functions are included here.
+Stage 06 and its archived implementation are retained as historical evidence.
+
+<details data-review-source="analysis/scripts/publication/fuel/06-generate-rd04-figure.R">
+<summary>06-generate-rd04-figure.R — retired entry point</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/06-generate-rd04-figure.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/06-generate-rd04-figure.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/07-audit-rd04-inference.R">
+<summary>07-audit-rd04-inference.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/07-audit-rd04-inference.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/07-audit-rd04-inference.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R">
+<summary>08-generate-rd04-integrated-figure.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/rd04-inference-utils.R">
+<summary>rd04-inference-utils.R</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/rd04-inference-utils.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/rd04-inference-utils.R >}}
+````
+
+</details>
+
+<details data-review-source="analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R">
+<summary>06-generate-rd04-figure.R — retired (historical implementation)</summary>
+
+[Download source](repo-files/analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R)
+
+````r
+{{< include ../analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R >}}
+````
+
+</details>
+
+### Retirement record
+
+::: {.included-readme heading-offset="3"}
+{{< include ../analysis/scripts/publication/fuel/retired/README.md >}}
+:::
+
+[Download the retirement note](repo-files/analysis/scripts/publication/fuel/retired/README.md).
+
+### Complete RD04 CSV outputs {#rd04-csv-review}
+
+These tables preserve all audit and estimate cells, including saved numeric
+precision. The companion table above formats the same canonical estimate CSV;
+RT03 consumes that CSV without taking ownership of its inference decisions.
+
+```{r}
+#| label: rd04-csv-source-review
+#| echo: false
+#| results: asis
+#| warning: false
+#| message: false
+
+source("scripts/render-csv-review.R", encoding = "UTF-8")
+tasks <- jsonlite::fromJSON("tasks.json", simplifyVector = FALSE)
+review_task <- Filter(function(task) task$id == "RD04", tasks)[[1]]
+groups <- c(
+  `inference-audit` = "Inference audit and historical comparisons",
+  `tables` = "Figure and companion-table estimates"
+)
+for (directory in names(groups)) {
+  cat("\n#### ", groups[[directory]], "\n\n", sep = "")
+  prefix <- paste0("analysis/outputs/publication/fuel/", directory, "/")
+  paths <- sort(unlist(review_task$outputs))
+  paths <- paths[startsWith(paths, prefix) & endsWith(paths, ".csv")]
+  for (path in paths) render_csv_review(path)
+}
+```

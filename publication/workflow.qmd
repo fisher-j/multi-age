@@ -72,6 +72,34 @@ The manuscript section pages and full draft both include `publication/sections/`
 sources. Edit those shared files once to update both reading views. Review
 decisions continue to follow the workflow above.
 
+## Documentation responsibilities {#documentation-responsibilities}
+
+The [fuel pipeline map](pipeline-fuel.qmd) connects the complete analytical and
+writing sequence. Each step's QMD and its included review sections own the
+detailed record: purpose/scope, inputs/dependencies, analyses performed,
+outputs/findings, decisions/rationale, implications/handoff, and review
+state/history. Update the originating step when its analysis or decision changes;
+downstream steps link to that record and explain their own use of it.
+
+F01 owns fuel derivation, exploration, candidate fitting, and provisional model
+leaders. RD04 owns prediction/inference, uncertainty, the figure/estimates, and
+retired display history. RT03 owns the Results claims and qualifications. M03
+and D03 will own manuscript Methods wording and management interpretation when
+their queued work begins. Consuming an upstream artifact does not transfer its
+ownership or accept its provisional scientific decisions.
+
+For the developed fuel records, `tasks.json` separates produced `outputs` from
+consumed `inputs` and lists `depends_on` task IDs. File lists and the pipeline
+map provide navigation; analytical explanations remain on their owning pages.
+Task summaries are concise descriptions of those records, not another decision
+log. The pipeline README supplies operational commands and links back to the
+step documentation.
+
+A continuous pipeline review is not maintained. If it becomes useful for
+code-agent work, assemble it with Quarto includes of the same step-owned
+sections. See the [maintenance guide](repo-files/publication/README.md) for file
+roles, include conventions, and ownership checks.
+
 ## Working boundaries
 
 The standalone publication project remains separate from the legacy Quarto

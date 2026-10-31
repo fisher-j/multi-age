@@ -5,20 +5,16 @@
     "status": "Completed — analytical record",
     "target": "Reproducible component/model record",
     "files": [
-      "analysis/scripts/publication/fuel/README.md",
       "analysis/scripts/publication/fuel/00-fuel-config.R",
       "analysis/scripts/publication/fuel/01-derive-components.R",
       "analysis/scripts/publication/fuel/02-explore-components.R",
       "analysis/scripts/publication/fuel/03-fit-phase-components.R",
       "analysis/scripts/publication/fuel/03-model-utils.R",
       "analysis/scripts/publication/fuel/04-fit-woody-pct-models.R",
-      "analysis/scripts/publication/fuel/05-evaluate-and-select-models.R",
-      "analysis/scripts/publication/fuel/06-generate-rd04-figure.R",
-      "analysis/scripts/publication/fuel/07-audit-rd04-inference.R",
-      "analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R",
-      "analysis/scripts/publication/fuel/rd04-inference-utils.R",
-      "analysis/scripts/publication/fuel/retired/README.md",
-      "analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R",
+      "analysis/scripts/publication/fuel/05-evaluate-and-select-models.R"
+    ],
+    "summary": "The [component definitions](task-f01.qmd#decisions-made) separate vegetation components and pre-PCT litter/duff, omitting post-PCT forest-floor estimates. The [analytical source review](task-f01.qmd#f01-pipeline-review) contains derivation, exploration, candidate-fitting code, and their complete CSV outputs. The [model-review register](task-f01.qmd#rendered-provisional-model-review-register) reports provisional AIC leaders, not final selections. Prediction, inference, and display decisions belong to [RD04](task-rd04.qmd#rd04-inference-review); the [pipeline map](pipeline-fuel.qmd) links the complete sequence.",
+    "outputs": [
       "analysis/outputs/publication/fuel/data/fuel-component-data-dictionary.csv",
       "analysis/outputs/publication/fuel/data/fuel-pairing-qc.csv",
       "analysis/outputs/publication/fuel/data/fuel-component-exploration-summary.csv",
@@ -29,12 +25,6 @@
       "analysis/outputs/publication/fuel/manifests/woody-pct-model-registry.csv",
       "analysis/outputs/publication/fuel/manifests/model-selection-log.csv",
       "analysis/outputs/publication/fuel/manifests/model-comparison.csv",
-      "analysis/outputs/publication/fuel/inference-audit/model-structures.csv",
-      "analysis/outputs/publication/fuel/inference-audit/rd04-estimand-comparison.csv",
-      "analysis/outputs/publication/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv",
-      "analysis/outputs/publication/fuel/inference-audit/thesis-reference-reproduction.csv",
-      "analysis/outputs/publication/fuel/inference-audit/woody-mean-change-comparison.csv",
-      "analysis/outputs/publication/fuel/tables/rd04-fuel-model-estimates.csv",
       "analysis/outputs/publication/fuel/diagnostics/postpct_herbaceous_vegetation_base-dharma.png",
       "analysis/outputs/publication/fuel/diagnostics/postpct_herbaceous_vegetation_disp_treatment-dharma.png",
       "analysis/outputs/publication/fuel/diagnostics/postpct_herbaceous_vegetation_zi_treatment-dharma.png",
@@ -81,7 +71,9 @@
       "analysis/outputs/publication/fuel/diagnostics/woody_phase_zigamma_zi1_dispphase-dharma.png",
       "analysis/outputs/publication/fuel/diagnostics/woody_phase_zigamma_ziphase_disp1-dharma.png"
     ],
-    "summary": "The [component definitions](task-f01.qmd#decisions-made) separate woody and herbaceous vegetation in both phases, split pre-PCT litter and duff, and omit post-PCT forest-floor estimates. Component derivation, pairing checks, exploration, and candidate fitting are preserved in the analytical record. The [model-review register](task-f01.qmd#rendered-provisional-model-review-register) reports provisional AIC leaders alongside diagnostics; it does not select final models. The [rendered pipeline review](task-f01.qmd#f01-pipeline-review) integrates the current README, complete scripts (including shared helpers and retired code), and all saved summary, model-register, inference-audit, and estimate CSVs in collapsible sections."
+    "inputs": [],
+    "depends_on": [],
+    "inline_review": true
   },
   {
     "id": "RD04",
@@ -93,16 +85,32 @@
       "analysis/scripts/publication/fuel/07-audit-rd04-inference.R",
       "analysis/scripts/publication/fuel/rd04-inference-utils.R",
       "analysis/scripts/publication/fuel/retired/README.md",
+      "publication/sections/rd04-fuel-estimates-table.qmd",
+      "publication/sections/rd04-inference-review.qmd",
+      "analysis/scripts/publication/fuel/06-generate-rd04-figure.R",
+      "analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R",
+      "publication/sections/rd04-source-review.qmd"
+    ],
+    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. The [complete source and output review](task-rd04.qmd#rd04-source-review) owns the inference-audit and figure scripts, retired implementation, and all audit/estimate CSVs; F01 supplies the fitted-model record.",
+    "outputs": [
       "analysis/outputs/publication/fuel/figures/rd04-fuel-phase-pct-inventory.png",
       "analysis/outputs/publication/fuel/tables/rd04-fuel-model-estimates.csv",
       "analysis/outputs/publication/fuel/manifests/rd04-figure-provenance.yml",
       "analysis/outputs/publication/fuel/inference-audit/rd04-estimand-comparison.csv",
       "analysis/outputs/publication/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv",
       "analysis/outputs/publication/fuel/inference-audit/woody-mean-change-comparison.csv",
-      "publication/sections/rd04-fuel-estimates-table.qmd",
-      "publication/sections/rd04-inference-review.qmd"
+      "analysis/outputs/publication/fuel/inference-audit/model-structures.csv",
+      "analysis/outputs/publication/fuel/inference-audit/thesis-reference-reproduction.csv"
     ],
-    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review."
+    "inputs": [
+      "analysis/outputs/publication/fuel/data/fuel-component-data-dictionary.csv",
+      "analysis/outputs/publication/fuel/manifests/model-selection-log.csv",
+      "analysis/outputs/publication/fuel/manifests/model-comparison.csv"
+    ],
+    "depends_on": [
+      "F01"
+    ],
+    "inline_review": true
   },
   {
     "id": "RD02",
@@ -171,13 +179,20 @@
     "status": "Pending review",
     "target": "1.5–2 manuscript pages",
     "files": [
-      "publication/sections/results.qmd",
+      "publication/sections/results.qmd"
+    ],
+    "summary": "The fuel Results draft follows the thesis pre-PCT, post-PCT, and vegetation-transition sequence using current publication values. The [source and review decisions](task-rt03.qmd#implemented-source-and-review-decisions) document separated components, integrated means, covariance-aware woody changes, and replacement of inherited significance claims with descriptive rankings. Inline values and the companion table share the canonical CSV; the draft remains pending review, with explicit limits on slash and causal PCT interpretations.",
+    "inputs": [
       "publication/sections/rd04-fuel-estimates-table.qmd",
       "analysis/thesis/results.qmd",
       "analysis/outputs/publication/fuel/tables/rd04-fuel-model-estimates.csv",
       "analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R"
     ],
-    "summary": "The fuel Results draft follows the thesis pre-PCT, post-PCT, and vegetation-transition sequence using current publication values. The [source and review decisions](task-rt03.qmd#implemented-source-and-review-decisions) document separated components, integrated means, covariance-aware woody changes, and replacement of inherited significance claims with descriptive rankings. Inline values and the companion table share the canonical CSV; the draft remains pending review, with explicit limits on slash and causal PCT interpretations."
+    "outputs": [],
+    "depends_on": [
+      "F01",
+      "RD04"
+    ]
   },
   {
     "id": "MD01",
@@ -224,7 +239,7 @@
       "analysis/scripts/publication/fuel/README.md",
       "publication/sections/rd04-inference-review.qmd"
     ],
-    "summary": "Following RT03, the proposal documents fuel-component definitions, the phase boundary, matched woody contrast, uncertainty/model decisions, and limits on causal interpretation. The planned 1–1.5-page Methods subsection must match the reviewed fuel caption and Results claims, with diagnostic detail linked through F01 and the supplement."
+    "summary": "Following RT03, the proposal documents fuel-component definitions, the phase boundary, matched woody contrast, uncertainty/model decisions, and limits on causal interpretation. The planned 1–1.5-page Methods subsection must match the reviewed fuel caption and Results claims, with component/model diagnostics linked through F01 and prediction/inference decisions through RD04."
   },
   {
     "id": "D01",

@@ -22,11 +22,29 @@ def write_if_changed(path, text):
         path.write_text(text, encoding="utf-8", newline="\n")
 
 
-def prepare():
-    tasks = json.loads((PROJECT / "tasks.json").read_text(encoding="utf-8"))
+def validate_tasks(tasks):
     ids = [task["id"] for task in tasks]
     if len(ids) != len(set(ids)):
         raise ValueError("Duplicate task IDs in tasks.json")
+    owners = {}
+    for task in tasks:
+        for dependency in task.get("depends_on", []):
+            if dependency not in ids or dependency == task["id"]:
+                raise ValueError(f"{task['id']}: invalid dependency {dependency}")
+        outputs = set(task.get("outputs", []))
+        if outputs & set(task["files"]):
+            raise ValueError(f"{task['id']}: outputs must be separate from maintained sources")
+        if set(task.get("inputs", [])) & (set(task["files"]) | outputs):
+            raise ValueError(f"{task['id']}: consumed inputs must be separate from maintained files")
+        for path in outputs:
+            if path in owners:
+                raise ValueError(f"Output has two owners: {path} ({owners[path]}, {task['id']})")
+            owners[path] = task["id"]
+
+
+def prepare():
+    tasks = json.loads((PROJECT / "tasks.json").read_text(encoding="utf-8"))
+    validate_tasks(tasks)
 
     index = [
         "---\ntitle: Task register and task list\nsidebar: workflow\n---\n",
@@ -67,8 +85,25 @@ def prepare():
             "from the local checkout on every render.\n"
         )
         files.append("<details>\n<summary>Browse current source files and outputs</summary>\n")
-        for path in task["files"]:
-            files.append(f"- [{path}](repo-files/{path})")
+        if "outputs" in task:
+            dependencies = task.get("depends_on", [])
+            if dependencies:
+                links = ", ".join(f"[{name}](task-{name.lower()}.qmd)" for name in dependencies)
+                files.append(f"Upstream analytical records: {links}.\n")
+            groups = [
+                ("Maintained sources", task["files"]),
+                ("Produced outputs", task["outputs"]),
+                ("Consumed inputs and references", task.get("inputs", [])),
+            ]
+        else:
+            groups = [(None, task["files"])]
+        for title, paths in groups:
+            if not paths:
+                continue
+            if title:
+                files.append(f"\n### {title}\n")
+            for path in paths:
+                files.append(f"- [{path}](repo-files/{path})")
         files.append("\n</details>\n")
         files.append(f"\n[Back to this task in the task list](task-list.qmd#{key}).\n")
         write_if_changed(PROJECT / "_task-metadata" / f"{key}-files.qmd", "\n".join(files))

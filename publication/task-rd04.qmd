@@ -1,11 +1,17 @@
 ---
 title: "RD04 — fuel phase and PCT display"
 sidebar: workflow
+filters:
+  - filters/include-heading-offset.lua
 ---
 
 {{< include _task-metadata/rd04-status.qmd >}}
 
 <span id="rd04-record"></span>
+
+This page owns fuel prediction and inference decisions, the figure and companion
+table, their source/output review, and the history of replaced display code.
+See the [fuel pipeline map](pipeline-fuel.qmd) for the complete sequence.
 
 The figure has been generated from the current
 AIC-leading fitted publication models. Its position in the register is an
@@ -30,6 +36,10 @@ must retain uncertainty, retained-overstory treatment context, and the
 qualified interpretation of the vegetation-difference estimand.
 
 ## Constraints and starting material
+
+The upstream [F01 record](task-f01.qmd#f01-record) supplies component definitions,
+saved fitted-model candidates, diagnostics, and provisional leaders. RD04
+consumes these artifacts; changes to their derivation or fitting belong in F01.
 
 - Use the saved fitted models identified as AIC leaders in the F01
   model-selection register. Their diagnostic/scientific review remains visible
@@ -96,18 +106,28 @@ appendix table; final placement remains a review decision.
 
 {{< include sections/rd04-fuel-estimates-table.qmd >}}
 
-<details>
-<summary>Show the RD04 figure-generation code</summary>
-
-```r
-{{< include ../analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R >}}
-```
-
-</details>
-
 {{< include sections/rd04-inference-review.qmd >}}
 
 The former figure-and-table plan has been merged into this task; this is the
 authoritative action record for fuel-display development.
+
+## Implications, handoff, and review state
+
+[RT03](task-rt03.qmd#implemented-source-and-review-decisions) consumes
+`rd04-fuel-model-estimates.csv` for narrative values and records its claim-level
+wording decisions. [M03](task-m03.qmd) will adapt the Methods wording in the
+inference review when its queued work begins. Both should link back here for
+the estimand and interval rationale. A change to prediction or uncertainty
+requires updating this record and regenerating the figure/CSV before reviewing
+dependent narrative claims.
+
+Acceptance requires a consistent mean-load interpretation across panels,
+traceability from all 60 estimates to the saved models, preservation of woody
+pre/post covariance, and captions that distinguish potential contribution from
+measured slash and causal PCT effects. The figure is complete; scientific model
+assumptions and final table placement remain under review. The archived stage 06
+implementation documents the superseded display, not the current inference target.
+
+{{< include sections/rd04-source-review.qmd >}}
 
 {{< include _task-metadata/rd04-files.qmd >}}

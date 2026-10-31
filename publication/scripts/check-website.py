@@ -101,18 +101,21 @@ def check():
             for part in ("files", "record"):
                 if f"{key}-{part}" not in documents[page].ids:
                     errors.append(f"{page.name}: missing task section {part}")
-            if key == "f01":
+            if task.get("inline_review", False):
                 reviews = documents[page].review_sources
-                expected = {path for path in task["files"] if path.endswith((".R", ".csv"))}
+                expected = {
+                    path for path in task["files"] + task.get("outputs", [])
+                    if path.endswith((".R", ".csv"))
+                }
                 if set(reviews) != expected:
-                    errors.append("F01: inline review must include every registered R script and CSV")
+                    errors.append(f"{task['id']}: inline review must include exactly its maintained R scripts and produced CSVs")
                 for relative, review in reviews.items():
                     source = project.parent / relative
                     if not review["collapsed"]:
-                        errors.append(f"F01: review should start collapsed: {relative}")
+                        errors.append(f"{task['id']}: review should start collapsed: {relative}")
                     if source.suffix == ".R":
                         if review["code"].rstrip("\n") != source.read_text(encoding="utf-8").rstrip("\n"):
-                            errors.append(f"F01: rendered code differs from source: {relative}")
+                            errors.append(f"{task['id']}: rendered code differs from source: {relative}")
                     else:
                         with source.open(encoding="utf-8-sig", newline="") as stream:
                             rows = list(csv.reader(stream))
@@ -120,7 +123,7 @@ def check():
                         # saved R formulas. Compare every cell's displayed text.
                         displayed = lambda table: [[" ".join(cell.split()) for cell in row] for row in table]
                         if displayed(review["rows"]) != displayed(rows):
-                            errors.append(f"F01: rendered CSV cells differ from source: {relative}")
+                            errors.append(f"{task['id']}: rendered CSV cells differ from source: {relative}")
         task_list = documents.get(output / "task-list.html")
         if task_list and (key not in task_list.ids or f"#{key}" not in task_list.register_links):
             errors.append(f"Task register must link to the task list entry: {key}")
@@ -138,9 +141,12 @@ def check():
             errors.append(f"Download is stale relative to local repository: {item['path']}")
     if errors:
         raise SystemExit("\n".join(sorted(set(errors))))
-    fuel_reviews = documents[output / "task-f01.html"].review_sources
+    reviews = ", ".join(
+        f"{task['id']}: {len(documents[output / ('task-' + task['id'].lower() + '.html')].review_sources)}"
+        for task in tasks if task.get("inline_review", False)
+    )
     print(f"Checked {len(documents)} pages, task-section anchors, local links, "
-          f"{len(manifest)} current downloads, and {len(fuel_reviews)} complete F01 inline source reviews.")
+          f"{len(manifest)} current downloads, and complete inline source reviews ({reviews}).")
 
 
 if __name__ == "__main__":

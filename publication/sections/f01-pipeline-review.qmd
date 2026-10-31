@@ -1,21 +1,18 @@
-## Pipeline documentation, code, and outputs {#f01-pipeline-review}
+## Analytical code and outputs {#f01-pipeline-review}
 
-The documentation below includes the current pipeline README directly. Expand a
-script to review its complete source, or a CSV to inspect every row and column.
-These sections read the original repository files on each website render.
-Model leaders remain provisional pending scientific review.
+This section is the authoritative source review for F01 derivation,
+exploration, and candidate fitting. Expand a script or CSV to inspect its
+complete contents, read from the repository on every render. Model leaders
+remain provisional pending scientific review.
 
-[Download the pipeline README](repo-files/analysis/scripts/publication/fuel/README.md).
+See the [fuel pipeline map](pipeline-fuel.qmd) for execution order and
+[RD04's source review](task-rd04.qmd#rd04-source-review) for subsequent inference,
+figure/table generation, and historical display implementations.
 
-::: {.included-readme heading-offset="2"}
-{{< include ../analysis/scripts/publication/fuel/README.md >}}
-:::
+### Complete F01 scripts
 
-### Complete pipeline scripts
-
-Configuration and shared helpers are included with the numbered stages.
-Stage 06 is a retired entry point; stage 08 is the active figure generator.
-The archived implementation is shown separately for historical review.
+Configuration and model helpers are maintained here with stages 01–05.
+RD04 consumes their saved fitted models; rendering this page does not fit them.
 
 <details data-review-source="analysis/scripts/publication/fuel/00-fuel-config.R">
 <summary>00-fuel-config.R</summary>
@@ -94,75 +91,10 @@ The archived implementation is shown separately for historical review.
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/06-generate-rd04-figure.R">
-<summary>06-generate-rd04-figure.R — retired entry point</summary>
+### Complete F01 CSV outputs {#f01-csv-review}
 
-[Download source](repo-files/analysis/scripts/publication/fuel/06-generate-rd04-figure.R)
-
-````r
-{{< include ../analysis/scripts/publication/fuel/06-generate-rd04-figure.R >}}
-````
-
-</details>
-
-<details data-review-source="analysis/scripts/publication/fuel/07-audit-rd04-inference.R">
-<summary>07-audit-rd04-inference.R</summary>
-
-[Download source](repo-files/analysis/scripts/publication/fuel/07-audit-rd04-inference.R)
-
-````r
-{{< include ../analysis/scripts/publication/fuel/07-audit-rd04-inference.R >}}
-````
-
-</details>
-
-<details data-review-source="analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R">
-<summary>08-generate-rd04-integrated-figure.R</summary>
-
-[Download source](repo-files/analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R)
-
-````r
-{{< include ../analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R >}}
-````
-
-</details>
-
-<details data-review-source="analysis/scripts/publication/fuel/rd04-inference-utils.R">
-<summary>rd04-inference-utils.R</summary>
-
-[Download source](repo-files/analysis/scripts/publication/fuel/rd04-inference-utils.R)
-
-````r
-{{< include ../analysis/scripts/publication/fuel/rd04-inference-utils.R >}}
-````
-
-</details>
-
-#### Archived figure implementation
-
-::: {.included-readme heading-offset="4"}
-{{< include ../analysis/scripts/publication/fuel/retired/README.md >}}
-:::
-
-[Download the retirement note](repo-files/analysis/scripts/publication/fuel/retired/README.md).
-
-<details data-review-source="analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R">
-<summary>06-generate-rd04-figure.R — retired (historical implementation)</summary>
-
-[Download source](repo-files/analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R)
-
-````r
-{{< include ../analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R >}}
-````
-
-</details>
-
-### Complete CSV summaries and outputs {#f01-csv-review}
-
-Tables read the saved CSVs directly, preserving full numeric precision and
-missing-value labels. Scroll within wide or long tables to inspect all values;
-the download retains the original CSV. The RD04 audit and estimate tables
-continue the modeling record through inference and display.
+Tables preserve every row, column, saved numeric value, and missing-value label.
+Wide or long tables scroll; downloads retain the original CSVs.
 
 ```{r}
 #| label: f01-csv-source-review
@@ -173,17 +105,15 @@ continue the modeling record through inference and display.
 
 source("scripts/render-csv-review.R", encoding = "UTF-8")
 tasks <- jsonlite::fromJSON("tasks.json", simplifyVector = FALSE)
-fuel_task <- Filter(function(task) task$id == "F01", tasks)[[1]]
+review_task <- Filter(function(task) task$id == "F01", tasks)[[1]]
 groups <- c(
-  data = "Component definitions, pairing, and exploration",
-  manifests = "Model candidates, registries, and provisional leaders",
-  `inference-audit` = "RD04 inference audit",
-  tables = "RD04 figure estimates"
+  `data` = "Component definitions, pairing, and exploration",
+  `manifests` = "Model candidates, registries, and provisional leaders"
 )
 for (directory in names(groups)) {
   cat("\n#### ", groups[[directory]], "\n\n", sep = "")
   prefix <- paste0("analysis/outputs/publication/fuel/", directory, "/")
-  paths <- sort(unlist(fuel_task$files))
+  paths <- sort(unlist(review_task$outputs))
   paths <- paths[startsWith(paths, prefix) & endsWith(paths, ".csv")]
   for (path in paths) render_csv_review(path)
 }

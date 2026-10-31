@@ -4,9 +4,10 @@ The publication is an independent Quarto website rendered to `docs/publication/`
 Its top navigation contains **Development workflow** and **Manuscript draft**,
 each with a dedicated sidebar. The repository's legacy products are separate.
 
-- `workflow.qmd`: process overview, repository map, and maintenance instructions.
-- `tasks.json`: task statuses, targets, summaries of the dedicated task records,
-  and repository file paths.
+- `workflow.qmd`: process overview, repository map, and documentation responsibilities.
+- `pipeline-fuel.qmd`: compact execution/dependency map linking authoritative steps.
+- `tasks.json`: index metadata (statuses, targets, short summaries, dependencies,
+  and file roles); detailed analytical documentation belongs in task QMDs.
 - `task-list.qmd`: generated register and task summaries; do not edit directly.
 - `task-*.qmd`: dedicated task proposals, detailed decisions, review artifacts,
   inference records, and acceptance criteria.
@@ -56,14 +57,49 @@ downloads are snapshots refreshed on render, not live filesystem editors.
 R display chunks read the current saved CSVs on each render. They do not refit
 models. Run analytical pipelines separately when new model output is required.
 
-F01 references the pipeline Markdown and R files in place with Quarto `include`
-shortcodes in `sections/f01-pipeline-review.qmd`. Script includes are inside plain
-R code fences for display. A page-specific Lua filter nests the README headings
-without editing its source. The CSV display chunk reads the F01 output paths in
-`tasks.json` directly using `scripts/render-csv-review.R`; it preserves all rows,
-columns, and saved numeric text. No intermediate copies of source contents are
-written into QMD files. Add new script includes to the review section and register
-new scripts or CSV outputs in `tasks.json`.
+## Documentation ownership
+
+Each `task-*.qmd` owns its scope, inputs, analyses, outputs/findings, decisions
+and rationale, implications/handoff, and review state/history. Its included
+`sections/` files form part of that record. Keep decisions at their originating
+step and link to them from consumers; record a consumer's own use or wording
+decision on that consumer's page. Manuscript prose still lives in shared
+`sections/` sources, which can contain subsections maintained by different tasks.
+
+The fuel map links the complete sequence. F01 owns derivation through candidate
+evaluation (stages 01-05); RD04 owns prediction/inference, display, and retired
+figure history (stages 07-08 and historical 06); RT03 owns fuel Results claims.
+The pipeline README contains execution instructions and links to those records.
+There is no continuous review page. If a combined view later improves code-agent
+work, build it with Quarto includes of the step-owned sections, never copies.
+
+Fuel task metadata distinguishes these roles:
+
+- `files`: maintained sources for that step.
+- `outputs`: registered produced artifacts; each declared output has one owner.
+- `inputs`: consumed upstream artifacts or references, separately linked.
+- `depends_on`: upstream task IDs, used for navigation, not scientific acceptance.
+- `inline_review`: require every maintained R script and produced CSV to have a
+  complete, collapsed review on the owning task page. Consumed files are linked
+  rather than included again.
+
+Tasks without these role fields retain their existing related-file lists until
+their records are developed; a related-file link does not declare ownership.
+The rendered file lists and download bundle include both owned and consumed
+files. Register only explicitly reviewable artifacts; binary model objects and
+raw data are not added to downloads by discovering their directories.
+
+F01 includes `sections/f01-pipeline-review.qmd`; RD04 includes
+`sections/rd04-inference-review.qmd` and `sections/rd04-source-review.qmd`.
+Original R scripts are included in plain code fences. The RD04 Lua filter nests
+the retired README's headings. CSV chunks read each step's `outputs` metadata
+using `scripts/render-csv-review.R`, preserving every saved cell. Add source
+includes to the owning review section and register its files/outputs there.
+
+The pre-render preparation rejects duplicate output ownership and invalid
+upstream task IDs. Website validation checks complete source and CSV review
+coverage separately for F01 and RD04, including literal source/cell comparisons,
+as well as links, anchors, and download checksums.
 
 After rendering, run `python publication/scripts/check-website.py` from the
 repository root to check local links, task-section anchors, and download

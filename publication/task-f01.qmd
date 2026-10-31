@@ -1,13 +1,16 @@
 ---
 title: "F01 — fuel-component separation and model exploration"
 sidebar: workflow
-filters:
-  - filters/include-heading-offset.lua
 ---
 
 {{< include _task-metadata/f01-status.qmd >}}
 
 <span id="f01-record"></span>
+
+This page owns the fuel-component derivation, exploration, candidate fitting,
+and provisional model-review record. The [fuel pipeline map](pipeline-fuel.qmd)
+connects it to [RD04 inference and display](task-rd04.qmd) and
+[RT03 Results writing](task-rt03.qmd); those steps own their subsequent decisions.
 
 ## Original objective and guardrails
 
@@ -24,6 +27,31 @@ candidate and diagnostic; do not treat an AIC leader as a selected model.
 - The primary PCT contrast is matched-transect pre-PCT minus post-PCT woody
   standing vegetation—an inferred potential surface-fuel contribution, not a
   direct slash-load measurement.
+
+## Inputs and analyses performed
+
+Stages 01–05 run from `analysis/` and write only beneath
+`analysis/outputs/publication/fuel/`. The read-only
+`analysis/summarize_collected_data.rda` supplies collected measurements.
+`analysis/calculate_fuel_load.rda` supplies the unchanged 1-, 10-, 100-, and
+1,000-hour components; its combined forest-floor and vegetation columns are
+not used for the separated components.
+
+Stage 01 derives component loads and audits transect pairing. The pre-PCT
+forest-floor partition uses Finney and Martin (1993), model 3, with recorded
+total depth and estimated litter percentage. Negative shallow-extrapolation
+values are bounded at zero and retained in the station-level audit. Fuel-bed
+depth is retained for later protocol-comparability review and is not yet
+interpreted as slash depth. Station and transect data are saved under `data/`
+as `.rds` files; the downloadable dictionary and pairing CSV describe them.
+
+Stage 02 reports zeros and spread by component and proposes zero and dispersion
+candidates without fitting models. The design fixes random intercepts for site,
+site-by-treatment block, and corner nested within block. Stages 03–04 fit the
+phase-component and matched woody candidates. Each attempted fit records its
+formula, family, zero/dispersion formulas, warnings, AIC, and DHARMa tests.
+Stage 05 compares candidates and records provisional AIC leaders. Saved fitted
+models and registries are the handoff to RD04, not a final scientific selection.
 
 ## Decisions made
 
@@ -92,8 +120,22 @@ knitr::kable(leaders, format = "html", digits = 3, escape = TRUE)
 | Exploration summaries | Raw phase-by-treatment summaries and matched woody PCT contrast. | [Fuel data artifacts](#f01-files) |
 | Model-selection log | The rendered provisional register above. | [Current local CSV](repo-files/analysis/outputs/publication/fuel/manifests/model-selection-log.csv) |
 | Candidate registry and diagnostics | Full auditable model search. | [Manifests](#f01-files) · [diagnostics](#f01-files) |
-| Reproducible pipeline | Publication-only derivation, exploration, fitting, and evaluation stages. | [Fuel pipeline](#f01-files) |
+| Reproducible analytical stages | Publication-only derivation, exploration, fitting, and evaluation. | [F01 code and outputs](#f01-pipeline-review) · [full pipeline map](pipeline-fuel.qmd) |
 | Initial derivation | Establishes component derivation and the pairing audit. | [Commit `bde965b`](https://github.com/fisher-j/multi-age/commit/bde965b) |
 | Completed exploration and model record | Carries dead-woody classes forward and records all candidates/diagnostics. | [Commit `5f80aaf`](https://github.com/fisher-j/multi-age/commit/5f80aaf) |
+
+## Implications, handoff, and review state
+
+RD04 consumes the saved fitted models and model-selection register and owns
+the choice of prediction target, inference audit, covariance treatment, and
+display estimates. See its [prediction and interpretation review](task-rd04.qmd#rd04-inference-review).
+RT03 consumes the reviewed definitions and RD04 estimates for fuel Results;
+M03 and D03 will use these records when their queued work begins.
+
+The completed analytical record requires traceable component definitions,
+pairing checks, all attempted candidates, and diagnostics. Completion of F01
+does not accept the provisional leaders. Final scientific model review remains
+open through the downstream review record; changes to component derivation or
+candidate fitting must be documented here before regenerating dependent outputs.
 
 {{< include _task-metadata/f01-files.qmd >}}

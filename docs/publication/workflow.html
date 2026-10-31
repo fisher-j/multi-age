@@ -130,6 +130,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./pipeline-fuel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fuel pipeline map</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./task-list.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Task register and task list</span></a>
   </div>
@@ -285,6 +291,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#task-register-and-review-records" id="toc-task-register-and-review-records" class="nav-link" data-scroll-target="#task-register-and-review-records">Task register and review records</a></li>
   <li><a href="#current-local-repository-map" id="toc-current-local-repository-map" class="nav-link" data-scroll-target="#current-local-repository-map">Current local repository map</a></li>
   <li><a href="#keeping-task-records-current" id="toc-keeping-task-records-current" class="nav-link" data-scroll-target="#keeping-task-records-current">Keeping task records current</a></li>
+  <li><a href="#documentation-responsibilities" id="toc-documentation-responsibilities" class="nav-link" data-scroll-target="#documentation-responsibilities">Documentation responsibilities</a></li>
   <li><a href="#working-boundaries" id="toc-working-boundaries" class="nav-link" data-scroll-target="#working-boundaries">Working boundaries</a></li>
   <li><a href="#previous-task-links" id="toc-previous-task-links" class="nav-link" data-scroll-target="#previous-task-links">Previous task links</a></li>
   </ul>
@@ -375,6 +382,13 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="keeping-task-records-current">Keeping task records current</h2>
 <p>When work changes, update its dedicated task page first, then revise its entry in <code>publication/tasks.json</code> with a concise summary of that record, its current status, and exact repository file paths. Then render the publication. The pre-render step regenerates the register and summaries, refreshes linked file downloads, and fails if a referenced repository file has moved or disappeared. It reads existing analytical outputs without fitting models.</p>
 <p>The manuscript section pages and full draft both include <code>publication/sections/</code> sources. Edit those shared files once to update both reading views. Review decisions continue to follow the workflow above.</p>
+</section>
+<section id="documentation-responsibilities" class="level2">
+<h2 class="anchored" data-anchor-id="documentation-responsibilities">Documentation responsibilities</h2>
+<p>The <a href="./pipeline-fuel.html">fuel pipeline map</a> connects the complete analytical and writing sequence. Each step’s QMD and its included review sections own the detailed record: purpose/scope, inputs/dependencies, analyses performed, outputs/findings, decisions/rationale, implications/handoff, and review state/history. Update the originating step when its analysis or decision changes; downstream steps link to that record and explain their own use of it.</p>
+<p>F01 owns fuel derivation, exploration, candidate fitting, and provisional model leaders. RD04 owns prediction/inference, uncertainty, the figure/estimates, and retired display history. RT03 owns the Results claims and qualifications. M03 and D03 will own manuscript Methods wording and management interpretation when their queued work begins. Consuming an upstream artifact does not transfer its ownership or accept its provisional scientific decisions.</p>
+<p>For the developed fuel records, <code>tasks.json</code> separates produced <code>outputs</code> from consumed <code>inputs</code> and lists <code>depends_on</code> task IDs. File lists and the pipeline map provide navigation; analytical explanations remain on their owning pages. Task summaries are concise descriptions of those records, not another decision log. The pipeline README supplies operational commands and links back to the step documentation.</p>
+<p>A continuous pipeline review is not maintained. If it becomes useful for code-agent work, assemble it with Quarto includes of the same step-owned sections. See the <a href="repo-files/publication/README.md">maintenance guide</a> for file roles, include conventions, and ownership checks.</p>
 </section>
 <section id="working-boundaries" class="level2">
 <h2 class="anchored" data-anchor-id="working-boundaries">Working boundaries</h2>
