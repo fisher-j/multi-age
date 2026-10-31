@@ -42,6 +42,8 @@ call :render_legacy defense
 exit /b %ERRORLEVEL%
 
 :publication
+call "%~dp0select-r-runtime.bat" publication
+if errorlevel 1 exit /b 1
 rem Windows sandbox sessions may redirect LOCALAPPDATA away from installed R
 rem packages. R expands %%v to its major.minor version at startup. Keep an
 rem explicit caller-supplied library, and leave legacy renv products alone.
@@ -54,7 +56,10 @@ popd
 exit /b %RESULT%
 
 :render_legacy
-pushd analysis
+call "%~dp0select-r-runtime.bat" legacy
+if errorlevel 1 exit /b 1
+pushd "%~dp0analysis"
+if errorlevel 1 exit /b 1
 quarto render --profile %~1 %RENDER_ARGS%
 set "RESULT=%ERRORLEVEL%"
 popd

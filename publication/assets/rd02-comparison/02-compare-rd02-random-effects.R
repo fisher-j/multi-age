@@ -1,24 +1,26 @@
 # Compare the thesis covariance structure with the full sampling hierarchy.
-# From analysis/: Rscript scripts/publication/regeneration/02-compare-rd02-random-effects.R
+# From publication/: Rscript scripts/regeneration/02-compare-rd02-random-effects.R
 # Also sourceable; preserves the saved thesis fit and the current lead display.
 script_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
 script_file <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else sys.frame(1)$ofile
 script_dir <- dirname(normalizePath(script_file))
-analysis_root <- normalizePath(file.path(script_dir, "..", "..", ".."))
+publication_root <- normalizePath(file.path(script_dir, "..", ".."))
+source(file.path(publication_root, "scripts", "publication-paths.R"))
+paths_common <- publication_paths(publication_root)
 suppressPackageStartupMessages({
   library(glmmTMB)
   library(dplyr)
   library(ggplot2)
   library(DHARMa)
 })
-input <- file.path(analysis_root, "regen_visualize.rda")
+input <- file.path(paths_common$input, "regeneration-measurements.rds")
 input_hash <- tools::md5sum(input)
-lead_files <- file.path(analysis_root, c(
-  "outputs/publication/regeneration/figures/rd02-regeneration-basal-area.png",
-  "outputs/publication/regeneration/tables/rd02-basal-area-model-estimates.csv"))
+lead_files <- file.path(paths_common$output, c(
+  "regeneration/figures/rd02-regeneration-basal-area.png",
+  "regeneration/tables/rd02-basal-area-model-estimates.csv"))
 lead_hashes <- tools::md5sum(lead_files)
-saved <- new.env()
-load(input, envir = saved)
+saved <- list(regen_pa = readRDS(input))
+saved_reference <- readRDS(file.path(paths_common$input, "regeneration/saved-model-reference.rds"))
 d <- as.data.frame(saved$regen_pa)
 d$site <- factor(d$site)
 d$plot <- factor(d$plot)
@@ -26,8 +28,8 @@ stopifnot(nrow(d) == 256L, !anyNA(d),
           nrow(distinct(d, site, treat, plot)) == 64L,
           all(count(d, site, treat, plot)$n == 4L),
           all(count(d, site, treat, spp)$n == 4L),
-          isTRUE(all.equal(d$ba_ha, unname(model.response(model.frame(saved$mba))))))
-out <- file.path(analysis_root, "outputs/publication/regeneration/random-effects-comparison")
+          isTRUE(all.equal(d$ba_ha, saved_reference$response)))
+out <- file.path(paths_common$output, "regeneration/random-effects-comparison")
 for (directory in c("models", "diagnostics", "tables", "figures", "manifests")) {
   dir.create(file.path(out, directory), recursive = TRUE, showWarnings = FALSE)
 }
@@ -93,7 +95,7 @@ for (id in names(formulas)) {
   )
   # glmmTMB's simulation in this installed version draws new random effects.
   # Explicitly record the version and use the same seed and n for all models.
-  sim <- simulateResiduals(fit, n = simulations, seed = seed, refit = FALSE, plot = FALSE)
+  sim <- publication_simulate_residuals(fit, n = simulations, seed = seed, refit = FALSE, plot = FALSE)
   saveRDS(sim, file.path(out, "models", paste0(id, "-dharma.rds")))
   diagnostic_records[[id]] <- test_record(sim, id, "species_plot_rows")
   # Recalculate residuals on aggregated responses to inspect each design level.
@@ -120,7 +122,7 @@ comparison <- bind_rows(records) |>
 variance_table <- bind_rows(variance_records)
 diagnostics <- bind_rows(diagnostic_records)
 stopifnot(abs(as.numeric(logLik(models$thesis_site_species)) -
-                as.numeric(logLik(saved$mba))) < 1e-5)
+                saved_reference$logLik) < 1e-5)
 # Boundary components warrant an optimizer/start sensitivity check. Start each
 # random SD at 0.3 rather than inheriting the near-zero nlminb estimates.
 optimizer_checks <- bind_rows(lapply(c("full_nested", "nested_plus_site_species"), function(id) {
@@ -146,7 +148,7 @@ write.csv(optimizer_checks, file.path(out, "tables/rd02-optimizer-sensitivity.cs
 
 # Inspect the baseline tail flag without removing observations or changing the
 # fit. More simulations and a second seed check Monte Carlo sensitivity.
-tail_check <- simulateResiduals(models$thesis_site_species, n = 10000,
+tail_check <- publication_simulate_residuals(models$thesis_site_species, n = 10000,
                                 seed = seed + 1L, refit = FALSE, plot = FALSE)
 tail_tests <- test_record(tail_check, "thesis_site_species", "species_plot_rows_10000_simulations")
 write.csv(tail_tests, file.path(out, "tables/rd02-baseline-tail-sensitivity.csv"), row.names = FALSE)
@@ -243,7 +245,7 @@ figure_file <- file.path(out, "figures/rd02-random-effects-comparison.png")
 ggsave(figure_file, figure, width = 9, height = 4.8, dpi = 300, bg = "white")
 ggsave(sub("png$", "pdf", figure_file), figure, width = 9, height = 4.8)
 provenance <- list(
-  task = "RD02 random-effects comparison", source = "analysis/regen_visualize.rda",
+  task = "RD02 random-effects comparison", source = "publication/inputs/thesis/regeneration-measurements.rds",
   source_md5 = unname(input_hash), script_md5 = unname(tools::md5sum(script_file)),
   data = "same 256 species-plot rows; 4 sites, 16 treatment macro plots, 64 vegetation plots",
   candidate_formulas = lapply(formulas, function(f) paste(deparse(f), collapse = " ")),
@@ -264,7 +266,7 @@ stopifnot(identical(unname(tools::md5sum(input)), unname(input_hash)),
           identical(unname(tools::md5sum(lead_files)), unname(lead_hashes)))
 # Publish only review artifacts; fitted models and simulations stay in the
 # analysis output directory (RDS files follow the repository's ignore policy).
-download_dir <- file.path(analysis_root, "../publication/assets/rd02-comparison")
+download_dir <- file.path(paths_common$assets, "rd02-comparison")
 for (directory in c("tables", "figures", "diagnostics", "manifests")) {
   target <- file.path(download_dir, directory)
   dir.create(target, recursive = TRUE, showWarnings = FALSE)

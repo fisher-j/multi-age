@@ -53,9 +53,9 @@ The [download manifest](repo-files/manifest.json) records file checksums.
 | `publication/` | Website configuration, task pages, and draft section wrappers. [Site maintenance guide](repo-files/publication/README.md). |
 | `publication/sections/` | Shared manuscript sections and included review displays/tables. [Results source](repo-files/publication/sections/results.qmd) · [Methods source](repo-files/publication/sections/methods.qmd). |
 | `publication/tasks.json` | Task status, targets, summaries of the detailed task records, and current file lists. [Task metadata](repo-files/publication/tasks.json). |
-| `analysis/scripts/publication/fuel/` | Component derivation, model exploration, inference audit, and active integrated figure generator. [Fuel pipeline guide](repo-files/analysis/scripts/publication/fuel/README.md). |
-| `analysis/scripts/publication/regeneration/` | Selected separate-species models and historical sensitivity comparisons. [Regeneration pipeline guide](repo-files/analysis/scripts/publication/regeneration/README.md). |
-| `analysis/outputs/publication/` | Publication-only derived data, model records, figures, tables, and provenance. [Output conventions](repo-files/analysis/outputs/publication/README.md). |
+| `publication/scripts/fuel/` | Component derivation, model exploration, inference audit, and active integrated figure generator. [Fuel pipeline guide](repo-files/publication/scripts/fuel/README.md). |
+| `publication/scripts/regeneration/` | Selected separate-species models and historical sensitivity comparisons. [Regeneration pipeline guide](repo-files/publication/scripts/regeneration/README.md). |
+| `publication/outputs/` | Publication-only derived data, model records, figures, tables, and provenance. [Output conventions](repo-files/publication/outputs/README.md). |
 | `analysis/thesis/` and `analysis/analysis/` | Thesis prose and legacy analytical sources; linked from the tasks that use them. [Repository overview](repo-files/README.md). |
 | `docs/publication/` | Rendered publication website, produced by `render-products.bat publication --to html`. |
 
@@ -104,8 +104,9 @@ roles, include conventions, and ownership checks.
 
 The standalone publication project remains separate from the legacy Quarto
 profiles in `analysis/`. Publication analyses write to
-`analysis/outputs/publication/`; their scripts live in
-`analysis/scripts/publication/`. Thesis-era model objects and raw data retain
+`publication/outputs/`; their scripts live in
+`publication/scripts/`. Publication calculations consume committed thesis exports and use their own
+updated R and renv environment. Thesis-era model objects and raw data retain
 their established locations. Completion commits in task histories document
 past work; current-file links use the local checkout.
 

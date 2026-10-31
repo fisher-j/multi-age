@@ -105,7 +105,7 @@ below separates these changes. Values are Mg/ha, GS treatment.
 #| echo: false
 #| warning: false
 #| message: false
-old_new <- read.csv("../analysis/outputs/publication/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv")
+old_new <- read.csv("outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv")
 old_new <- old_new[old_new$treatment == "gs", c("component", "phase", "thesis_reference", "reference_custom", "integrated_custom")]
 names(old_new) <- c("Component", "Phase", "Thesis reference", "Original RD04 reference", "Current integrated mean")
 knitr::kable(old_new, digits = 2, row.names = FALSE)
@@ -161,7 +161,7 @@ or transect.
 
 ```{r}
 #| echo: false
-audit <- read.csv("../analysis/outputs/publication/fuel/inference-audit/rd04-estimand-comparison.csv")
+audit <- read.csv("outputs/fuel/inference-audit/rd04-estimand-comparison.csv")
 show <- audit[audit$treatment == "gs" & audit$component %in%
                 c("100-hour", "Woody vegetation", "Herbaceous vegetation"), ]
 show <- show[!(show$component == "100-hour" & show$phase == "prepct"), ]
@@ -202,7 +202,7 @@ the matrix predictions against `predict.glmmTMB()`, and the retired script's
 checksum before and after the run. It additionally verifies all four woody
 mean contrasts with cross-phase covariance and reproduces the 48 thesis fuel
 reference estimates. Outputs and the R/package session record are in
-`analysis/outputs/publication/fuel/inference-audit/`.
+`publication/outputs/fuel/inference-audit/`.
 
 [Review the complete audit and inference-helper source](#rd04-source-review).
 

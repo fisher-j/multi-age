@@ -33,6 +33,6 @@ active worktree. The copy is retained for inspection and can be removed after
 review.
 
 Publication-specific analyses and generated objects belong under
-`analysis/outputs/publication/` and `analysis/scripts/publication/`. Do not
+`publication/outputs/` and `publication/scripts/`. Do not
 move or overwrite the thesis-era model objects and rendered artifacts while the
 publication is in development.

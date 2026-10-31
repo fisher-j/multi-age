@@ -12,57 +12,57 @@ Stage 07 audits inference; stage 08 generates the current integrated-mean
 figure and estimates. Their shared inference functions are included here.
 Stage 06 and its archived implementation are retained as historical evidence.
 
-<details data-review-source="analysis/scripts/publication/fuel/06-generate-rd04-figure.R">
+<details data-review-source="publication/scripts/fuel/06-generate-rd04-figure.R">
 <summary>06-generate-rd04-figure.R — retired entry point</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/06-generate-rd04-figure.R)
+[Download source](repo-files/publication/scripts/fuel/06-generate-rd04-figure.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/06-generate-rd04-figure.R >}}
+{{< include scripts/fuel/06-generate-rd04-figure.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/07-audit-rd04-inference.R">
+<details data-review-source="publication/scripts/fuel/07-audit-rd04-inference.R">
 <summary>07-audit-rd04-inference.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/07-audit-rd04-inference.R)
+[Download source](repo-files/publication/scripts/fuel/07-audit-rd04-inference.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/07-audit-rd04-inference.R >}}
+{{< include scripts/fuel/07-audit-rd04-inference.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R">
+<details data-review-source="publication/scripts/fuel/08-generate-rd04-integrated-figure.R">
 <summary>08-generate-rd04-integrated-figure.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R)
+[Download source](repo-files/publication/scripts/fuel/08-generate-rd04-integrated-figure.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/08-generate-rd04-integrated-figure.R >}}
+{{< include scripts/fuel/08-generate-rd04-integrated-figure.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/rd04-inference-utils.R">
+<details data-review-source="publication/scripts/fuel/rd04-inference-utils.R">
 <summary>rd04-inference-utils.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/rd04-inference-utils.R)
+[Download source](repo-files/publication/scripts/fuel/rd04-inference-utils.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/rd04-inference-utils.R >}}
+{{< include scripts/fuel/rd04-inference-utils.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R">
+<details data-review-source="publication/scripts/fuel/retired/06-generate-rd04-figure.R">
 <summary>06-generate-rd04-figure.R — retired (historical implementation)</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R)
+[Download source](repo-files/publication/scripts/fuel/retired/06-generate-rd04-figure.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/retired/06-generate-rd04-figure.R >}}
+{{< include scripts/fuel/retired/06-generate-rd04-figure.R >}}
 ````
 
 </details>
@@ -70,10 +70,10 @@ Stage 06 and its archived implementation are retained as historical evidence.
 ### Retirement record
 
 ::: {.included-readme heading-offset="3"}
-{{< include ../analysis/scripts/publication/fuel/retired/README.md >}}
+{{< include scripts/fuel/retired/README.md >}}
 :::
 
-[Download the retirement note](repo-files/analysis/scripts/publication/fuel/retired/README.md).
+[Download the retirement note](repo-files/publication/scripts/fuel/retired/README.md).
 
 ### Complete RD04 CSV outputs {#rd04-csv-review}
 
@@ -97,7 +97,7 @@ groups <- c(
 )
 for (directory in names(groups)) {
   cat("\n#### ", groups[[directory]], "\n\n", sep = "")
-  prefix <- paste0("analysis/outputs/publication/fuel/", directory, "/")
+  prefix <- paste0("publication/outputs/fuel/", directory, "/")
   paths <- sort(unlist(review_task$outputs))
   paths <- paths[startsWith(paths, prefix) & endsWith(paths, ".csv")]
   for (path in paths) render_csv_review(path)

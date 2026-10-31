@@ -287,7 +287,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#selected-display-and-supplement" id="toc-selected-display-and-supplement" class="nav-link active" data-scroll-target="#selected-display-and-supplement">Selected display and supplement</a></li>
+  <li><a href="#selected-display-and-supplement" id="toc-selected-display-and-supplement" class="nav-link active" data-scroll-target="#selected-display-and-supplement">Selected display and supplement</a>
+  <ul class="collapse">
+  <li><a href="#publication-execution" id="toc-publication-execution" class="nav-link" data-scroll-target="#publication-execution">Publication execution</a></li>
+  </ul></li>
   <li><a href="#rd02-random-effects-review" id="toc-rd02-random-effects-review" class="nav-link" data-scroll-target="#rd02-random-effects-review">Overall model sensitivity</a></li>
   <li><a href="#rd02-separate-species-review" id="toc-rd02-separate-species-review" class="nav-link" data-scroll-target="#rd02-separate-species-review">Separate RW and TO models</a></li>
   <li><a href="#rd02-review-recommendation" id="toc-rd02-review-recommendation" class="nav-link" data-scroll-target="#rd02-review-recommendation">Summary and model decision</a></li>
@@ -323,6 +326,9 @@ ul.task-list li input[type="checkbox"] {
 <p>Redwood, tanoak, Douglas-fir, and other species are each modeled with <code>ba_ha ~ treat + (1 | site/treat)</code>, using zero-inflated Gamma responses and category-specific zero and dispersion intercepts. The choice follows the biological interpretation of separate species responses and variances. There are four sites, 16 macro plots, and 64 vegetation-plot observations per category; no plot-level random effect is included.</p>
 <section id="selected-display-and-supplement" class="level2">
 <h2 class="anchored" data-anchor-id="selected-display-and-supplement">Selected display and supplement</h2>
+<section id="publication-execution" class="level3">
+<h3 class="anchored" data-anchor-id="publication-execution">Publication execution</h3>
+<p>Regeneration calculations use the sole publication R 4.6.2 environment and <code>publication/renv.lock</code>. Committed thesis exports supply the 256-row dataset and historical joint-model references. Canonical outputs and existing prediction, gradient, integration, optimizer and diagnostic checks define the current workflow. Historical thesis reference export remains a separate input operation. Scientific model and display review states are unchanged.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-rd02-regeneration-basal-area" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Redwood and tanoak mean regeneration basal area with 95% confidence intervals for GS, LD, HA, and HD retention treatments in two species panels. Redwood means are highest in GS and lowest in HD, with wide uncertainty in GS. Tanoak means vary less across treatments. ">
@@ -338,6 +344,7 @@ Figure&nbsp;1: Regeneration basal area 10 years after harvest by retained-overst
 </div>
 </div>
 <p>The RW/TO display is in the <a href="./draft-results.html#rd02-regeneration-display-draft">Results body</a>, and all 16 species-by-treatment means and intervals are in the <a href="./draft-supplement.html#tbl-rd02-selected-species-estimates">supplement table</a>. Means include zeros and integrate over fitted site and macro-plot random effects. The earlier joint fit is retained in the comparison record below.</p>
+</section>
 </section>
 <section id="rd02-random-effects-review" class="level2">
 <h2 class="anchored" data-anchor-id="rd02-random-effects-review">Overall model sensitivity</h2>
@@ -497,20 +504,20 @@ Selected-model source and diagnostics
 Browse current source files and outputs
 </summary>
 <ul>
-<li><a href="repo-files/analysis/scripts/publication/regeneration/README.md">analysis/scripts/publication/regeneration/README.md</a></li>
-<li><a href="repo-files/analysis/scripts/publication/regeneration/01-generate-rd02-display.R">analysis/scripts/publication/regeneration/01-generate-rd02-display.R</a></li>
-<li><a href="repo-files/analysis/scripts/publication/regeneration/02-compare-rd02-random-effects.R">analysis/scripts/publication/regeneration/02-compare-rd02-random-effects.R</a></li>
-<li><a href="repo-files/analysis/scripts/publication/regeneration/03-compare-rd02-separate-species.R">analysis/scripts/publication/regeneration/03-compare-rd02-separate-species.R</a></li>
-<li><a href="repo-files/analysis/scripts/publication/regeneration/04-assemble-rd02-sensitivity.R">analysis/scripts/publication/regeneration/04-assemble-rd02-sensitivity.R</a></li>
-<li><a href="repo-files/analysis/scripts/publication/regeneration/05-fit-selected-species-models.R">analysis/scripts/publication/regeneration/05-fit-selected-species-models.R</a></li>
-<li><a href="repo-files/analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv">analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv</a></li>
-<li><a href="repo-files/analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-fit-register.csv">analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-fit-register.csv</a></li>
-<li><a href="repo-files/analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv">analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv</a></li>
-<li><a href="repo-files/analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv">analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv</a></li>
-<li><a href="repo-files/analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-optimizer-checks.csv">analysis/outputs/publication/regeneration/selected-species-models/tables/rd02-selected-species-optimizer-checks.csv</a></li>
-<li><a href="repo-files/analysis/outputs/publication/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml">analysis/outputs/publication/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml</a></li>
-<li><a href="repo-files/analysis/outputs/publication/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv">analysis/outputs/publication/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv</a></li>
-<li><a href="repo-files/analysis/outputs/publication/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv">analysis/outputs/publication/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv</a></li>
+<li><a href="repo-files/publication/scripts/regeneration/README.md">publication/scripts/regeneration/README.md</a></li>
+<li><a href="repo-files/publication/scripts/regeneration/01-generate-rd02-display.R">publication/scripts/regeneration/01-generate-rd02-display.R</a></li>
+<li><a href="repo-files/publication/scripts/regeneration/02-compare-rd02-random-effects.R">publication/scripts/regeneration/02-compare-rd02-random-effects.R</a></li>
+<li><a href="repo-files/publication/scripts/regeneration/03-compare-rd02-separate-species.R">publication/scripts/regeneration/03-compare-rd02-separate-species.R</a></li>
+<li><a href="repo-files/publication/scripts/regeneration/04-assemble-rd02-sensitivity.R">publication/scripts/regeneration/04-assemble-rd02-sensitivity.R</a></li>
+<li><a href="repo-files/publication/scripts/regeneration/05-fit-selected-species-models.R">publication/scripts/regeneration/05-fit-selected-species-models.R</a></li>
+<li><a href="repo-files/publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv">publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv</a></li>
+<li><a href="repo-files/publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-fit-register.csv">publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-fit-register.csv</a></li>
+<li><a href="repo-files/publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv">publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv</a></li>
+<li><a href="repo-files/publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv">publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv</a></li>
+<li><a href="repo-files/publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-optimizer-checks.csv">publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-optimizer-checks.csv</a></li>
+<li><a href="repo-files/publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml">publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml</a></li>
+<li><a href="repo-files/publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv">publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv</a></li>
+<li><a href="repo-files/publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv">publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv</a></li>
 <li><a href="repo-files/publication/sections/rd02-regeneration-display.qmd">publication/sections/rd02-regeneration-display.qmd</a></li>
 <li><a href="repo-files/publication/sections/rd02-species-estimates-table.qmd">publication/sections/rd02-species-estimates-table.qmd</a></li>
 </ul>

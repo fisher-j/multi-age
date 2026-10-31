@@ -1,25 +1,26 @@
 # Selected RD02 analysis: four independent species-category models.
-# From analysis/: Rscript scripts/publication/regeneration/05-fit-selected-species-models.R
+# From publication/: Rscript scripts/regeneration/05-fit-selected-species-models.R
 # Also sourceable. Preserves thesis data and the historical joint-model record.
 script_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
 script_file <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else sys.frame(1)$ofile
 script_dir <- dirname(normalizePath(script_file))
-analysis_root <- normalizePath(file.path(script_dir, "..", "..", ".."))
+publication_root <- normalizePath(file.path(script_dir, "..", ".."))
+source(file.path(publication_root, "scripts", "publication-paths.R"))
+paths_common <- publication_paths(publication_root)
 suppressPackageStartupMessages({library(glmmTMB); library(DHARMa); library(dplyr); library(ggplot2)})
-input <- file.path(analysis_root, "regen_visualize.rda")
-protected <- c(input, file.path(analysis_root, c(
-  "outputs/publication/regeneration/tables/rd02-basal-area-model-estimates.csv",
-  "outputs/publication/regeneration/figures/rd02-regeneration-basal-area.png")))
+input <- file.path(paths_common$input, "regeneration-measurements.rds")
+protected <- c(input, file.path(paths_common$output, c(
+  "regeneration/tables/rd02-basal-area-model-estimates.csv",
+  "regeneration/figures/rd02-regeneration-basal-area.png")))
 protected_hashes <- tools::md5sum(protected)
-saved <- new.env()
-load(input, envir = saved)
+saved <- list(regen_pa = readRDS(input))
 d <- as.data.frame(saved$regen_pa)
 d$site <- factor(d$site)
 d$plot <- factor(d$plot)
 species_order <- c("rw", "to", "df", "other")
 species_labels <- c(rw = "Redwood", to = "Tanoak", df = "Douglas-fir", other = "Other species")
 stopifnot(nrow(d) == 256L, !anyNA(d), setequal(unique(d$spp), species_order))
-out <- file.path(analysis_root, "outputs/publication/regeneration/selected-species-models")
+out <- file.path(paths_common$output, "regeneration/selected-species-models")
 for (directory in c("models", "tables", "diagnostics", "figures", "manifests")) {
   dir.create(file.path(out, directory), recursive = TRUE, showWarnings = FALSE)
 }
@@ -54,7 +55,7 @@ for (sp in species_order) {
     data.frame(spp = sp, group = g, n_groups = nrow(unique(data_sp[strsplit(g, ":", fixed = TRUE)[[1]]])),
                variance = value, sd = sqrt(value))
   }))
-  sim <- simulateResiduals(m, n = 1000, seed = seed, refit = FALSE, plot = FALSE)
+  sim <- publication_simulate_residuals(m, n = 1000, seed = seed, refit = FALSE, plot = FALSE)
   tests <- list(uniformity = testUniformity, dispersion = testDispersion,
                 outliers = testOutliers, zero_inflation = testZeroInflation)
   diagnostic_records[[sp]] <- bind_rows(lapply(names(tests), function(test) {
@@ -141,8 +142,8 @@ estimates <- bind_rows(lapply(species_order, function(sp) {
 stopifnot(nrow(estimates) == 16L, !anyDuplicated(estimates[c("spp", "treat")]),
           all(estimates$lcl > 0), all(estimates$lcl <= estimates$estimate), all(estimates$ucl >= estimates$estimate))
 # The selected RW/TO fits must reproduce the accepted sensitivity specification.
-reference <- read.csv(file.path(analysis_root,
-  "outputs/publication/regeneration/separate-species-comparison/tables/rd02-species-integrated-estimates.csv"))
+reference <- read.csv(file.path(paths_common$output,
+  "regeneration/separate-species-comparison/tables/rd02-species-integrated-estimates.csv"))
 key <- function(x) paste(x$spp, x$treat)
 for (sp in c("rw", "to")) {
   old <- reference[reference$model_id == paste0(sp, "_site_macro"), ]
@@ -182,7 +183,7 @@ ggsave(file.path(out, "figures", paste0(figure_name, ".pdf")), figure, width = 7
 provenance <- list(
   task = "RD02 selected species-category models", selected_structure = "four independent species-category models",
   selection_basis = "User selected biological interpretability and conventional species-specific analysis; not minimum AIC",
-  source = "analysis/regen_visualize.rda", source_md5 = unname(protected_hashes[1]),
+  source = "publication/inputs/thesis/regeneration-measurements.rds", source_md5 = unname(protected_hashes[1]),
   script_md5 = unname(tools::md5sum(script_file)),
   categories = unname(species_labels), formula = "ba_ha ~ treat + (1 | site/treat)",
   family = "zero-inflated Gamma; conditional log link; zero ~1; dispersion ~1",
@@ -198,7 +199,7 @@ provenance <- list(
 yaml::write_yaml(provenance, file.path(out, "manifests/rd02-selected-species-provenance.yml"))
 capture.output(sessionInfo(), file = file.path(out, "manifests/rd02-selected-species-session-info.txt"))
 stopifnot(identical(unname(tools::md5sum(protected)), unname(protected_hashes)))
-asset_root <- file.path(analysis_root, "../publication/assets")
+asset_root <- file.path(paths_common$assets, "")
 stopifnot(file.copy(file.path(out, "figures", paste0(figure_name, ".png")), asset_root, overwrite = TRUE))
 download_dir <- file.path(asset_root, "rd02-selected")
 for (directory in c("tables", "diagnostics", "figures", "manifests")) {

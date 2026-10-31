@@ -1,14 +1,14 @@
 task: RD02
 status: Draft pending scientific and display review
-script: analysis/scripts/publication/regeneration/01-generate-rd02-display.R
-script_md5: 4929e3a4bf0048faa3134eed1903cd90
-source: analysis/regen_visualize.rda
-source_md5: 0acdd024d85ece7145769da65b3324b3
-source_object: mba
+script: publication/scripts/regeneration/01-generate-rd02-display.R
+script_md5: 1320d188c09ae7ea5353e7eaeeb6ffe7
+source: publication/inputs/thesis/regeneration-measurements.rds
+source_md5: 809123005f6d8f4ea17aeb2d9ed35752
+source_object: exported historical mba reference
 model_refitted: no
-conditional_formula: ba_ha ~ treat * spp + (1 | site:spp)
-zero_formula: ~spp
-dispersion_formula: ~spp
+historical_reference: publication/inputs/thesis/regeneration
+historical_replay: analysis/scripts/export-publication-inputs.R using thesis R and
+  renv
 family: zero-inflated Gamma (log conditional link; logit zero link)
 n_species_plot_rows: 256
 n_vegetation_plots: 64
@@ -20,7 +20,7 @@ site_weights: equal; no site fixed effects, so integrated expectations coincide 
   site rows
 interval: 95% log-scale delta method; full nonrandom parameter covariance including
   log SD
-checks: '16 cells: predict and marginaleffects references, integrated hypotheses SEs,
-  numerical gradients, quadrature, unchanged source MD5'
+checks: Historical 16-cell prediction, gradient, and quadrature checks executed by
+  thesis exporter; publication validates export checksums
 review: Retained thesis site:species intercept does not explicitly model macro-plot
   clustering; manuscript design review remains open. Intervals condition on this model.

@@ -356,16 +356,16 @@ ul.task-list li input[type="checkbox"] {
 <td>Task status, targets, summaries of the detailed task records, and current file lists. <a href="repo-files/publication/tasks.json">Task metadata</a>.</td>
 </tr>
 <tr class="even">
-<td><code>analysis/scripts/publication/fuel/</code></td>
-<td>Component derivation, model exploration, inference audit, and active integrated figure generator. <a href="repo-files/analysis/scripts/publication/fuel/README.md">Fuel pipeline guide</a>.</td>
+<td><code>publication/scripts/fuel/</code></td>
+<td>Component derivation, model exploration, inference audit, and active integrated figure generator. <a href="repo-files/publication/scripts/fuel/README.md">Fuel pipeline guide</a>.</td>
 </tr>
 <tr class="odd">
-<td><code>analysis/scripts/publication/regeneration/</code></td>
-<td>Selected separate-species models and historical sensitivity comparisons. <a href="repo-files/analysis/scripts/publication/regeneration/README.md">Regeneration pipeline guide</a>.</td>
+<td><code>publication/scripts/regeneration/</code></td>
+<td>Selected separate-species models and historical sensitivity comparisons. <a href="repo-files/publication/scripts/regeneration/README.md">Regeneration pipeline guide</a>.</td>
 </tr>
 <tr class="even">
-<td><code>analysis/outputs/publication/</code></td>
-<td>Publication-only derived data, model records, figures, tables, and provenance. <a href="repo-files/analysis/outputs/publication/README.md">Output conventions</a>.</td>
+<td><code>publication/outputs/</code></td>
+<td>Publication-only derived data, model records, figures, tables, and provenance. <a href="repo-files/publication/outputs/README.md">Output conventions</a>.</td>
 </tr>
 <tr class="odd">
 <td><code>analysis/thesis/</code> and <code>analysis/analysis/</code></td>
@@ -392,7 +392,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="working-boundaries" class="level2">
 <h2 class="anchored" data-anchor-id="working-boundaries">Working boundaries</h2>
-<p>The standalone publication project remains separate from the legacy Quarto profiles in <code>analysis/</code>. Publication analyses write to <code>analysis/outputs/publication/</code>; their scripts live in <code>analysis/scripts/publication/</code>. Thesis-era model objects and raw data retain their established locations. Completion commits in task histories document past work; current-file links use the local checkout.</p>
+<p>The standalone publication project remains separate from the legacy Quarto profiles in <code>analysis/</code>. Publication analyses write to <code>publication/outputs/</code>; their scripts live in <code>publication/scripts/</code>. Publication calculations consume committed thesis exports and use their own updated R and renv environment. Thesis-era model objects and raw data retain their established locations. Completion commits in task histories document past work; current-file links use the local checkout.</p>
 </section>
 <section id="previous-task-links" class="level2">
 <h2 class="anchored" data-anchor-id="previous-task-links">Previous task links</h2>

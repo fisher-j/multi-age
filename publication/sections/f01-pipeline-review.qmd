@@ -14,79 +14,90 @@ figure/table generation, and historical display implementations.
 Configuration and model helpers are maintained here with stages 01–05.
 RD04 consumes their saved fitted models; rendering this page does not fit them.
 
-<details data-review-source="analysis/scripts/publication/fuel/00-fuel-config.R">
+<details data-review-source="publication/scripts/publication-paths.R">
+<summary>publication-paths.R — shared I/O boundary</summary>
+
+[Download source](repo-files/publication/scripts/publication-paths.R)
+
+````r
+{{< include scripts/publication-paths.R >}}
+````
+
+</details>
+
+<details data-review-source="publication/scripts/fuel/00-fuel-config.R">
 <summary>00-fuel-config.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/00-fuel-config.R)
+[Download source](repo-files/publication/scripts/fuel/00-fuel-config.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/00-fuel-config.R >}}
+{{< include scripts/fuel/00-fuel-config.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/01-derive-components.R">
+<details data-review-source="publication/scripts/fuel/01-derive-components.R">
 <summary>01-derive-components.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/01-derive-components.R)
+[Download source](repo-files/publication/scripts/fuel/01-derive-components.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/01-derive-components.R >}}
+{{< include scripts/fuel/01-derive-components.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/02-explore-components.R">
+<details data-review-source="publication/scripts/fuel/02-explore-components.R">
 <summary>02-explore-components.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/02-explore-components.R)
+[Download source](repo-files/publication/scripts/fuel/02-explore-components.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/02-explore-components.R >}}
+{{< include scripts/fuel/02-explore-components.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/03-fit-phase-components.R">
+<details data-review-source="publication/scripts/fuel/03-fit-phase-components.R">
 <summary>03-fit-phase-components.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/03-fit-phase-components.R)
+[Download source](repo-files/publication/scripts/fuel/03-fit-phase-components.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/03-fit-phase-components.R >}}
+{{< include scripts/fuel/03-fit-phase-components.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/03-model-utils.R">
+<details data-review-source="publication/scripts/fuel/03-model-utils.R">
 <summary>03-model-utils.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/03-model-utils.R)
+[Download source](repo-files/publication/scripts/fuel/03-model-utils.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/03-model-utils.R >}}
+{{< include scripts/fuel/03-model-utils.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/04-fit-woody-pct-models.R">
+<details data-review-source="publication/scripts/fuel/04-fit-woody-pct-models.R">
 <summary>04-fit-woody-pct-models.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/04-fit-woody-pct-models.R)
+[Download source](repo-files/publication/scripts/fuel/04-fit-woody-pct-models.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/04-fit-woody-pct-models.R >}}
+{{< include scripts/fuel/04-fit-woody-pct-models.R >}}
 ````
 
 </details>
 
-<details data-review-source="analysis/scripts/publication/fuel/05-evaluate-and-select-models.R">
+<details data-review-source="publication/scripts/fuel/05-evaluate-and-select-models.R">
 <summary>05-evaluate-and-select-models.R</summary>
 
-[Download source](repo-files/analysis/scripts/publication/fuel/05-evaluate-and-select-models.R)
+[Download source](repo-files/publication/scripts/fuel/05-evaluate-and-select-models.R)
 
 ````r
-{{< include ../analysis/scripts/publication/fuel/05-evaluate-and-select-models.R >}}
+{{< include scripts/fuel/05-evaluate-and-select-models.R >}}
 ````
 
 </details>
@@ -112,7 +123,7 @@ groups <- c(
 )
 for (directory in names(groups)) {
   cat("\n#### ", groups[[directory]], "\n\n", sep = "")
-  prefix <- paste0("analysis/outputs/publication/fuel/", directory, "/")
+  prefix <- paste0("publication/outputs/fuel/", directory, "/")
   paths <- sort(unlist(review_task$outputs))
   paths <- paths[startsWith(paths, prefix) & endsWith(paths, ".csv")]
   for (path in paths) render_csv_review(path)

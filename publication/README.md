@@ -30,14 +30,54 @@ From the repository root, run:
 render-products.bat publication --to html
 ```
 
-The Windows wrapper uses the installed R user library under
-`%USERPROFILE%\AppData\Local\R\win-library\<R major.minor>` when
-`R_LIBS_USER` is unset. This avoids sandbox sessions redirecting R's default
-library to an empty `LOCALAPPDATA` location. An explicit `R_LIBS_USER` is
-preserved. If Quarto reports missing `knitr` or `rmarkdown`, check the library
-paths before reinstalling packages; see the repository's `AGENTS.md` for
-diagnostic and direct-command instructions. Publication rendering does not
-activate the separate `analysis/renv` environment.
+The wrapper explicitly selects publication R 4.6.2 and activates this directory's
+independent `renv` project. The legacy products explicitly select thesis R 4.3.2.
+`PUBLICATION_R_HOME` and `THESIS_R_HOME` can override installation locations;
+neither wrapper changes the machine PATH. An explicit `R_LIBS_USER` is preserved.
+Actual namespace loads and installed DESCRIPTION versions are checked against
+the publication lock; broad startup package scans are disabled because sandbox
+permission checks can misreport missing packages.
+
+## Independent calculations
+
+From the repository root:
+
+```bat
+run-publication.bat restore
+run-publication.bat all
+run-publication.bat check
+render-products.bat publication --to html
+python publication/scripts/check-website.py
+```
+
+`fuel` and `regeneration` run their respective pipelines. Fuel order is
+01, 02, 03, 04, 05, 07, 08; regeneration order is 01, 02, 03, 05, 04.
+The runner uses committed exports under `inputs/thesis/`, scripts under
+`scripts/fuel/` and `scripts/regeneration/`, and canonical outputs under
+`outputs/`. Thesis model objects and thesis renv are not calculation dependencies.
+See [the input contract](inputs/thesis/README.md) for the separate export operation.
+
+Recomputation starts with empty model/output directories under `.runs/`.
+Each stage stops on failure. Existing numerical checks verify predictions,
+gradients, integration, covariance and assembly within the owning scripts.
+Before promotion, validation checks declared outputs, complete CSV structure,
+finite estimates, ordered intervals, nonnegative SEs and registered fuel-model
+files. `check` validates saved outputs without requiring local model caches;
+`--require-models` additionally checks fitted-model files after recomputation.
+The runner refuses to overwrite an existing run directory; archive it before
+a deliberate rerun.
+
+`publication/renv.lock`, maintained publication scripts, committed thesis
+exports and canonical `outputs/` define the single authoritative publication
+workflow. Previous-environment publication replay, comparison modes, retained
+snapshots and migration acceptance/difference artifacts are retired. Publication
+does not require them for calculation, validation or website rendering.
+
+`python scripts/check-analysis.py --inputs-only --protected` optionally checks
+original thesis input/configuration checksums recorded in the export manifest.
+This is a thesis-input integrity check, not an old publication execution mode.
+Normal publication validation never opens thesis objects. Historical thesis
+reproduction and deliberate export refresh remain separate operations.
 
 Quarto first runs `python scripts/prepare-workflow.py` (Python 3.10+ standard
 library only), then the existing bibliography synchronization. The preparation

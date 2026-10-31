@@ -9,7 +9,7 @@ has 64 observations, four site groups, and 16 nested macro-plot groups.
 The plot-level random effect is omitted. Selection follows the user's
 biological modeling decision rather than the minimum-AIC alternative.
 
-Current outputs are under `outputs/publication/regeneration/selected-species-models/`:
+Current outputs are under `outputs/regeneration/selected-species-models/`:
 16 integrated means and full-covariance intervals, four fitted models, fit and
 variance registers, DHARMa plots/tests, optimizer checks, and provenance. All
 four models are checked against BFGS; all 16 means are verified using model
@@ -25,15 +25,19 @@ reference/sensitivity record and do not overwrite this selected figure.
 
 ## Historical joint-model reference
 
-From `analysis/`, with the project R libraries available:
+From the repository root, run `run-publication.bat regeneration`. The runner
+uses publication's independent R and renv and executes 01, 02, 03, 05, then 04.
+Individual scripts can also be run from `publication/` with that environment:
 
 ```sh
-Rscript scripts/publication/regeneration/01-generate-rd02-display.R
+Rscript scripts/regeneration/01-generate-rd02-display.R
 ```
 
-The script can also be sourced from an R session. It reads `mba` from
-`analysis/regen_visualize.rda` into an isolated environment. It does not refit
-models or change thesis files. The selected model is `m5` from
+The script can also be sourced from a publication R session. It reads exported
+historical estimates and audit tables, then generates the reference display.
+The original `mba` replay, prediction, gradient, and quadrature checks execute
+in `analysis/scripts/export-publication-inputs.R` under thesis R and renv.
+Publication never loads `analysis/regen_visualize.rda`. The selected model is `m5` from
 `analysis/analysis/regen_visualize.qmd`: zero-inflated Gamma, conditional log
 link, `ba_ha ~ treat * spp + (1 | site:spp)`, zero and dispersion formulas
 `~spp`. All four species classes remain in the fit. Only redwood and tanoak
@@ -55,7 +59,7 @@ The retained site-by-species intercept does not explicitly model macro-plot
 clustering, unlike the fuel hierarchy. That design question remains open for
 scientific review; this script does not silently replace the thesis model.
 
-Outputs in `analysis/outputs/publication/regeneration/`:
+Outputs in `publication/outputs/regeneration/`:
 
 - `figures/rd02-regeneration-basal-area.png` and `.pdf`: shared-scale lead display.
 - `tables/rd02-basal-area-model-estimates.csv`: all 16 species/treatment means.
@@ -68,11 +72,10 @@ source is `publication/sections/rd02-regeneration-display.qmd`.
 Linked review downloads are bundled in `publication/assets/rd02/` so that
 the rendered workflow can serve the same estimates, audit, PDF, and source.
 
-Every run checks all 16 cells against `predict()` and `marginaleffects` for the
+The thesis export operation checks all 16 historical cells against `predict()` and `marginaleffects` for the
 zero-effect reference, and against `marginaleffects::hypotheses()` for integrated
 means and SEs. Independent numerical gradients and numerical quadrature verify
-the analytic derivatives and integration factor. The input checksum is checked
-again at completion. No significance arrows, inherited p-values, or claims
+the analytic derivatives and integration factor. Export checksums are checked before publication execution and again at completion. No significance arrows, inherited p-values, or claims
 based on CI overlap are generated. Refitted bootstrap intervals remain possible
 later modeling work.
 
@@ -93,7 +96,7 @@ All candidates use zero-inflated Gamma with conditional log link, the same
 effects are added to the zero model. The sensitivity candidate distinguishes
 adding design clustering from removing species-specific site variation.
 
-Outputs are in `outputs/publication/regeneration/random-effects-comparison/`:
+Outputs are in `outputs/regeneration/random-effects-comparison/`:
 ML fit/AIC/BIC/convergence records, variance components, row/grouped DHARMa
 tests and plots, integrated means and full-covariance delta-method intervals,
 optimizer and residual-tail sensitivity checks, and a model-comparison figure.
@@ -137,7 +140,7 @@ are summed under species independence. Neither individual-species AICs nor
 the paired AIC are compared with the earlier 256-row, four-species AICs.
 Cross-species covariance is not estimated by the independent fits.
 
-Outputs are in `outputs/publication/regeneration/separate-species-comparison/`:
+Outputs are in `outputs/regeneration/separate-species-comparison/`:
 fit and variance registers, same-data AIC comparison, 1,000-simulation DHARMa
 checks and treatment plots, full-covariance integrated means and intervals,
 BFGS/start sensitivity checks, provenance, session, and a comparison figure.
@@ -155,7 +158,7 @@ inference. The overall collection includes the three four-species joint fits,
 three RW/TO joint refits, the separate site/macro-plot RW/TO pair, and the
 selected four-category separate models.
 
-`outputs/publication/regeneration/overall-sensitivity/` contains a four-panel
+`outputs/regeneration/overall-sensitivity/` contains a four-panel
 figure (fitting-data scopes in rows, species in columns), an eight-configuration
 fit table, all 28 variance-component rows, 48 row-level diagnostic tests, and
 96 complete mean/interval cells (64 focal-species cells in the figure).

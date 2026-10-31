@@ -13,7 +13,7 @@ connections; detailed evidence is included on the owning step's page.
 
 | Stage | Inputs → outputs | Authoritative record |
 |---|---|---|
-| 01 derive components | Read-only thesis measurements and deadwood loads → separated station/transect data, dictionary, pairing audit | [F01 inputs and analyses](task-f01.qmd#inputs-and-analyses-performed) |
+| 01 derive components | Committed thesis measurement/deadwood exports → separated station/transect data, dictionary, pairing audit | [F01 inputs and analyses](task-f01.qmd#inputs-and-analyses-performed) |
 | 02 explore components | Derived data → component summaries, zero/dispersion candidates | [F01 analytical review](task-f01.qmd#f01-pipeline-review) |
 | 03 fit phase components; 04 fit woody PCT candidates | Derived data and candidate specifications → saved fitted models, fit registries, diagnostics | [F01 model record](task-f01.qmd#rendered-provisional-model-review-register) |
 | 05 evaluate candidates | Fit registries → comparisons and provisional AIC leaders | [F01 decisions and handoff](task-f01.qmd#implications-handoff-and-review-state) |
@@ -32,10 +32,11 @@ stub and archived implementation belong to the
 
 ## Running and updating the pipeline
 
-Run analysis scripts from `analysis/` to use its `renv` environment. See the
-[operational README](repo-files/analysis/scripts/publication/fuel/README.md)
-for exact commands. Outputs remain under `analysis/outputs/publication/fuel/`;
-raw data, legacy notebooks, and thesis-era model objects are read-only inputs.
+Run `run-publication.bat fuel` from the repository root, using publication's
+independent R 4.6.2 and renv environment. See the
+[operational README](repo-files/publication/scripts/fuel/README.md) for commands.
+Inputs are committed thesis exports; outputs live under `publication/outputs/fuel/`.
+Historical thesis replay is a separate export operation.
 Website rendering reads saved outputs and displays source; it does not refit models.
 
 For a change, update the owning task record and code, regenerate affected

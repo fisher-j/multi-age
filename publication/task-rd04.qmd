@@ -69,6 +69,19 @@ consumes these artifacts; changes to their derivation or fitting belong in F01.
 
 ## Completed output
 
+### Publication execution {#publication-execution}
+
+RD04 inference, audits and display generation use the sole publication
+environment: R 4.6.2 with `publication/renv.lock`. The canonical figure, estimates,
+saved models and producing provenance are under `publication/outputs/fuel/`.
+The scripts retain their prediction, gradient, integration and covariance
+verification checks. Model assumptions and final display decisions remain
+under their existing scientific review states.
+
+Historical thesis reference calculations belong to the separate thesis export
+operation. Publication consumes those exported reference values; it has no
+previous-environment replay or retained migration acceptance/difference artifacts.
+
 ```{r}
 #| label: fig-rd04-fuel-inventory
 #| echo: false
@@ -89,9 +102,9 @@ knitr::include_graphics("assets/rd04-fuel-phase-pct-inventory.png")
 ```
 
 Generated artifacts for this review are
-`analysis/outputs/publication/fuel/figures/rd04-fuel-phase-pct-inventory.png`,
-`analysis/outputs/publication/fuel/tables/rd04-fuel-model-estimates.csv`, and
-`analysis/outputs/publication/fuel/manifests/rd04-figure-provenance.yml`.
+`publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png`,
+`publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv`, and
+`publication/outputs/fuel/manifests/rd04-figure-provenance.yml`.
 The figure uses the AIC-leading models documented in the
 [F01 model-review register](task-f01.qmd#f01-record). It is also available
 [in the working manuscript for review in context](draft-results.qmd#rd04-fuel-inventory-draft).

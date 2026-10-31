@@ -329,7 +329,7 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td>01 derive components</td>
-<td>Read-only thesis measurements and deadwood loads → separated station/transect data, dictionary, pairing audit</td>
+<td>Committed thesis measurement/deadwood exports → separated station/transect data, dictionary, pairing audit</td>
 <td><a href="./task-f01.html#inputs-and-analyses-performed">F01 inputs and analyses</a></td>
 </tr>
 <tr class="even">
@@ -373,7 +373,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="running-and-updating-the-pipeline" class="level2">
 <h2 class="anchored" data-anchor-id="running-and-updating-the-pipeline">Running and updating the pipeline</h2>
-<p>Run analysis scripts from <code>analysis/</code> to use its <code>renv</code> environment. See the <a href="repo-files/analysis/scripts/publication/fuel/README.md">operational README</a> for exact commands. Outputs remain under <code>analysis/outputs/publication/fuel/</code>; raw data, legacy notebooks, and thesis-era model objects are read-only inputs. Website rendering reads saved outputs and displays source; it does not refit models.</p>
+<p>Run <code>run-publication.bat fuel</code> from the repository root, using publication’s independent R 4.6.2 and renv environment. See the <a href="repo-files/publication/scripts/fuel/README.md">operational README</a> for commands. Inputs are committed thesis exports; outputs live under <code>publication/outputs/fuel/</code>. Historical thesis replay is a separate export operation. Website rendering reads saved outputs and displays source; it does not refit models.</p>
 <p>For a change, update the owning task record and code, regenerate affected outputs, then review downstream uses. F01 changes can affect RD04 and RT03; RD04 changes can affect RT03, Methods, and Discussion. A consumer links to the producing step’s decision and records its own use of the result. Review states remain explicit on each task page; an upstream completed analysis does not automatically accept a downstream claim.</p>
 <p>The <a href="./workflow.html#documentation-responsibilities">workflow maintenance rules</a> describe the shared documentation structure. There is no separate continuous pipeline review: the linked step records provide the complete evidence without a second review surface to maintain. If one becomes useful for code-agent work, assemble it from these same step-owned sections using Quarto includes.</p>
 

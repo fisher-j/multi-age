@@ -1,11 +1,13 @@
 # Assemble all fitted RD02 sensitivity alternatives; no fitting or inference.
-# From analysis/: Rscript scripts/publication/regeneration/04-assemble-rd02-sensitivity.R
+# From publication/: Rscript scripts/regeneration/04-assemble-rd02-sensitivity.R
 script_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
 script_file <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else sys.frame(1)$ofile
 script_dir <- dirname(normalizePath(script_file))
-analysis_root <- normalizePath(file.path(script_dir, "..", "..", ".."))
+publication_root <- normalizePath(file.path(script_dir, "..", ".."))
+source(file.path(publication_root, "scripts", "publication-paths.R"))
+paths_common <- publication_paths(publication_root)
 suppressPackageStartupMessages({library(dplyr); library(ggplot2)})
-root <- file.path(analysis_root, "outputs/publication/regeneration")
+root <- file.path(paths_common$output, "regeneration")
 joint_dir <- file.path(root, "random-effects-comparison/tables")
 species_dir <- file.path(root, "separate-species-comparison/tables")
 selected_dir <- file.path(root, "selected-species-models/tables")
@@ -159,7 +161,7 @@ ggsave(file.path(out, "figures/rd02-overall-sensitivity.png"), figure,
        width = 10, height = 8.5, dpi = 300, bg = "white")
 ggsave(file.path(out, "figures/rd02-overall-sensitivity.pdf"), figure, width = 10, height = 8.5)
 input_manifest <- data.frame(
-  input = names(inputs), path = sub(paste0(analysis_root, "/"), "", unname(inputs), fixed = TRUE),
+  input = names(inputs), path = sub(paste0(paths_common$output, "/"), "", unname(inputs), fixed = TRUE),
   md5 = unname(hashes))
 write.csv(input_manifest, file.path(out, "manifests/rd02-overall-inputs.csv"), row.names = FALSE)
 yaml::write_yaml(list(
@@ -175,7 +177,7 @@ yaml::write_yaml(list(
   figure = "Two species columns; fitting-data scopes in rows; panel-specific vertical scales"
 ), file.path(out, "manifests/rd02-overall-provenance.yml"))
 stopifnot(identical(unname(tools::md5sum(inputs)), unname(hashes)))
-download_dir <- file.path(analysis_root, "../publication/assets/rd02-sensitivity")
+download_dir <- file.path(paths_common$assets, "rd02-sensitivity")
 for (directory in c("tables", "figures", "manifests")) {
   target <- file.path(download_dir, directory)
   dir.create(target, recursive = TRUE, showWarnings = FALSE)

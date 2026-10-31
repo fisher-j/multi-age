@@ -8,7 +8,15 @@
   `$env:R_LIBS_USER = "$env:USERPROFILE/AppData/Local/R/win-library/%v"`
   in the same shell invocation.
 - Run legacy R work from `analysis/` to activate its `renv` environment;
-  `publication/` uses a separate library.
+  `publication/` uses its own updated R 4.6.2 and renv. Use
+  `.\run-publication.bat restore`, then `fuel`, `regeneration`, `all`, or `check`
+  from the repository root. Root wrappers select each R installation explicitly.
+- Publication reads committed `publication/inputs/thesis/` exports and writes
+  staged calculations before current-output validation and promotion. Historical
+  replay is the separate `analysis/scripts/export-publication-inputs.R`
+  operation with thesis R 4.3.2; do not restore or update thesis renv for
+  publication work. Publication has one authoritative environment and current
+  workflow; do not restore old publication replay modes or migration artifacts.
 - Before installing packages, restoring `renv`, or declaring rendering blocked,
   check `.libPaths()` and actual `requireNamespace()` calls in the target project.
   Sandbox permission checks can make `renv::status()` and `installed.packages()`

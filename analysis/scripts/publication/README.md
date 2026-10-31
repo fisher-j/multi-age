@@ -1,8 +1,9 @@
-# Publication analysis scripts
+# Publication workflow moved
 
-Place scripts that define publication-specific transformations, model
-specifications, figures, and tables here. Shared utilities should remain in
-`analysis/scripts/` until a stable, product-neutral interface is identified.
+Active publication pipelines are maintained under `publication/scripts/` and
+write to `publication/outputs/`. Run `run-publication.bat` from the repository
+root. Publication uses its own updated R and renv environment.
 
-Do not modify thesis-era scripts solely to accommodate the publication. Extract
-or wrap stable functions only when the publication requires them.
+The separate thesis export operation is `scripts/export-publication-inputs.R`,
+run from `analysis/` with thesis R 4.3.2. Thesis notebooks and environment remain
+unchanged. See `publication/inputs/thesis/README.md` from the repository root.

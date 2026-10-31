@@ -1,30 +1,31 @@
 # RD02: separate RW/TO models with site and nested macro-plot intercepts.
-# From analysis/: Rscript scripts/publication/regeneration/03-compare-rd02-separate-species.R
+# From publication/: Rscript scripts/regeneration/03-compare-rd02-separate-species.R
 # Also sourceable. Original thesis and current lead display are preserved.
 script_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
 script_file <- if (length(script_arg)) sub("^--file=", "", script_arg[1]) else sys.frame(1)$ofile
 script_dir <- dirname(normalizePath(script_file))
-analysis_root <- normalizePath(file.path(script_dir, "..", "..", ".."))
+publication_root <- normalizePath(file.path(script_dir, "..", ".."))
+source(file.path(publication_root, "scripts", "publication-paths.R"))
+paths_common <- publication_paths(publication_root)
 suppressPackageStartupMessages({
   library(glmmTMB)
   library(DHARMa)
   library(dplyr)
   library(ggplot2)
 })
-input <- file.path(analysis_root, "regen_visualize.rda")
-protected <- c(input, file.path(analysis_root, c(
-  "outputs/publication/regeneration/figures/rd02-regeneration-basal-area.png",
-  "outputs/publication/regeneration/tables/rd02-basal-area-model-estimates.csv")))
+input <- file.path(paths_common$input, "regeneration-measurements.rds")
+protected <- c(input, file.path(paths_common$output, c(
+  "regeneration/figures/rd02-regeneration-basal-area.png",
+  "regeneration/tables/rd02-basal-area-model-estimates.csv")))
 protected_hashes <- tools::md5sum(protected)
-saved <- new.env()
-load(input, envir = saved)
+saved <- list(regen_pa = readRDS(input))
 d <- droplevels(subset(as.data.frame(saved$regen_pa), spp %in% c("rw", "to")))
 d$site <- factor(d$site)
 d$plot <- factor(d$plot)
 stopifnot(nrow(d) == 128L, !anyNA(d),
           nrow(distinct(d, site, treat, plot)) == 64L,
           all(count(d, site, treat, plot)$n == 2L))
-out <- file.path(analysis_root, "outputs/publication/regeneration/separate-species-comparison")
+out <- file.path(paths_common$output, "regeneration/separate-species-comparison")
 for (directory in c("models", "tables", "diagnostics", "figures", "manifests")) {
   dir.create(file.path(out, directory), recursive = TRUE, showWarnings = FALSE)
 }
@@ -74,7 +75,7 @@ for (id in names(spec)) {
     log_likelihood = as.numeric(ll), AIC = AIC(m), convergence = m$fit$convergence,
     pd_hessian = m$sdr$pdHess, max_abs_gradient = max(abs(m$sdr$gradient.fixed)),
     warnings = paste(unique(warnings), collapse = " | "))
-  sim <- simulateResiduals(m, n = 1000, seed = seed, refit = FALSE, plot = FALSE)
+  sim <- publication_simulate_residuals(m, n = 1000, seed = seed, refit = FALSE, plot = FALSE)
   tests <- list(uniformity = testUniformity, dispersion = testDispersion,
                 outliers = testOutliers, zero_inflation = testZeroInflation)
   diagnostic_records[[id]] <- bind_rows(lapply(names(tests), function(test) {
@@ -219,7 +220,7 @@ tables <- list("rd02-species-fit-register.csv" = fit_table,
 for (filename in names(tables)) write.csv(tables[[filename]], file.path(out, "tables", filename), row.names = FALSE)
 provenance <- list(
   task = "RD02 separate species with site and macro-plot random effects",
-  source = "analysis/regen_visualize.rda", source_md5 = unname(protected_hashes[1]),
+  source = "publication/inputs/thesis/regeneration-measurements.rds", source_md5 = unname(protected_hashes[1]),
   script_md5 = unname(tools::md5sum(script_file)),
   data = "64 RW and 64 TO observations; 4 sites, 16 macro plots, 64 vegetation plots per species",
   species_formula = "ba_ha ~ treat + (1 | site/treat); ziGamma(log), zero ~1, dispersion ~1",
@@ -236,7 +237,7 @@ provenance <- list(
 yaml::write_yaml(provenance, file.path(out, "manifests/rd02-species-comparison-provenance.yml"))
 capture.output(sessionInfo(), file = file.path(out, "manifests/rd02-species-comparison-session-info.txt"))
 stopifnot(identical(unname(tools::md5sum(protected)), unname(protected_hashes)))
-download_dir <- file.path(analysis_root, "../publication/assets/rd02-species")
+download_dir <- file.path(paths_common$assets, "rd02-species")
 for (directory in c("tables", "diagnostics", "figures", "manifests")) {
   target <- file.path(download_dir, directory)
   dir.create(target, recursive = TRUE, showWarnings = FALSE)
