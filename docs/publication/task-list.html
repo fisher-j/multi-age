@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Task register and task list – Publication manuscript development</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e2d335519fda3bc7c134d94e5e0c7dbd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Publication manuscript development</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./workflow.html" aria-current="page"> 
+<span class="menu-text">Development workflow</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./manuscript.html"> 
+<span class="menu-text">Manuscript draft</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./task-list.html">Task register and task list</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-list.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Task register and task list</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Dedicated task pages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-f01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">F01 — fuel-component separation and model exploration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-rd04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">RD04 — fuel phase and PCT display</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-rd02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">RD02 — regeneration basal-area/density display</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-rd03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">RD03 — sprout-height display</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-rt01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">RT01 — regeneration Results narrative</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-rt02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">RT02 — sprout-height Results narrative</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-rt03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">RT03 — fuel Results narrative</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-md01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">MD01 — study design display</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-m01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">M01 — study area and experimental design</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-m02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">M02 — regeneration and sprout methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-m03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">M03 — fuel methods and estimand</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-d01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">D01 — regeneration cohort discussion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-d02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">D02 — sprout development discussion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-d03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">D03 — fuels and PCT-management discussion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-d04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">D04 — limits, integration, and future work</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-i01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">I01 — management problem and study purpose</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-i02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">I02 — regeneration and retention context</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-i03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">I03 — fuels context and questions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-s01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">S01 — supplement and machine-readable outputs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-c01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C01 — conclusions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task-a01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A01 — abstract and title</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#task-register" id="toc-task-register" class="nav-link active" data-scroll-target="#task-register">Task register</a></li>
+  <li><a href="#task-list" id="toc-task-list" class="nav-link" data-scroll-target="#task-list">Task list</a>
+  <ul class="collapse">
+  <li><a href="#f01" id="toc-f01" class="nav-link" data-scroll-target="#f01">F01 — fuel-component separation and model exploration</a></li>
+  <li><a href="#rd04" id="toc-rd04" class="nav-link" data-scroll-target="#rd04">RD04 — fuel phase and PCT display</a></li>
+  <li><a href="#rd02" id="toc-rd02" class="nav-link" data-scroll-target="#rd02">RD02 — regeneration basal-area/density display</a></li>
+  <li><a href="#rd03" id="toc-rd03" class="nav-link" data-scroll-target="#rd03">RD03 — sprout-height display</a></li>
+  <li><a href="#rt01" id="toc-rt01" class="nav-link" data-scroll-target="#rt01">RT01 — regeneration Results narrative</a></li>
+  <li><a href="#rt02" id="toc-rt02" class="nav-link" data-scroll-target="#rt02">RT02 — sprout-height Results narrative</a></li>
+  <li><a href="#rt03" id="toc-rt03" class="nav-link" data-scroll-target="#rt03">RT03 — fuel Results narrative</a></li>
+  <li><a href="#md01" id="toc-md01" class="nav-link" data-scroll-target="#md01">MD01 — study design display</a></li>
+  <li><a href="#m01" id="toc-m01" class="nav-link" data-scroll-target="#m01">M01 — study area and experimental design</a></li>
+  <li><a href="#m02" id="toc-m02" class="nav-link" data-scroll-target="#m02">M02 — regeneration and sprout methods</a></li>
+  <li><a href="#m03" id="toc-m03" class="nav-link" data-scroll-target="#m03">M03 — fuel methods and estimand</a></li>
+  <li><a href="#d01" id="toc-d01" class="nav-link" data-scroll-target="#d01">D01 — regeneration cohort discussion</a></li>
+  <li><a href="#d02" id="toc-d02" class="nav-link" data-scroll-target="#d02">D02 — sprout development discussion</a></li>
+  <li><a href="#d03" id="toc-d03" class="nav-link" data-scroll-target="#d03">D03 — fuels and PCT-management discussion</a></li>
+  <li><a href="#d04" id="toc-d04" class="nav-link" data-scroll-target="#d04">D04 — limits, integration, and future work</a></li>
+  <li><a href="#i01" id="toc-i01" class="nav-link" data-scroll-target="#i01">I01 — management problem and study purpose</a></li>
+  <li><a href="#i02" id="toc-i02" class="nav-link" data-scroll-target="#i02">I02 — regeneration and retention context</a></li>
+  <li><a href="#i03" id="toc-i03" class="nav-link" data-scroll-target="#i03">I03 — fuels context and questions</a></li>
+  <li><a href="#s01" id="toc-s01" class="nav-link" data-scroll-target="#s01">S01 — supplement and machine-readable outputs</a></li>
+  <li><a href="#c01" id="toc-c01" class="nav-link" data-scroll-target="#c01">C01 — conclusions</a></li>
+  <li><a href="#a01" id="toc-a01" class="nav-link" data-scroll-target="#a01">A01 — abstract and title</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Task register and task list</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- Generated by scripts/prepare-workflow.py from tasks.json. -->
+<p>The register links to the task entries below. Each entry summarizes the proposal or work recorded on its dedicated task page, with links to the full record and relevant review sections.</p>
+<section id="task-register" class="level2">
+<h2 class="anchored" data-anchor-id="task-register">Task register</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Order</th>
+<th>Task</th>
+<th>Status</th>
+<th>Proposed target</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td><a href="#f01">F01 — fuel-component separation and model exploration</a></td>
+<td>Completed — analytical record</td>
+<td>Reproducible component/model record</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td><a href="#rd04">RD04 — fuel phase and PCT display</a></td>
+<td>Figure complete; companion table pending review</td>
+<td>Nine-panel figure, estimates table, and CSV</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td><a href="#rd02">RD02 — regeneration basal-area/density display</a></td>
+<td>Separate models selected; displays pending review</td>
+<td>RW/TO Results figure and all-species supplement table</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td><a href="#rd03">RD03 — sprout-height display</a></td>
+<td>Queued</td>
+<td>1 figure, combined only if readable</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td><a href="#rt01">RT01 — regeneration Results narrative</a></td>
+<td>Queued — after RD02</td>
+<td>1–2 manuscript pages</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td><a href="#rt02">RT02 — sprout-height Results narrative</a></td>
+<td>Queued — after RD03</td>
+<td>1–1.5 manuscript pages</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6</td>
+<td><a href="#rt03">RT03 — fuel Results narrative</a></td>
+<td>Pending review</td>
+<td>1.5–2 manuscript pages</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td><a href="#md01">MD01 — study design display</a></td>
+<td>Queued — Methods stage</td>
+<td>1 compact figure or table</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">8</td>
+<td><a href="#m01">M01 — study area and experimental design</a></td>
+<td>Queued — after MD01</td>
+<td>1–1.5 manuscript pages</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9</td>
+<td><a href="#m02">M02 — regeneration and sprout methods</a></td>
+<td>Queued — after RT01/RT02</td>
+<td>1–1.5 manuscript pages</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td><a href="#m03">M03 — fuel methods and estimand</a></td>
+<td>Queued — after RT03</td>
+<td>1–1.5 manuscript pages</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">11</td>
+<td><a href="#d01">D01 — regeneration cohort discussion</a></td>
+<td>Queued — after regeneration Results/Methods</td>
+<td>1.5–2 manuscript pages</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td><a href="#d02">D02 — sprout development discussion</a></td>
+<td>Queued — after sprout Results/Methods</td>
+<td>1–1.5 manuscript pages</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">13</td>
+<td><a href="#d03">D03 — fuels and PCT-management discussion</a></td>
+<td>Queued — after fuel Results/Methods</td>
+<td>1.5–2 manuscript pages</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">14</td>
+<td><a href="#d04">D04 — limits, integration, and future work</a></td>
+<td>Queued</td>
+<td>0.5–1 manuscript page</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">15</td>
+<td><a href="#i01">I01 — management problem and study purpose</a></td>
+<td>Queued — after Discussion</td>
+<td>1–1.5 manuscript pages</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">16</td>
+<td><a href="#i02">I02 — regeneration and retention context</a></td>
+<td>Queued — after Discussion</td>
+<td>1–1.5 manuscript pages</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">17</td>
+<td><a href="#i03">I03 — fuels context and questions</a></td>
+<td>Queued — after Discussion</td>
+<td>1–1.5 manuscript pages</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">18</td>
+<td><a href="#s01">S01 — supplement and machine-readable outputs</a></td>
+<td>Queued — after main displays</td>
+<td>Inventory and links</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">19</td>
+<td><a href="#c01">C01 — conclusions</a></td>
+<td>Queued — after Discussion</td>
+<td>≤0.5 manuscript page</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">20</td>
+<td><a href="#a01">A01 — abstract and title</a></td>
+<td>Queued — last</td>
+<td>Abstract and final title</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="task-list" class="level2">
+<h2 class="anchored" data-anchor-id="task-list">Task list</h2>
+<section id="f01" class="level3">
+<h3 class="anchored" data-anchor-id="f01"><a href="./task-f01.html">F01 — fuel-component separation and model exploration</a></h3>
+<p><strong>Status: Completed — analytical record.</strong></p>
+<p>The <a href="./task-f01.html#decisions-made">component definitions</a> separate woody and herbaceous vegetation in both phases, split pre-PCT litter and duff, and omit post-PCT forest-floor estimates. Component derivation, pairing checks, exploration, and candidate fitting are preserved in the analytical record. The <a href="./task-f01.html#rendered-provisional-model-review-register">model-review register</a> reports provisional AIC leaders alongside diagnostics; it does not select final models. The <a href="./task-f01.html#f01-pipeline-review">rendered pipeline review</a> integrates the current README, complete scripts (including shared helpers and retired code), and all saved summary, model-register, inference-audit, and estimate CSVs in collapsible sections.</p>
+</section>
+<section id="rd04" class="level3">
+<h3 class="anchored" data-anchor-id="rd04"><a href="./task-rd04.html">RD04 — fuel phase and PCT display</a></h3>
+<p><strong>Status: Figure complete; companion table pending review.</strong></p>
+<p>The <a href="./task-rd04.html#completed-output">nine-panel inventory</a> reports phase-specific fuel loads and a matched woody-vegetation contrast. The <a href="./task-rd04.html#rd04-inference-review">inference review</a> compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A <a href="./task-rd04.html#fuel-companion-table">companion table</a> reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review.</p>
+</section>
+<section id="rd02" class="level3">
+<h3 class="anchored" data-anchor-id="rd02"><a href="./task-rd02.html">RD02 — regeneration basal-area/density display</a></h3>
+<p><strong>Status: Separate models selected; displays pending review.</strong></p>
+<p>The <a href="./task-rd02.html#rd02-random-effects-review">overall sensitivity review</a> examines joint random-effect structures and same-data species comparisons; the <a href="./task-rd02.html#rd02-separate-species-review">focused RW/TO comparison</a> examines separate fitting and species-specific variances. The <a href="./task-rd02.html#rd02-review-recommendation">recorded selection</a> uses four separate zero-inflated Gamma models with site and nested macro-plot intercepts. Prediction, gradient, integration, and optimizer checks accompany the RW/TO Results figure and all-category supplement estimates; display review remains open.</p>
+</section>
+<section id="rd03" class="level3">
+<h3 class="anchored" data-anchor-id="rd03"><a href="./task-rd03.html">RD03 — sprout-height display</a></h3>
+<p><strong>Status: Queued.</strong></p>
+<p>The proposal reviews treatment, temporal, and 10-year redwood/tanoak sprout-height displays together, retaining the smallest set that preserves their distinct messages. The task page identifies the three thesis source figures and requires the chosen display to distinguish treatment from time without repeating the basal-area/density result.</p>
+</section>
+<section id="rt01" class="level3">
+<h3 class="anchored" data-anchor-id="rt01"><a href="./task-rt01.html">RT01 — regeneration Results narrative</a></h3>
+<p><strong>Status: Queued — after RD02.</strong></p>
+<p>After RD02 acceptance, the proposal is to draft a 1–2-page regeneration Results subsection around the accepted display, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Every quantitative claim must be traceable to an accepted display or linked table.</p>
+</section>
+<section id="rt02" class="level3">
+<h3 class="anchored" data-anchor-id="rt02"><a href="./task-rt02.html">RT02 — sprout-height Results narrative</a></h3>
+<p><strong>Status: Queued — after RD03.</strong></p>
+<p>After RD03 acceptance, the proposal is to report redwood and tanoak height/time findings in a distinct 1–1.5-page Results subsection. Combining it with RT01 remains conditional on one shared display and a clearer common message; the narrative must add sprout-development evidence without restating basal-area/density findings.</p>
+</section>
+<section id="rt03" class="level3">
+<h3 class="anchored" data-anchor-id="rt03"><a href="./task-rt03.html">RT03 — fuel Results narrative</a></h3>
+<p><strong>Status: Pending review.</strong></p>
+<p>The fuel Results draft follows the thesis pre-PCT, post-PCT, and vegetation-transition sequence using current publication values. The <a href="./task-rt03.html#implemented-source-and-review-decisions">source and review decisions</a> document separated components, integrated means, covariance-aware woody changes, and replacement of inherited significance claims with descriptive rankings. Inline values and the companion table share the canonical CSV; the draft remains pending review, with explicit limits on slash and causal PCT interpretations.</p>
+</section>
+<section id="md01" class="level3">
+<h3 class="anchored" data-anchor-id="md01"><a href="./task-md01.html">MD01 — study design display</a></h3>
+<p><strong>Status: Queued — Methods stage.</strong></p>
+<p>The proposed design display combines study area, treatment layout, and sampling logic if the result remains legible, with the second map or layout moved to the supplement. Its review criterion is that readers can identify the four treatments, replication, and measurement phases without consulting the text.</p>
+</section>
+<section id="m01" class="level3">
+<h3 class="anchored" data-anchor-id="m01"><a href="./task-m01.html">M01 — study area and experimental design</a></h3>
+<p><strong>Status: Queued — after MD01.</strong></p>
+<p>Following MD01 acceptance, the proposal retains the setting, four treatments, replication, timing, and PCT context needed to understand the accepted results. A 1–1.5-page Methods subsection and compact design table should make every displayed variable and phase traceable to the experimental design.</p>
+</section>
+<section id="m02" class="level3">
+<h3 class="anchored" data-anchor-id="m02"><a href="./task-m02.html">M02 — regeneration and sprout methods</a></h3>
+<p><strong>Status: Queued — after RT01/RT02.</strong></p>
+<p>The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02.</p>
+</section>
+<section id="m03" class="level3">
+<h3 class="anchored" data-anchor-id="m03"><a href="./task-m03.html">M03 — fuel methods and estimand</a></h3>
+<p><strong>Status: Queued — after RT03.</strong></p>
+<p>Following RT03, the proposal documents fuel-component definitions, the phase boundary, matched woody contrast, uncertainty/model decisions, and limits on causal interpretation. The planned 1–1.5-page Methods subsection must match the reviewed fuel caption and Results claims, with diagnostic detail linked through F01 and the supplement.</p>
+</section>
+<section id="d01" class="level3">
+<h3 class="anchored" data-anchor-id="d01"><a href="./task-d01.html">D01 — regeneration cohort discussion</a></h3>
+<p><strong>Status: Queued — after regeneration Results/Methods.</strong></p>
+<p>The proposed 1.5–2-page discussion interprets redwood and tanoak regeneration under retained overstory as evidence about developing a new cohort in multiaged stands. It tightens the thesis discussion around accepted basal-area/density findings and their uncertainty, with each inference grounded in Results and cited context.</p>
+</section>
+<section id="d02" class="level3">
+<h3 class="anchored" data-anchor-id="d02"><a href="./task-d02.html">D02 — sprout development discussion</a></h3>
+<p><strong>Status: Queued — after sprout Results/Methods.</strong></p>
+<p>The proposed sprout discussion connects accepted height patterns to light, retention, and cohort development. Its 1–1.5 pages must explain what the height evidence adds beyond basal area; combining it with D01 depends on whether the reviewed results support one inseparable management message.</p>
+</section>
+<section id="d03" class="level3">
+<h3 class="anchored" data-anchor-id="d03"><a href="./task-d03.html">D03 — fuels and PCT-management discussion</a></h3>
+<p><strong>Status: Queued — after fuel Results/Methods.</strong></p>
+<p>The proposed 1.5–2-page discussion connects phase-specific fuel conditions and the matched woody contrast to silvicultural, fuels, and fire-management questions. It must distinguish potential surface-fuel contribution from directly measured slash and keep interpretation within the reviewed design.</p>
+</section>
+<section id="d04" class="level3">
+<h3 class="anchored" data-anchor-id="d04"><a href="./task-d04.html">D04 — limits, integration, and future work</a></h3>
+<p><strong>Status: Queued.</strong></p>
+<p>The proposed closing Discussion subsection integrates the limitations governing regeneration and fuel interpretation, then identifies targeted future work. Its 0.5–1-page allocation is intended to resolve caveats from the topical discussions without repeating detailed model results.</p>
+</section>
+<section id="i01" class="level3">
+<h3 class="anchored" data-anchor-id="i01"><a href="./task-i01.html">I01 — management problem and study purpose</a></h3>
+<p><strong>Status: Queued — after Discussion.</strong></p>
+<p>After Discussion, the proposal condenses the multiaged-silviculture framing into the management problem, study purpose, and scope supported by accepted findings.</p>
+</section>
+<section id="i02" class="level3">
+<h3 class="anchored" data-anchor-id="i02"><a href="./task-i02.html">I02 — regeneration and retention context</a></h3>
+<p><strong>Status: Queued — after Discussion.</strong></p>
+<p>After Discussion, the proposal retains the sprouting, light, and retention background needed to motivate D01/D02, removing broader context that does not serve the study question.</p>
+</section>
+<section id="i03" class="level3">
+<h3 class="anchored" data-anchor-id="i03"><a href="./task-i03.html">I03 — fuels context and questions</a></h3>
+<p><strong>Status: Queued — after Discussion.</strong></p>
+<p>The proposal focuses fuel background on phase-specific reference conditions and the PCT question, excluding broad fire-management claims unsupported by the study. Together I01–I03 target a 4–5-page Introduction whose final questions are answered by accepted Results.</p>
+</section>
+<section id="s01" class="level3">
+<h3 class="anchored" data-anchor-id="s01"><a href="./task-s01.html">S01 — supplement and machine-readable outputs</a></h3>
+<p><strong>Status: Queued — after main displays.</strong></p>
+<p>The proposed inventory covers material excluded from the main text: model registries, diagnostics, pairwise comparisons, optional Douglas-fir detail, expanded fuel components, and machine-readable phase values. Each retained item is to be linked from its accepted main-text counterpart after the main displays are reviewed.</p>
+</section>
+<section id="c01" class="level3">
+<h3 class="anchored" data-anchor-id="c01"><a href="./task-c01.html">C01 — conclusions</a></h3>
+<p><strong>Status: Queued — after Discussion.</strong></p>
+<p>After Discussion, the proposal is to write a short conclusion restricted to management implications directly supported by the accepted regeneration, sprout, and fuel results.</p>
+</section>
+<section id="a01" class="level3">
+<h3 class="anchored" data-anchor-id="a01"><a href="./task-a01.html">A01 — abstract and title</a></h3>
+<p><strong>Status: Queued — last.</strong></p>
+<p>The proposal drafts the abstract from the accepted Results, Methods, Discussion, and Conclusions, then sets the final title after the abstract stabilizes. This is the last task in the backwards-writing sequence.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

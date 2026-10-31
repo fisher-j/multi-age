@@ -1,0 +1,237 @@
+## Prediction and interpretation review {#rd04-inference-review}
+
+**Implemented approach:** use **study-standardized, population-averaged
+expected loads** as the baseline for mean fuel loading in comparable systems.
+Integrate over the fitted random-intercept distributions and include modeled
+zeros, with equal weights for the four study-site contexts. Retain the historical
+zero-random-effect predictions as a clearly labeled reference/sensitivity
+summary in the audit. RD04 now uses this integrated interpretation throughout,
+with woody mean change derived from the joint phase model; the fitted load
+models remain provisional pending scientific review. The original generator
+has been retired in favor of `08-generate-rd04-integrated-figure.R`.
+
+### What the prediction arguments actually do
+
+| Calculation | Quantity estimated | Appropriate interpretation |
+|---|---|---|
+| `re.form = NULL` with known grouping IDs | Expected response conditional on fitted random effects for those sites, blocks, corners, and transects | Conditions in the sampled units; average over an explicitly weighted set of these units if that is the target |
+| `re.form = NA` (or `~0`) | Expected response with all random effects set to zero | A reference at the center of the latent random-effect distribution |
+| `re.form = NULL`, with selected random-only grouping variables set to `NA` in `newdata` | Retains known-group effects for the remaining grouping variables and sets the selected groups' effects to zero | A conditional reference, e.g., a known site with zero lower-level effects |
+| Integrate expected responses over the fitted random-effect distribution | Arithmetic expected load for a population of exchangeable sampling units | The model-based mean-load baseline used in RD04 |
+
+`marginaleffects` passes the random-effect arguments to the fitted model's
+prediction method. Its `by` argument and `avg_predictions()` average the
+predictions supplied to them; they do not change zero-effect predictions into
+random-effect-integrated predictions. This distinction follows the
+[mixed-model vignette](https://marginaleffects.com/bonus/lme4.html), the
+[prediction reference](https://marginaleffects.com/man/r/predictions.html),
+and the distinction between observed-group averaging and new-group integration
+in the [Bayesian vignette](https://marginaleffects.com/bonus/brms.html#averaging-marginalizing-integrating-random-effects).
+
+For `glmmTMB`, arbitrary formulas selecting random effects in `re.form` are
+not supported. Selected grouping variables can instead be set to `NA`, but
+this is unsuitable when a variable is also required as a fixed predictor:
+`site`, for example, must remain defined for the post-PCT 100-hour model's zero
+component. `allow.new.levels = TRUE` permits new grouping IDs; it does not
+request integration over their possible effects. See the
+[model's prediction documentation](https://glmmtmb.github.io/glmmTMB/reference/predict.glmmTMB.html).
+
+Two different uses of “conditional” also need separating: `type = "conditional"`
+requests the conditional-distribution mean, whereas `re.form` controls
+conditioning on random effects. For these zero-inflated Gamma models,
+`type = "response"` returns $(1-p_0)\mu_+$, including the modeled probability
+of zero, while `type = "conditional"` returns $\mu_+$. Dispersion parameters
+affect variability and estimation but are not additional multipliers of this
+response mean. Gamma sampling variability should not receive a lognormal
+residual-variance correction.
+
+### Alignment of the thesis code and interpretation
+
+The controlling Results function is `marginaleffects_to_emmeans()` in
+`analysis/thesis/results.qmd`: **both predictions and comparisons use
+`re.form = NA`**. For fuel loads, its pre- and post-PCT calls use
+`tidyr::expand(data, treatment, site)`, giving equal site weights. Passing the
+predictions and pairwise-difference standard errors into `emmeans::emmobj()`
+changes their representation, not their underlying estimand. The earlier
+`re.form = NULL` exploratory basal-area plots in `regen_visualize.qmd` are
+not the calls controlling the thesis Results.
+
+| Thesis statement or presentation | Assessment |
+|---|---|
+| Methods: predictions incorporate all components and average over random effects to obtain population means | Partly aligned: response predictions can include the zero component, but the wrapper sets random effects to zero before averaging. The random effects were not integrated out. |
+| Methods: estimates apply to equal proportions of similar sites, specifically north- and south-facing aspects | Equal site weights are explicit for fuel grids. Zeroing site random effects does not reproduce an aspect mixture on a nonlinear response scale; aspect was not a fixed adjustment variable. Transport requires an exchangeability assumption beyond the prediction settings. |
+| Fuel Results: “expected value” and “estimated marginal means” | Valid if identified as site-standardized expectations **at zero random effects**. Too broad if read as arithmetic population-average loads across forest heterogeneity. |
+| Discussion: compare “average” loads with other forest studies | State whether each value is an observed mean, a zero-effect reference, or an integrated model mean, and check component definitions and sampling protocols. These quantities are not interchangeable. |
+| Post-PCT caption: vegetation difference “represents slash fuels recruited to the forest floor” | Overstates the measurement: standing-vegetation reduction is an inferred potential contribution, not measured slash deposition. RD04's qualified caption is better aligned. |
+| Results: pre/post estimates are not statistically comparable because model structures differ | Different structures alone do not prevent comparison. Formal phase differences need an explicit common estimand and their covariance, accounting for pairing. Separate phase CIs do not supply a paired change test. |
+| Discussion/conclusions: PCT “resulted in” or “generated” the observed dead-fuel changes | The observed transition supports association; attributing all change to PCT requires the design/time assumptions. No unthinned contemporaneous comparison is used by these predictions. |
+
+The same wrapper controls regeneration and sprout Results. Basal area,
+Douglas-fir counts, and year-10 height use nonlinear links, so zero-effect and
+integrated means can differ there too. Height increment uses an identity link;
+integration over mean-zero random effects leaves its expected value unchanged,
+for a fixed covariate distribution. The Results grids also vary: treatment
+height-increment summaries explicitly balance years, whereas the by-year
+analysis uses `newdata = NULL` and averages within observed species/year cells.
+Those are different standardization choices and should be described separately.
+The fuel integration code below is deliberately restricted to its audited model
+structures; it is not a general-purpose replacement for those other analyses.
+
+One numerical provenance issue also deserves attention: the Discussion reports
+about **42 Mg/ha** of pre-PCT 1,000-hour fuel. Reproducing the Results wrapper on
+the saved thesis models gives an equal-treatment reference mean of **32.63
+Mg/ha**. The Discussion value may be an observed summary, but it should not be
+presented as the grand mean of these particular model predictions without a
+separate source. The audit preserves all reproduced thesis fuel estimates.
+
+### How RD04 compares with the thesis
+
+The original RD04 and thesis fuel Results used the **same zero-random-effect
+target** and equal-site weighting. Both used valid prediction grids: the thesis
+expanded the observed treatment and site levels, and RD04 retained observed
+rows with valid nested identifiers, one per site/treatment/phase. Neither
+approach introduced a grid discrepancy for these zero-effect predictions.
+The updated RD04 retains equal-site weighting and integrates over random
+effects. Every phase-specific mean averages four site contexts; post-PCT
+100-hour fuel additionally retains fixed site effects in its zero component.
+
+Numerical changes from the thesis to the original RD04 arose from revised
+fitted models and component definitions, not a switch from `marginaleffects`
+to custom prediction. The updated figure also changes the estimand by
+integrating over random effects. The directly comparable deadwood example
+below separates these changes. Values are Mg/ha, GS treatment.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+old_new <- read.csv("../analysis/outputs/publication/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv")
+old_new <- old_new[old_new$treatment == "gs", c("component", "phase", "thesis_reference", "reference_custom", "integrated_custom")]
+names(old_new) <- c("Component", "Phase", "Thesis reference", "Original RD04 reference", "Current integrated mean")
+knitr::kable(old_new, digits = 2, row.names = FALSE)
+```
+
+Combined thesis vegetation and forest-floor estimates do not directly match
+the new woody/herbaceous and litter/duff components.
+
+### Implemented target and worked demonstration
+
+For a treatment $t$, phase $h$, and equally weighted site contexts $s$, define
+
+$$
+M_{th} = \frac{1}{4}\sum_{s=1}^{4}
+  E_b\!\left[(1-p_{0,sth})\exp\{x_{sth}^{\mathsf T}\beta + z^{\mathsf T}b\}\right].
+$$
+
+The audited load models have independent Gaussian random intercepts only in
+the conditional model and no random effects in the zero component. Thus,
+with $v=\sum_k\sigma_k^2$ across **all** modeled random-intercept levels,
+
+$$
+M_{th}=\exp(v/2)\,
+\frac{1}{4}\sum_{s=1}^{4}(1-p_{0,sth})\exp(x_{sth}^{\mathsf T}\beta).
+$$
+
+This is exact under the fitted model, not a generic bias-correction option.
+The same multiplier across treatments within a fitted load model preserves
+ratios and rankings, while changing absolute loads and differences. Inference
+must still propagate uncertainty in the multiplier; old p-values and standard
+errors should not simply be carried over.
+
+The separate Student-t difference model was replaced in the display by the
+integrated joint phase-model contrast so that woody change equals the
+difference between the displayed arithmetic mean loads. Its uncertainty
+retains the joint pre/post covariance, keeping the change estimate consistent
+with the matched design and the mean-load interpretation of the other panels.
+
+For post-PCT 100-hour fuel, “site-standardized” specifically retains an equal
+mixture of the **four fitted zero-process site contexts**. Integration of the
+random intercepts cannot create a zero-process coefficient for a fifth site.
+The baseline therefore concerns comparable contexts, not a fitted prediction
+for any arbitrary new forest. Four sites also provide limited information
+about the site-variance distribution. A regional mean, or an explicitly
+50:50 aspect-standardized mean, would need a justified target distribution
+and sufficient covariate information to support that standardization.
+
+The demonstration holds fitted load models fixed and changes the estimand;
+woody change now uses their joint phase model. Selected
+GS examples below show why the distinction matters (Mg/ha). The intervals
+describe uncertainty in the integrated **mean**, not variation in a new forest
+or transect.
+
+```{r}
+#| echo: false
+audit <- read.csv("../analysis/outputs/publication/fuel/inference-audit/rd04-estimand-comparison.csv")
+show <- audit[audit$treatment == "gs" & audit$component %in%
+                c("100-hour", "Woody vegetation", "Herbaceous vegetation"), ]
+show <- show[!(show$component == "100-hour" & show$phase == "prepct"), ]
+show <- show[, c("component", "phase", "reference_custom", "integrated_custom", "integrated_lcl", "integrated_ucl")]
+names(show) <- c("Component", "Phase", "Zero-effect reference", "Integrated mean", "95% lower", "95% upper")
+knitr::kable(show, digits = 2, row.names = FALSE)
+```
+
+The implementation in `07-audit-rd04-inference.R` demonstrates both routes:
+
+1. **Historical reference target:** `marginaleffects::avg_predictions(model,
+   newdata = grid, by = ..., type = "response", re.form = NA)` agrees with
+   `predict()` followed by explicit matrix averaging. The custom
+   variance is `A %*% prediction$cov.fit %*% t(A)`.
+2. **Implemented integrated target:** a nonlinear functional supplied to
+   `marginaleffects::hypotheses()` averages the response means after analytic
+   integration. A separate custom implementation derives its gradient and
+   calculates `G %*% V %*% t(G)`. Both use the full covariance of the fitted
+   nonrandom parameters, including zero-model coefficients, log random-effect
+   standard deviations, and their cross-covariances. Merely multiplying an
+   `avg_predictions()` interval by `exp(v/2)` would omit uncertainty in $v$.
+
+The [hypotheses documentation](https://marginaleffects.com/man/r/hypotheses.html)
+supports nonlinear functionals and supplied covariance matrices. Here the
+full parameter table is supplied explicitly because ordinary fixed-coefficient
+prediction covariance alone does not include the integration multiplier's
+variance. These are asymptotic delta-method intervals, conditional on the
+chosen models and the reference grid. They do not include model-selection
+or fuel-component-derivation uncertainty. Refitted parametric bootstrap
+intervals are a useful final sensitivity check, particularly for herbaceous
+loads with large variance corrections and only four sites.
+
+**Verification:** the audit checks all 60 historical comparison cells for
+agreement of reference point estimates and SEs, integrated point estimates, and
+integrated SEs; the latter agree within a relative/absolute tolerance of
+$10^{-4}$. It checks the integration multiplier against numerical quadrature,
+the matrix predictions against `predict.glmmTMB()`, and the retired script's
+checksum before and after the run. It additionally verifies all four woody
+mean contrasts with cross-phase covariance and reproduces the 48 thesis fuel
+reference estimates. Outputs and the R/package session record are in
+`analysis/outputs/publication/fuel/inference-audit/`.
+
+<details>
+<summary>Show the executable prediction and inference demonstration</summary>
+
+```r
+{{< include ../analysis/scripts/publication/fuel/rd04-inference-utils.R >}}
+```
+
+```r
+{{< include ../analysis/scripts/publication/fuel/07-audit-rd04-inference.R >}}
+```
+
+</details>
+
+### Methods wording
+
+For the implemented population-average baseline:
+
+> We estimated treatment- and phase-specific mean fuel loads by averaging
+> response-scale expectations, including modeled zeros, over an equally
+> weighted grid of the four study-site contexts and analytically integrating
+> over all fitted Gaussian random-intercept distributions. These estimates
+> provide model-based reference means for comparable forest conditions; 95%
+> confidence intervals were calculated using the delta method with the full
+> parameter covariance, including uncertainty in random-effect variances.
+
+The matched-contrast qualification can be stated in its own Methods sentence:
+
+> Mean woody standing-vegetation reduction was estimated as the pre-PCT minus
+> post-PCT contrast from the matched repeated-phase model, with its joint
+> covariance, and interpreted as a potential surface-fuel contribution.
+

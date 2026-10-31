@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Judson Fisher">
-<meta name="dcterms.date" content="2026-09-11">
 
-<title>Regeneration and fuel loading with varying overstory retention in redwood stands – Publication manuscript development</title>
+<title>Manuscript draft – Publication manuscript development</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,27 +23,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -64,7 +42,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ece42c8223ec2bf36298a08f122c9a68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e2d335519fda3bc7c134d94e5e0c7dbd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -96,7 +74,7 @@ div.csl-indent {
 
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-sidebar docked nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -114,16 +92,12 @@ div.csl-indent {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Overview</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./workflow.html"> 
-<span class="menu-text">Workflow and review</span></a>
+<span class="menu-text">Development workflow</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./manuscript.html" aria-current="page"> 
-<span class="menu-text">Manuscript structure</span></a>
+<span class="menu-text">Manuscript draft</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -131,63 +105,98 @@ div.csl-indent {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./manuscript.html">Overview</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
-  <ul class="collapse">
-  <li><a href="#study-area-and-design" id="toc-study-area-and-design" class="nav-link" data-scroll-target="#study-area-and-design">Study area and design</a></li>
-  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a></li>
-  </ul></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
-  <ul class="collapse">
-  <li><a href="#regeneration-under-varying-overstory-retention" id="toc-regeneration-under-varying-overstory-retention" class="nav-link" data-scroll-target="#regeneration-under-varying-overstory-retention">Regeneration under varying overstory retention</a></li>
-  <li><a href="#fuel-conditions-as-reference-values" id="toc-fuel-conditions-as-reference-values" class="nav-link" data-scroll-target="#fuel-conditions-as-reference-values">Fuel conditions as reference values</a>
-  <ul class="collapse">
-  <li><a href="#rd04-fuel-inventory-draft" id="toc-rd04-fuel-inventory-draft" class="nav-link" data-scroll-target="#rd04-fuel-inventory-draft">R-D04 fuel inventory draft</a></li>
-  </ul></li>
-  </ul></li>
-  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
-  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
-  <li><a href="#supplementary-material-plan" id="toc-supplementary-material-plan" class="nav-link" data-scroll-target="#supplementary-material-plan">Supplementary material plan</a></li>
-  </ul>
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./manuscript.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-abstract.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Abstract</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Methods</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Results</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-discussion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Discussion</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-conclusions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusions</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-supplement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Supplementary material</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./manuscript-full.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Full manuscript</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Regeneration and fuel loading with varying overstory retention in redwood stands</h1>
-<p class="subtitle lead">Working publication manuscript structure</p>
+<h1 class="title">Manuscript draft</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Judson Fisher </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">September 11, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -197,116 +206,52 @@ div.csl-indent {
 </header>
 
 
-<!--
-This document is a publication scaffold, not a submission-ready manuscript.
-It deliberately contains no copied thesis text or recalculated results.
-The section files define the intended narrative and source map.
--->
-<section id="abstract" class="level1">
-<h1>Abstract</h1>
-<p>Forest managers using retention forestry need information on regeneration and fuel development to design productive stands in fire-adapted ecosystems. We analyzed 10-year remeasurement data from the Redwood Multiaged Experiment in Jackson Demonstration State Forest, California. The experiment compared group selection, aggregated retention, and low- and high-density dispersed retention treatments and measured regeneration, sprout growth, and surface fuel loading.</p>
-<p>Redwood regeneration responded strongly to increasing canopy openness, whereas tanoak responses were more modest. Sprout-height findings will remain part of the main regeneration evidence. Fuel measurements describe conditions before and after precommercial thinning, including the PCT-associated contrast. The manuscript will evaluate how overstory retention affects regeneration while presenting fuel components in a form useful for integrated silviculture, fuels, and fire management.</p>
-<!-- This is a thesis-derived starter abstract. Revise after publication-specific
-fuel components, figures, and supplementary material are finalized. -->
-</section>
-<section id="introduction" class="level1">
-<h1>Introduction</h1>
-<p>Developing and maintaining multiaged stand structures requires silvicultural systems that create and sustain cohorts of different ages within the same stand <span class="citation" data-cites="oharaSilvicultureStructuralDiversity1998 schutzSilviculturalToolsDevelop2002">(<a href="#ref-oharaSilvicultureStructuralDiversity1998" role="doc-biblioref">O’Hara, 1998</a>; <a href="#ref-schutzSilviculturalToolsDevelop2002" role="doc-biblioref">Schütz, 2002</a>)</span>. Retention systems can retain a range of tree densities in dispersed or aggregated patterns and can be used to maintain multiaged stands or transform formerly even-aged stands <span class="citation" data-cites="mitchellRetentionSystemReconciling2002">(<a href="#ref-mitchellRetentionSystemReconciling2002" role="doc-biblioref">Mitchell &amp; Beese, 2002</a>)</span>.</p>
-<p>Coast redwood (<em>Sequoia sempervirens</em>) is well suited to this objective because it regenerates reliably by stump sprouting and can grow beneath a retained overstory. Its response to light is nevertheless important: reduced access to light can limit sprout vigor and persistence <span class="citation" data-cites="berrillUnderstoryLightPredicts2018 mumaDynamicsStumpSprout2022 oharaUnderstoryStumpSprout2007">(<a href="#ref-berrillUnderstoryLightPredicts2018" role="doc-biblioref">Berrill et al., 2018</a>; <a href="#ref-mumaDynamicsStumpSprout2022" role="doc-biblioref">Muma et al., 2022</a>; <a href="#ref-oharaUnderstoryStumpSprout2007" role="doc-biblioref">O’Hara et al., 2007</a>)</span>. Tanoak (<em>Notholithocarpus densiflorus</em>) is also shade tolerant and a vigorous resprouter, making its response relevant to both stand development and management of competing vegetation <span class="citation" data-cites="berrillDevelopmentRedwoodRegeneration2021 oharaRegenerationDynamicsCoast2017">(<a href="#ref-berrillDevelopmentRedwoodRegeneration2021" role="doc-biblioref">Berrill et al., 2021</a>; <a href="#ref-oharaRegenerationDynamicsCoast2017" role="doc-biblioref">O’Hara et al., 2017</a>)</span>.</p>
-<p>Silvicultural decisions that promote regeneration also influence the fuel conditions in which later management and fire occur. This paper therefore examines regeneration under varying overstory retention and describes surface fuel conditions before and after precommercial thinning as reference information for integrated silvicultural, fuels, fire, and potential modeling applications.</p>
-<p>We use 10-year measurements from the Redwood Multiaged Experiment to evaluate regeneration responses among retention treatments and to report fuel conditions before and after precommercial thinning, including their PCT-associated contrast. Redwood and tanoak provide the primary regeneration focus, with other species retained as descriptive context where useful. Fuel components will be presented in a publication-specific form after their analytical specification is reviewed.</p>
-</section>
-<section id="methods" class="level1">
-<h1>Methods</h1>
-<section id="study-area-and-design" class="level2">
-<h2 class="anchored" data-anchor-id="study-area-and-design">Study area and design</h2>
-<p>The experiment is located in the Jackson Demonstration State Forest in coastal northern California. Four harvest treatments were replicated at four sites in 2012: group selection (GS), high-density dispersed retention (HD), high-density aggregated retention (HA), and low-density dispersed retention (LD). The retained-overstory treatments targeted post-harvest relative densities of 13% or 21%; group selection created a 1-ha opening with a lightly thinned buffer. These treatments were designed to examine alternative pathways for developing multiaged redwood stands <span class="citation" data-cites="berrillSimulatingMultiagedCoast2009 reinekePerfectionStanddensityIndex1933">(<a href="#ref-berrillSimulatingMultiagedCoast2009" role="doc-biblioref">Berrill &amp; O’Hara, 2009</a>; <a href="#ref-reinekePerfectionStanddensityIndex1933" role="doc-biblioref">Reineke, 1933</a>)</span>.</p>
-<p>Ten years after harvest, regeneration plots and fuel transects were established within each 0.2-ha treatment macro plot. Regeneration measurements characterized redwood, tanoak, and Douglas-fir; fuel transects characterized dead surface fuels and live vegetation. The plots were remeasured after precommercial thinning, which released selected conifers from competing trees and shrubs.</p>
-</section>
-<section id="analysis" class="level2">
-<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
-<p>The final publication methods will identify the regeneration models retained from the thesis and the revised fuel-component specifications separately. They will define the phase-specific fuel estimates and the PCT-associated contrast, including whether the sampling design supports a paired change analysis. Detailed sampling procedures, model diagnostics, and expanded comparisons will be retained as supplementary material where they are needed for reproducibility but not for interpretation of the main findings.</p>
-<p>For the R-D04 fuel display, treatment- and phase-specific mean loads were estimated by averaging response-scale expectations, including modeled zeros, over an equally weighted grid of the four study-site contexts and analytically integrating over all fitted Gaussian random-intercept distributions. These estimates provide model-based reference means for comparable forest conditions; 95% confidence intervals were calculated using the delta method with the full parameter covariance, including uncertainty in random-effect variances. Mean woody standing-vegetation reduction was estimated as the pre-PCT minus post-PCT contrast from the matched repeated-phase model, with its joint covariance, and interpreted as a potential surface-fuel contribution.</p>
-</section>
-</section>
-<section id="results" class="level1">
-<h1>Results</h1>
-<section id="regeneration-under-varying-overstory-retention" class="level2">
-<h2 class="anchored" data-anchor-id="regeneration-under-varying-overstory-retention">Regeneration under varying overstory retention</h2>
-<p>The thesis results provide the starting material for basal area, understory density, and sprout-height summaries. At 10 years after harvest, redwood regeneration was greatest in the most open treatment and declined with greater overstory retention. Tanoak responses were comparatively modest. Redwood and tanoak sprout-height findings will remain in the main results; other species will be retained as descriptive context where useful rather than as dedicated main-text analyses. The final figures and summaries will retain these results only after the publication presentation and modeling review are complete.</p>
-</section>
-<section id="fuel-conditions-as-reference-values" class="level2">
-<h2 class="anchored" data-anchor-id="fuel-conditions-as-reference-values">Fuel conditions as reference values</h2>
-<p>Fuel conditions are reported second to support interpretation of the silvicultural treatments and to characterize the management-relevant transition before and after precommercial thinning. The thesis found comparatively few treatment differences in fine dead fuels before precommercial thinning, whereas vegetation fuels were greater in more open treatments. The publication analysis will separate fuel components that were previously combined, report phase- specific estimates and uncertainty, and evaluate the PCT-associated contrast. Treatment comparisons will be retained where they clarify PCT or retained- overstory implications.</p>
-<section id="rd04-fuel-inventory-draft" class="level3">
-<h3 class="anchored" data-anchor-id="rd04-fuel-inventory-draft">R-D04 fuel inventory draft</h3>
-<p>The following display is a <strong>draft pending review</strong>. It is included here so the figure, caption, and eventual fuel Results narrative can be reviewed in their manuscript context. Its estimates have not yet been converted into the R-T03 Results narrative.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-rd04-fuel-inventory-manuscript" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-rd04-fuel-inventory-manuscript-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="assets/rd04-fuel-phase-pct-inventory.png" class="img-fluid figure-img" style="width:100.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rd04-fuel-inventory-manuscript-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Fuel components by retention treatment before and after precommercial thinning (PCT). Points are site-standardized mean loads from AIC-leading models, integrated over all fitted random effects and including modeled zeros; ranges are 95% confidence intervals for the means. Study sites receive equal weights. Orange denotes pre-PCT and blue denotes post-PCT for the six components measured in both phases. Litter and duff are pre-PCT only. The woody vegetation-difference panel is the pre-PCT minus post-PCT mean contrast from the joint matched woody phase model, with its pre/post covariance. It is an inferred potential surface-fuel contribution, not direct slash load. Panel-specific y-scales are used.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-</section>
-<section id="discussion" class="level1">
-<h1>Discussion</h1>
-<p>The discussion will first interpret regeneration responses in relation to the silvicultural objective of developing a new redwood cohort beneath varying levels of retained overstory. It will then interpret phase-specific fuel conditions and the PCT-associated contrast as a linked management question, with conclusions limited to the reviewed sampling design and analysis.</p>
-<p>This structure treats silviculture and fire management as linked management questions while keeping conclusions within the support of the reviewed analyses and cited literature.</p>
-</section>
-<section id="conclusions" class="level1">
-<h1>Conclusions</h1>
-<p>State the management implications supported by the final regeneration, sprout-height, and pre/post-PCT fuel results. Keep this section concise and reserve untested recommendations or presumed downstream uses for future-work language.</p>
-</section>
-<section id="supplementary-material-plan" class="level1">
-<h1>Supplementary material plan</h1>
-<p>Potential supplementary material includes expanded model outputs, detailed pairwise comparisons, optional Douglas-fir detail, additional fuel-component tables, machine-readable phase-specific estimates, supplemental figures, and procedures that are useful for reproducibility but not essential to the main narrative. Final contents will be chosen after the manuscript and revised fuel analysis are settled.</p>
+<p><strong>Regeneration and fuel loading with varying overstory retention in redwood stands</strong></p>
+<p>Judson Fisher · Working publication manuscript</p>
+<p>Use the sidebar to read each publication section, or open the <a href="./manuscript-full.html">full manuscript draft</a> for a continuous reading view. The individual pages and full draft share the same section sources.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>Current state</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="./draft-abstract.html">Abstract</a></td>
+<td>Thesis-derived starter; final drafting is queued under A01.</td>
+</tr>
+<tr class="even">
+<td><a href="./draft-introduction.html">Introduction</a></td>
+<td>Working framing; I01–I03 follow Discussion.</td>
+</tr>
+<tr class="odd">
+<td><a href="./draft-methods.html">Methods</a></td>
+<td>Study design and selected regeneration/fuel estimands drafted; Methods tasks remain open.</td>
+</tr>
+<tr class="even">
+<td><a href="./draft-results.html">Results</a></td>
+<td>Selected regeneration display and fuel Results available for review; sprout-height work remains queued.</td>
+</tr>
+<tr class="odd">
+<td><a href="./draft-discussion.html">Discussion</a></td>
+<td>Development outline; D01–D04 remain queued.</td>
+</tr>
+<tr class="even">
+<td><a href="./draft-conclusions.html">Conclusions</a></td>
+<td>Development placeholder; C01 follows Discussion.</td>
+</tr>
+<tr class="odd">
+<td><a href="./draft-supplement.html">Supplementary material</a></td>
+<td>All-category regeneration estimates and candidate fuel estimates table; S01 inventory remains queued.</td>
+</tr>
+</tbody>
+</table>
+<p>For review status, decisions, and source files, use the <a href="./task-list.html">development task register</a>. Draft availability does not imply scientific acceptance or task completion.</p>
 
 
 
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
-<div id="ref-berrillSimulatingMultiagedCoast2009" class="csl-entry" role="listitem">
-Berrill, J.-P., &amp; O’Hara, K. L. (2009). Simulating multiaged coast redwood stand development: interactions between regeneration, structure, and productivity. <em>Western Journal of Applied Forestry</em>, <em>24</em>(1), 24–32. <a href="https://doi.org/10.1093/wjaf/24.1.24">https://doi.org/10.1093/wjaf/24.1.24</a>
-</div>
-<div id="ref-berrillUnderstoryLightPredicts2018" class="csl-entry" role="listitem">
-Berrill, J.-P., Schneider, K., Dagley, C. M., &amp; Webb, L. A. (2018). Understory light predicts stump sprout growth in mixed multiaged stands in north coastal California. <em>New Forests</em>, <em>49</em>(6), 815–828. <a href="https://doi.org/10.1007/s11056-018-9636-6">https://doi.org/10.1007/s11056-018-9636-6</a>
-</div>
-<div id="ref-berrillDevelopmentRedwoodRegeneration2021" class="csl-entry" role="listitem">
-Berrill, J.-P., Webb, L. A., DeYoung, K. L., Dagley, C. M., Bodle, C. G., &amp; Simpson, S. M. (2021). Development of redwood regeneration after conifer partial harvest and hardwood management. <em>Forest Science</em>, <em>67</em>(1), 72–82. <a href="https://doi.org/10.1093/forsci/fxaa031">https://doi.org/10.1093/forsci/fxaa031</a>
-</div>
-<div id="ref-mitchellRetentionSystemReconciling2002" class="csl-entry" role="listitem">
-Mitchell, S. J., &amp; Beese, W. J. (2002). The retention system: reconciling variable retention with the principles of silvicultural systems. <em>The Forestry Chronicle</em>, <em>78</em>(3), 397–403. <a href="https://doi.org/10.5558/tfc78397-3">https://doi.org/10.5558/tfc78397-3</a>
-</div>
-<div id="ref-mumaDynamicsStumpSprout2022" class="csl-entry" role="listitem">
-Muma, R., Webb, L. A., Zald, H. S. J., Boston, K., Dagley, C. M., &amp; Berrill, J.-P. (2022). Dynamics of stump sprout regeneration after transformation to multiaged management in coast redwood forests. <em>Forest Ecology and Management</em>, <em>515</em>, 120236. <a href="https://doi.org/10.1016/j.foreco.2022.120236">https://doi.org/10.1016/j.foreco.2022.120236</a>
-</div>
-<div id="ref-oharaSilvicultureStructuralDiversity1998" class="csl-entry" role="listitem">
-O’Hara, K. L. (1998). Silviculture for structural diversity: a new look at multiaged systems. <em>Journal of Forestry</em>, <em>96</em>(7), 4–10. <a href="https://doi.org/10.1093/jof/96.7.4a">https://doi.org/10.1093/jof/96.7.4a</a>
-</div>
-<div id="ref-oharaRegenerationDynamicsCoast2017" class="csl-entry" role="listitem">
-O’Hara, K. L., Cox, L., Nikolaeva, S., Bauer, J., &amp; Hedges, R. (2017). Regeneration dynamics of coast redwood, a sprouting conifer species: a review with implications for management and restoration. <em>Forests</em>, <em>8</em>(5), 144. <a href="https://doi.org/10.3390/f8050144">https://doi.org/10.3390/f8050144</a>
-</div>
-<div id="ref-oharaUnderstoryStumpSprout2007" class="csl-entry" role="listitem">
-O’Hara, K. L., Stancioiu, P. T., &amp; Spencer, M. A. (2007). Understory stump sprout development under variable canopy density and leaf area in coast redwood. <em>Forest Ecology and Management</em>, <em>244</em>(1), 76–85. <a href="https://doi.org/10.1016/j.foreco.2007.03.062">https://doi.org/10.1016/j.foreco.2007.03.062</a>
-</div>
-<div id="ref-reinekePerfectionStanddensityIndex1933" class="csl-entry" role="listitem">
-Reineke, L. H. (1933). Perfecting a stand-density index for even-aged forest. <em>Journal of Agricultural Research</em>, <em>46</em>, 627–638. <a href="https://www.fs.usda.gov/treesearch/pubs/60134">https://www.fs.usda.gov/treesearch/pubs/60134</a>
-</div>
-<div id="ref-schutzSilviculturalToolsDevelop2002" class="csl-entry" role="listitem">
-Schütz, J.-P. (2002). Silvicultural tools to develop irregular and diverse forest structures. <em>Forestry: An International Journal of Forest Research</em>, <em>75</em>(4), 329–337. <a href="https://doi.org/10.1093/forestry/75.4.329">https://doi.org/10.1093/forestry/75.4.329</a>
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

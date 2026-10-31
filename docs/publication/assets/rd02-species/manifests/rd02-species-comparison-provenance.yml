@@ -1,0 +1,30 @@
+task: RD02 separate species with full nested random effects
+source: analysis/regen_visualize.rda
+source_md5: 0acdd024d85ece7145769da65b3324b3
+script_md5: 33a281f3e90ee186229582a8376d53a7
+data: 64 RW and 64 TO observations; 4 sites, 16 macro plots, 64 vegetation plots per
+  species
+species_formula: ba_ha ~ treat + (1 | site/treat/plot); ziGamma(log), zero ~1, dispersion
+  ~1
+candidate_formulas:
+  rw_full_nested: ba_ha ~ treat + (1 | site/treat/plot)
+  to_full_nested: ba_ha ~ treat + (1 | site/treat/plot)
+  joint_site_species_rwto: ba_ha ~ treat * spp + (1 | site:spp)
+  joint_full_nested_rwto: ba_ha ~ treat * spp + (1 | site/treat/plot)
+  joint_combined_rwto: ba_ha ~ treat * spp + (1 | site/treat/plot) + (1 | site:spp)
+joint_comparisons: all refitted on the SAME 128 RW/TO rows; no AIC comparison with
+  earlier 256-row fits
+paired_likelihood: sum species log likelihoods and parameter counts; assumes independence
+  between species
+diagnostics: 1000 unconditional DHARMa simulations, seed 20261030, plus treatment
+  plots
+optimizer_sensitivity: BFGS from all random SDs 0.3; objective agreement checked within
+  1e-4
+prediction_checks: 'all 32 new model/treatment/species means: predict, numerical gradients,
+  quadrature'
+intervals: 95% log-scale delta method including all conditional random SD uncertainty;
+  approximate near boundary
+review: one observation per species/vegetation plot; lowest RE is observation-level,
+  not separately replicated clustering
+selection: comparison only; original lead figure/estimates and thesis input checksum
+  protected

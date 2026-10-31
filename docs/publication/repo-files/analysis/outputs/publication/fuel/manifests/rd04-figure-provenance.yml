@@ -1,0 +1,15 @@
+task: RD04
+generator: scripts/publication/fuel/08-generate-rd04-integrated-figure.R
+figure: figures/rd04-fuel-phase-pct-inventory.png
+estimates: tables/rd04-fuel-model-estimates.csv
+estimand: site-standardized random-effect-integrated mean load including modeled zeros
+random_effects: analytically integrated over all fitted independent Gaussian random intercepts
+site_averaging: equal weights for the four observed study-site contexts
+load_intervals: 95% log-scale delta-method confidence intervals for integrated means
+difference_intervals: 95% response-scale delta-method confidence intervals with joint pre/post covariance
+parameter_covariance: full sdr$cov.fixed including zero-process coefficients and log random-effect SDs
+difference_panel: integrated matched woody mean difference from the same repeated-phase model as woody load panels
+difference_model: woody_phase_zigamma_ziphase_disp1
+pre_pct_only: litter; duff
+model_ids: prepct_onehr_disp_treatment; postpct_onehr_base; prepct_tenhr_base; postpct_tenhr_base; prepct_hundhr_base; postpct_hundhr_zi_treatment_site_disp_treatment_site_interaction; prepct_thoushr_base; postpct_thoushr_zi_treatment; woody_phase_zigamma_ziphase_disp1; prepct_herbaceous_vegetation_base; postpct_herbaceous_vegetation_base; prepct_litter_disp_treatment; prepct_duff_base
+selection_status: existing AIC-leading load models used for draft figure; scientific review remains pending

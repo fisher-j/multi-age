@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Judson Fisher">
+<meta name="dcterms.date" content="2026-10-31">
+
+<title>Regeneration and fuel loading with varying overstory retention in redwood stands – Publication manuscript development</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e2d335519fda3bc7c134d94e5e0c7dbd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Publication manuscript development</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./workflow.html"> 
+<span class="menu-text">Development workflow</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./manuscript.html" aria-current="page"> 
+<span class="menu-text">Manuscript draft</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./manuscript-full.html">Full manuscript</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./manuscript.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-abstract.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Abstract</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Methods</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Results</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-discussion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Discussion</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-conclusions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusions</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./draft-supplement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Supplementary material</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./manuscript-full.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Full manuscript</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#study-area-and-design" id="toc-study-area-and-design" class="nav-link" data-scroll-target="#study-area-and-design">Study area and design</a></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a>
+  <ul class="collapse">
+  <li><a href="#regeneration-basal-area" id="toc-regeneration-basal-area" class="nav-link" data-scroll-target="#regeneration-basal-area">Regeneration basal area</a></li>
+  <li><a href="#fuel-loads-and-pct-contrast" id="toc-fuel-loads-and-pct-contrast" class="nav-link" data-scroll-target="#fuel-loads-and-pct-contrast">Fuel loads and PCT contrast</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#regeneration-under-varying-overstory-retention" id="toc-regeneration-under-varying-overstory-retention" class="nav-link" data-scroll-target="#regeneration-under-varying-overstory-retention">Regeneration under varying overstory retention</a>
+  <ul class="collapse">
+  <li><a href="#rd02-regeneration-display-draft" id="toc-rd02-regeneration-display-draft" class="nav-link" data-scroll-target="#rd02-regeneration-display-draft">Regeneration basal area</a></li>
+  </ul></li>
+  <li><a href="#rt03-fuel-results" id="toc-rt03-fuel-results" class="nav-link" data-scroll-target="#rt03-fuel-results">Fuel conditions before and after precommercial thinning</a>
+  <ul class="collapse">
+  <li><a href="#dead-fuel-loading" id="toc-dead-fuel-loading" class="nav-link" data-scroll-target="#dead-fuel-loading">Dead fuel loading</a></li>
+  <li><a href="#standing-vegetation-and-woody-vegetation-difference" id="toc-standing-vegetation-and-woody-vegetation-difference" class="nav-link" data-scroll-target="#standing-vegetation-and-woody-vegetation-difference">Standing vegetation and woody vegetation difference</a></li>
+  <li><a href="#rd04-fuel-inventory-draft" id="toc-rd04-fuel-inventory-draft" class="nav-link" data-scroll-target="#rd04-fuel-inventory-draft">Fuel inventory</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
+  <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary material</a>
+  <ul class="collapse">
+  <li><a href="#regeneration-basal-area-1" id="toc-regeneration-basal-area-1" class="nav-link" data-scroll-target="#regeneration-basal-area-1">Regeneration basal area</a></li>
+  <li><a href="#fuel-estimates" id="toc-fuel-estimates" class="nav-link" data-scroll-target="#fuel-estimates">Fuel estimates</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Regeneration and fuel loading with varying overstory retention in redwood stands</h1>
+<p class="subtitle lead">Working publication manuscript — regeneration display and fuel Results for review</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Judson Fisher </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 31, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+This document assembles the working publication manuscript, not a submission-ready
+manuscript. RT03 contains a fuel Results draft and the RD04 figure and companion
+table; RD02 uses four selected species-category models, with a RW/TO display
+and an all-category supplement table pending display review. The remaining
+sections retain their staged development text. Fuel values
+come from the current publication estimates, not the thesis prediction target.
+-->
+<section id="abstract" class="level1">
+<h1>Abstract</h1>
+<p>Forest managers using retention forestry need information on regeneration and fuel development to design productive stands in fire-adapted ecosystems. We analyzed 10-year remeasurement data from the Redwood Multiaged Experiment in Jackson Demonstration State Forest, California. The experiment compared group selection, aggregated retention, and low- and high-density dispersed retention treatments and measured regeneration, sprout growth, and surface fuel loading.</p>
+<p>Redwood regeneration responded strongly to increasing canopy openness, whereas tanoak responses were more modest. Sprout-height findings will remain part of the main regeneration evidence. Fuel measurements describe conditions before and after precommercial thinning, including the PCT-associated contrast. The manuscript will evaluate how overstory retention affects regeneration while presenting fuel components in a form useful for integrated silviculture, fuels, and fire management.</p>
+<!-- This is a thesis-derived starter abstract. Revise after publication-specific
+fuel components, figures, and supplementary material are finalized. -->
+</section>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Developing and maintaining multiaged stand structures requires silvicultural systems that create and sustain cohorts of different ages within the same stand <span class="citation" data-cites="oharaSilvicultureStructuralDiversity1998 schutzSilviculturalToolsDevelop2002">(<a href="#ref-oharaSilvicultureStructuralDiversity1998" role="doc-biblioref">O’Hara, 1998</a>; <a href="#ref-schutzSilviculturalToolsDevelop2002" role="doc-biblioref">Schütz, 2002</a>)</span>. Retention systems can retain a range of tree densities in dispersed or aggregated patterns and can be used to maintain multiaged stands or transform formerly even-aged stands <span class="citation" data-cites="mitchellRetentionSystemReconciling2002">(<a href="#ref-mitchellRetentionSystemReconciling2002" role="doc-biblioref">Mitchell &amp; Beese, 2002</a>)</span>.</p>
+<p>Coast redwood (<em>Sequoia sempervirens</em>) is well suited to this objective because it regenerates reliably by stump sprouting and can grow beneath a retained overstory. Its response to light is nevertheless important: reduced access to light can limit sprout vigor and persistence <span class="citation" data-cites="berrillUnderstoryLightPredicts2018 mumaDynamicsStumpSprout2022 oharaUnderstoryStumpSprout2007">(<a href="#ref-berrillUnderstoryLightPredicts2018" role="doc-biblioref">Berrill et al., 2018</a>; <a href="#ref-mumaDynamicsStumpSprout2022" role="doc-biblioref">Muma et al., 2022</a>; <a href="#ref-oharaUnderstoryStumpSprout2007" role="doc-biblioref">O’Hara et al., 2007</a>)</span>. Tanoak (<em>Notholithocarpus densiflorus</em>) is also shade tolerant and a vigorous resprouter, making its response relevant to both stand development and management of competing vegetation <span class="citation" data-cites="berrillDevelopmentRedwoodRegeneration2021 oharaRegenerationDynamicsCoast2017">(<a href="#ref-berrillDevelopmentRedwoodRegeneration2021" role="doc-biblioref">Berrill et al., 2021</a>; <a href="#ref-oharaRegenerationDynamicsCoast2017" role="doc-biblioref">O’Hara et al., 2017</a>)</span>.</p>
+<p>Silvicultural decisions that promote regeneration also influence the fuel conditions in which later management and fire occur. This paper therefore examines regeneration under varying overstory retention and describes surface fuel conditions before and after precommercial thinning as reference information for integrated silvicultural, fuels, fire, and potential modeling applications.</p>
+<p>We use 10-year measurements from the Redwood Multiaged Experiment to evaluate regeneration responses among retention treatments and to report fuel conditions before and after precommercial thinning, including their PCT-associated contrast. Redwood and tanoak provide the primary regeneration focus, with other species retained as descriptive context where useful. Fuel components will be presented in a publication-specific form after their analytical specification is reviewed.</p>
+</section>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="study-area-and-design" class="level2">
+<h2 class="anchored" data-anchor-id="study-area-and-design">Study area and design</h2>
+<p>The experiment is located in the Jackson Demonstration State Forest in coastal northern California. Four harvest treatments were replicated at four sites in 2012: group selection (GS), high-density dispersed retention (HD), high-density aggregated retention (HA), and low-density dispersed retention (LD). The retained-overstory treatments targeted post-harvest relative densities of 13% or 21%; group selection created a 1-ha opening with a lightly thinned buffer. These treatments were designed to examine alternative pathways for developing multiaged redwood stands <span class="citation" data-cites="berrillSimulatingMultiagedCoast2009 reinekePerfectionStanddensityIndex1933">(<a href="#ref-berrillSimulatingMultiagedCoast2009" role="doc-biblioref">Berrill &amp; O’Hara, 2009</a>; <a href="#ref-reinekePerfectionStanddensityIndex1933" role="doc-biblioref">Reineke, 1933</a>)</span>.</p>
+<p>Ten years after harvest, regeneration plots and fuel transects were established within each 0.2-ha treatment macro plot. Regeneration measurements characterized redwood, tanoak, and Douglas-fir; fuel transects characterized dead surface fuels and live vegetation. The plots were remeasured after precommercial thinning, which released selected conifers from competing trees and shrubs.</p>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<p>Detailed sampling procedures, model diagnostics, and sensitivity analyses will be retained as supplementary material.</p>
+<section id="regeneration-basal-area" class="level3">
+<h3 class="anchored" data-anchor-id="regeneration-basal-area">Regeneration basal area</h3>
+<p>Basal area was modeled separately for redwood, tanoak, Douglas-fir, and other species using zero-inflated Gamma mixed models with a conditional log link. Treatment was a fixed effect; site and macro plot nested within site were random intercepts. Each species category had its own intercept-only zero and dispersion components. Each model used 64 vegetation-plot observations from four sites and 16 macro plots. Arithmetic mean basal area included modeled zeros and integrated over both fitted Gaussian random-intercept distributions. Confidence intervals for the means were calculated using the log-scale delta method with the full parameter covariance, including random-effect variance uncertainty. Redwood and tanoak estimates are displayed in the Results; estimates for all four categories are reported in the supplement.</p>
+</section>
+<section id="fuel-loads-and-pct-contrast" class="level3">
+<h3 class="anchored" data-anchor-id="fuel-loads-and-pct-contrast">Fuel loads and PCT contrast</h3>
+<p>Reported values are model-based arithmetic mean loads, including modeled zeros and integrating over fitted random effects, with equal weights for the four study-site contexts.</p>
+<p>These estimates provide model-based reference means for comparable forest conditions; 95% confidence intervals were calculated using the delta method with the full parameter covariance, including uncertainty in random-effect variances. Mean woody standing-vegetation reduction was estimated as the pre-PCT minus post-PCT contrast from the matched repeated-phase model, with its joint covariance, and interpreted as a potential surface-fuel contribution.</p>
+</section>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<section id="regeneration-under-varying-overstory-retention" class="level2">
+<h2 class="anchored" data-anchor-id="regeneration-under-varying-overstory-retention">Regeneration under varying overstory retention</h2>
+<p>The display below summarizes redwood and tanoak regeneration basal area from separate species-category models. Estimates for all four categories are given in the supplement (<a href="./draft-supplement.html#tbl-rd02-selected-species-estimates">supplementary estimates table</a>). The full regeneration Results narrative and sprout-height displays remain in development.</p>
+<section id="rd02-regeneration-display-draft" class="level3">
+<h3 class="anchored" data-anchor-id="rd02-regeneration-display-draft">Regeneration basal area</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rd02-regeneration-basal-area" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Redwood and tanoak mean regeneration basal area with 95% confidence intervals for GS, LD, HA, and HD retention treatments in two species panels. Redwood means are highest in GS and lowest in HD, with wide uncertainty in GS. Tanoak means vary less across treatments. ">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rd02-regeneration-basal-area-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="assets/rd02-selected-species-basal-area.png" class="img-fluid figure-img" style="width:100.0%" alt="Redwood and tanoak mean regeneration basal area with 95% confidence intervals for GS, LD, HA, and HD retention treatments in two species panels. Redwood means are highest in GS and lowest in HD, with wide uncertainty in GS. Tanoak means vary less across treatments. ">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rd02-regeneration-basal-area-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Regeneration basal area 10 years after harvest by retained-overstory treatment. Points are arithmetic expected basal area, including modeled zeros and integrated over fitted site and nested macro-plot random intercepts; colored ranges are 95% confidence intervals for the means from the full-parameter log-scale delta method. Blue ranges with circles denote redwood and orange ranges with triangles denote tanoak. Each species is modeled separately using zero-inflated Gamma responses with treatment as a fixed effect and four site and 16 nested macro-plot random intercepts, using 64 vegetation-plot observations per species. GS = group selection; LD = low-density dispersed retention; HA = high-density aggregated retention; HD = high-density dispersed retention. Species panels use different vertical scales. Intervals describe uncertainty in means, not new-plot variation or pairwise significance tests.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="rt03-fuel-results" class="level2">
+<h2 class="anchored" data-anchor-id="rt03-fuel-results">Fuel conditions before and after precommercial thinning</h2>
+<section id="dead-fuel-loading" class="level3">
+<h3 class="anchored" data-anchor-id="dead-fuel-loading">Dead fuel loading</h3>
+<p>Fuel measurements ten years after harvest characterized conditions before and after precommercial thinning (PCT) across the four retention treatments (<a href="#fig-rd04-fuel-inventory-manuscript" class="quarto-xref">Figure&nbsp;2</a>). Following PCT, group selection (GS) and low-density dispersed retention (LD) showed the largest estimated increases in fine dead-fuel loads and reductions in woody standing vegetation. These treatments also had the highest post-PCT fine dead-fuel loads. Pre-PCT dead-fuel estimates suggested subtler, component-specific treatment patterns. Fuel loads are reported as model-estimated means, with 95% confidence intervals. Woody and herbaceous standing vegetation are reported separately, as are pre-PCT litter and duff. All loads and load differences below are in Mg ha<sup>-1</sup>.</p>
+<p>Before PCT, estimated 1-hour fuel loads were highest in high-density aggregated retention (HA; 1.2) and lowest in GS (0.6), with LD and high-density dispersed (HD) retention intermediate. Estimated 10-hour loads ranged from 2.8 in HD to 3.8 in GS, and 100-hour loads from 9.0 to 11.5 in those same treatments. The 1,000-hour class had larger mean loads, ranging from 30.2 in LD to 49.6 (95% CI 25.9 to 95.0) in GS. Uncertainty was substantial for this coarse-wood component across treatments.</p>
+<p>The separated forest-floor components showed different treatment patterns. Pre-PCT litter estimates ranged from 12.6 in LD to 18.4 in GS; HA and HD were intermediate. Duff estimates were lowest in HA, at 19.3 (95% CI 14.5 to 25.8), and highest in HD, at 35.5 (95% CI 26.6 to 47.4), with GS and LD both near 28–29. These are model-derived forest-floor loads based on the estimated litter-depth boundary. Post-PCT litter and duff were not estimated because the forest-floor boundary could not be distinguished reliably in the presence of slash and suspended foliage.</p>
+<p>After PCT, estimated 1-hour loads were about 2.4–2.7 in GS, LD, and HD, and 1.4 in HA. The 10-hour estimates were ordered GS (9.6), LD (5.9), HA (4.1), and HD (3.3). The 100-hour estimates followed the same order, from 19.6 (95% CI 11.8 to 32.8) in GS to 7.5 (95% CI 4.6 to 12.2) in HD. Post-PCT 1,000-hour means ranged from 25.2 in HA to 53.9 in GS, with wide confidence intervals. These rankings describe estimated loads; they do not establish pairwise treatment differences. The separate dead-fuel phase estimates are reference conditions, without paired phase-change tests in this display.</p>
+</section>
+<section id="standing-vegetation-and-woody-vegetation-difference" class="level3">
+<h3 class="anchored" data-anchor-id="standing-vegetation-and-woody-vegetation-difference">Standing vegetation and woody vegetation difference</h3>
+<p>Pre-PCT woody standing-vegetation means were greatest in GS (39.9), followed by LD (26.5), HD (18.8), and HA (14.7). Post-PCT means were 2.0–2.9 across treatments. The joint phase model estimated pre-minus-post reductions of 37.4 (95% CI 13.4 to 61.4) in GS, 24.5 (95% CI 9.0 to 40.0) in LD, 11.8 (95% CI 3.6 to 20.0) in HA, and 16.6 (95% CI 5.5 to 27.6) in HD. All four reduction intervals excluded zero. Their uncertainty includes the pre/post covariance; the ordering of reduction estimates alone does not test differences among treatments.</p>
+<p>Herbaceous standing-vegetation means were small relative to woody loads: 0.24–0.59 before PCT and 0.11–0.35 afterward, with broad relative uncertainty. The woody reduction represents an inferred potential contribution to surface fuels. It does not measure slash deposition or reconcile standing-vegetation loss with changes in downed fuel classes. Without a contemporaneous unthinned comparison, the phase transition does not isolate a causal PCT effect.</p>
+</section>
+<section id="rd04-fuel-inventory-draft" class="level3">
+<h3 class="anchored" data-anchor-id="rd04-fuel-inventory-draft">Fuel inventory</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rd04-fuel-inventory-manuscript" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rd04-fuel-inventory-manuscript-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="assets/rd04-fuel-phase-pct-inventory.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rd04-fuel-inventory-manuscript-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Fuel components by retention treatment before and after precommercial thinning (PCT). Points are site-standardized mean loads from AIC-leading models, integrated over all fitted random effects and including modeled zeros; ranges are 95% confidence intervals for the means. Study sites receive equal weights. Orange denotes pre-PCT and blue denotes post-PCT for the six components measured in both phases. Litter and duff are pre-PCT only. The woody vegetation-difference panel is the pre-PCT minus post-PCT mean contrast from the joint matched woody phase model, with its pre/post covariance. It is an inferred potential surface-fuel contribution, not direct slash load. Panel-specific y-scales are used.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<p>The discussion will first interpret regeneration responses in relation to the silvicultural objective of developing a new redwood cohort beneath varying levels of retained overstory. It will then interpret phase-specific fuel conditions and the PCT-associated contrast as a linked management question, with conclusions limited to the reviewed sampling design and analysis.</p>
+<p>This structure treats silviculture and fire management as linked management questions while keeping conclusions within the support of the reviewed analyses and cited literature.</p>
+</section>
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+<p>State the management implications supported by the final regeneration, sprout-height, and pre/post-PCT fuel results. Keep this section concise and reserve untested recommendations or presumed downstream uses for future-work language.</p>
+</section>
+<section id="supplementary-material" class="level1">
+<h1>Supplementary material</h1>
+<section id="regeneration-basal-area-1" class="level2">
+<h2 class="anchored" data-anchor-id="regeneration-basal-area-1">Regeneration basal area</h2>
+<div class="cell">
+<div id="tbl-rd02-selected-species-estimates" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rd02-selected-species-estimates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Regeneration basal area 10 years after harvest for all four species categories. Entries are arithmetic mean (lower, upper 95% confidence limits), in m<sup>2</sup> ha<sup>-1</sup>. Each category was modeled separately using zero-inflated Gamma responses, treatment as a fixed effect, and site and macro-plot-within-site random intercepts. Means include modeled zeros and integrate over both random-effect distributions. Intervals use the full-parameter log-scale delta method and describe uncertainty in means. Each model uses 64 vegetation plots across four sites and 16 macro plots. GS = group selection; LD = low-density dispersed retention; HA = high-density aggregated retention; HD = high-density dispersed retention.
+</figcaption>
+<div aria-describedby="tbl-rd02-selected-species-estimates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 22%">
+<col style="width: 21%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Species</th>
+<th style="text-align: right;">GS</th>
+<th style="text-align: right;">LD</th>
+<th style="text-align: right;">HA</th>
+<th style="text-align: right;">HD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Redwood</td>
+<td style="text-align: right;">12.66 (3.67, 43.72)</td>
+<td style="text-align: right;">3.97 (1.25, 12.62)</td>
+<td style="text-align: right;">1.72 (0.53, 5.54)</td>
+<td style="text-align: right;">0.93 (0.25, 3.44)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tanoak</td>
+<td style="text-align: right;">2.21 (1.38, 3.55)</td>
+<td style="text-align: right;">2.05 (1.25, 3.36)</td>
+<td style="text-align: right;">0.93 (0.57, 1.51)</td>
+<td style="text-align: right;">1.20 (0.74, 1.95)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Douglas-fir</td>
+<td style="text-align: right;">0.28 (0.15, 0.53)</td>
+<td style="text-align: right;">0.11 (0.06, 0.22)</td>
+<td style="text-align: right;">0.18 (0.08, 0.37)</td>
+<td style="text-align: right;">0.12 (0.06, 0.22)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Other species</td>
+<td style="text-align: right;">0.23 (0.04, 1.40)</td>
+<td style="text-align: right;">0.12 (0.03, 0.55)</td>
+<td style="text-align: right;">0.06 (0.01, 0.29)</td>
+<td style="text-align: right;">0.20 (0.05, 0.92)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="assets/rd02-selected/tables/rd02-selected-species-estimates.csv">Download the complete regeneration estimates</a>.</p>
+</section>
+<section id="fuel-estimates" class="level2">
+<h2 class="anchored" data-anchor-id="fuel-estimates">Fuel estimates</h2>
+<div class="cell">
+<div id="tbl-rd04-fuel-estimates" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rd04-fuel-estimates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Companion values for the RD04 fuel inventory (candidate appendix table). Entries are mean (lower, upper 95% confidence limits), in Mg ha<sup>-1</sup>. GS = group selection; LD = low-density dispersed retention; HA = high-density aggregated retention; HD = high-density dispersed retention. Load means include modeled zeros, integrate over all fitted random intercepts, and equally weight the four study-site contexts. The signed woody reduction is pre-PCT minus post-PCT from the joint matched phase model, retaining pre/post covariance; it is a potential surface-fuel contribution, not measured slash. Load intervals use the log-scale delta method; reduction intervals use the response-scale delta method. These are intervals for means, not prediction intervals. Models remain provisional; intervals exclude model-selection and component-derivation uncertainty. Post-PCT litter and duff are not estimated.
+</figcaption>
+<div aria-describedby="tbl-rd04-fuel-estimates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 11%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">Phase</th>
+<th style="text-align: right;">GS</th>
+<th style="text-align: right;">LD</th>
+<th style="text-align: right;">HA</th>
+<th style="text-align: right;">HD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1-hour fuel</td>
+<td style="text-align: left;">Pre-PCT</td>
+<td style="text-align: right;">0.58 (0.38, 0.89)</td>
+<td style="text-align: right;">0.67 (0.47, 0.97)</td>
+<td style="text-align: right;">1.24 (0.84, 1.82)</td>
+<td style="text-align: right;">1.03 (0.71, 1.50)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1-hour fuel</td>
+<td style="text-align: left;">Post-PCT</td>
+<td style="text-align: right;">2.66 (1.71, 4.14)</td>
+<td style="text-align: right;">2.67 (1.71, 4.17)</td>
+<td style="text-align: right;">1.37 (0.88, 2.14)</td>
+<td style="text-align: right;">2.42 (1.55, 3.78)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10-hour fuel</td>
+<td style="text-align: left;">Pre-PCT</td>
+<td style="text-align: right;">3.83 (2.68, 5.48)</td>
+<td style="text-align: right;">3.23 (2.27, 4.58)</td>
+<td style="text-align: right;">3.20 (2.19, 4.66)</td>
+<td style="text-align: right;">2.85 (2.00, 4.05)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10-hour fuel</td>
+<td style="text-align: left;">Post-PCT</td>
+<td style="text-align: right;">9.59 (6.57, 13.99)</td>
+<td style="text-align: right;">5.86 (4.02, 8.53)</td>
+<td style="text-align: right;">4.10 (2.81, 6.00)</td>
+<td style="text-align: right;">3.27 (2.24, 4.77)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">100-hour fuel</td>
+<td style="text-align: left;">Pre-PCT</td>
+<td style="text-align: right;">11.48 (8.19, 16.08)</td>
+<td style="text-align: right;">10.30 (7.31, 14.54)</td>
+<td style="text-align: right;">9.14 (6.55, 12.77)</td>
+<td style="text-align: right;">9.01 (6.45, 12.58)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">100-hour fuel</td>
+<td style="text-align: left;">Post-PCT</td>
+<td style="text-align: right;">19.64 (11.77, 32.78)</td>
+<td style="text-align: right;">14.16 (8.79, 22.82)</td>
+<td style="text-align: right;">10.51 (6.43, 17.18)</td>
+<td style="text-align: right;">7.45 (4.56, 12.18)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1,000-hour fuel</td>
+<td style="text-align: left;">Pre-PCT</td>
+<td style="text-align: right;">49.60 (25.88, 95.04)</td>
+<td style="text-align: right;">30.22 (15.94, 57.30)</td>
+<td style="text-align: right;">32.31 (16.76, 62.27)</td>
+<td style="text-align: right;">45.76 (23.90, 87.62)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1,000-hour fuel</td>
+<td style="text-align: left;">Post-PCT</td>
+<td style="text-align: right;">53.93 (32.47, 89.57)</td>
+<td style="text-align: right;">31.21 (19.69, 49.45)</td>
+<td style="text-align: right;">25.23 (14.74, 43.21)</td>
+<td style="text-align: right;">48.60 (25.83, 91.42)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Woody vegetation</td>
+<td style="text-align: left;">Pre-PCT</td>
+<td style="text-align: right;">39.90 (21.32, 74.67)</td>
+<td style="text-align: right;">26.53 (14.31, 49.19)</td>
+<td style="text-align: right;">14.73 (7.84, 27.66)</td>
+<td style="text-align: right;">18.76 (9.94, 35.39)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Woody vegetation</td>
+<td style="text-align: left;">Post-PCT</td>
+<td style="text-align: right;">2.46 (1.29, 4.68)</td>
+<td style="text-align: right;">2.01 (1.08, 3.74)</td>
+<td style="text-align: right;">2.92 (1.55, 5.52)</td>
+<td style="text-align: right;">2.20 (1.17, 4.13)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Herbaceous vegetation</td>
+<td style="text-align: left;">Pre-PCT</td>
+<td style="text-align: right;">0.51 (0.20, 1.28)</td>
+<td style="text-align: right;">0.59 (0.23, 1.54)</td>
+<td style="text-align: right;">0.45 (0.18, 1.12)</td>
+<td style="text-align: right;">0.24 (0.10, 0.63)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Herbaceous vegetation</td>
+<td style="text-align: left;">Post-PCT</td>
+<td style="text-align: right;">0.18 (0.05, 0.59)</td>
+<td style="text-align: right;">0.35 (0.11, 1.13)</td>
+<td style="text-align: right;">0.28 (0.09, 0.92)</td>
+<td style="text-align: right;">0.11 (0.04, 0.37)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Litter</td>
+<td style="text-align: left;">Pre-PCT</td>
+<td style="text-align: right;">18.41 (12.40, 27.32)</td>
+<td style="text-align: right;">12.58 (9.19, 17.24)</td>
+<td style="text-align: right;">17.27 (12.24, 24.35)</td>
+<td style="text-align: right;">14.73 (10.01, 21.68)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Duff</td>
+<td style="text-align: left;">Pre-PCT</td>
+<td style="text-align: right;">28.27 (21.02, 38.00)</td>
+<td style="text-align: right;">28.85 (21.65, 38.44)</td>
+<td style="text-align: right;">19.31 (14.48, 25.76)</td>
+<td style="text-align: right;">35.52 (26.65, 47.35)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Woody standing-vegetation reduction</td>
+<td style="text-align: left;">Pre minus post</td>
+<td style="text-align: right;">37.44 (13.45, 61.44)</td>
+<td style="text-align: right;">24.53 (9.01, 40.04)</td>
+<td style="text-align: right;">11.80 (3.61, 20.00)</td>
+<td style="text-align: right;">16.56 (5.53, 27.60)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Additional model outputs, sensitivity figures, pairwise comparisons, and sampling procedures will be added as the remaining analyses are finalized.</p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-berrillSimulatingMultiagedCoast2009" class="csl-entry" role="listitem">
+Berrill, J.-P., &amp; O’Hara, K. L. (2009). Simulating multiaged coast redwood stand development: interactions between regeneration, structure, and productivity. <em>Western Journal of Applied Forestry</em>, <em>24</em>(1), 24–32. <a href="https://doi.org/10.1093/wjaf/24.1.24">https://doi.org/10.1093/wjaf/24.1.24</a>
+</div>
+<div id="ref-berrillUnderstoryLightPredicts2018" class="csl-entry" role="listitem">
+Berrill, J.-P., Schneider, K., Dagley, C. M., &amp; Webb, L. A. (2018). Understory light predicts stump sprout growth in mixed multiaged stands in north coastal California. <em>New Forests</em>, <em>49</em>(6), 815–828. <a href="https://doi.org/10.1007/s11056-018-9636-6">https://doi.org/10.1007/s11056-018-9636-6</a>
+</div>
+<div id="ref-berrillDevelopmentRedwoodRegeneration2021" class="csl-entry" role="listitem">
+Berrill, J.-P., Webb, L. A., DeYoung, K. L., Dagley, C. M., Bodle, C. G., &amp; Simpson, S. M. (2021). Development of redwood regeneration after conifer partial harvest and hardwood management. <em>Forest Science</em>, <em>67</em>(1), 72–82. <a href="https://doi.org/10.1093/forsci/fxaa031">https://doi.org/10.1093/forsci/fxaa031</a>
+</div>
+<div id="ref-mitchellRetentionSystemReconciling2002" class="csl-entry" role="listitem">
+Mitchell, S. J., &amp; Beese, W. J. (2002). The retention system: reconciling variable retention with the principles of silvicultural systems. <em>The Forestry Chronicle</em>, <em>78</em>(3), 397–403. <a href="https://doi.org/10.5558/tfc78397-3">https://doi.org/10.5558/tfc78397-3</a>
+</div>
+<div id="ref-mumaDynamicsStumpSprout2022" class="csl-entry" role="listitem">
+Muma, R., Webb, L. A., Zald, H. S. J., Boston, K., Dagley, C. M., &amp; Berrill, J.-P. (2022). Dynamics of stump sprout regeneration after transformation to multiaged management in coast redwood forests. <em>Forest Ecology and Management</em>, <em>515</em>, 120236. <a href="https://doi.org/10.1016/j.foreco.2022.120236">https://doi.org/10.1016/j.foreco.2022.120236</a>
+</div>
+<div id="ref-oharaSilvicultureStructuralDiversity1998" class="csl-entry" role="listitem">
+O’Hara, K. L. (1998). Silviculture for structural diversity: a new look at multiaged systems. <em>Journal of Forestry</em>, <em>96</em>(7), 4–10. <a href="https://doi.org/10.1093/jof/96.7.4a">https://doi.org/10.1093/jof/96.7.4a</a>
+</div>
+<div id="ref-oharaRegenerationDynamicsCoast2017" class="csl-entry" role="listitem">
+O’Hara, K. L., Cox, L., Nikolaeva, S., Bauer, J., &amp; Hedges, R. (2017). Regeneration dynamics of coast redwood, a sprouting conifer species: a review with implications for management and restoration. <em>Forests</em>, <em>8</em>(5), 144. <a href="https://doi.org/10.3390/f8050144">https://doi.org/10.3390/f8050144</a>
+</div>
+<div id="ref-oharaUnderstoryStumpSprout2007" class="csl-entry" role="listitem">
+O’Hara, K. L., Stancioiu, P. T., &amp; Spencer, M. A. (2007). Understory stump sprout development under variable canopy density and leaf area in coast redwood. <em>Forest Ecology and Management</em>, <em>244</em>(1), 76–85. <a href="https://doi.org/10.1016/j.foreco.2007.03.062">https://doi.org/10.1016/j.foreco.2007.03.062</a>
+</div>
+<div id="ref-reinekePerfectionStanddensityIndex1933" class="csl-entry" role="listitem">
+Reineke, L. H. (1933). Perfecting a stand-density index for even-aged forest. <em>Journal of Agricultural Research</em>, <em>46</em>, 627–638. <a href="https://www.fs.usda.gov/treesearch/pubs/60134">https://www.fs.usda.gov/treesearch/pubs/60134</a>
+</div>
+<div id="ref-schutzSilviculturalToolsDevelop2002" class="csl-entry" role="listitem">
+Schütz, J.-P. (2002). Silvicultural tools to develop irregular and diverse forest structures. <em>Forestry: An International Journal of Forest Research</em>, <em>75</em>(4), 329–337. <a href="https://doi.org/10.1093/forestry/75.4.329">https://doi.org/10.1093/forestry/75.4.329</a>
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
