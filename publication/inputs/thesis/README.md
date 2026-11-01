@@ -11,6 +11,7 @@ without opening thesis model objects or activating thesis renv.
 | `regeneration-measurements.rds` | `regen_visualize.rda`, `regen_pa` | 256 species/plot rows; site, treat, plot, spp, ba_ha; original treatment/species factor levels retained |
 | `fuel/thesis-reference-reproduction.csv` | `fuel_modeling_round_3.rda`, `fuel_tmb` | Historical Results grid, zero-random-effect means/SEs, and model formulas |
 | `regeneration/tables/`, `regeneration/inference-audit/` | `regen_visualize.rda`, `mba` | Historical joint-model integrated means/SEs/intervals, observed summaries, prediction grids, and independent inference checks |
+| `regeneration/tables/rd02-thesis-results.csv` | `results_appendix_deps.rda`, `regen_all` emmeans objects | Original 16 thesis zero-effect means, SEs, and response-scale asymptotic 95% intervals, including negative lower limits; checked against the saved `mba` predictions |
 | `regeneration/saved-model-reference.rds` | Same saved `mba` | Plain numeric response ordering, saved log likelihood, and formula strings; contains no fitted model |
 
 The typed RDS datasets preserve row order, values, missingness, classes, factor
