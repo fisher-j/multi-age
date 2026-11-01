@@ -10,22 +10,16 @@ sidebar: workflow
 
 <span id="rd04-record"></span>
 
-With the components and candidate fits from [F01](task-f01.qmd) in hand, we can
-explore what they imply for mean fuel loads under each overstory treatment.
-Here we'll check how the means and their uncertainty are calculated, then bring
-the phase estimates and matched woody change into a figure and companion table.
+How do mean fuel loads vary among overstory treatments and between measurement
+phases? Using the components and candidate fits from [F01](task-f01.qmd), we'll
+check the means and their uncertainty, then present phase estimates and matched
+woody change in a figure and companion table.
 
-The figure has been generated from the current
-AIC-leading fitted publication models. Its position in the register is an
-organizational sequence, not a required execution order relative to RD02 or
-RD03.
-
-The [prediction and interpretation review](#rd04-inference-review) below
-collects the thesis comparison, explains the integrated estimand, and records
-the Methods wording. The figure now uses
-random-effect-integrated mean loads throughout and the joint woody phase model
-for the displayed pre-minus-post mean change. The completed display and its
-model assumptions are recorded below.
+The figure uses the current AIC-leading publication fits. The
+[prediction and interpretation review](#rd04-inference-review) compares them
+with the thesis references and explains the random-effect-integrated mean
+loads and joint-model woody contrast. The companion table is accepted for the
+publication supplement; the fitted models remain provisional.
 
 ## Objective
 
@@ -60,14 +54,14 @@ consumes these artifacts; changes to their derivation or fitting belong in F01.
   legible. Keep full model registries, diagnostics, and pairwise comparisons in
   linked artifacts rather than adding them to the figure.
 
-## Suggested deliverables
+## Display products
 
 1. A nine-panel model-estimate figure: six paired phase panels, litter, duff,
    and the matched woody vegetation-difference panel.
-2. A publication caption and a short Results paragraph, both marked
-   **Pending review** when draft-ready.
-3. A linked table or CSV of complete phase-by-treatment model estimates and a
-   link to the model-selection register used for the draft.
+2. A publication caption and Results narrative, with wording tracked in
+   [RT03](task-rt03.qmd); the narrative remains pending review.
+3. An accepted supplementary table and full-precision CSV of all 60 estimates,
+   linked to the F01 model-selection register.
 
 ## Shared setup
 
@@ -135,10 +129,8 @@ write_publication_lines <- function(text, path) {
 ```
 
 To separate changes in models from changes in the prediction target, we'll first
-reproduce means with random effects set to zero. These functions give each site
-equal weight and retain covariance among its predictions when averaging. They
-provide the reference means and intervals for the later audit against integrated
-mean loads.
+reproduce means with random effects set to zero. These functions form equally site-weighted reference means and their
+standard errors for the later audit against integrated loads.
 
 ```{r}
 #| label: rd04-reference-functions
@@ -264,11 +256,10 @@ integration_setup <- function(model, grid) {
 }
 ```
 
-With a log link, variation among sampling units changes the arithmetic mean as
-well as its uncertainty. We'll define the integrated means and analytic
-derivatives together so uncertainty in that variance adjustment is retained.
-Identity-link means keep their original expectation. The audit below will show
-the resulting estimates and compare them with an independent calculation.
+With a log link, random-intercept variation changes the arithmetic mean.
+We'll define the integrated means and their derivatives together for the
+[uncertainty calculation](#integrated-mean-and-uncertainty). Identity-link means
+keep their original expectation.
 
 ```{r}
 #| label: rd04-integrated-means
@@ -335,9 +326,8 @@ custom_integrated <- function(s) {
 ```
 
 The woody-change panel should describe the difference between the same means
-shown in the phase panels. We'll derive pre-PCT minus post-PCT load from the
-joint model and retain their covariance, which matters for uncertainty in a
-paired comparison. This function supplies the change estimates checked below.
+shown in the phase panels. This function forms pre-PCT minus post-PCT contrasts from the joint model,
+retaining their covariance for the uncertainty calculation.
 
 ```{r}
 #| label: rd04-woody-change
@@ -374,9 +364,8 @@ woody_change_setup <- function(s) {
 ```
 
 A second calculation will help us catch errors in the analytic derivatives.
-We'll use marginaleffects for a numerical delta-method calculation, supplying
-the full parameter table, including log random-effect SDs. Comparing the two
-routes then checks uncertainty in the integration adjustment as well as the means.
+We'll supply the same full parameter table to marginaleffects and compare
+its numerical delta-method calculation with the analytic route.
 
 ```{r}
 #| label: rd04-independent-delta-method
@@ -444,6 +433,9 @@ component and phase. The mapping table below makes those choices visible for
 both the audit and the figure, including the joint model used for woody change.
 These are the current provisional leaders; their scientific review remains open.
 
+<details id="rd04-model-map-details">
+<summary>Inspect the component-to-model mapping</summary>
+
 ```{r}
 #| label: rd04-model-specification
 #| echo: true
@@ -489,17 +481,20 @@ stopifnot(nrow(rd04_spec) == 13L)
 publication_table(rd04_spec)
 ```
 
-## 07 - Audit prediction and uncertainty {#rd04-method-agreement}
+</details>
 
-Before using the estimates to describe fuel conditions, we'll check that the
-calculation delivers the intended mean and interval. We'll compare the analytic
-and marginaleffects routes once for zero-random-effect references, integrated
-means, and covariance-aware woody changes. This covers modeled zeros, equal site
-weights, and uncertainty in random-effect variances, holding the F01 fits fixed.
+## Audit prediction and uncertainty {#rd04-method-agreement}
+
+Before using the estimates, we'll compare the analytic and marginaleffects
+calculations for 60 zero-effect references, 60 integrated means, and four woody
+contrasts, holding the F01 fits and prediction grids fixed.
 The check requires absolute mean differences below $10^{-6}$ Mg/ha and SE
 differences divided by $\max(1, \mathrm{SE}_{\mathrm{analytic}})$ below
 $10^{-4}$. The summary records the largest discrepancies across all cells;
 subsequent tables use only the analytic route.
+
+<details id="rd04-method-details">
+<summary>Inspect the calculation and method-agreement summary</summary>
 
 ```{r}
 #| label: rd04-07-method-agreement
@@ -605,13 +600,18 @@ stopifnot(all(method_agreement$passed))
 publication_table(method_agreement)
 ```
 
+</details>
+
 The analytic and marginaleffects calculations agree within both tolerances for
-all `r sum(method_agreement$cells)` checked targets. We can therefore use the
-analytic estimates and SEs throughout the following tables without repeating
-the method comparison. This verifies computational agreement, conditional on
-the shared models and prediction grids; it does not establish model adequacy.
+all `r sum(method_agreement$cells)` checked targets. Subsequent tables use the
+analytic route. Agreement checks the implementation, not model adequacy. The
+estimand audit below also checks integration against numerical quadrature and
+matrix predictions against `predict.glmmTMB()`.
 
 Next we'll examine how the prediction target changes the estimated loads.
+
+<details id="rd04-estimand-details">
+<summary>Inspect prediction targets and model structures</summary>
 
 In the first table, `model_id`, `component`, `phase`, and `treatment` identify
 the fit and prediction target; `n_sites` counts the equally weighted sites.
@@ -765,18 +765,17 @@ htmltools::tagList(
 )
 ```
 
-Integration multiplies herbaceous means by about 2.0–2.3 and raises woody
-vegetation means by 33%, but
-changes duff by only 0.3%. Thus, the choice of prediction target matters most
-where fitted random-effect variation is larger; computational agreement alone
-does not establish model adequacy.
+</details>
 
-We'll check the woody pre-minus-post contrast separately because its uncertainty
-depends on covariance between the two phases. The results below compare the
-joint-model calculation with observed differences and the direct Student-t model.
-This lets us inspect the consequences
-of the change-model choice while keeping the displayed contrast consistent with
-the phase means.
+Integration multiplies herbaceous means by about 2.0–2.3, raises woody
+vegetation means by 33%, and changes duff by only 0.3%. The prediction target
+matters most where fitted random-effect variation is larger.
+
+We'll compare joint-model woody change with observed differences and the
+direct Student-t model to examine the consequences of the change-model choice.
+
+<details id="rd04-woody-details">
+<summary>Inspect observed, joint-model, and Student-t woody changes</summary>
 
 ```{r}
 #| label: rd04-07-woody-contrast
@@ -839,9 +838,10 @@ publication_table(read.csv(
 ))
 ```
 
-Agreement between the computational routes supports the implementation of the
-chosen estimand and uncertainty calculation. Whether the provisional models
-adequately describe the fuel data remains a separate scientific review question.
+</details>
+
+The display uses the joint-model contrast to keep woody change consistent
+with the phase means; the separate Student-t fit remains a sensitivity comparison.
 
 ## Prediction and interpretation review {#rd04-inference-review}
 
@@ -855,14 +855,13 @@ fitted load models remain provisional pending scientific review.
 
 In our fuel models, `type = "response"` includes modeled zeros, while
 `re.form = NA` sets random effects to zero and `re.form = NULL` conditions on
-fitted effects for known sampling units. Averaging predictions with
+fitted effects for known sampling units. Averaging these response predictions with
 `marginaleffects` does not integrate over random effects, and
 `allow.new.levels = TRUE` only permits new grouping IDs. RD04 instead integrates
 the response mean over all fitted Gaussian random intercepts, then averages
 equally across the four site contexts; this retains the fixed site effects in
-the post-PCT 100-hour model's zero component. The resulting intervals describe
-uncertainty in mean loads, rather than variation among new forests or transects
-(see the [prediction documentation](https://glmmtmb.github.io/glmmTMB/reference/predict.glmmTMB.html)).
+the post-PCT 100-hour model's zero component (see the
+[prediction documentation](https://glmmtmb.github.io/glmmTMB/reference/predict.glmmTMB.html)).
 
 ### Thesis comparison {#rd04-thesis-comparison}
 
@@ -872,8 +871,8 @@ current fuel components and the historical references here, separating changes
 in the prediction target from changes in component definitions.
 
 The thesis Results wrapper, `marginaleffects_to_emmeans()` in
-`analysis/thesis/results.qmd`, used `type = "response", re.form = NA` for both
-predictions and comparisons, with an equally weighted treatment-by-site grid
+`analysis/thesis/results.qmd`, set `re.form = NA` for predictions and comparisons,
+using the default response scale and an equally weighted treatment-by-site grid
 for fuels. Converting these predictions to `emmeans` objects did not change
 their estimand. The original RD04 also used zero random effects and equal-site
 weights; its valid nested-ID grid gave the same standardization. Thus,
@@ -921,6 +920,9 @@ We'll assemble this comparison from the saved audit and historical export on
 each render. Woody change uses the saved joint-model estimate and interval,
 with its zero-effect reference derived from the same model's phase means.
 This combines existing results without refitting or recalculating inference.
+
+<details id="rd04-thesis-details">
+<summary>Inspect all 76 thesis and publication comparison rows</summary>
 
 ```{r}
 #| label: rd04-07-thesis-comparison
@@ -1015,11 +1017,6 @@ readr::write_csv(
   comparison, "outputs/fuel/inference-audit/thesis-rd04-comparison.csv"
 )
 if (recompute) {
-  stopifnot(file.copy(
-    thesis_reference_path,
-    file.path(audit_dir, "thesis-reference-reproduction.csv"),
-    overwrite = TRUE
-  ))
   write_publication_lines(
     c(
       "RD04 inference audit; existing fitted models; no refitting or model selection.",
@@ -1049,18 +1046,16 @@ publication_table(dplyr::transmute(
 ))
 ```
 
-This comparison separates fitting differences from the additional integration
-adjustment wherever the component definitions match. Integration matters most
-for herbaceous loads, whose means roughly double, and less for duff; the
-earlier audit gives the exact multipliers. Larger means do not establish that
-a model is preferable, and the vegetation and forest-floor rows document a
-change in scientific definition rather than a like-for-like thesis comparison.
+</details>
+
+For matching deadwood definitions, the comparison separates fitting changes
+from the integration adjustment. Vegetation and forest-floor rows instead
+document changed component definitions. Neither larger means nor computational
+agreement establishes that a model is preferable.
 
 The thesis Methods described averaging over random effects, but the Results
 code set them to zero. Its fuel estimates are therefore equal-site,
-zero-effect references rather than arithmetic population means. Equal site
-weights also do not establish a regional or 50:50 aspect-standardized target;
-transport to comparable forests still requires exchangeability assumptions.
+zero-effect references rather than random-effect-integrated arithmetic means.
 For comparisons with other studies, we need to distinguish observed means,
 zero-effect references, and integrated means, as well as component definitions
 and sampling protocols. One unresolved provenance issue is the thesis
@@ -1068,16 +1063,13 @@ Discussion's approximately **42 Mg/ha** of pre-PCT 1,000-hour fuel: the reproduc
 model references average **32.63 Mg/ha** across treatments. The larger value
 needs its own source if retained.
 
-Interpretation of change also needs care. Different model structures do not
-by themselves prevent phase comparisons, but formal differences require a
-common estimand and covariance accounting for pairing; separate phase CIs are
-insufficient. The current joint woody contrast meets that requirement, while
-representing a potential surface-fuel contribution rather than measured slash
-deposition. The pre/post transition supports association with PCT; attributing
-all change to PCT requires additional design/time assumptions because these
-predictions have no contemporaneous unthinned comparison.
+The joint woody contrast represents a potential surface-fuel contribution,
+rather than measured slash deposition. The pre/post transition supports
+association with PCT; attributing all change to PCT requires additional design
+and time assumptions because these predictions have no contemporaneous
+unthinned comparison.
 
-### Integrated mean and uncertainty
+### Integrated mean and uncertainty {#integrated-mean-and-uncertainty}
 
 For a treatment $t$, phase $h$, and equally weighted site contexts $s$, define
 
@@ -1095,61 +1087,39 @@ M_{th}=\exp(v/2)\,
 \frac{1}{4}\sum_{s=1}^{4}(1-p_{0,sth})\exp(x_{sth}^{\mathsf T}\beta).
 $$
 
-This is exact under the fitted model, not a generic bias-correction option.
-The same multiplier across treatments within a fitted load model preserves
-ratios and rankings, while changing absolute loads and differences. Inference
-must still propagate uncertainty in the multiplier; old p-values and standard
-errors should not simply be carried over.
+Integration is exact under these fitted-model assumptions. Within a fitted
+load model, the common multiplier preserves treatment ratios and rankings while
+changing absolute loads and differences.
 
-The separate Student-t difference model was replaced in the display by the
-integrated joint phase-model contrast so that woody change equals the
-difference between the displayed arithmetic mean loads. Its uncertainty
-retains the joint pre/post covariance, keeping the change estimate consistent
-with the matched design and the mean-load interpretation of the other panels.
+For uncertainty, we use the delta method with the full covariance of the
+conditional coefficients, zero-model coefficients, and log random-effect SDs,
+including their cross-covariances. For a target with gradient $G$ and parameter
+covariance $V$, its variance is $G V G^{\mathsf T}$. This propagates uncertainty
+in the integration multiplier; scaling an old interval by $\exp(v/2)$ would
+hold that multiplier fixed. The independent numerical check uses
+[`marginaleffects::hypotheses()`](https://marginaleffects.com/man/r/hypotheses.html)
+with the same full parameter table and covariance.
 
-For post-PCT 100-hour fuel, “site-standardized” specifically retains an equal
-mixture of the **four fitted zero-process site contexts**. Integration of the
-random intercepts cannot create a zero-process coefficient for a fifth site.
-The baseline therefore concerns comparable contexts, not a fitted prediction
-for any arbitrary new forest. Four sites also provide limited information
-about the site-variance distribution. A regional mean, or an explicitly
-50:50 aspect-standardized mean, would need a justified target distribution
-and sufficient covariate information to support that standardization.
+Load means use 95% log-scale delta-method intervals to keep limits positive.
+Woody change uses the pre-PCT minus post-PCT contrast from the same joint model
+as the phase means, with their covariance retained. Its 95% response-scale
+interval can span zero. Separate phase intervals do not test a paired change,
+and inherited p-values or standard errors should not be carried over.
 
-The single method check above verifies both routes:
+These are asymptotic confidence intervals for **means**, conditional on the
+chosen models and reference grid, not prediction intervals for new forests or
+transects. They exclude model-selection and fuel-component-derivation
+uncertainty. A refitted parametric bootstrap could assess the delta
+approximation, particularly for herbaceous loads with large variance
+corrections; that sensitivity analysis has not been performed.
 
-1. **Historical reference target:** `marginaleffects::avg_predictions(model,
-   newdata = grid, by = ..., type = "response", re.form = NA)` agrees with
-   `predict()` followed by explicit matrix averaging. The custom
-   variance is `A %*% prediction$cov.fit %*% t(A)`.
-2. **Implemented integrated target:** a nonlinear functional supplied to
-   `marginaleffects::hypotheses()` averages the response means after analytic
-   integration. A separate custom implementation derives its gradient and
-   calculates `G %*% V %*% t(G)`. Both use the full covariance of the fitted
-   nonrandom parameters, including zero-model coefficients, log random-effect
-   standard deviations, and their cross-covariances. Merely multiplying an
-   `avg_predictions()` interval by `exp(v/2)` would omit uncertainty in $v$.
-
-The [hypotheses documentation](https://marginaleffects.com/man/r/hypotheses.html)
-supports nonlinear functionals and supplied covariance matrices. Here the
-full parameter table is supplied explicitly because ordinary fixed-coefficient
-prediction covariance alone does not include the integration multiplier's
-variance. These are asymptotic delta-method intervals, conditional on the
-chosen models and the reference grid. They do not include model-selection
-or fuel-component-derivation uncertainty. Refitted parametric bootstrap
-intervals are a useful final sensitivity check, particularly for herbaceous
-loads with large variance corrections and only four sites.
-
-**Verification:** the [method-agreement check](#rd04-method-agreement)
-compares all 60 reference and 60 integrated cells, plus all four woody contrasts,
-at the stated mean and SE tolerances. Subsequent tables retain only the analytic
-results. The estimand audit also checks integration multipliers against numerical
-quadrature and matrix predictions against `predict.glmmTMB()`, using current
-saved fits. The thesis comparison reads the 48 verified fuel references from the
-committed export. Outputs and the R/package session record are in
-`publication/outputs/fuel/inference-audit/`.
-
-[Review the complete audit and inference-helper source](#rd04-source-review).
+For post-PCT 100-hour fuel, “site-standardized” retains an equal mixture of the
+**four fitted zero-process site contexts**. Random-effect integration cannot
+supply a zero-process coefficient for a fifth site. Generalization therefore
+requires comparable contexts and exchangeability assumptions. Four sites also
+provide limited information about the site-variance distribution. A regional
+or explicitly 50:50 aspect-standardized mean would require a justified target
+distribution and sufficient covariate information.
 
 ### Methods wording
 
@@ -1170,13 +1140,11 @@ The matched-contrast qualification can be stated in its own Methods sentence:
 > covariance, and interpreted as a potential surface-fuel contribution.
 
 
-## 08 - Generate the figure and canonical estimates
+## Generate the figure and canonical estimates
 
-We can now turn the audited calculation into the 60 estimates needed for the
-inventory figure and table. We'll use the mapped F01 models directly, keeping
-the audit tables as checking evidence. First, this formatter gives positive
-means log-scale delta-method intervals and signed differences response-scale
-intervals, allowing the woody-change interval to span zero where appropriate.
+We can now turn the audited calculation into the 60 estimates for the
+inventory figure and table. This formatter applies the interval methods
+[defined above](#integrated-mean-and-uncertainty) to the mapped F01 models.
 
 ```{r}
 #| label: rd04-estimate-rows
@@ -1244,6 +1212,9 @@ We'll calculate the phase means and woody change from those fits and collect
 them in one source table for the publication. The table below shows every mean
 and interval behind the figure. Checks ensure all 60 cells are present and that
 woody change equals the difference between the displayed phase means.
+
+<details id="rd04-estimate-details">
+<summary>Inspect all 60 full-precision estimates and their calculation</summary>
 
 ```{r}
 #| label: rd04-08-generate-rd04-integrated-figure
@@ -1346,19 +1317,23 @@ if (recompute) {
 publication_table(read.csv("outputs/fuel/tables/rd04-fuel-model-estimates.csv"))
 ```
 
-## Companion estimates table - pending review {#fuel-companion-table}
+</details>
+
+## Accepted publication estimates table {#fuel-companion-table}
+
+**Accepted for the publication supplement.** This accepts the table's content
+and presentation; scientific acceptance of the provisional models remains open.
 
 The figure makes patterns easier to see, but readers also need the values and
 uncertainty behind them. We'll arrange all 60 estimates and their existing 95%
 confidence intervals into 15 component–phase rows, with treatments in the same
 order as the figure. This reads the canonical estimate CSV without recalculating
-inference. The same table appears in the manuscript supplement; final placement
-remains a review decision.
+inference. The same table appears in the manuscript supplement.
 
 ```{r}
 #| label: tbl-rd04-fuel-estimates
 #| echo: true
-#| tbl-cap: "Companion values for the RD04 fuel inventory (candidate appendix table). Entries are mean (lower, upper 95% confidence limits), in Mg ha^-1^. GS = group selection; LD = low-density dispersed retention; HA = high-density aggregated retention; HD = high-density dispersed retention. Load means include modeled zeros, integrate over all fitted random intercepts, and equally weight the four study-site contexts. The signed woody reduction is pre-PCT minus post-PCT from the joint matched phase model, retaining pre/post covariance; it is a potential surface-fuel contribution, not measured slash. Load intervals use the log-scale delta method; reduction intervals use the response-scale delta method. These are intervals for means, not prediction intervals. Models remain provisional; intervals exclude model-selection and component-derivation uncertainty. Post-PCT litter and duff are not estimated."
+#| tbl-cap: "Fuel load estimates by retention treatment and measurement phase. Entries are mean (lower, upper 95% confidence limits), in Mg ha^-1^. GS = group selection; LD = low-density dispersed retention; HA = high-density aggregated retention; HD = high-density dispersed retention. Load means include modeled zeros, integrate over all fitted random intercepts, and equally weight the four study-site contexts. Woody reduction is pre-PCT minus post-PCT from the joint matched phase model, retaining pre/post covariance; it represents a potential surface-fuel contribution, not measured slash. Load intervals use the log-scale delta method; reduction intervals use the response-scale delta method. Intervals describe means, not individual observations, and exclude model-selection and component-derivation uncertainty. Models remain provisional. Post-PCT litter and duff are not estimated."
 
 # Read the full-precision inference once; formatting below changes display only.
 fuel_table_source <- read.csv(
@@ -1576,17 +1551,10 @@ knitr::include_graphics(file.path(
 ))
 ```
 
-Generated artifacts for this review are
-`publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png`,
-`publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv`, and
-`publication/outputs/fuel/manifests/rd04-figure-provenance.yml`.
 The figure uses the AIC-leading models documented in the
 [F01 model-review register](task-f01.qmd#f01-record). It is also available
 [in the working manuscript for review in context](draft-results.qmd#rd04-fuel-inventory-draft).
 
-
-The former figure-and-table plan has been merged into this task; this is the
-authoritative action record for fuel-display development.
 
 ## Implications, handoff, and review state
 
@@ -1598,16 +1566,12 @@ the estimand and interval rationale. A change to prediction or uncertainty
 requires updating this record and regenerating the figure/CSV before reviewing
 dependent narrative claims.
 
-Acceptance requires a consistent mean-load interpretation across panels,
-traceability from all 60 estimates to the saved models, preservation of woody
-pre/post covariance, and captions that distinguish potential contribution from
-measured slash and causal PCT effects. The figure is complete; scientific model
-assumptions and final table placement remain under review. The archived stage 06
-implementation documents the superseded display, not the current inference target.
-
-
-## Source and display history {#rd04-source-review}
-
-Inference functions are defined beside their first use. The superseded zero-effect display is documented in the inference review and Git history.
+The figure and accepted supplementary table now share a consistent mean-load
+interpretation, with all 60 estimates traceable to saved models. Woody change
+retains pre/post covariance and represents potential surface-fuel contribution.
+The numerical checks support the implementation; model adequacy and the fuel
+Results narrative remain under review. In particular, the four-site basis and
+large herbaceous integration adjustments limit how broadly these means can be
+interpreted.
 
 {{< include /_task-metadata/rd04-files.qmd >}}

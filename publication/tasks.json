@@ -77,13 +77,13 @@
   {
     "id": "RD04",
     "title": "fuel phase and PCT display",
-    "status": "Figure complete; companion table pending review",
+    "status": "Figure complete; publication table accepted",
     "target": "Nine-panel figure, estimates table, and CSV",
     "files": [
       "publication/task-rd04.qmd",
       "publication/sections/rd04-fuel-estimates-table.qmd"
     ],
-    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) collects all current fuel components and historical references in one comparison table, marks unmatched component definitions, and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. A single tolerance check verifies analytic and marginaleffects agreement; later audit tables and figure calculations use the analytic route. The [source review](task-rd04.qmd#rd04-source-review) explains the inline inference functions and display history; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task from saved F01 models while other tasks remain in review mode.",
+    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific mean fuel loads and a matched woody contrast. The [inference review](task-rd04.qmd#rd04-inference-review) distinguishes model changes, random-effect integration, and unmatched thesis component definitions. The [accepted supplementary table](task-rd04.qmd#fuel-companion-table) presents all 60 estimates from the canonical CSV. Woody change uses the joint phase model and its pre/post covariance. Saved computational checks support the implementation; model adequacy and the RT03 narrative remain under review. F01 supplies the provisional fitted models. RD04 can render saved results or recompute from those fits in the locked publication environment.",
     "outputs": [
       "publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
@@ -94,7 +94,6 @@
       "publication/outputs/fuel/inference-audit/thesis-rd04-comparison.csv",
       "publication/outputs/fuel/inference-audit/woody-mean-change-comparison.csv",
       "publication/outputs/fuel/inference-audit/model-structures.csv",
-      "publication/outputs/fuel/inference-audit/thesis-reference-reproduction.csv",
       "publication/outputs/fuel/inference-audit/session-info.txt",
       "publication/outputs/fuel/tables/rd04-fuel-display.csv"
     ],
@@ -107,7 +106,23 @@
       "analysis/scripts/publication-export/fuel-historical-reference.R",
       "analysis/analysis/fuel_modeling_round_3.qmd",
       "analysis/thesis/results.qmd",
-      "publication/outputs/helpers/task-helpers.rds"
+      "publication/outputs/helpers/task-helpers.rds",
+      "publication/outputs/fuel/models/prepct_duff_base.rds",
+      "publication/outputs/fuel/models/postpct_herbaceous_vegetation_base.rds",
+      "publication/outputs/fuel/models/prepct_herbaceous_vegetation_base.rds",
+      "publication/outputs/fuel/models/postpct_hundhr_zi_treatment_site_disp_treatment_site_interaction.rds",
+      "publication/outputs/fuel/models/prepct_hundhr_base.rds",
+      "publication/outputs/fuel/models/prepct_litter_disp_treatment.rds",
+      "publication/outputs/fuel/models/postpct_onehr_base.rds",
+      "publication/outputs/fuel/models/prepct_onehr_disp_treatment.rds",
+      "publication/outputs/fuel/models/postpct_tenhr_base.rds",
+      "publication/outputs/fuel/models/prepct_tenhr_base.rds",
+      "publication/outputs/fuel/models/postpct_thoushr_zi_treatment.rds",
+      "publication/outputs/fuel/models/prepct_thoushr_base.rds",
+      "publication/outputs/fuel/models/woody_delta_student_t_disp_treatment_site_interaction.rds",
+      "publication/outputs/fuel/models/woody_phase_zigamma_ziphase_disp1.rds",
+      "analysis/thesis/methods.qmd",
+      "analysis/thesis/discussion.qmd"
     ],
     "depends_on": [
       "F01"
@@ -198,7 +213,6 @@
     ],
     "summary": "The fuel Results draft follows the thesis pre-PCT, post-PCT, and vegetation-transition sequence using current publication values. The [source and review decisions](task-rt03.qmd#implemented-source-and-review-decisions) document separated components, integrated means, covariance-aware woody changes, and replacement of inherited significance claims with descriptive rankings. Inline values and the companion table share the canonical CSV; the draft remains pending review, with explicit limits on slash and causal PCT interpretations.",
     "inputs": [
-      "publication/sections/rd04-fuel-estimates-table.qmd",
       "analysis/thesis/results.qmd",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
       "publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
@@ -253,9 +267,21 @@
     "status": "Queued - after RT03",
     "target": "1–1.5 manuscript pages",
     "files": [
+      "publication/task-m03.qmd",
       "publication/sections/methods.qmd"
     ],
-    "summary": "Following RT03, the proposal documents fuel-component definitions, the phase boundary, matched woody contrast, uncertainty/model decisions, and limits on causal interpretation. The planned 1–1.5-page Methods subsection must match the reviewed fuel caption and Results claims, with component/model diagnostics linked through F01 and prediction/inference decisions through RD04."
+    "summary": "Following RT03, the proposal documents fuel-component definitions, the phase boundary, matched woody contrast, uncertainty/model decisions, and limits on causal interpretation. The planned 1–1.5-page Methods subsection must match the reviewed fuel caption and Results claims, with component/model diagnostics linked through F01 and prediction/inference decisions through RD04.",
+    "inputs": [
+      "publication/task-f01.qmd",
+      "publication/task-rd04.qmd",
+      "publication/task-rt03.qmd"
+    ],
+    "outputs": [],
+    "depends_on": [
+      "F01",
+      "RD04",
+      "RT03"
+    ]
   },
   {
     "id": "D01",
@@ -351,18 +377,22 @@
       "publication/draft-supplement.qmd",
       "publication/manuscript-full.qmd"
     ],
-    "summary": "The proposed inventory covers material excluded from the main text: model registries, diagnostics, pairwise comparisons, optional Douglas-fir detail, expanded fuel components, and machine-readable phase values. Each retained item is to be linked from its accepted main-text counterpart after the main displays are reviewed.",
+    "summary": "The fuel estimates table is accepted for the publication supplement. The remaining inventory is queued: model registries, diagnostics, pairwise comparisons, optional Douglas-fir detail, and machine-readable phase values. The full manuscript also consumes the fuel Results and saved narrative formatter from RT03; refresh that helper before rendering the manuscript.",
     "outputs": [],
     "inputs": [
       "publication/outputs/fuel/tables/rd04-fuel-display.csv",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-display.csv",
-      "publication/outputs/helpers/task-helpers.rds"
+      "publication/outputs/helpers/task-helpers.rds",
+      "publication/outputs/helpers/fuel-value.rds",
+      "publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
+      "publication/sections/fuel-results.qmd"
     ],
     "depends_on": [
       "F01",
       "RD02",
-      "RD04"
+      "RD04",
+      "RT03"
     ]
   },
   {

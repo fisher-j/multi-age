@@ -12,7 +12,7 @@ The register links to the task entries below. Each entry summarizes the proposal
 | Order | Task | Status | Proposed target |
 |---:|---|---|---|
 | 0 | [F01 - fuel-component separation and model exploration](#f01) | Completed - analytical record | Reproducible component/model record |
-| 1 | [RD04 - fuel phase and PCT display](#rd04) | Figure complete; companion table pending review | Nine-panel figure, estimates table, and CSV |
+| 1 | [RD04 - fuel phase and PCT display](#rd04) | Figure complete; publication table accepted | Nine-panel figure, estimates table, and CSV |
 | 2 | [RD02 - regeneration basal-area/density display](#rd02) | Separate models selected; displays pending review | RW/TO Results figure and all-species supplement table |
 | 3 | [RD03 - sprout-height display](#rd03) | Queued | 1 figure, combined only if readable |
 | 4 | [RT01 - regeneration Results narrative](#rt01) | Queued - after RD02 | 1–2 manuscript pages |
@@ -45,9 +45,9 @@ The [component definitions](task-f01.qmd#tbl-fuel-component-dictionary) separate
 
 ### [RD04 - fuel phase and PCT display](task-rd04.qmd) {#rd04}
 
-**Status: Figure complete; companion table pending review.**
+**Status: Figure complete; publication table accepted.**
 
-The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) collects all current fuel components and historical references in one comparison table, marks unmatched component definitions, and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. A single tolerance check verifies analytic and marginaleffects agreement; later audit tables and figure calculations use the analytic route. The [source review](task-rd04.qmd#rd04-source-review) explains the inline inference functions and display history; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task from saved F01 models while other tasks remain in review mode.
+The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific mean fuel loads and a matched woody contrast. The [inference review](task-rd04.qmd#rd04-inference-review) distinguishes model changes, random-effect integration, and unmatched thesis component definitions. The [accepted supplementary table](task-rd04.qmd#fuel-companion-table) presents all 60 estimates from the canonical CSV. Woody change uses the joint phase model and its pre/post covariance. Saved computational checks support the implementation; model adequacy and the RT03 narrative remain under review. F01 supplies the provisional fitted models. RD04 can render saved results or recompute from those fits in the locked publication environment.
 
 
 ### [RD02 - regeneration basal-area/density display](task-rd02.qmd) {#rd02}
@@ -166,7 +166,7 @@ The proposal focuses fuel background on phase-specific reference conditions and 
 
 **Status: Queued - after main displays.**
 
-The proposed inventory covers material excluded from the main text: model registries, diagnostics, pairwise comparisons, optional Douglas-fir detail, expanded fuel components, and machine-readable phase values. Each retained item is to be linked from its accepted main-text counterpart after the main displays are reviewed.
+The fuel estimates table is accepted for the publication supplement. The remaining inventory is queued: model registries, diagnostics, pairwise comparisons, optional Douglas-fir detail, and machine-readable phase values. The full manuscript also consumes the fuel Results and saved narrative formatter from RT03; refresh that helper before rendering the manuscript.
 
 
 ### [C01 - conclusions](task-c01.qmd) {#c01}
