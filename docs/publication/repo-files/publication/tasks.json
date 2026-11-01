@@ -83,16 +83,19 @@
       "publication/task-rd04.qmd",
       "publication/sections/rd04-fuel-estimates-table.qmd"
     ],
-    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. Executable audit and figure calculations appear beside their evidence in task order. The [source review](task-rd04.qmd#rd04-source-review) explains the inline inference functions and display history; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task from saved F01 models while other tasks remain in review mode.",
+    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. A single tolerance check verifies analytic and marginaleffects agreement; later audit tables and figure calculations use the analytic route. The [source review](task-rd04.qmd#rd04-source-review) explains the inline inference functions and display history; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task from saved F01 models while other tasks remain in review mode.",
     "outputs": [
       "publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
       "publication/outputs/fuel/manifests/rd04-figure-provenance.yml",
+      "publication/outputs/fuel/manifests/rd04-figure-session-info.txt",
+      "publication/outputs/fuel/inference-audit/rd04-method-agreement.csv",
       "publication/outputs/fuel/inference-audit/rd04-estimand-comparison.csv",
       "publication/outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv",
       "publication/outputs/fuel/inference-audit/woody-mean-change-comparison.csv",
       "publication/outputs/fuel/inference-audit/model-structures.csv",
       "publication/outputs/fuel/inference-audit/thesis-reference-reproduction.csv",
+      "publication/outputs/fuel/inference-audit/session-info.txt",
       "publication/outputs/fuel/tables/rd04-fuel-display.csv"
     ],
     "inputs": [
@@ -102,6 +105,7 @@
       "publication/inputs/thesis/fuel/thesis-reference-reproduction.csv",
       "analysis/scripts/export-publication-inputs.R",
       "analysis/scripts/publication-export/fuel-historical-reference.R",
+      "analysis/analysis/fuel_modeling_round_3.qmd",
       "publication/outputs/helpers/task-helpers.rds"
     ],
     "depends_on": [
@@ -187,13 +191,16 @@
     "files": [
       "publication/task-rt03.qmd",
       "publication/sections/results.qmd",
-      "publication/sections/fuel-results.qmd"
+      "publication/sections/fuel-results.qmd",
+      "publication/draft-results.qmd",
+      "publication/manuscript-full.qmd"
     ],
     "summary": "The fuel Results draft follows the thesis pre-PCT, post-PCT, and vegetation-transition sequence using current publication values. The [source and review decisions](task-rt03.qmd#implemented-source-and-review-decisions) document separated components, integrated means, covariance-aware woody changes, and replacement of inherited significance claims with descriptive rankings. Inline values and the companion table share the canonical CSV; the draft remains pending review, with explicit limits on slash and causal PCT interpretations.",
     "inputs": [
       "publication/sections/rd04-fuel-estimates-table.qmd",
       "analysis/thesis/results.qmd",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
+      "publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
       "publication/task-rd04.qmd",
       "publication/outputs/helpers/task-helpers.rds"
     ],
@@ -339,9 +346,23 @@
       "publication/sections/supplement.qmd",
       "publication/sections/rd02-species-estimates-table.qmd",
       "publication/sections/rd04-fuel-estimates-table.qmd",
-      "publication/outputs/README.md"
+      "publication/outputs/README.md",
+      "publication/draft-supplement.qmd",
+      "publication/manuscript-full.qmd"
     ],
-    "summary": "The proposed inventory covers material excluded from the main text: model registries, diagnostics, pairwise comparisons, optional Douglas-fir detail, expanded fuel components, and machine-readable phase values. Each retained item is to be linked from its accepted main-text counterpart after the main displays are reviewed."
+    "summary": "The proposed inventory covers material excluded from the main text: model registries, diagnostics, pairwise comparisons, optional Douglas-fir detail, expanded fuel components, and machine-readable phase values. Each retained item is to be linked from its accepted main-text counterpart after the main displays are reviewed.",
+    "outputs": [],
+    "inputs": [
+      "publication/outputs/fuel/tables/rd04-fuel-display.csv",
+      "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-display.csv",
+      "publication/outputs/helpers/task-helpers.rds"
+    ],
+    "depends_on": [
+      "F01",
+      "RD02",
+      "RD04"
+    ]
   },
   {
     "id": "C01",

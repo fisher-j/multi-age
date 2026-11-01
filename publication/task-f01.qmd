@@ -153,6 +153,8 @@ The model comparisons produce more detail than fits comfortably on one screen.
 We'll use a shared table formatter so readers can sort, search, and choose fields
 in the results below. Continuous estimates use consistent rounding, while AIC
 uses whole numbers to keep differences between candidates visible.
+Model identifiers use spaces in place of underscores in displayed tables so
+long names can wrap; saved identifiers retain their original spelling.
 
 ```{r}
 #| label: f01-table-functions
@@ -172,11 +174,20 @@ publication_number <- function(x, digits = 2L) {
   value
 }
 
+# Allow model identifiers to wrap without changing their saved values.
+publication_model_id <- function(x) {
+  gsub("_", " ", x, fixed = TRUE)
+}
+
 # Use the same controls for analytical results and CSV review tables.
 # Keep the supplied order until a reader sorts, and escape data by default so
 # formulas and HTML-like text remain literal. Integer counts stay exact;
 # AIC uses whole numbers; other continuous columns use significant figures.
 publication_table <- function(data, digits = 2L, caption = NULL) {
+  model_ids <- names(data) %in% c(
+    "model_id", "component_model_id", "provisional_aic_leader", "Provisional leader"
+  )
+  data[model_ids] <- lapply(data[model_ids], publication_model_id)
   if (!is.null(digits)) {
     numeric <- vapply(
       data,
@@ -219,7 +230,9 @@ publication_table <- function(data, digits = 2L, caption = NULL) {
 
 For detailed review, we also need access to the exact saved values and formulas.
 This helper makes expandable CSV tables with the same controls; reading fields
-as text preserves their contents alongside the rounded analytical displays.
+as text preserves their precision alongside the rounded analytical displays.
+Model identifiers use the same spacing as other tables; downloads retain the
+exact saved contents.
 
 ```{r}
 #| label: f01-csv-review-function
@@ -277,6 +290,7 @@ shared_helpers <- list(
   read_saved_model = read_saved_model,
   publication_simulate_residuals = publication_simulate_residuals,
   publication_number = publication_number,
+  publication_model_id = publication_model_id,
   publication_table = publication_table,
   render_csv_review = render_csv_review,
   enable_chunk_labels = enable_chunk_labels

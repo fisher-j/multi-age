@@ -147,7 +147,13 @@ def check():
         errors.extend(f"{page.name}: {error}" for error in doc.widget_errors)
         for source, rows in doc.review_tables.items():
             with (project.parent / source).open(encoding="utf-8-sig", newline="") as stream:
-                if rows != list(csv.reader(stream)):
+                expected = list(csv.reader(stream))
+                model_ids = [i for i, name in enumerate(expected[0]) if name in
+                             ("model_id", "component_model_id", "provisional_aic_leader", "Provisional leader")]
+                for row in expected[1:]:
+                    for i in model_ids:
+                        row[i] = row[i].replace("_", " ")
+                if rows != expected:
                     errors.append(f"{page.name}: DT review differs from saved CSV: {source}")
         for source in doc.formula_errors:
             errors.append(f"{page.name}: formula rendered as subscript in CSV review: {source}")

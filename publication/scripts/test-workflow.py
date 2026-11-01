@@ -218,7 +218,9 @@ stopifnot(length(predict(fit, type="response", re.form=NA)) == 64L)
 #| tbl-cap: Current estimates
 values <- data.frame(Species="Redwood", Estimate=12.34, Small=0.004567,
                      Large=1234.5, Unit=1.04, Zero=0, Count=1234L,
-                     Formula="load ~ treatment + (1 | site)", Literal="<b>001</b>")
+                     Formula="load ~ treatment + (1 | site)", Literal="<b>001</b>",
+                     model_id="full_nested", component_model_id="rw_site_macro",
+                     provisional_aic_leader="woody_phase_zigamma")
 write.csv(values, "values.csv", row.names=FALSE)
 publication_table(values)
 ```
@@ -236,12 +238,16 @@ publication_table(read.csv("values.csv"))
             for page, label in (("producer", "tbl-produced"), ("consumer", "tbl-reused")):
                 rendered = website.Document(fixture / ("_site/" + page + ".html"))
                 self.assertEqual(rendered.result_tables[label],
-                                 [["Species", "Estimate", "Small", "Large", "Unit", "Zero", "Count", "Formula", "Literal"],
+                                 [["Species", "Estimate", "Small", "Large", "Unit", "Zero", "Count", "Formula", "Literal",
+                                   "model_id", "component_model_id", "provisional_aic_leader"],
                                   ["Redwood", "12", "0.0046", "1200", "1.0", "0", "1234",
-                                   "load ~ treatment + (1 | site)", "<b>001</b>"]])
+                                   "load ~ treatment + (1 | site)", "<b>001</b>",
+                                   "full nested", "rw site macro", "woody phase zigamma"]])
                 self.assertEqual(len(rendered.widgets), 1)
                 self.assertFalse(rendered.widget_errors)
                 self.assertEqual(rendered.widgets[0]["options"]["order"], [])
+            self.assertIn("full_nested", (fixture / "values.csv").read_text())
+            self.assertIn("rw_site_macro", (fixture / "values.csv").read_text())
 
     def test_pairing_cell_displays_results_beside_code_in_review_and_recompute(self):
         project = Path(__file__).resolve().parents[1]
