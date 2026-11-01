@@ -556,6 +556,14 @@ ul.task-list li input[type="checkbox"] {
   });
   </script>
 </div> <!-- /content -->
+<script>
+document.addEventListener("toggle", function (event) {
+  if (event.target.tagName === "DETAILS" && event.target.open &&
+      event.target.querySelector(".datatables")) {
+    window.dispatchEvent(new Event("resize"));
+  }
+}, true);
+</script>
 
 
 

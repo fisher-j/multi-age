@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Judson Fisher">
-<meta name="dcterms.date" content="2026-10-31">
+<meta name="dcterms.date" content="2026-11-01">
 
 <title>Regeneration and fuel loading with varying overstory retention in redwood stands – Publication manuscript development</title>
 <style>
@@ -92,6 +92,34 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+
+<script src="site_libs/datatables-binding-0.34.0/datatables.js"></script>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+
+<link href="site_libs/dt-ext-buttons-1.13.6/css/buttons.dataTables.min.css" rel="stylesheet">
+
+<script src="site_libs/dt-ext-buttons-1.13.6/js/dataTables.buttons.min.js"></script>
+
+<script src="site_libs/dt-ext-buttons-1.13.6/js/buttons.html5.min.js"></script>
+
+<script src="site_libs/dt-ext-buttons-1.13.6/js/buttons.colVis.min.js"></script>
+
+<script src="site_libs/dt-ext-buttons-1.13.6/js/buttons.print.min.js"></script>
+
+<link href="site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+
 
 
 </head>
@@ -248,7 +276,7 @@ div.csl-indent {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Regeneration and fuel loading with varying overstory retention in redwood stands</h1>
-<p class="subtitle lead">Working publication manuscript — regeneration display and fuel Results for review</p>
+<p class="subtitle lead">Working publication manuscript - regeneration display and fuel Results for review</p>
 </div>
 
 
@@ -265,7 +293,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 31, 2026</p>
+      <p class="date">November 1, 2026</p>
     </div>
   </div>
   
@@ -277,6 +305,7 @@ div.csl-indent {
 </header>
 
 
+<!-- Enable automatic labels for echoed code in the included sections. -->
 <!--
 This document assembles the working publication manuscript, not a submission-ready
 manuscript. RT03 contains a fuel Results draft and the RD04 figure and companion
@@ -327,19 +356,15 @@ fuel components, figures, and supplementary material are finalized. -->
 <p>The display below summarizes redwood and tanoak regeneration basal area from separate species-category models. Estimates for all four categories are given in the supplement (<a href="./draft-supplement.html#tbl-rd02-selected-species-estimates">supplementary estimates table</a>). The full regeneration Results narrative and sprout-height displays remain in development.</p>
 <section id="rd02-regeneration-display-draft" class="level3">
 <h3 class="anchored" data-anchor-id="rd02-regeneration-display-draft">Regeneration basal area</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-rd02-regeneration-basal-area" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Redwood and tanoak mean regeneration basal area with 95% confidence intervals for GS, LD, HA, and HD retention treatments in two species panels. Redwood means are highest in GS and lowest in HD, with wide uncertainty in GS. Tanoak means vary less across treatments. ">
+<div id="fig-rd02-regeneration-basal-area" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Redwood and tanoak mean regeneration basal area with 95% confidence intervals for GS, LD, HA, and HD retention treatments in two species panels. Redwood means are highest in GS and lowest in HD, with wide uncertainty in GS. Tanoak means vary less across treatments.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-rd02-regeneration-basal-area-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png" class="img-fluid figure-img" style="width:100.0%" alt="Redwood and tanoak mean regeneration basal area with 95% confidence intervals for GS, LD, HA, and HD retention treatments in two species panels. Redwood means are highest in GS and lowest in HD, with wide uncertainty in GS. Tanoak means vary less across treatments. ">
+<img src=".\outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png" class="img-fluid figure-img" style="width:100.0%" alt="Redwood and tanoak mean regeneration basal area with 95% confidence intervals for GS, LD, HA, and HD retention treatments in two species panels. Redwood means are highest in GS and lowest in HD, with wide uncertainty in GS. Tanoak means vary less across treatments.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rd02-regeneration-basal-area-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Regeneration basal area 10 years after harvest by retained-overstory treatment. Points are arithmetic expected basal area, including modeled zeros and integrated over fitted site and nested macro-plot random intercepts; colored ranges are 95% confidence intervals for the means from the full-parameter log-scale delta method. Blue ranges with circles denote redwood and orange ranges with triangles denote tanoak. Each species is modeled separately using zero-inflated Gamma responses with treatment as a fixed effect and four site and 16 nested macro-plot random intercepts, using 64 vegetation-plot observations per species. GS = group selection; LD = low-density dispersed retention; HA = high-density aggregated retention; HD = high-density dispersed retention. Species panels use different vertical scales. Intervals describe uncertainty in means, not new-plot variation or pairwise significance tests.
 </figcaption>
 </figure>
-</div>
-</div>
 </div>
 </section>
 </section>
@@ -359,19 +384,15 @@ Figure&nbsp;1: Regeneration basal area 10 years after harvest by retained-overst
 </section>
 <section id="rd04-fuel-inventory-draft" class="level3">
 <h3 class="anchored" data-anchor-id="rd04-fuel-inventory-draft">Fuel inventory</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-rd04-fuel-inventory-manuscript" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-rd04-fuel-inventory-manuscript" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Fuel components by retention treatment before and after precommercial thinning (PCT). Points are site-standardized mean loads from AIC-leading models, integrated over all fitted random effects and including modeled zeros; ranges are 95% confidence intervals for the means. Study sites receive equal weights. Orange denotes pre-PCT and blue denotes post-PCT for the six components measured in both phases. Litter and duff are pre-PCT only. The woody vegetation-difference panel is the pre-PCT minus post-PCT mean contrast from the joint matched woody phase model, with its pre/post covariance. It is an inferred potential surface-fuel contribution, not direct slash load. Panel-specific y-scales are used.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-rd04-fuel-inventory-manuscript-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png" class="img-fluid figure-img" style="width:100.0%">
+<img src=".\outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png" class="img-fluid figure-img" style="width:100.0%" alt="Fuel components by retention treatment before and after precommercial thinning (PCT). Points are site-standardized mean loads from AIC-leading models, integrated over all fitted random effects and including modeled zeros; ranges are 95% confidence intervals for the means. Study sites receive equal weights. Orange denotes pre-PCT and blue denotes post-PCT for the six components measured in both phases. Litter and duff are pre-PCT only. The woody vegetation-difference panel is the pre-PCT minus post-PCT mean contrast from the joint matched woody phase model, with its pre/post covariance. It is an inferred potential surface-fuel contribution, not direct slash load. Panel-specific y-scales are used.">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rd04-fuel-inventory-manuscript-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Fuel components by retention treatment before and after precommercial thinning (PCT). Points are site-standardized mean loads from AIC-leading models, integrated over all fitted random effects and including modeled zeros; ranges are 95% confidence intervals for the means. Study sites receive equal weights. Orange denotes pre-PCT and blue denotes post-PCT for the six components measured in both phases. Litter and duff are pre-PCT only. The woody vegetation-difference panel is the pre-PCT minus post-PCT mean contrast from the joint matched woody phase model, with its pre/post covariance. It is an inferred potential surface-fuel contribution, not direct slash load. Panel-specific y-scales are used.
 </figcaption>
 </figure>
-</div>
-</div>
 </div>
 </section>
 </section>
@@ -397,54 +418,8 @@ Table&nbsp;1: Regeneration basal area 10 years after harvest for all four specie
 </figcaption>
 <div aria-describedby="tbl-rd02-selected-species-estimates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 15%">
-<col style="width: 22%">
-<col style="width: 21%">
-<col style="width: 20%">
-<col style="width: 20%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Species</th>
-<th style="text-align: right;">GS</th>
-<th style="text-align: right;">LD</th>
-<th style="text-align: right;">HA</th>
-<th style="text-align: right;">HD</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Redwood</td>
-<td style="text-align: right;">12.66 (3.67, 43.72)</td>
-<td style="text-align: right;">3.97 (1.25, 12.62)</td>
-<td style="text-align: right;">1.72 (0.53, 5.54)</td>
-<td style="text-align: right;">0.93 (0.25, 3.44)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Tanoak</td>
-<td style="text-align: right;">2.21 (1.38, 3.55)</td>
-<td style="text-align: right;">2.05 (1.25, 3.36)</td>
-<td style="text-align: right;">0.93 (0.57, 1.51)</td>
-<td style="text-align: right;">1.20 (0.74, 1.95)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Douglas-fir</td>
-<td style="text-align: right;">0.28 (0.15, 0.53)</td>
-<td style="text-align: right;">0.11 (0.06, 0.22)</td>
-<td style="text-align: right;">0.18 (0.08, 0.37)</td>
-<td style="text-align: right;">0.12 (0.06, 0.22)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Other species</td>
-<td style="text-align: right;">0.23 (0.04, 1.40)</td>
-<td style="text-align: right;">0.12 (0.03, 0.55)</td>
-<td style="text-align: right;">0.06 (0.01, 0.29)</td>
-<td style="text-align: right;">0.20 (0.05, 0.92)</td>
-</tr>
-</tbody>
-</table>
+<div id="htmlwidget-b7a727affc4d507f0ad0" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b7a727affc4d507f0ad0">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Redwood","Tanoak","Douglas-fir","Other species"],["13 (3.7, 44)","2.2 (1.4, 3.6)","0.28 (0.15, 0.53)","0.23 (0.037, 1.4)"],["4.0 (1.3, 13)","2.0 (1.2, 3.4)","0.11 (0.056, 0.22)","0.12 (0.028, 0.55)"],["1.7 (0.53, 5.5)","0.93 (0.57, 1.5)","0.18 (0.083, 0.37)","0.056 (0.011, 0.29)"],["0.93 (0.25, 3.4)","1.2 (0.74, 1.9)","0.12 (0.062, 0.22)","0.20 (0.045, 0.92)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Species<\/th>\n      <th>GS<\/th>\n      <th>LD<\/th>\n      <th>HA<\/th>\n      <th>HD<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"B l f r t i p","order":[],"ordering":true,"searching":true,"scrollX":true,"pageLength":10,"lengthMenu":[[10,25,50,-1],["10","25","50","All"]],"buttons":[{"extend":"colvis","text":"Show/hide fields"}],"columnDefs":[{"name":"Species","targets":0},{"name":"GS","targets":1},{"name":"LD","targets":2},{"name":"HA","targets":3},{"name":"HD","targets":4}],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </figure>
@@ -462,153 +437,14 @@ Table&nbsp;2: Companion values for the RD04 fuel inventory (candidate appendix t
 </figcaption>
 <div aria-describedby="tbl-rd04-fuel-estimates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 26%">
-<col style="width: 11%">
-<col style="width: 15%">
-<col style="width: 15%">
-<col style="width: 15%">
-<col style="width: 15%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Component</th>
-<th style="text-align: left;">Phase</th>
-<th style="text-align: right;">GS</th>
-<th style="text-align: right;">LD</th>
-<th style="text-align: right;">HA</th>
-<th style="text-align: right;">HD</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">1-hour fuel</td>
-<td style="text-align: left;">Pre-PCT</td>
-<td style="text-align: right;">0.58 (0.38, 0.89)</td>
-<td style="text-align: right;">0.67 (0.47, 0.97)</td>
-<td style="text-align: right;">1.24 (0.84, 1.82)</td>
-<td style="text-align: right;">1.03 (0.71, 1.50)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">1-hour fuel</td>
-<td style="text-align: left;">Post-PCT</td>
-<td style="text-align: right;">2.66 (1.71, 4.14)</td>
-<td style="text-align: right;">2.67 (1.71, 4.17)</td>
-<td style="text-align: right;">1.37 (0.88, 2.14)</td>
-<td style="text-align: right;">2.42 (1.55, 3.78)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">10-hour fuel</td>
-<td style="text-align: left;">Pre-PCT</td>
-<td style="text-align: right;">3.83 (2.68, 5.48)</td>
-<td style="text-align: right;">3.23 (2.27, 4.58)</td>
-<td style="text-align: right;">3.20 (2.19, 4.66)</td>
-<td style="text-align: right;">2.85 (2.00, 4.05)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">10-hour fuel</td>
-<td style="text-align: left;">Post-PCT</td>
-<td style="text-align: right;">9.59 (6.57, 13.99)</td>
-<td style="text-align: right;">5.86 (4.02, 8.53)</td>
-<td style="text-align: right;">4.10 (2.81, 6.00)</td>
-<td style="text-align: right;">3.27 (2.24, 4.77)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">100-hour fuel</td>
-<td style="text-align: left;">Pre-PCT</td>
-<td style="text-align: right;">11.48 (8.19, 16.08)</td>
-<td style="text-align: right;">10.30 (7.31, 14.54)</td>
-<td style="text-align: right;">9.14 (6.55, 12.77)</td>
-<td style="text-align: right;">9.01 (6.45, 12.58)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">100-hour fuel</td>
-<td style="text-align: left;">Post-PCT</td>
-<td style="text-align: right;">19.64 (11.77, 32.78)</td>
-<td style="text-align: right;">14.16 (8.79, 22.82)</td>
-<td style="text-align: right;">10.51 (6.43, 17.18)</td>
-<td style="text-align: right;">7.45 (4.56, 12.18)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">1,000-hour fuel</td>
-<td style="text-align: left;">Pre-PCT</td>
-<td style="text-align: right;">49.60 (25.88, 95.04)</td>
-<td style="text-align: right;">30.22 (15.94, 57.30)</td>
-<td style="text-align: right;">32.31 (16.76, 62.27)</td>
-<td style="text-align: right;">45.76 (23.90, 87.62)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">1,000-hour fuel</td>
-<td style="text-align: left;">Post-PCT</td>
-<td style="text-align: right;">53.93 (32.47, 89.57)</td>
-<td style="text-align: right;">31.21 (19.69, 49.45)</td>
-<td style="text-align: right;">25.23 (14.74, 43.21)</td>
-<td style="text-align: right;">48.60 (25.83, 91.42)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Woody vegetation</td>
-<td style="text-align: left;">Pre-PCT</td>
-<td style="text-align: right;">39.90 (21.32, 74.67)</td>
-<td style="text-align: right;">26.53 (14.31, 49.19)</td>
-<td style="text-align: right;">14.73 (7.84, 27.66)</td>
-<td style="text-align: right;">18.76 (9.94, 35.39)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Woody vegetation</td>
-<td style="text-align: left;">Post-PCT</td>
-<td style="text-align: right;">2.46 (1.29, 4.68)</td>
-<td style="text-align: right;">2.01 (1.08, 3.74)</td>
-<td style="text-align: right;">2.92 (1.55, 5.52)</td>
-<td style="text-align: right;">2.20 (1.17, 4.13)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Herbaceous vegetation</td>
-<td style="text-align: left;">Pre-PCT</td>
-<td style="text-align: right;">0.51 (0.20, 1.28)</td>
-<td style="text-align: right;">0.59 (0.23, 1.54)</td>
-<td style="text-align: right;">0.45 (0.18, 1.12)</td>
-<td style="text-align: right;">0.24 (0.10, 0.63)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Herbaceous vegetation</td>
-<td style="text-align: left;">Post-PCT</td>
-<td style="text-align: right;">0.18 (0.05, 0.59)</td>
-<td style="text-align: right;">0.35 (0.11, 1.13)</td>
-<td style="text-align: right;">0.28 (0.09, 0.92)</td>
-<td style="text-align: right;">0.11 (0.04, 0.37)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Litter</td>
-<td style="text-align: left;">Pre-PCT</td>
-<td style="text-align: right;">18.41 (12.40, 27.32)</td>
-<td style="text-align: right;">12.58 (9.19, 17.24)</td>
-<td style="text-align: right;">17.27 (12.24, 24.35)</td>
-<td style="text-align: right;">14.73 (10.01, 21.68)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Duff</td>
-<td style="text-align: left;">Pre-PCT</td>
-<td style="text-align: right;">28.27 (21.02, 38.00)</td>
-<td style="text-align: right;">28.85 (21.65, 38.44)</td>
-<td style="text-align: right;">19.31 (14.48, 25.76)</td>
-<td style="text-align: right;">35.52 (26.65, 47.35)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Woody standing-vegetation reduction</td>
-<td style="text-align: left;">Pre minus post</td>
-<td style="text-align: right;">37.44 (13.45, 61.44)</td>
-<td style="text-align: right;">24.53 (9.01, 40.04)</td>
-<td style="text-align: right;">11.80 (3.61, 20.00)</td>
-<td style="text-align: right;">16.56 (5.53, 27.60)</td>
-</tr>
-</tbody>
-</table>
+<div id="htmlwidget-026d92ae5a51434faf98" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-026d92ae5a51434faf98">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["1-hour fuel","1-hour fuel","10-hour fuel","10-hour fuel","100-hour fuel","100-hour fuel","1,000-hour fuel","1,000-hour fuel","Woody vegetation","Woody vegetation","Herbaceous vegetation","Herbaceous vegetation","Litter","Duff","Woody standing-vegetation reduction"],["Pre-PCT","Post-PCT","Pre-PCT","Post-PCT","Pre-PCT","Post-PCT","Pre-PCT","Post-PCT","Pre-PCT","Post-PCT","Pre-PCT","Post-PCT","Pre-PCT","Pre-PCT","Pre minus post"],["0.58 (0.38, 0.89)","2.7 (1.7, 4.1)","3.8 (2.7, 5.5)","9.6 (6.6, 14)","11 (8.2, 16)","20 (12, 33)","50 (26, 95)","54 (32, 90)","40 (21, 75)","2.5 (1.3, 4.7)","0.51 (0.20, 1.3)","0.18 (0.055, 0.59)","18 (12, 27)","28 (21, 38)","37 (13, 61)"],["0.67 (0.47, 0.97)","2.7 (1.7, 4.2)","3.2 (2.3, 4.6)","5.9 (4.0, 8.5)","10 (7.3, 15)","14 (8.8, 23)","30 (16, 57)","31 (20, 49)","27 (14, 49)","2.0 (1.1, 3.7)","0.59 (0.23, 1.5)","0.35 (0.11, 1.1)","13 (9.2, 17)","29 (22, 38)","25 (9.0, 40)"],["1.2 (0.84, 1.8)","1.4 (0.88, 2.1)","3.2 (2.2, 4.7)","4.1 (2.8, 6.0)","9.1 (6.5, 13)","11 (6.4, 17)","32 (17, 62)","25 (15, 43)","15 (7.8, 28)","2.9 (1.5, 5.5)","0.45 (0.18, 1.1)","0.28 (0.087, 0.92)","17 (12, 24)","19 (14, 26)","12 (3.6, 20)"],["1.0 (0.71, 1.5)","2.4 (1.6, 3.8)","2.8 (2.0, 4.0)","3.3 (2.2, 4.8)","9.0 (6.4, 13)","7.5 (4.6, 12)","46 (24, 88)","49 (26, 91)","19 (9.9, 35)","2.2 (1.2, 4.1)","0.24 (0.096, 0.63)","0.11 (0.035, 0.37)","15 (10, 22)","36 (27, 47)","17 (5.5, 28)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Component<\/th>\n      <th>Phase<\/th>\n      <th>GS<\/th>\n      <th>LD<\/th>\n      <th>HA<\/th>\n      <th>HD<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"B l f r t i p","order":[],"ordering":true,"searching":true,"scrollX":true,"pageLength":10,"lengthMenu":[[10,25,50,-1],["10","25","50","All"]],"buttons":[{"extend":"colvis","text":"Show/hide fields"}],"columnDefs":[{"name":"Component","targets":0},{"name":"Phase","targets":1},{"name":"GS","targets":2},{"name":"LD","targets":3},{"name":"HA","targets":4},{"name":"HD","targets":5}],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </figure>
 </div>
 </div>
+<p><a href="repo-files/publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv">Download the complete fuel estimates</a>.</p>
 <p>Additional model outputs, sensitivity figures, pairwise comparisons, and sampling procedures will be added as the remaining analyses are finalized.</p>
 
 
@@ -1049,6 +885,14 @@ Schütz, J.-P. (2002). Silvicultural tools to develop irregular and diverse fore
   });
   </script>
 </div> <!-- /content -->
+<script>
+document.addEventListener("toggle", function (event) {
+  if (event.target.tagName === "DETAILS" && event.target.open &&
+      event.target.querySelector(".datatables")) {
+    window.dispatchEvent(new Event("resize"));
+  }
+}, true);
+</script>
 
 
 

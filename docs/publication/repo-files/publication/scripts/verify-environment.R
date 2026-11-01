@@ -1,4 +1,5 @@
-# Shared runtime check: inspect actual namespaces and readable DESCRIPTION files.
+# Explicit dependency check after restore or dependency changes.
+# Inspect actual namespaces and readable DESCRIPTION files.
 verify_publication_environment <- function() {
   root <- normalizePath(getwd(), winslash = "/")
   stopifnot(getRversion() == "4.6.2", file.exists("renv.lock"),

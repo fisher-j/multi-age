@@ -17,11 +17,11 @@ The typed RDS datasets preserve row order, values, missingness, classes, factor
 levels and contrasts. `data-dictionary.csv` inventories every dataset column,
 type, factor level and missing count. Depths are cm; vegetation heights are m;
 cover/litter estimates are percentages; fuel loads are Mg/ha; basal area is
-m²/ha. Neither export nor migration revises measurement or scientific definitions.
+mÂ²/ha. Neither export nor migration revises measurement or scientific definitions.
 
 `manifest.json` records SHA-256 checksums of inputs, producing scripts and all
 exported numerical/audit artifacts. `export-session-info.txt` records the actual
-thesis replay environment. Publication validates export checksums before running.
+thesis replay environment. Check export integrity explicitly with `python scripts/check-analysis.py --inputs-only`.
 Publication uses these exports and its current code, lockfile and canonical
 outputs; no retained migration snapshots or acceptance artifacts are required.
 

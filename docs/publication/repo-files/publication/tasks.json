@@ -2,17 +2,13 @@
   {
     "id": "F01",
     "title": "fuel-component separation and model exploration",
-    "status": "Completed — analytical record",
+    "status": "Completed - analytical record",
     "target": "Reproducible component/model record",
     "files": [
       "publication/task-f01.qmd",
-      "publication/scripts/publication-paths.R",
-      "publication/scripts/fuel/00-fuel-config.R",
-      "publication/scripts/fuel/03-model-utils.R",
-      "publication/scripts/task-execution.R",
       "publication/scripts/verify-environment.R"
     ],
-    "summary": "The [component definitions](task-f01.qmd#decisions-made) separate vegetation components and pre-PCT litter/duff, omitting post-PCT forest-floor estimates. The [executable analytical sequence](task-f01.qmd#publication-execution) integrates derivation, exploration, candidate-fitting code, and complete CSV evidence; reusable helpers have their own source review. The [model-review register](task-f01.qmd#rendered-provisional-model-review-register) reports provisional AIC leaders, not final selections. Prediction, inference, and display decisions belong to [RD04](task-rd04.qmd#rd04-inference-review); the task pages own calculation order and selective recomputation. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task independently or render its saved evidence.",
+    "summary": "The [component definitions](task-f01.qmd#tbl-fuel-component-dictionary) separate vegetation components and pre-PCT litter/duff, omitting post-PCT forest-floor estimates. The [executable analytical sequence](task-f01.qmd#publication-execution) integrates derivation, exploration, candidate-fitting code, and complete CSV evidence; shared helpers are defined inline and saved for later tasks. The [model-review register](task-f01.qmd#rendered-provisional-model-review-register) reports provisional AIC leaders, not final selections. Prediction, inference, and display decisions belong to [RD04](task-rd04.qmd#rd04-inference-review); the task pages own calculation order and selective recomputation. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task independently or render its saved evidence.",
     "outputs": [
       "publication/outputs/fuel/data/fuel-component-data-dictionary.csv",
       "publication/outputs/fuel/data/fuel-pairing-qc.csv",
@@ -68,15 +64,15 @@
       "publication/outputs/fuel/diagnostics/woody_delta_student_t_disp_treatment_site_interaction-dharma.png",
       "publication/outputs/fuel/diagnostics/woody_phase_zigamma_zi1_disp1-dharma.png",
       "publication/outputs/fuel/diagnostics/woody_phase_zigamma_zi1_dispphase-dharma.png",
-      "publication/outputs/fuel/diagnostics/woody_phase_zigamma_ziphase_disp1-dharma.png"
+      "publication/outputs/fuel/diagnostics/woody_phase_zigamma_ziphase_disp1-dharma.png",
+      "publication/outputs/helpers/task-helpers.rds"
     ],
     "inputs": [
       "publication/inputs/thesis/README.md",
       "publication/inputs/thesis/manifest.json",
       "publication/inputs/thesis/data-dictionary.csv"
     ],
-    "depends_on": [],
-    "inline_review": true
+    "depends_on": []
   },
   {
     "id": "RD04",
@@ -85,12 +81,9 @@
     "target": "Nine-panel figure, estimates table, and CSV",
     "files": [
       "publication/task-rd04.qmd",
-      "publication/scripts/fuel/rd04-inference-utils.R",
-      "publication/scripts/fuel/retired/README.md",
-      "publication/sections/rd04-fuel-estimates-table.qmd",
-      "publication/scripts/fuel/retired/06-generate-rd04-figure.R"
+      "publication/sections/rd04-fuel-estimates-table.qmd"
     ],
-    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. Executable audit and figure calculations appear beside their evidence in task order. The [helper and historical source review](task-rd04.qmd#rd04-source-review) preserves inference functions and the retired implementation; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task from saved F01 models while other tasks remain in review mode.",
+    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. Executable audit and figure calculations appear beside their evidence in task order. The [source review](task-rd04.qmd#rd04-source-review) explains the inline inference functions and display history; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task from saved F01 models while other tasks remain in review mode.",
     "outputs": [
       "publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
@@ -99,7 +92,8 @@
       "publication/outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv",
       "publication/outputs/fuel/inference-audit/woody-mean-change-comparison.csv",
       "publication/outputs/fuel/inference-audit/model-structures.csv",
-      "publication/outputs/fuel/inference-audit/thesis-reference-reproduction.csv"
+      "publication/outputs/fuel/inference-audit/thesis-reference-reproduction.csv",
+      "publication/outputs/fuel/tables/rd04-fuel-display.csv"
     ],
     "inputs": [
       "publication/outputs/fuel/data/fuel-component-data-dictionary.csv",
@@ -107,12 +101,12 @@
       "publication/outputs/fuel/manifests/model-comparison.csv",
       "publication/inputs/thesis/fuel/thesis-reference-reproduction.csv",
       "analysis/scripts/export-publication-inputs.R",
-      "analysis/scripts/publication-export/fuel-historical-reference.R"
+      "analysis/scripts/publication-export/fuel-historical-reference.R",
+      "publication/outputs/helpers/task-helpers.rds"
     ],
     "depends_on": [
       "F01"
-    ],
-    "inline_review": true
+    ]
   },
   {
     "id": "RD02",
@@ -120,20 +114,7 @@
     "status": "Separate models selected; displays pending review",
     "target": "RW/TO Results figure and all-species supplement table",
     "files": [
-      "publication/scripts/regeneration/README.md",
-      "publication/scripts/regeneration/01-generate-rd02-display.R",
-      "publication/scripts/regeneration/02-compare-rd02-random-effects.R",
-      "publication/scripts/regeneration/03-compare-rd02-separate-species.R",
-      "publication/scripts/regeneration/04-assemble-rd02-sensitivity.R",
-      "publication/scripts/regeneration/05-fit-selected-species-models.R",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-fit-register.csv",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-optimizer-checks.csv",
-      "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml",
-      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv",
-      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv",
+      "publication/task-rd02.qmd",
       "publication/sections/rd02-regeneration-display.qmd",
       "publication/sections/rd02-species-estimates-table.qmd"
     ],
@@ -142,7 +123,24 @@
       "publication/inputs/thesis/README.md",
       "publication/inputs/thesis/manifest.json",
       "analysis/scripts/export-publication-inputs.R",
-      "analysis/scripts/publication-export/rd02-historical-reference.R"
+      "analysis/scripts/publication-export/rd02-historical-reference.R",
+      "publication/outputs/helpers/task-helpers.rds"
+    ],
+    "outputs": [
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-fit-register.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-optimizer-checks.csv",
+      "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml",
+      "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png",
+      "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.pdf",
+      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv",
+      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-display.csv"
+    ],
+    "depends_on": [
+      "F01"
     ]
   },
   {
@@ -160,7 +158,7 @@
   {
     "id": "RT01",
     "title": "regeneration Results narrative",
-    "status": "Queued — after RD02",
+    "status": "Queued - after RD02",
     "target": "1–2 manuscript pages",
     "files": [
       "publication/sections/results.qmd",
@@ -172,7 +170,7 @@
   {
     "id": "RT02",
     "title": "sprout-height Results narrative",
-    "status": "Queued — after RD03",
+    "status": "Queued - after RD03",
     "target": "1–1.5 manuscript pages",
     "files": [
       "publication/sections/results.qmd",
@@ -187,16 +185,21 @@
     "status": "Pending review",
     "target": "1.5–2 manuscript pages",
     "files": [
-      "publication/sections/results.qmd"
+      "publication/task-rt03.qmd",
+      "publication/sections/results.qmd",
+      "publication/sections/fuel-results.qmd"
     ],
     "summary": "The fuel Results draft follows the thesis pre-PCT, post-PCT, and vegetation-transition sequence using current publication values. The [source and review decisions](task-rt03.qmd#implemented-source-and-review-decisions) document separated components, integrated means, covariance-aware woody changes, and replacement of inherited significance claims with descriptive rankings. Inline values and the companion table share the canonical CSV; the draft remains pending review, with explicit limits on slash and causal PCT interpretations.",
     "inputs": [
       "publication/sections/rd04-fuel-estimates-table.qmd",
       "analysis/thesis/results.qmd",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
-      "publication/task-rd04.qmd"
+      "publication/task-rd04.qmd",
+      "publication/outputs/helpers/task-helpers.rds"
     ],
-    "outputs": [],
+    "outputs": [
+      "publication/outputs/helpers/fuel-value.rds"
+    ],
     "depends_on": [
       "F01",
       "RD04"
@@ -205,7 +208,7 @@
   {
     "id": "MD01",
     "title": "study design display",
-    "status": "Queued — Methods stage",
+    "status": "Queued - Methods stage",
     "target": "1 compact figure or table",
     "files": [
       "publication/sections/methods.qmd",
@@ -216,7 +219,7 @@
   {
     "id": "M01",
     "title": "study area and experimental design",
-    "status": "Queued — after MD01",
+    "status": "Queued - after MD01",
     "target": "1–1.5 manuscript pages",
     "files": [
       "publication/sections/methods.qmd",
@@ -227,12 +230,11 @@
   {
     "id": "M02",
     "title": "regeneration and sprout methods",
-    "status": "Queued — after RT01/RT02",
+    "status": "Queued - after RT01/RT02",
     "target": "1–1.5 manuscript pages",
     "files": [
       "publication/sections/methods.qmd",
       "publication/sections/supplement.qmd",
-      "publication/scripts/regeneration/README.md",
       "analysis/analysis/sprout_modeling.qmd"
     ],
     "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02."
@@ -240,18 +242,17 @@
   {
     "id": "M03",
     "title": "fuel methods and estimand",
-    "status": "Queued — after RT03",
+    "status": "Queued - after RT03",
     "target": "1–1.5 manuscript pages",
     "files": [
-      "publication/sections/methods.qmd",
-      "publication/scripts/fuel/README.md"
+      "publication/sections/methods.qmd"
     ],
     "summary": "Following RT03, the proposal documents fuel-component definitions, the phase boundary, matched woody contrast, uncertainty/model decisions, and limits on causal interpretation. The planned 1–1.5-page Methods subsection must match the reviewed fuel caption and Results claims, with component/model diagnostics linked through F01 and prediction/inference decisions through RD04."
   },
   {
     "id": "D01",
     "title": "regeneration cohort discussion",
-    "status": "Queued — after regeneration Results/Methods",
+    "status": "Queued - after regeneration Results/Methods",
     "target": "1.5–2 manuscript pages",
     "files": [
       "publication/sections/discussion.qmd",
@@ -263,7 +264,7 @@
   {
     "id": "D02",
     "title": "sprout development discussion",
-    "status": "Queued — after sprout Results/Methods",
+    "status": "Queued - after sprout Results/Methods",
     "target": "1–1.5 manuscript pages",
     "files": [
       "publication/sections/discussion.qmd",
@@ -275,7 +276,7 @@
   {
     "id": "D03",
     "title": "fuels and PCT-management discussion",
-    "status": "Queued — after fuel Results/Methods",
+    "status": "Queued - after fuel Results/Methods",
     "target": "1.5–2 manuscript pages",
     "files": [
       "publication/sections/discussion.qmd",
@@ -298,7 +299,7 @@
   {
     "id": "I01",
     "title": "management problem and study purpose",
-    "status": "Queued — after Discussion",
+    "status": "Queued - after Discussion",
     "target": "1–1.5 manuscript pages",
     "files": [
       "publication/sections/introduction.qmd",
@@ -309,7 +310,7 @@
   {
     "id": "I02",
     "title": "regeneration and retention context",
-    "status": "Queued — after Discussion",
+    "status": "Queued - after Discussion",
     "target": "1–1.5 manuscript pages",
     "files": [
       "publication/sections/introduction.qmd",
@@ -320,7 +321,7 @@
   {
     "id": "I03",
     "title": "fuels context and questions",
-    "status": "Queued — after Discussion",
+    "status": "Queued - after Discussion",
     "target": "1–1.5 manuscript pages",
     "files": [
       "publication/sections/introduction.qmd",
@@ -332,7 +333,7 @@
   {
     "id": "S01",
     "title": "supplement and machine-readable outputs",
-    "status": "Queued — after main displays",
+    "status": "Queued - after main displays",
     "target": "Inventory and links",
     "files": [
       "publication/sections/supplement.qmd",
@@ -345,7 +346,7 @@
   {
     "id": "C01",
     "title": "conclusions",
-    "status": "Queued — after Discussion",
+    "status": "Queued - after Discussion",
     "target": "≤0.5 manuscript page",
     "files": [
       "publication/sections/conclusions.qmd",
@@ -356,7 +357,7 @@
   {
     "id": "A01",
     "title": "abstract and title",
-    "status": "Queued — last",
+    "status": "Queued - last",
     "target": "Abstract and final title",
     "files": [
       "publication/sections/abstract.qmd",
