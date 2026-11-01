@@ -1,140 +1,57 @@
 ---
 title: Development workflow
-subtitle: Overview, review sequence, and repository map
+subtitle: Tasks, calculations, and manuscript development
 sidebar: workflow
 ---
 
+The [task register](task-list.qmd) records current status and inputs. Each task
+page explains its purpose, calculations, findings, and decisions. Develop the
+manuscript from **figures and tables → results → methods → discussion →
+introduction → abstract → title**.
 
-This overview describes the publication-development process. The
-[task register and task list](task-list.qmd) summarize the work, and each task
-has a dedicated review page. Each task is
-tracked like a small issue: it begins with an objective and guardrails, records
-the decisions and artifacts produced while it is open, and ends either in a
-reviewable manuscript product or a completed analytical record. The manuscript
-is developed backwards from the results displays: **figures and tables →
-results → methods → discussion → introduction → abstract → title**. This order
-adapts the “write backwards” approach described by
-[Montagnes, Montagnes, and Yang (2022)](https://pmc.ncbi.nlm.nih.gov/articles/PMC10077155/).
-
-## How to use this queue
-
-Each dedicated task page preserves its proposal and detailed review record. Review and
-edit that proposal, then move the task through this sequence:
+## Review sequence
 
 **Direction for review → Approved to execute → In progress → Pending review →
 Accepted (or Revision requested) → Complete.**
 
-“Queued” means the task is deliberately decomposed and ready to be proposed;
-it is not yet authorized for execution. “Completed — analytical record” means
-the reproducible work is preserved, while a decision explicitly marked
-provisional still awaits scientific review. Page targets are working allocations
-for the main manuscript, not a journal requirement.
+Queued work remains queued until authorized. A completed analytical record does
+not imply scientific acceptance. Keep decisions with the task that made them;
+consumers explain how they use those decisions.
 
-## Task register and review records
+## Render and recompute
 
-The [task register and task list](task-list.qmd) are the current planning view.
-The register links to the task entries below it. Each entry summarizes the
-proposal or work documented on its dedicated page and links to relevant review
-sections. Full analytical records, figures, inference reviews, acceptance
-criteria, and current source/output files remain with that task.
+From the publication directory, `quarto render` builds the entire site using saved
+results. Add `-P recompute:true` to refresh calculations from saved models, or
+`-P refit:true` to fit models explicitly. Both parameters default to false.
 
-Start with [RD02 regeneration display review](task-rd02.qmd),
-[RD04 fuel display and companion table](task-rd04.qmd), or
-[RT03 fuel Results review](task-rt03.qmd). Their existing review states are
-preserved; reorganizing the website does not accept a scientific result.
+For faster iteration, only re-render pages affected by requested changes.                                                                            
+                                                                             
+Calculations overwrite their current files directly. A failed calculation can
+leave partially updated outputs. Preserve separate copies explicitly when
+comparing results. There are no staging directories or promotion steps.
 
-## Current local repository map
+Read each task as purpose and rationale → code → result → interpretation.
+Each block explains why it is needed before it runs. Results appear directly
+after their generating code, even when also saved for downstream tasks. Review
+renders display the saved result in that same place; `if (recompute)` guards
+the calculation inside the cell, leaving its table or figure visible in both modes.
 
-All paths are relative to the repository root. Linked files are served as
-downloadable copies of the current checkout, refreshed before every render.
-The [download manifest](repo-files/manifest.json) records file checksums.
+## Where things live
 
-| Repository location | Purpose and current entry points |
+| Location | Purpose |
 |---|---|
-| `publication/` | Website configuration, task pages, and draft section wrappers. [Site maintenance guide](repo-files/publication/README.md). |
-| `publication/sections/` | Shared manuscript sections and included review displays/tables. `results.qmd` and `methods.qmd`. |
-| `publication/tasks.json` | Task status, targets, summaries of the detailed task records, and current file lists. [Task metadata](repo-files/publication/tasks.json). |
-| `publication/scripts/fuel/` | Component derivation, model exploration, inference audit, and active integrated figure generator. [Fuel pipeline guide](repo-files/publication/scripts/fuel/README.md). |
-| `publication/scripts/regeneration/` | Selected separate-species models and historical sensitivity comparisons. [Regeneration pipeline guide](repo-files/publication/scripts/regeneration/README.md). |
-| `publication/outputs/` | Publication-only derived data, model records, figures, tables, and provenance. [Output conventions](repo-files/publication/outputs/README.md). |
-| `analysis/thesis/` and `analysis/analysis/` | Thesis prose and legacy analytical sources; linked from the tasks that use them. [Repository overview](repo-files/README.md). |
-| `docs/publication/` | Rendered publication website; see the publication guide for rendering. |
+| Task pages | R code, explanations, evidence, and scientific decisions. |
+| `tasks.json` | Structured task inventory. [Download](repo-files/publication/tasks.json). |
+| Shared manuscript sections | Authored prose and includes of saved figures, tables, and numerical passages. |
+| Publication outputs | Current derived data, fitted models, diagnostics, figures, and reusable R objects or CSV tables. |
+| Committed thesis inputs | Numerical inputs exported from the independent thesis environment. [Input guide](repo-files/publication/inputs/thesis/README.md). |
+| Analysis export scripts | Deliberate input refresh using thesis R; retained under analysis. |
 
-## Keeping task records current
+F01 defines reusable functions where they are first used and saves them for
+later tasks. Quarto renders F01, RD02, RD04, and RT03 before their manuscript
+consumers. The task inventory records dependencies without running them.
 
-When work changes, update its dedicated task page first, then revise its entry
-in `publication/tasks.json` with a concise summary of that record, its current
-status, and exact repository file paths. Then render the
-publication. The pre-render step regenerates the register and summaries,
-refreshes linked file downloads, and fails if a referenced repository file has
-moved or disappeared. It reads existing analytical outputs without fitting models.
-
-The manuscript section pages and full draft both include `publication/sections/`
-sources. Edit those shared files once to update both reading views. Review
-decisions continue to follow the workflow above.
-
-## Documentation responsibilities {#documentation-responsibilities}
-
-The analytical sequence starts with [F01](task-f01.qmd), followed by
-[RD04](task-rd04.qmd) and [RT03 Results writing](task-rt03.qmd). Each step's executable QMD owns the
-detailed record: purpose/scope, inputs/dependencies, analyses performed,
-outputs/findings, decisions/rationale, implications/handoff, and review
-state/history. Update the originating step when its analysis or decision changes;
-downstream steps link to that record and explain their own use of it.
-
-F01 owns fuel derivation, exploration, candidate fitting, and provisional model
-leaders. RD04 owns prediction/inference, uncertainty, the figure/estimates, and
-retired display history. RT03 owns the Results claims and qualifications. M03
-and D03 will own manuscript Methods wording and management interpretation when
-their queued work begins. Consuming an upstream artifact does not transfer its
-ownership or accept its provisional scientific decisions.
-
-For the developed fuel records, `tasks.json` separates produced `outputs` from
-consumed `inputs` and lists `depends_on` task IDs. Task introductions and file lists provide navigation; analytical explanations remain on their owning pages.
-Task summaries are concise descriptions of those records, not another decision
-log. The [publication guide](repo-files/publication/README.md) supplies operational
-commands and links back to the step documentation.
-
-Calculation specifications and order live directly in each owning task page.
-Quarto selects whole pages for recomputation through native execution parameters;
-unselected pages review saved artifacts. There is no pipeline map, combined
-analytical account, or document-execution loop. See the
-[maintenance guide](repo-files/publication/README.md) for modes and validation.
-
-## Working boundaries
-
-The standalone publication project remains separate from the legacy Quarto
-profiles in `analysis/`. Publication analyses write to
-`publication/outputs/`; their scripts live in
-`publication/scripts/`. Publication calculations consume committed thesis exports and use their own
-updated R and renv environment. Thesis-era model objects and raw data retain
-their established locations. Completion commits in task histories document
-past work; current-file links use the local checkout.
-
-## Previous task links
-
-Older workflow bookmarks can use the links below to reach the dedicated records.
-
-- <span id="f01"></span>[F01 — fuel-component separation and model exploration](task-f01.qmd)
-- <span id="rd04"></span>[RD04 — fuel phase and PCT display](task-rd04.qmd)
-- <span id="rd02"></span>[RD02 — regeneration basal-area/density display](task-rd02.qmd)
-- <span id="rd03"></span>[RD03 — sprout-height display](task-rd03.qmd)
-- <span id="rt01"></span>[RT01 — regeneration Results narrative](task-rt01.qmd)
-- <span id="rt02"></span>[RT02 — sprout-height Results narrative](task-rt02.qmd)
-- <span id="rt03"></span>[RT03 — fuel Results narrative](task-rt03.qmd)
-- <span id="md01"></span>[MD01 — study design display](task-md01.qmd)
-- <span id="m01"></span>[M01 — study area and experimental design](task-m01.qmd)
-- <span id="m02"></span>[M02 — regeneration and sprout methods](task-m02.qmd)
-- <span id="m03"></span>[M03 — fuel methods and estimand](task-m03.qmd)
-- <span id="d01"></span>[D01 — regeneration cohort discussion](task-d01.qmd)
-- <span id="d02"></span>[D02 — sprout development discussion](task-d02.qmd)
-- <span id="d03"></span>[D03 — fuels and PCT-management discussion](task-d03.qmd)
-- <span id="d04"></span>[D04 — limits, integration, and future work](task-d04.qmd)
-- <span id="i01"></span>[I01 — management problem and study purpose](task-i01.qmd)
-- <span id="i02"></span>[I02 — regeneration and retention context](task-i02.qmd)
-- <span id="i03"></span>[I03 — fuels context and questions](task-i03.qmd)
-- <span id="s01"></span>[S01 — supplement and machine-readable outputs](task-s01.qmd)
-- <span id="c01"></span>[C01 — conclusions](task-c01.qmd)
-- <span id="a01"></span>[A01 — abstract and title](task-a01.qmd)
-
-[Fuel prediction and interpretation review](task-rd04.qmd#rd04-inference-review) · [Regeneration model comparisons](task-rd02.qmd#rd02-random-effects-review).
+Only explicitly linked files become downloads. Copies are overwritten after
+calculations finish; model objects and saved helper functions remain local.
+The [short command reference](repo-files/publication/README.md) explains the
+render commands, environment, and explicit checks.

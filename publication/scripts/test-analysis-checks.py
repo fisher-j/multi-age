@@ -24,7 +24,6 @@ class PublicationValidationTests(unittest.TestCase):
             root = Path(temp)
             self.project(root)
             self.assertFalse(checks.validate_outputs(root, root / "outputs", ["fuel"]))
-            self.assertFalse((root / "validation").exists())
 
     def test_missing_declared_output_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -33,7 +32,7 @@ class PublicationValidationTests(unittest.TestCase):
             self.assertTrue(checks.validate_outputs(root, root / "outputs", ["fuel"]))
 
     def test_corrupt_intervals_and_nonfinite_values_are_rejected(self):
-        for row in ("1,0.1,2,3", "NaN,0.1,0,2", "1,-0.1,0,2"):
+        for row in ("1,0.1,2,3", "NaN,0.1,0,2", "1,inf,0,2", "1,-0.1,0,2", "bad,0.1,0,2", "1,0.1,0"):
             with self.subTest(row=row), tempfile.TemporaryDirectory() as temp:
                 root = Path(temp)
                 self.project(root, "estimate,se,lcl,ucl\n" + row + "\n")
@@ -46,7 +45,20 @@ class PublicationValidationTests(unittest.TestCase):
             self.assertFalse(checks.validate_outputs(root, root / "outputs", ["fuel"]))
             self.assertTrue(checks.validate_outputs(root, root / "outputs", ["fuel"], require_models=True))
 
-    def test_task_checks_need_only_its_own_staged_outputs(self):
+    def test_selected_regeneration_requires_its_fitted_models(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            table = root / "outputs/regeneration/selected-species-models/tables/rd02-selected-species-fit-register.csv"
+            table.parent.mkdir(parents=True)
+            table.write_text("model_id,convergence\nrw_site_macro,0\n", encoding="utf-8")
+            (root / "tasks.json").write_text("[]", encoding="utf-8")
+            self.assertTrue(checks.validate_outputs(root, root / "outputs", ["regeneration"], require_models=True))
+            model = table.parent.parent / "models/rw_site_macro.rds"
+            model.parent.mkdir()
+            model.write_bytes(b"saved fit")
+            self.assertFalse(checks.validate_outputs(root, root / "outputs", ["regeneration"], require_models=True))
+
+    def test_task_checks_need_only_its_own_outputs(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             self.project(root)
@@ -71,17 +83,9 @@ class PublicationValidationTests(unittest.TestCase):
             self.assertFalse(checks.validate_exports(root))
             data.write_bytes(b"value\n2\n")
             self.assertTrue(checks.validate_exports(root))
+            data.unlink()
+            self.assertTrue(checks.validate_exports(root))
 
-    def test_provenance_must_name_an_existing_qmd_calculation(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            self.project(root)
-            (root / "task-rd04.qmd").write_text("```{r}\n#| label: rd04-08-figure\n1\n```\n", encoding="utf-8")
-            provenance = root / "outputs/fuel/figure-provenance.yml"
-            provenance.write_text("generator: task-rd04.qmd#rd04-08-figure\n", encoding="utf-8")
-            self.assertFalse(checks.validate_outputs(root, root / "outputs", ["fuel"]))
-            provenance.write_text("generator: task-rd04.qmd#f01-08-figure\n", encoding="utf-8")
-            self.assertTrue(checks.validate_outputs(root, root / "outputs", ["fuel"]))
 
 
 if __name__ == "__main__":

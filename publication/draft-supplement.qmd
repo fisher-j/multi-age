@@ -8,5 +8,14 @@ format:
         <style>#title-block-header { display: none; }</style>
 ---
 
+<!-- Enable automatic labels for echoed code in the included sections. -->
 
-{{< include sections/supplement.qmd >}}
+```{r}
+#| label: setup
+#| include: false
+
+readRDS("outputs/helpers/task-helpers.rds")$enable_chunk_labels()
+```
+
+
+{{< include /sections/supplement.qmd >}}

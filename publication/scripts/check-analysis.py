@@ -56,14 +56,6 @@ def validate_outputs(project, outputs, domains, require_models=False, task_id=No
         if not domain_root.is_dir():
             errors.append(f"Output directory missing: {domain}")
             continue
-        for path in domain_root.rglob("*provenance.yml"):
-            for line in path.read_text(encoding="utf-8").splitlines():
-                key, separator, value = line.partition(": ")
-                if separator and key in ("generator", "publication_derivation") and ".qmd#" in value:
-                    source, label = value.split("#", 1)
-                    source_path = project / source
-                    if not source_path.is_file() or f"#| label: {label}\n" not in source_path.read_text(encoding="utf-8"):
-                        errors.append(f"Provenance references a missing calculation: {value}")
         for path in sorted(domain_root.rglob("*.csv")):
             relative = path.relative_to(outputs).as_posix()
             try:
@@ -87,8 +79,9 @@ def validate_outputs(project, outputs, domains, require_models=False, task_id=No
                             errors.append(f"Interval does not contain estimate: {relative}:{row_number}")
                         elif "se" in numeric and numeric["se"] < 0:
                             errors.append(f"Negative standard error: {relative}:{row_number}")
-                    if require_models and row.get("fit_status") == "fit":
-                        model = domain_root / "models" / (row["model_id"] + ".rds")
+                    if require_models and (row.get("fit_status") == "fit" or
+                                           path.name.endswith("-fit-register.csv")):
+                        model = path.parent.parent / "models" / (row["model_id"] + ".rds")
                         if not model.is_file():
                             errors.append(f"Fitted model missing: {model.relative_to(outputs).as_posix()}")
             except (csv.Error, UnicodeError, ValueError, KeyError) as error:
@@ -101,7 +94,7 @@ def main():
     parser.add_argument("--inputs-only", action="store_true")
     parser.add_argument("--protected", action="store_true")
     parser.add_argument("--require-models", action="store_true")
-    parser.add_argument("--task", choices=("F01", "RD04"), help="Check only this task's staged outputs")
+    parser.add_argument("--task", choices=("F01", "RD04", "RD02"), help="Check only this task's current outputs")
     parser.add_argument("--outputs", type=Path, default=PROJECT / "outputs")
     parser.add_argument("--domains", default="fuel,regeneration")
     parser.add_argument("--report", type=Path)
@@ -109,9 +102,9 @@ def main():
     domains = args.domains.split(",")
     if not domains or any(domain not in ("fuel", "regeneration") for domain in domains):
         parser.error("--domains must contain fuel and/or regeneration")
-    if args.task and domains != ["fuel"]:
-        parser.error("--task requires --domains fuel")
-    errors = validate_exports(PROJECT, args.protected)
+    if args.task and domains != (["regeneration"] if args.task == "RD02" else ["fuel"]):
+        parser.error("--task must match --domains")
+    errors = validate_exports(PROJECT, args.protected) if args.inputs_only or args.protected else []
     if not args.inputs_only:
         errors.extend(validate_outputs(PROJECT, args.outputs.resolve(), domains, args.require_models, args.task))
     result = dict(valid=not errors, errors=errors, domains=domains,

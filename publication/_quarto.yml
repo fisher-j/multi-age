@@ -3,15 +3,15 @@ project:
   execute-dir: project
   output-dir: ../docs/publication
   pre-render:
-    - python scripts/check-analysis.py --inputs-only
-    - python scripts/prepare-workflow.py
+    - python scripts/prepare-workflow.py prepare
     - cmd.exe /c "..\analysis\scripts\sync_zotero_library.bat"
-  resources:
-    - repo-files/**
-    - "!.runs/**"
+  post-render:
+    - python scripts/prepare-workflow.py downloads
   render:
     - task-f01.qmd
+    - task-rd02.qmd
     - task-rd04.qmd
+    - task-rt03.qmd
     - index.qmd
     - workflow.qmd
     - task-list.qmd
@@ -20,9 +20,13 @@ project:
     - manuscript-full.qmd
     - draft-*.qmd
 
+params:
+  recompute: false
+  refit: false
+
 execute:
-  # Display chunks read saved tables, not analytical fits. Refresh their values
-  # when upstream output changes, even if the prose has not changed.
+  # Calculation cells always display their results; only recomputation inside
+  # each cell is conditional. Read current saved results on every review render.
   freeze: false
   cache: false
   error: false
@@ -32,8 +36,20 @@ csl: ../analysis/apa.csl
 
 format:
   html:
+    code-fold: true
     toc: true
     toc-depth: 3
+    # DT defers hidden tables until a resize; opening a review must trigger it.
+    include-after-body:
+      text: |
+        <script>
+        document.addEventListener("toggle", function (event) {
+          if (event.target.tagName === "DETAILS" && event.target.open &&
+              event.target.querySelector(".datatables")) {
+            window.dispatchEvent(new Event("resize"));
+          }
+        }, true);
+        </script>
 
 website:
   title: Publication manuscript development
@@ -56,47 +72,47 @@ website:
         - section: Dedicated task pages
           contents:
             - href: task-f01.qmd
-              text: "F01 — fuel-component separation and model exploration"
+              text: "F01 - fuel-component separation and model exploration"
             - href: task-rd04.qmd
-              text: "RD04 — fuel phase and PCT display"
+              text: "RD04 - fuel phase and PCT display"
             - href: task-rd02.qmd
-              text: "RD02 — regeneration basal-area/density display"
+              text: "RD02 - regeneration basal-area/density display"
             - href: task-rd03.qmd
-              text: "RD03 — sprout-height display"
+              text: "RD03 - sprout-height display"
             - href: task-rt01.qmd
-              text: "RT01 — regeneration Results narrative"
+              text: "RT01 - regeneration Results narrative"
             - href: task-rt02.qmd
-              text: "RT02 — sprout-height Results narrative"
+              text: "RT02 - sprout-height Results narrative"
             - href: task-rt03.qmd
-              text: "RT03 — fuel Results narrative"
+              text: "RT03 - fuel Results narrative"
             - href: task-md01.qmd
-              text: "MD01 — study design display"
+              text: "MD01 - study design display"
             - href: task-m01.qmd
-              text: "M01 — study area and experimental design"
+              text: "M01 - study area and experimental design"
             - href: task-m02.qmd
-              text: "M02 — regeneration and sprout methods"
+              text: "M02 - regeneration and sprout methods"
             - href: task-m03.qmd
-              text: "M03 — fuel methods and estimand"
+              text: "M03 - fuel methods and estimand"
             - href: task-d01.qmd
-              text: "D01 — regeneration cohort discussion"
+              text: "D01 - regeneration cohort discussion"
             - href: task-d02.qmd
-              text: "D02 — sprout development discussion"
+              text: "D02 - sprout development discussion"
             - href: task-d03.qmd
-              text: "D03 — fuels and PCT-management discussion"
+              text: "D03 - fuels and PCT-management discussion"
             - href: task-d04.qmd
-              text: "D04 — limits, integration, and future work"
+              text: "D04 - limits, integration, and future work"
             - href: task-i01.qmd
-              text: "I01 — management problem and study purpose"
+              text: "I01 - management problem and study purpose"
             - href: task-i02.qmd
-              text: "I02 — regeneration and retention context"
+              text: "I02 - regeneration and retention context"
             - href: task-i03.qmd
-              text: "I03 — fuels context and questions"
+              text: "I03 - fuels context and questions"
             - href: task-s01.qmd
-              text: "S01 — supplement and machine-readable outputs"
+              text: "S01 - supplement and machine-readable outputs"
             - href: task-c01.qmd
-              text: "C01 — conclusions"
+              text: "C01 - conclusions"
             - href: task-a01.qmd
-              text: "A01 — abstract and title"
+              text: "A01 - abstract and title"
     - id: manuscript
       title: Manuscript draft
       style: docked

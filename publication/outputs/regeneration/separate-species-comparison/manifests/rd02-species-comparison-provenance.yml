@@ -1,7 +1,4 @@
 task: RD02 separate species with site and macro-plot random effects
-source: publication/inputs/thesis/regeneration-measurements.rds
-source_md5: 809123005f6d8f4ea17aeb2d9ed35752
-script_md5: e2b08efbf23474c68c6c17c454bdc305
 data: 64 RW and 64 TO observations; 4 sites, 16 macro plots, 64 vegetation plots per
   species
 species_formula: ba_ha ~ treat + (1 | site/treat); ziGamma(log), zero ~1, dispersion
@@ -26,5 +23,4 @@ intervals: 95% log-scale delta method including all conditional random SD uncert
   approximate near boundary
 review: plot-level RE omitted as requested; 4 site and 16 nested macro-plot groups
   per species
-selection: comparison only; original lead figure/estimates and thesis input checksum
-  protected
+selection: comparison only; writes separate comparison outputs

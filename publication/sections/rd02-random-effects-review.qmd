@@ -1,62 +1,18 @@
 ## Overall model sensitivity {#rd02-random-effects-review}
 
-**Comparison record.** The comparison includes three joint structures—site by
-species, full design nesting, and both together—fitted to all four species
+**Comparison record.** The comparison includes three joint structures - site by
+species, full design nesting, and both together - fitted to all four species
 (256 rows) and to RW/TO only (128 rows). Separate RW and TO fits use site and
 macro-plot random intercepts, with the plot-level effect omitted. The selected
 four-category separate models are included in the 256-row comparison. AIC ranks
 models within each dataset; the separate pair combines both species'
 likelihoods and parameter counts.
 
-```{r}
-#| label: rd02-comparison-values
-#| include: false
-rd02_cmp_dir <- "outputs/regeneration/overall-sensitivity"
-rd02_cmp_fit <- read.csv(file.path(rd02_cmp_dir, "tables/rd02-overall-model-comparison.csv"))
-rd02_cmp_means <- read.csv(file.path(rd02_cmp_dir, "tables/rd02-overall-integrated-estimates.csv"))
-rd02_scope_label <- c(`Four-species fits` = "4 species (256)", `RW/TO fits` = "RW/TO (128)")
-rd02_aic <- function(id) {
-  value <- rd02_cmp_fit$AIC[rd02_cmp_fit$model_id == id]
-  stopifnot(length(value) == 1L)
-  sprintf("%.2f", value)
-}
-rd02_mean_ci <- function(id, species, treatment) {
-  value <- subset(rd02_cmp_means, model_id == id & spp == species & treat == treatment)
-  stopifnot(nrow(value) == 1L)
-  sprintf("%.2f (%.2f, %.2f)", value$estimate, value$lcl, value$ucl)
-}
-```
 
-```{r}
-#| label: tbl-rd02-random-effects-fit
-#| echo: false
-#| tbl-cap: "Sensitivity-model fit. Delta AIC is calculated within each dataset. Separate-species rows combine independent category likelihoods and parameter counts: 32 parameters for four categories, 16 for RW/TO. The selected primary analysis is marked. All component fits converged with positive-definite Hessians."
-rd02_fit_table <- data.frame(
-  Data = unname(rd02_scope_label[rd02_cmp_fit$fit_scope]),
-  Model = ifelse(rd02_cmp_fit$selected_primary,
-                 paste0(rd02_cmp_fit$model_label, " (selected)"), rd02_cmp_fit$model_label),
-  Parameters = rd02_cmp_fit$k,
-  AIC = rd02_cmp_fit$AIC,
-  `Delta AIC` = rd02_cmp_fit$delta_AIC_within_scope,
-  check.names = FALSE
-)
-knitr::kable(rd02_fit_table, digits = 2, row.names = FALSE)
-```
 
-```{r}
-#| label: fig-rd02-random-effects-comparison
-#| echo: false
-#| out-width: "100%"
-#| fig-cap: >
-#|   Overall basal-area sensitivity. Top panels show joint fits and the
-#|   selected separate models for all four categories; bottom panels show
-#|   RW/TO joint fits and separate species models with site
-#|   and macro-plot random intercepts. Points are arithmetic means including
-#|   modeled zeros and integrated over fitted random effects; ranges are
-#|   approximate 95% confidence intervals from the full-covariance log-scale
-#|   delta method. Vertical scales differ between panels.
-knitr::include_graphics("outputs/regeneration/overall-sensitivity/figures/rd02-overall-sensitivity.png")
-```
+See @tbl-rd02-random-effects-fit for the fit comparison.
+
+See @fig-rd02-random-effects-comparison beside the assembly code above.
 
 Notable patterns across the comparisons:
 
@@ -86,11 +42,10 @@ Notable patterns across the comparisons:
 [variance components](repo-files/publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-variance-components.csv),
 [diagnostic tests](repo-files/publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-dharma-tests.csv),
 [figure PDF](repo-files/publication/outputs/regeneration/overall-sensitivity/figures/rd02-overall-sensitivity.pdf),
-[assembly code](repo-files/publication/scripts/regeneration/04-assemble-rd02-sensitivity.R),
-[input checksums](repo-files/publication/outputs/regeneration/overall-sensitivity/manifests/rd02-overall-inputs.csv), and
+[assembly code](task-rd02.qmd#rd02-04),
 [provenance](repo-files/publication/outputs/regeneration/overall-sensitivity/manifests/rd02-overall-provenance.yml).
 The fitting scripts are available for the
-[joint comparison](repo-files/publication/scripts/regeneration/02-compare-rd02-random-effects.R) and
-[separate-species comparison](repo-files/publication/scripts/regeneration/03-compare-rd02-separate-species.R).
+[joint comparison](task-rd02.qmd#rd02-02) and
+[separate-species comparison](task-rd02.qmd#rd02-03).
 
 </details>

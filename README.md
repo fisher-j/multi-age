@@ -20,8 +20,10 @@ publication is a standalone Quarto project in `publication/`. Its execution
 and maintenance instructions live in [publication/README.md](publication/README.md).
 
 `product-registry.yml` records each product's source location, render command,
-and output location. On Windows, `render-products.bat <product> [Quarto render
-options]` provides a common entry point for rendering one product. Use
+and output location. From `publication/`, use `quarto render`, adding `-P recompute:true` for
+calculations from saved models or `-P refit:true` for explicit model fitting.
+On Windows, `render-products.bat <product> [Quarto render options]` is an
+optional alias and remains the entry point for legacy products. Use
 `render-products.bat` without an argument to see the supported product names.
 For focused legacy checks, render only the needed format; for example,
 `render-products.bat thesis --to pdf` avoids building the thesis HTML and DOCX
@@ -34,6 +36,6 @@ active worktree. The copy is retained for inspection and can be removed after
 review.
 
 Publication-specific analyses and generated objects belong under
-`publication/outputs/` and `publication/scripts/`. Do not
+the publication outputs directory, with analytical R code in task QMDs. Do not
 move or overwrite the thesis-era model objects and rendered artifacts while the
 publication is in development.

@@ -1,27 +1,34 @@
 ## Rendering
 
-- From the repository root, render with
-  `.\render-products.bat publication --to html`, then validate with
-  `python publication/scripts/check-website.py`.
-- Use the wrapper: it handles sandbox R library paths and preserves explicit
-  `R_LIBS_USER` settings. For direct Quarto commands, if unset, set
-  `$env:R_LIBS_USER = "$env:USERPROFILE/AppData/Local/R/win-library/%v"`
-  in the same shell invocation.
-- Run legacy R work from `analysis/` to activate its `renv` environment;
-  `publication/` uses its own updated R 4.6.2 and renv. Use
-  `.\run-publication.bat restore`, then `fuel`, `regeneration`, `all`, or `check`
-  from the repository root. Root wrappers select each R installation explicitly.
-- Publication reads committed `publication/inputs/thesis/` exports and writes
-  staged calculations before current-output validation and promotion. Historical
-  replay is the separate `analysis/scripts/export-publication-inputs.R`
-  operation with thesis R 4.3.2; do not restore or update thesis renv for
-  publication work. Publication has one authoritative environment and current
-  workflow; do not restore old publication replay modes or migration artifacts.
-- Before installing packages, restoring `renv`, or declaring rendering blocked,
-  check `.libPaths()` and actual `requireNamespace()` calls in the target project.
-  Sandbox permission checks can make `renv::status()` and `installed.packages()`
-  falsely report missing packages. If needed, compare readable package
-  `DESCRIPTION` versions against `analysis/renv.lock`.
+- Publication is a plain Quarto project. From `publication/`, use `quarto render`.
+  From the repository root, the optional alias is
+  `.\render-products.bat publication --to html`.
+- Normal renders use saved analytical results. Add `-P recompute:true` to
+  refresh calculations from saved models, or `-P refit:true` to refit explicitly.
+  A single task can be rendered with either flag; then render the site.
+- Publication R code belongs in task QMDs, including shared helpers and
+  presentation calculations. Define helpers where first used and save them for
+  later tasks. Explain purpose and important considerations alongside the code.
+- Before every publication code block, explain its purpose and why it is needed.
+  Split long calculations into coherent steps. Print tables, figures, and other
+  results immediately after the code that generates them, including when results
+  are also saved. Review renders should display the saved result at that same
+  point; keep recomputation conditional inside the cell instead of hiding output.
+- Outputs overwrite current files directly. No staging, promotion, or automatic
+  comparisons. A failed run may leave partially updated outputs.
+- Validate with `python publication/scripts/check-analysis.py` and
+  `python publication/scripts/check-website.py` from the repository root.
+- Publication has its own R 4.6.2 and renv; Quarto's `_environment` supplies
+  runtime defaults while preserving explicit environment settings. Legacy work
+  runs from `analysis/` under thesis R 4.3.2 and its unchanged renv.
+- Committed `publication/inputs/thesis/` exports supply publication inputs.
+  Deliberate refresh uses `analysis/scripts/export-publication-inputs.R` in the
+  thesis environment; do not restore or update thesis renv for publication work.
+- Before installing packages or restoring renv, check `.libPaths()` and actual
+  `requireNamespace()` calls in the target project. Sandbox permission checks
+  can make `renv::status()` and `installed.packages()` falsely report missing
+  packages. Compare readable package DESCRIPTION versions to its lockfile
+  when needed.
 
 ## Development philosophy
 

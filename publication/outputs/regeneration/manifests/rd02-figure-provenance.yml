@@ -1,9 +1,6 @@
 task: RD02
 status: Draft pending scientific and display review
-script: publication/scripts/regeneration/01-generate-rd02-display.R
-script_md5: 1320d188c09ae7ea5353e7eaeeb6ffe7
-source: publication/inputs/thesis/regeneration-measurements.rds
-source_md5: 809123005f6d8f4ea17aeb2d9ed35752
+generator: task-rd02.qmd#rd02-01
 source_object: exported historical mba reference
 model_refitted: no
 historical_reference: publication/inputs/thesis/regeneration
@@ -21,6 +18,6 @@ site_weights: equal; no site fixed effects, so integrated expectations coincide 
 interval: 95% log-scale delta method; full nonrandom parameter covariance including
   log SD
 checks: Historical 16-cell prediction, gradient, and quadrature checks executed by
-  thesis exporter; publication validates export checksums
+  thesis exporter; export checksums can be validated explicitly
 review: Retained thesis site:species intercept does not explicitly model macro-plot
   clustering; manuscript design review remains open. Intervals condition on this model.

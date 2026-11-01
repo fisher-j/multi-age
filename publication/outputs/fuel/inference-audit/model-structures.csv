@@ -1,16 +1,16 @@
 model_id,phase,conditional,zero,dispersion
-prepct_onehr_disp_treatment,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~0,~treatment
-postpct_onehr_base,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
-prepct_tenhr_base,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
-postpct_tenhr_base,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
-prepct_hundhr_base,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
-postpct_hundhr_zi_treatment_site_disp_treatment_site_interaction,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~treatment + site,~treatment * site
-prepct_thoushr_base,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
-postpct_thoushr_zi_treatment,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~treatment,~1
-prepct_herbaceous_vegetation_base,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
-postpct_herbaceous_vegetation_base,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
-prepct_litter_disp_treatment,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~0,~treatment
 prepct_duff_base,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
-woody_delta_student_t_disp_treatment_site_interaction,NA,woody_standing_reduction_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~0,~treatment * site
+postpct_herbaceous_vegetation_base,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
+prepct_herbaceous_vegetation_base,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
+postpct_hundhr_zi_treatment_site_disp_treatment_site_interaction,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~treatment + site,~treatment * site
+prepct_hundhr_base,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
+prepct_litter_disp_treatment,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~0,~treatment
+postpct_onehr_base,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
+prepct_onehr_disp_treatment,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~0,~treatment
+postpct_tenhr_base,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
+prepct_tenhr_base,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
+postpct_thoushr_zi_treatment,postpct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~treatment,~1
+prepct_thoushr_base,prepct,load_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~1,~1
 woody_phase_zigamma_ziphase_disp1,prepct,load_mgha ~ phase * treatment + (1 | site) + (1 | block) + (1 | design_corner) + (1 | transect_id),~phase,~1
 woody_phase_zigamma_ziphase_disp1,postpct,load_mgha ~ phase * treatment + (1 | site) + (1 | block) + (1 | design_corner) + (1 | transect_id),~phase,~1
+woody_delta_student_t_disp_treatment_site_interaction,NA,woody_standing_reduction_mgha ~ treatment + (1 | site) + (1 | block) + (1 | design_corner),~0,~treatment * site

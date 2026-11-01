@@ -4,8 +4,9 @@ Run automatically before Quarto renders. Task metadata lives in tasks.json;
 long-form review records live in task-*.qmd. No analytical pipeline is executed.
 """
 
-import hashlib
 import json
+import os
+import sys
 import re
 import shutil
 from pathlib import Path
@@ -16,10 +17,9 @@ PROJECT = Path(__file__).resolve().parents[1]
 REPOSITORY = PROJECT.parent
 
 
-def write_if_changed(path, text):
+def write(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
-    if not path.exists() or path.read_text(encoding="utf-8") != text:
-        path.write_text(text, encoding="utf-8", newline="\n")
+    path.write_text(text, encoding="utf-8", newline="\n")
 
 
 def validate_tasks(tasks):
@@ -61,7 +61,7 @@ def prepare():
         if not (PROJECT / page).is_file():
             raise FileNotFoundError(f"Missing dedicated task page: {page}")
         index.append(
-            f"| {order} | [{task['id']} — {task['title']}](#{key}) | "
+            f"| {order} | [{task['id']} - {task['title']}](#{key}) | "
             f"{task['status']} | {task['target']} |"
         )
 
@@ -70,11 +70,11 @@ def prepare():
         key = task["id"].lower()
         page = f"task-{key}.qmd"
         index.extend([
-            f"\n### [{task['id']} — {task['title']}]({page}) {{#{key}}}\n",
+            f"\n### [{task['id']} - {task['title']}]({page}) {{#{key}}}\n",
             f"**Status: {task['status']}.**\n",
             task["summary"] + "\n",
         ])
-        write_if_changed(
+        write(
             PROJECT / "_task-metadata" / f"{key}-status.qmd",
             f"<!-- Generated from tasks.json. -->\n\n"
             f"**Status: {task['status']}.** Working target: {task['target']}.\n",
@@ -103,7 +103,9 @@ def prepare():
             if title:
                 files.append(f"\n### {title}\n")
             for path in paths:
-                if path.lower().endswith((".rmd", ".qmd")):
+                if path.lower().endswith((".rds", ".rda")):
+                    files.append(f"- `{path}`")
+                elif path.lower().endswith((".rmd", ".qmd")):
                     if not (REPOSITORY / path).is_file():
                         raise FileNotFoundError(f"Repository source document is missing: {path}")
                     files.append(f"- `{path}`")
@@ -111,46 +113,53 @@ def prepare():
                     files.append(f"- [{path}](repo-files/{path})")
         files.append("\n</details>\n")
         files.append(f"\n[Back to this task in the task list](task-list.qmd#{key}).\n")
-        write_if_changed(PROJECT / "_task-metadata" / f"{key}-files.qmd", "\n".join(files))
-    write_if_changed(PROJECT / "task-list.qmd", "\n".join(index))
+        write(PROJECT / "_task-metadata" / f"{key}-files.qmd", "\n".join(files))
+    write(PROJECT / "task-list.qmd", "\n".join(index))
 
-    # Only explicitly linked files are copied. Raw data and binary model objects
-    # are not exposed by walking arbitrary source/output directories.
+    print(f"Prepared {len(tasks)} task summaries.")
+
+
+def linked_downloads():
+    # Explicit links define downloads; never walk model or raw-data directories.
     paths = set()
     sources = [*PROJECT.glob("*.qmd"), *PROJECT.glob("sections/*.qmd"),
                *PROJECT.glob("_task-metadata/*.qmd")]
     for source in sources:
         paths.update(unquote(match) for match in re.findall(
-            r"\]\(repo-files/([^\s)#]+)(?:#[^)]*)?\)",
-            source.read_text(encoding="utf-8"),
-        ))
-    bundle = PROJECT / "repo-files"
-    manifest = []
-    for relative in sorted(paths - {"manifest.json"}):
+            r"\]\(repo-files/([^\s)#]+)(?:#[^)]*)?\)", source.read_text(encoding="utf-8")))
+    for relative in paths:
         if Path(relative).is_absolute() or ".." in Path(relative).parts:
             raise ValueError(f"Repository download path must be relative without '..': {relative}")
-        if relative.lower().endswith((".rmd", ".qmd", ".rmd.txt", ".qmd.txt")):
-            raise ValueError(f"Analytical source documents are not published as downloads: {relative}")
+        if relative.lower().endswith((".rmd", ".qmd", ".rmd.txt", ".qmd.txt", ".rds", ".rda")):
+            raise ValueError(f"Source documents and binary objects are not published as downloads: {relative}")
         source = (REPOSITORY / relative).resolve()
         if not source.is_relative_to(REPOSITORY) or not source.is_file():
             raise FileNotFoundError(f"Linked repository file is missing or outside the repo: {relative}")
+    return paths
+
+
+def downloads(output=None):
+    # Quarto supplies the actual output directory, including --output-dir overrides.
+    output = Path(output or os.environ.get("QUARTO_PROJECT_OUTPUT_DIR", "../docs/publication"))
+    if not output.is_absolute():
+        output = (PROJECT / output).resolve()
+    bundle = output / "repo-files"
+    paths = linked_downloads()
+    # Overwrite directly, then remove copies that no longer have a source link.
+    for relative in sorted(paths):
         destination = bundle / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, destination)
-        manifest.append({"path": relative, "source": relative,
-                         "sha256": hashlib.sha256(source.read_bytes()).hexdigest()})
-    # Quarto may retain resources from earlier renders. Remove downloads whose
-    # links were removed from the source, in both the input and published bundle.
-    current = {item["path"] for item in manifest} | {"manifest.json"}
-    directories = [bundle, REPOSITORY / "docs/publication/repo-files"]
-    (REPOSITORY / "docs/publication/pipeline-fuel.html").unlink(missing_ok=True)
-    for directory in directories:
-        for path in directory.rglob("*"):
-            if path.is_file() and path.relative_to(directory).as_posix() not in current:
-                path.unlink()
-    write_if_changed(bundle / "manifest.json", json.dumps(manifest, indent=2) + "\n")
-    print(f"Prepared {len(tasks)} task summaries and {len(manifest)} current repository downloads.")
+        shutil.copyfile(REPOSITORY / relative, destination)
+    for path in bundle.rglob("*"):
+        if path.is_file() and path.relative_to(bundle).as_posix() not in paths:
+            path.unlink()
+    print(f"Overwrote {len(paths)} linked downloads.")
 
 
 if __name__ == "__main__":
-    prepare()
+    if sys.argv[1:] == ["downloads"]:
+        downloads()
+    elif sys.argv[1:] in ([], ["prepare"]):
+        prepare()
+    else:
+        raise SystemExit("Use prepare or downloads.")

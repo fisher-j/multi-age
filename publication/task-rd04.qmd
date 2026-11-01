@@ -1,28 +1,19 @@
 ---
-title: "RD04 — fuel phase and PCT display"
+title: "RD04 - fuel phase and PCT display"
 params:
   recompute: false
+  refit: false
 sidebar: workflow
-filters:
-  - filters/include-heading-offset.lua
 ---
 
-```{r}
-#| label: fuel-task-setup
-#| include: false
-source("scripts/task-execution.R")
-source("scripts/render-csv-review.R")
-output_root <- if (isTRUE(params$recompute)) prepare_fuel_task("RD04") else "outputs"
-```
-
-
-{{< include _task-metadata/rd04-status.qmd >}}
+{{< include /_task-metadata/rd04-status.qmd >}}
 
 <span id="rd04-record"></span>
 
-This page owns fuel prediction and inference decisions, the figure and companion
-table, their source/output review, and the history of replaced display code.
-Begin with [F01](task-f01.qmd) for upstream derivation and model fitting; this page owns the subsequent executable sequence.
+With the components and candidate fits from [F01](task-f01.qmd) in hand, we can
+explore what they imply for mean fuel loads under each overstory treatment.
+Here we'll check how the means and their uncertainty are calculated, then bring
+the phase estimates and matched woody change into a figure and companion table.
 
 The figure has been generated from the current
 AIC-leading fitted publication models. Its position in the register is an
@@ -59,8 +50,8 @@ consumes these artifacts; changes to their derivation or fitting belong in F01.
   interpretation, with equal study-site weights. Derive woody mean change
   from the same joint phase model as the woody load panels, retaining its
   pre/post covariance.
-- Retain the thesis visual grammar—model estimate point with a colored 95% CI
-  range—for the six paired panels. Label pre-PCT-only litter and duff panels
+- Retain the thesis visual grammar - model estimate point with a colored 95% CI
+  range - for the six paired panels. Label pre-PCT-only litter and duff panels
   explicitly; do not imply a post-PCT zero or estimate.
 - Plot the matched woody vegetation difference separately with a zero reference
   line. It is an inferred potential surface-fuel contribution, not direct slash
@@ -78,221 +69,467 @@ consumes these artifacts; changes to their derivation or fitting belong in F01.
 3. A linked table or CSV of complete phase-by-treatment model estimates and a
    link to the model-selection register used for the draft.
 
-## 07 — Audit prediction and uncertainty
+## Shared setup
 
-**Purpose.** Verify the response means and their uncertainty against independent computational routes and exported thesis references.
+The hidden setup loads the shared F01 helpers and enables automatic chunk
+labels before any code is displayed.
 
-**Rationale.** Integrate over all fitted random intercepts, include modeled zeros,
-and give each study-site context equal weight. Carry the full parameter covariance
-through the gradient, including random-effect variances and joint woody pre/post covariance.
-F01 supplies saved models; this audit does not refit or select them.
+```{r}
+#| label: rd04-setup
+#| include: false
 
-<details data-review-source="publication/task-rd04.qmd#rd04-07-audit-rd04-inference">
-<summary>Calculation — rd04-07-audit-rd04-inference</summary>
+if (!file.exists("outputs/helpers/task-helpers.rds"))
+  stop("Saved helpers are missing. Run quarto render task-f01.qmd first.")
+invisible(list2env(readRDS("outputs/helpers/task-helpers.rds"), envir = knitr::knit_global()))
+enable_chunk_labels()
+```
+
+Next we'll identify the execution mode.
+The table below tells us whether this page is showing saved results or refreshing
+calculations from the fitted models. Model refitting takes place in F01; an
+ordinary render here reviews the current tables and figures.
+
+```{r}
+#| label: rd04-parameters
+#| echo: true
+
+# A refit also refreshes the results derived from the new models.
+recompute <- isTRUE(params$recompute) || isTRUE(params$refit)
+output_root <- "outputs"
+data.frame(Mode = if (isTRUE(params$refit)) "Refresh after F01 refit" else if (recompute) "Recompute from saved models" else "Review saved results")
+```
+
+## Inference functions
+
+We'll keep a record of the inputs and R session used for the inference checks
+and figure. This small text-writing function gives those records consistent
+encoding and line endings so they remain readable across renders. The numerical
+functions that follow define the means and uncertainty we want to audit.
+
+```{r}
+#| label: rd04-inference-functions
+#| echo: true
+
+write_publication_lines <- function(text, path) {
+  connection <- file(path, open = "wb")
+  on.exit(close(connection))
+  writeLines(enc2utf8(sub("[[:blank:]]+$", "", text)), connection,
+             sep = "\n", useBytes = TRUE)
+}
+```
+
+To separate changes in models from changes in the prediction target, we'll first
+reproduce means with random effects set to zero. These functions give each site
+equal weight and retain covariance among its predictions when averaging. They
+provide the reference means and intervals for the later audit against integrated
+mean loads.
+
+```{r}
+#| label: rd04-reference-functions
+#| echo: true
+
+# Keep valid nested identifiers from one observed row per site/treatment/phase.
+# These identifiers do not contribute fitted random effects when re.form=NA.
+reference_grid <- function(model, phase = NULL) {
+  keys <- intersect(c("site", "treatment", "phase"), names(model$frame))
+  grid <- distinct(model$frame, across(all_of(keys)), .keep_all = TRUE)
+  if (!is.null(phase) && "phase" %in% keys) grid <- filter(grid, .data$phase == .env$phase)
+  counts <- count(grid, treatment)
+  stopifnot(length(unique(counts$n)) == 1L)
+  grid
+}
+
+# A maps row predictions to equally weighted site means. A V A' retains every
+# cross-site covariance; treating site predictions as independent is incorrect.
+averaging_matrix <- function(grid) {
+  keys <- intersect(c("treatment", "phase"), names(grid))
+  labels <- distinct(grid, across(all_of(keys)))
+  A <- t(vapply(seq_len(nrow(labels)), function(i) {
+    keep <- Reduce(`&`, lapply(keys, function(k) grid[[k]] == labels[[k]][i]))
+    as.numeric(keep) / sum(keep)
+  }, numeric(nrow(grid))))
+  list(A = A, labels = labels)
+}
+
+custom_reference <- function(model, grid) {
+  p <- predict(model, newdata = grid, type = "response", re.form = NA,
+               allow.new.levels = TRUE, se.fit = TRUE, cov.fit = TRUE)
+  avg <- averaging_matrix(grid)
+  transform(avg$labels, estimate = as.vector(avg$A %*% p$fit),
+            std.error = sqrt(diag(avg$A %*% p$cov.fit %*% t(avg$A))))
+}
+```
+
+For arithmetic mean loads across comparable sampling units, we need to average
+over the fitted random-effect distributions. We'll extract the model matrices
+and full parameter covariance needed for exact integration. This calculation
+assumes independent Gaussian random intercepts and a log or identity link, so
+the function checks those assumptions before returning its inputs.
+
+```{r}
+#| label: rd04-integration-setup
+#| echo: true
+
+# Exact integration for THESE models: independent Gaussian random intercepts in
+# the conditional model, log/identity link, no random effects in the zero model.
+# This deliberately fails on slopes, correlated effects, offsets, or other links.
+integration_setup <- function(model, grid) {
+  vc <- VarCorr(model)
+  stopifnot(length(vc$zi) == 0L, length(vc$disp) == 0L,
+            all(vapply(vc$cond, function(x) identical(dim(x), c(1L, 1L)), logical(1))))
+  X <- model.matrix(delete.response(terms(formula(model, fixed.only = TRUE))), grid)
+  Z <- model.matrix(formula(model, component = "zi", fixed.only = TRUE), grid)
+  par <- model$fit$par
+  ib <- which(names(par) == "beta")
+  iz <- which(names(par) == "betazi")
+  it <- which(names(par) == "theta")
+  stopifnot(ncol(X) == length(ib), ncol(Z) == length(iz),
+            length(it) == length(vc$cond), model$sdr$pdHess,
+            isTRUE(all.equal(unname(par), unname(model$sdr$par.fixed))),
+            is.null(model.offset(model$frame)),
+            family(model)$link %in% c("log", "identity"))
+  variance <- sum(vapply(vc$cond, function(x) x[1, 1], numeric(1)))
+  stopifnot(isTRUE(all.equal(variance, sum(exp(2 * par[it])), tolerance = 1e-8)))
+  list(X = X, Z = Z, par = par, V = model$sdr$cov.fixed,
+       ib = ib, iz = iz, it = it, link = family(model)$link,
+       avg = averaging_matrix(grid), variance = variance)
+}
+```
+
+With a log link, variation among sampling units changes the arithmetic mean as
+well as its uncertainty. We'll define the integrated means and analytic
+derivatives together so uncertainty in that variance adjustment is retained.
+Identity-link means keep their original expectation. The audit below will show
+the resulting estimates and compare them with an independent calculation.
+
+```{r}
+#| label: rd04-integrated-means
+#| echo: true
+
+# Independent analytic derivatives for the custom delta-method implementation.
+custom_integrated <- function(s) {
+  eta <- drop(s$X %*% s$par[s$ib])
+  pzero <- if (length(s$iz)) plogis(drop(s$Z %*% s$par[s$iz])) else rep(0, length(eta))
+  if (s$link == "log") {
+    mu <- exp(eta + s$variance / 2) * (1 - pzero)
+    D <- matrix(0, nrow(s$X), length(s$par))
+    D[, s$ib] <- mu * s$X
+    if (length(s$iz)) D[, s$iz] <- -mu * pzero * s$Z
+    D[, s$it] <- outer(mu, exp(2 * s$par[s$it]))
+  } else {
+    stopifnot(length(s$iz) == 0L)
+    mu <- eta
+    D <- matrix(0, nrow(s$X), length(s$par))
+    D[, s$ib] <- s$X
+  }
+  G <- s$avg$A %*% D
+  list(estimate = drop(s$avg$A %*% mu),
+       se = sqrt(pmax(0, diag(G %*% s$V %*% t(G)))), G = G)
+}
+```
+
+The woody-change panel should describe the difference between the same means
+shown in the phase panels. We'll derive pre-PCT minus post-PCT load from the
+joint model and retain their covariance, which matters for uncertainty in a
+paired comparison. This function supplies the change estimates checked below.
+
+```{r}
+#| label: rd04-woody-change
+#| echo: true
+
+# Contrast the same matched model's integrated phase means, retaining their
+# covariance through a single gradient and the full parameter covariance.
+woody_change_setup <- function(s) {
+  labels <- s$avg$labels
+  stopifnot(all(c("phase", "treatment") %in% names(labels)),
+            setequal(unique(as.character(labels$phase)), c("prepct", "postpct")))
+  treatments <- unique(as.character(labels$treatment))
+  C <- t(vapply(treatments, function(trt) {
+    stopifnot(sum(labels$treatment == trt & labels$phase == "prepct") == 1L,
+              sum(labels$treatment == trt & labels$phase == "postpct") == 1L)
+    as.numeric(labels$treatment == trt) * ifelse(labels$phase == "prepct", 1, -1)
+  }, numeric(nrow(labels))))
+  s$avg$A <- C %*% s$avg$A
+  s$avg$labels <- data.frame(treatment = treatments)
+  s
+}
+```
+
+A second calculation will help us catch errors in the analytic derivatives.
+We'll use marginaleffects for a numerical delta-method calculation, supplying
+the full parameter table, including log random-effect SDs. Comparing the two
+routes then checks uncertainty in the integration adjustment as well as the means.
+
+```{r}
+#| label: rd04-independent-delta-method
+#| echo: true
+
+# marginaleffects does the nonlinear delta method on a supplied full parameter
+# table, including theta (log SDs), not just the conditional fixed coefficients.
+# avg_predictions(re.form=NA) alone does NOT integrate over random effects.
+marginaleffects_integrated <- function(s) {
+  parameters <- data.frame(term = paste0("p", seq_along(s$par)),
+                           estimate = unname(s$par))
+  functional <- function(x) {
+    b <- x$estimate
+    eta <- drop(s$X %*% b[s$ib])
+    pzero <- if (length(s$iz)) plogis(drop(s$Z %*% b[s$iz])) else rep(0, length(eta))
+    mu <- if (s$link == "log") exp(eta + sum(exp(2 * b[s$it])) / 2) * (1 - pzero) else eta
+    data.frame(term = seq_len(nrow(s$avg$labels)), estimate = drop(s$avg$A %*% mu))
+  }
+  marginaleffects::hypotheses(parameters, hypothesis = functional, vcov = s$V,
+             numderiv = "fdcenter", conf_level = .95)
+}
+```
+
+## Model identities for the audit and figure
+
+Before calculating estimates, we'll identify the saved F01 fit behind each
+component and phase. The mapping table below makes those choices visible for
+both the audit and the figure, including the joint model used for woody change.
+These are the current provisional leaders; their scientific review remains open.
+
+```{r}
+#| label: rd04-model-specification
+#| echo: true
+#| message: false
+#| warning: false
+
+selection <- readr::read_csv("outputs/fuel/manifests/model-selection-log.csv", show_col_types = FALSE)
+component_labels <- c(onehr = "1-hour fuel", tenhr = "10-hour fuel", hundhr = "100-hour fuel",
+  thoushr = "1,000-hour fuel", herbaceous_vegetation = "Herbaceous vegetation",
+  litter = "Litter (pre-PCT only)", duff = "Duff (pre-PCT only)")
+rd04_spec <- selection |>
+  dplyr::filter(response %in% names(component_labels), grepl("phase-specific", analysis)) |>
+  dplyr::transmute(model_id = provisional_aic_leader,
+    component = unname(component_labels[response]), phase = sub(":.*", "", analysis))
+rd04_spec <- dplyr::bind_rows(rd04_spec,
+  dplyr::transmute(dplyr::filter(selection, response == "woody vegetation load"),
+    model_id = provisional_aic_leader, component = "Woody vegetation", phase = NA_character_))
+stopifnot(nrow(rd04_spec) == 13L)
+
+publication_table(rd04_spec)
+```
+
+## 07 - Audit prediction and uncertainty
+
+Before using the estimates to describe fuel conditions, we'll check that the
+calculation delivers the intended mean and interval. The audit below compares
+independent computational routes for zero-random-effect references and integrated
+means, including modeled zeros and equal site weights. Its tables show how
+integration changes the estimates and whether the routes agree on uncertainty,
+including uncertainty in random-effect variances. The F01 fits are held fixed
+throughout this check.
 
 ```{r}
 #| label: rd04-07-audit-rd04-inference
-#| eval: !expr isTRUE(params$recompute)
 #| echo: true
-#| warning: false
 #| message: false
-source("scripts/fuel/00-fuel-config.R")
-local({
-publication_root <- normalizePath(getwd(), winslash = "/")
-script_dir <- file.path(publication_root, "scripts", "fuel")
-paths_common <- publication_paths(publication_root)
+#| warning: false
 
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(glmmTMB)
-  library(marginaleffects)
-  library(readr)
-  library(tidyr)
-})
-models_dir <- file.path(publication_root, "outputs", "fuel", "models")
-audit_dir <- file.path(paths_common$output, "fuel/inference-audit")
-dir.create(audit_dir, recursive = TRUE, showWarnings = FALSE)
+if (recompute) {
+  publication_root <- normalizePath(getwd(), winslash = "/")
+  paths_common <- publication_paths(publication_root)
 
-# Evaluate only these two definitions, never the original script's output steps.
-original_script <- file.path(script_dir, "retired", "06-generate-rd04-figure.R")
-original_hash <- tools::md5sum(original_script)
-for (expr in parse(original_script)) {
-  if (is.call(expr) && identical(expr[[1]], as.name("<-")) && is.symbol(expr[[2]]) &&
-      as.character(expr[[2]]) %in% c("model_ids", "model_estimates")) eval(expr)
-}
+  suppressPackageStartupMessages({
+    library(dplyr)
+    library(glmmTMB)
+    library(marginaleffects)
+    library(readr)
+    library(tidyr)
+  })
+  models_dir <- file.path(publication_root, "outputs", "fuel", "models")
+  audit_dir <- file.path(paths_common$output, "fuel/inference-audit")
+  dir.create(audit_dir, recursive = TRUE, showWarnings = FALSE)
 
-source(file.path(script_dir, "rd04-inference-utils.R"))
+  # Read model identities from the current F01 register.
+  spec <- bind_rows(filter(rd04_spec, !is.na(phase)),
+    mutate(filter(rd04_spec, component == "Woody vegetation"), phase = "prepct"),
+    mutate(filter(rd04_spec, component == "Woody vegetation"), phase = "postpct")) |>
+    mutate(component = sub(" fuel$", "", component),
+           component = sub(" (pre-PCT only)", "", component, fixed = TRUE))
+  # Audit the signed alternative alongside the joint woody phase model.
+  spec <- bind_rows(spec, transmute(filter(selection, response == "woody standing-vegetation reduction"),
+    model_id = provisional_aic_leader, component = "Woody difference", phase = NA_character_))
 
-spec <- tibble(
-  key = names(model_ids), model_id = unname(model_ids),
-  component = c("1-hour", "1-hour", "10-hour", "10-hour", "100-hour", "100-hour",
-                "1,000-hour", "1,000-hour", "Woody vegetation", "Herbaceous vegetation",
-                "Herbaceous vegetation", "Litter", "Duff", "Woody difference"),
-  phase = c(rep(c("prepct", "postpct"), 4), NA, "prepct", "postpct", "prepct", "prepct", NA)
-)
-spec <- bind_rows(filter(spec, key != "woody_phase"),
-                  mutate(filter(spec, key == "woody_phase"), phase = "prepct"),
-                  mutate(filter(spec, key == "woody_phase"), phase = "postpct"))
-
-audit <- list()
-structures <- list()
-for (i in seq_len(nrow(spec))) {
-  item <- spec[i, ]
-  message("Auditing ", item$model_id, " ", item$phase)
-  model <- readRDS(file.path(models_dir, paste0(item$model_id, ".rds")))
-  phase_arg <- if (is.na(item$phase)) NULL else item$phase
-  grid <- reference_grid(model, phase_arg)
-  avg <- averaging_matrix(grid)
-  reference <- custom_reference(model, grid)
-  me <- as.data.frame(avg_predictions(model, newdata = grid, type = "response",
-                       by = intersect(c("treatment", "phase"), names(grid)),
-                       re.form = NA, allow.new.levels = TRUE))
-  me <- me[match(as.character(reference$treatment), as.character(me$treatment)), ]
-  legacy <- model_estimates(item$model_id, item$component, phase_arg,
-                            difference = item$key == "woody_difference")
-  legacy <- legacy[match(as.character(reference$treatment), as.character(legacy$treatment)), ]
-  s <- integration_setup(model, grid)
-  integrated <- custom_integrated(s)
-  me_integrated <- as.data.frame(marginaleffects_integrated(s))
-  stopifnot(max(abs(reference$estimate - me$estimate)) < 1e-6,
-            max(abs(reference$std.error - me$std.error) / pmax(1, reference$std.error)) < 1e-4,
-            max(abs(reference$estimate - legacy$estimate)) < 1e-6,
-            max(abs(integrated$estimate - me_integrated$estimate)) < 1e-6,
-            max(abs(integrated$se - me_integrated$std.error) / pmax(1, integrated$se)) < 1e-4)
-  # Verify integration at a point using numerical quadrature, independently of
-  # the closed-form exp(v/2) calculation (including near-zero variances).
-  if (s$link == "log") {
-    quadrature <- integrate(function(z) exp(sqrt(s$variance) * z) * dnorm(z),
-                            lower = -12, upper = 12, rel.tol = 1e-9)$value
-    stopifnot(abs(quadrature - exp(s$variance / 2)) < 1e-7)
+  audit <- list()
+  structures <- list()
+  for (i in seq_len(nrow(spec))) {
+    item <- spec[i, ]
+    message("Auditing ", item$model_id, " ", item$phase)
+    model <- read_saved_model(file.path(models_dir, paste0(item$model_id, ".rds")), "F01")
+    phase_arg <- if (is.na(item$phase)) NULL else item$phase
+    grid <- reference_grid(model, phase_arg)
+    avg <- averaging_matrix(grid)
+    reference <- custom_reference(model, grid)
+    me <- as.data.frame(avg_predictions(model, newdata = grid, type = "response",
+                         by = intersect(c("treatment", "phase"), names(grid)),
+                         re.form = NA, allow.new.levels = TRUE))
+    me <- me[match(as.character(reference$treatment), as.character(me$treatment)), ]
+    s <- integration_setup(model, grid)
+    integrated <- custom_integrated(s)
+    me_integrated <- as.data.frame(marginaleffects_integrated(s))
+    stopifnot(max(abs(reference$estimate - me$estimate)) < 1e-6,
+              max(abs(reference$std.error - me$std.error) / pmax(1, reference$std.error)) < 1e-4,
+              max(abs(integrated$estimate - me_integrated$estimate)) < 1e-6,
+              max(abs(integrated$se - me_integrated$std.error) / pmax(1, integrated$se)) < 1e-4)
+    # Verify integration at a point using numerical quadrature, independently of
+    # the closed-form exp(v/2) calculation (including near-zero variances).
+    if (s$link == "log") {
+      quadrature <- integrate(function(z) exp(sqrt(s$variance) * z) * dnorm(z),
+                              lower = -12, upper = 12, rel.tol = 1e-9)$value
+      stopifnot(abs(quadrature - exp(s$variance / 2)) < 1e-7)
+    }
+    # Check matrix construction against the model's own predict implementation.
+    row0 <- if (s$link == "log") exp(drop(s$X %*% s$par[s$ib])) else drop(s$X %*% s$par[s$ib])
+    if (length(s$iz)) row0 <- row0 * (1 - plogis(drop(s$Z %*% s$par[s$iz])))
+    stopifnot(max(abs(row0 - predict(model, grid, type = "response", re.form = NA))) < 1e-6)
+    # Average ALL observed rows within site, then equally across sites; retaining
+    # only one corner/transect per site would give an arbitrary conditional mean.
+    observed <- model$frame
+    if (!is.null(phase_arg) && "phase" %in% names(observed)) observed <- filter(observed, .data$phase == .env$phase_arg)
+    conditional <- observed |>
+      mutate(predicted = as.numeric(predict(model, observed, type = "response", re.form = NULL))) |>
+      group_by(across(all_of(intersect(c("site", "treatment", "phase"), names(observed))))) |>
+      summarise(predicted = mean(predicted), .groups = "drop") |>
+      group_by(across(all_of(intersect(c("treatment", "phase"), names(observed))))) |>
+      summarise(predicted = mean(predicted), .groups = "drop")
+    fitted_groups <- conditional$predicted[match(as.character(reference$treatment), as.character(conditional$treatment))]
+    # Marginal mean intervals: log-delta intervals stay positive without truncation;
+    # the signed identity-link difference uses ordinary response-scale intervals.
+    lcl <- if (s$link == "log") integrated$estimate * exp(-qnorm(.975) * integrated$se / integrated$estimate) else integrated$estimate - qnorm(.975) * integrated$se
+    ucl <- if (s$link == "log") integrated$estimate * exp(qnorm(.975) * integrated$se / integrated$estimate) else integrated$estimate + qnorm(.975) * integrated$se
+    audit[[i]] <- tibble(
+      model_id = item$model_id, component = item$component, phase = item$phase,
+      treatment = as.character(reference$treatment), n_sites = rowSums(avg$A > 0),
+      reference_custom = reference$estimate, reference_marginaleffects = me$estimate,
+      corrected_reference_se = reference$std.error,
+      marginaleffects_reference_se = me$std.error,
+      fitted_group_site_balanced_mean = fitted_groups,
+      random_intercept_variance = s$variance,
+      integration_multiplier = if (s$link == "log") exp(s$variance / 2) else 1,
+      integrated_custom = integrated$estimate,
+      integrated_marginaleffects = me_integrated$estimate,
+      integrated_se_custom = integrated$se,
+      integrated_se_marginaleffects = me_integrated$std.error,
+      integrated_lcl = lcl, integrated_ucl = ucl
+    )
+    structures[[i]] <- tibble(model_id = item$model_id, phase = item$phase,
+                              conditional = deparse1(formula(model)),
+                              zero = deparse1(formula(model, component = "zi")),
+                              dispersion = deparse1(formula(model, component = "disp")))
   }
-  # Check matrix construction against the model's own predict implementation.
-  row0 <- if (s$link == "log") exp(drop(s$X %*% s$par[s$ib])) else drop(s$X %*% s$par[s$ib])
-  if (length(s$iz)) row0 <- row0 * (1 - plogis(drop(s$Z %*% s$par[s$iz])))
-  stopifnot(max(abs(row0 - predict(model, grid, type = "response", re.form = NA))) < 1e-6)
-  # Average ALL observed rows within site, then equally across sites; retaining
-  # only one corner/transect per site would give an arbitrary conditional mean.
-  observed <- model$frame
-  if (!is.null(phase_arg) && "phase" %in% names(observed)) observed <- filter(observed, .data$phase == .env$phase_arg)
-  conditional <- observed |>
-    mutate(predicted = as.numeric(predict(model, observed, type = "response", re.form = NULL))) |>
-    group_by(across(all_of(intersect(c("site", "treatment", "phase"), names(observed))))) |>
-    summarise(predicted = mean(predicted), .groups = "drop") |>
-    group_by(across(all_of(intersect(c("treatment", "phase"), names(observed))))) |>
-    summarise(predicted = mean(predicted), .groups = "drop")
-  fitted_groups <- conditional$predicted[match(as.character(reference$treatment), as.character(conditional$treatment))]
-  # Marginal mean intervals: log-delta intervals stay positive without truncation;
-  # the signed identity-link difference uses ordinary response-scale intervals.
-  lcl <- if (s$link == "log") integrated$estimate * exp(-qnorm(.975) * integrated$se / integrated$estimate) else integrated$estimate - qnorm(.975) * integrated$se
-  ucl <- if (s$link == "log") integrated$estimate * exp(qnorm(.975) * integrated$se / integrated$estimate) else integrated$estimate + qnorm(.975) * integrated$se
-  audit[[i]] <- tibble(
-    model_id = item$model_id, component = item$component, phase = item$phase,
-    treatment = as.character(reference$treatment), n_sites = rowSums(avg$A > 0),
-    reference_custom = reference$estimate, reference_marginaleffects = me$estimate,
-    original_se = legacy$se, corrected_reference_se = reference$std.error,
-    marginaleffects_reference_se = me$std.error,
-    fitted_group_site_balanced_mean = fitted_groups,
-    random_intercept_variance = s$variance,
-    integration_multiplier = if (s$link == "log") exp(s$variance / 2) else 1,
-    integrated_custom = integrated$estimate,
-    integrated_marginaleffects = me_integrated$estimate,
-    integrated_se_custom = integrated$se,
-    integrated_se_marginaleffects = me_integrated$std.error,
-    integrated_lcl = lcl, integrated_ucl = ucl
-  )
-  structures[[i]] <- tibble(model_id = item$model_id, phase = item$phase,
-                            conditional = deparse1(formula(model)),
-                            zero = deparse1(formula(model, component = "zi")),
-                            dispersion = deparse1(formula(model, component = "disp")))
-}
-audit <- bind_rows(audit)
-write_csv(audit, file.path(audit_dir, "rd04-estimand-comparison.csv"))
-structure_path <- file.path(audit_dir, "model-structures.csv")
-structure_table <- as.data.frame(bind_rows(structures))
-# Preserve an unchanged model inventory, including when it is open for review.
-if (!file.exists(structure_path) ||
-    !identical(structure_table, as.data.frame(read_csv(structure_path, show_col_types = FALSE)))) {
+  audit <- bind_rows(audit)
+  write_csv(audit, file.path(audit_dir, "rd04-estimand-comparison.csv"))
+  structure_path <- file.path(audit_dir, "model-structures.csv")
+  structure_table <- as.data.frame(bind_rows(structures))
   write_csv(structure_table, structure_path)
 }
 
-# A coherent mean change uses the same repeated-phase model on both sides and
-# its cross-phase covariance. Compare with the independently fitted t model.
-woody <- readRDS(file.path(models_dir, paste0(model_ids[["woody_phase"]], ".rds")))
-s <- integration_setup(woody, reference_grid(woody))
-s <- woody_change_setup(s)
-treatments <- as.character(s$avg$labels$treatment)
-change <- custom_integrated(s)
-change_me <- as.data.frame(marginaleffects_integrated(s))
-stopifnot(max(abs(change$estimate - change_me$estimate)) < 1e-6,
-          max(abs(change$se - change_me$std.error) / pmax(1, change$se)) < 1e-4)
-observed <- woody$frame |>
-  group_by(treatment, phase, site) |>
-  summarise(load = mean(load_mgha), .groups = "drop") |>
-  group_by(treatment, phase) |>
-  summarise(load = mean(load), .groups = "drop") |>
-  pivot_wider(names_from = phase, values_from = load) |>
-  mutate(observed_difference = prepct - postpct)
-phase_change <- tibble(
-  treatment = treatments, phase_model_difference = change$estimate,
-  phase_model_difference_marginaleffects = change_me$estimate,
-  se_custom = change$se, se_marginaleffects = change_me$std.error,
-  lcl = change$estimate - qnorm(.975) * change$se,
-  ucl = change$estimate + qnorm(.975) * change$se
-) |>
-  left_join(select(observed, treatment, observed_difference), by = "treatment") |>
-  left_join(select(filter(audit, component == "Woody difference"), treatment,
-                   separate_t_model_difference = integrated_custom), by = "treatment")
-write_csv(phase_change, file.path(audit_dir, "woody-mean-change-comparison.csv"))
-
-# Reproduce the thesis RESULTS grid on the original saved models, without
-# executing or modifying any thesis notebook or changing its fitted models.
-# Historical predictions were replayed and verified in the thesis environment.
-thesis_reference <- file.path(paths_common$input, "fuel/thesis-reference-reproduction.csv")
-thesis_results <- read_csv(thesis_reference, show_col_types = FALSE)
-stopifnot(file.copy(thesis_reference,
-                   file.path(audit_dir, "thesis-reference-reproduction.csv"), overwrite = TRUE))
-lookup <- c("1-hour" = "onehr", "10-hour" = "tenhr", "100-hour" = "hundhr", "1,000-hour" = "thoushr")
-comparison <- audit |>
-  filter(component %in% names(lookup)) |>
-  mutate(thesis_class = unname(lookup[component])) |>
-  left_join(select(thesis_results, phase, thesis_class, treatment, thesis_reference, thesis_se),
-            by = c("phase", "thesis_class", "treatment")) |>
-  mutate(reference_change = reference_custom - thesis_reference)
-write_csv(comparison, file.path(audit_dir, "thesis-rd04-deadwood-comparison.csv"))
-
-stopifnot(identical(original_hash, tools::md5sum(original_script)))
-write_publication_lines(c("RD04 inference audit; existing fitted models; no refitting or model selection.",
-             paste("Original script MD5:", unname(original_hash)),
-             "Integrated SEs include beta, betazi, and log-SD covariance via sdr$cov.fixed.",
-             "Intervals describe estimated means, not new-site or new-observation predictions.",
-             sub("[[:blank:]]+$", "", capture.output(sessionInfo()))), file.path(audit_dir, "session-info.txt"))
-print(select(audit, component, phase, treatment, reference_custom, integrated_custom,
-             original_se, corrected_reference_se), n = Inf)
-})
+htmltools::tagList(
+  publication_table(read.csv("outputs/fuel/inference-audit/rd04-estimand-comparison.csv")),
+  publication_table(read.csv("outputs/fuel/inference-audit/model-structures.csv"))
+)
 ```
 
-</details>
-
-**Evidence.** The complete saved cells are available below.
+We'll check the woody pre-minus-post contrast separately because its uncertainty
+depends on covariance between the two phases. The results below compare the
+joint-model calculation with the independent delta-method route, observed
+differences, and the direct Student-t model. This lets us inspect the consequences
+of the change-model choice while keeping the displayed contrast consistent with
+the phase means.
 
 ```{r}
-#| label: rd04-07-audit-rd04-inference-evidence
-#| echo: false
-#| results: asis
-render_csv_review("publication/outputs/fuel/inference-audit/rd04-estimand-comparison.csv", output_root)
-render_csv_review("publication/outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv", output_root)
-render_csv_review("publication/outputs/fuel/inference-audit/woody-mean-change-comparison.csv", output_root)
-render_csv_review("publication/outputs/fuel/inference-audit/model-structures.csv", output_root)
-render_csv_review("publication/outputs/fuel/inference-audit/thesis-reference-reproduction.csv", output_root)
+#| label: rd04-07-woody-contrast
+#| echo: true
+#| message: false
+#| warning: false
+
+if (recompute) {
+  # A coherent mean change uses the same repeated-phase model on both sides and
+  # its cross-phase covariance. Compare with the independently fitted t model.
+  woody <- read_saved_model(file.path(models_dir, paste0(spec$model_id[spec$component == "Woody vegetation"][1], ".rds")), "F01")
+  s <- integration_setup(woody, reference_grid(woody))
+  s <- woody_change_setup(s)
+  treatments <- as.character(s$avg$labels$treatment)
+  change <- custom_integrated(s)
+  change_me <- as.data.frame(marginaleffects_integrated(s))
+  stopifnot(max(abs(change$estimate - change_me$estimate)) < 1e-6,
+            max(abs(change$se - change_me$std.error) / pmax(1, change$se)) < 1e-4)
+  observed <- woody$frame |>
+    group_by(treatment, phase, site) |>
+    summarise(load = mean(load_mgha), .groups = "drop") |>
+    group_by(treatment, phase) |>
+    summarise(load = mean(load), .groups = "drop") |>
+    pivot_wider(names_from = phase, values_from = load) |>
+    mutate(observed_difference = prepct - postpct)
+  phase_change <- tibble(
+    treatment = treatments, phase_model_difference = change$estimate,
+    phase_model_difference_marginaleffects = change_me$estimate,
+    se_custom = change$se, se_marginaleffects = change_me$std.error,
+    lcl = change$estimate - qnorm(.975) * change$se,
+    ucl = change$estimate + qnorm(.975) * change$se
+  ) |>
+    left_join(select(observed, treatment, observed_difference), by = "treatment") |>
+    left_join(select(filter(audit, component == "Woody difference"), treatment,
+                     separate_t_model_difference = integrated_custom), by = "treatment")
+  write_csv(phase_change, file.path(audit_dir, "woody-mean-change-comparison.csv"))
+}
+
+publication_table(read.csv("outputs/fuel/inference-audit/woody-mean-change-comparison.csv"))
 ```
 
-**Interpretation and review state.** Numerical agreement verifies the implemented estimand and uncertainty calculation. It does not accept the provisional model assumptions.
+Some differences from the thesis may come from revised fits, and others from
+integrating over random effects. We'll join the verified thesis deadwood
+references to the current audit to distinguish those sources. The comparison
+and original reference values appear below; they use committed exports rather
+than rerunning the thesis models.
+
+```{r}
+#| label: rd04-07-thesis-comparison
+#| echo: true
+#| message: false
+#| warning: false
+
+if (recompute) {
+  # Reproduce the thesis RESULTS grid on the original saved models, without
+  # executing or modifying any thesis notebook or changing its fitted models.
+  # Historical predictions were replayed and verified in the thesis environment.
+  thesis_reference <- file.path(paths_common$input, "fuel/thesis-reference-reproduction.csv")
+  thesis_results <- read_csv(thesis_reference, show_col_types = FALSE)
+  stopifnot(file.copy(thesis_reference,
+                     file.path(audit_dir, "thesis-reference-reproduction.csv"), overwrite = TRUE))
+  lookup <- c("1-hour" = "onehr", "10-hour" = "tenhr", "100-hour" = "hundhr", "1,000-hour" = "thoushr")
+  comparison <- audit |>
+    filter(component %in% names(lookup)) |>
+    mutate(thesis_class = unname(lookup[component])) |>
+    left_join(select(thesis_results, phase, thesis_class, treatment, thesis_reference, thesis_se),
+              by = c("phase", "thesis_class", "treatment")) |>
+    mutate(reference_change = reference_custom - thesis_reference)
+  write_csv(comparison, file.path(audit_dir, "thesis-rd04-deadwood-comparison.csv"))
+
+  write_publication_lines(c("RD04 inference audit; existing fitted models; no refitting or model selection.",
+               "Integrated SEs include beta, betazi, and log-SD covariance via sdr$cov.fixed.",
+               "Intervals describe estimated means, not new-site or new-observation predictions.",
+               sub("[[:blank:]]+$", "", capture.output(sessionInfo()))), file.path(audit_dir, "session-info.txt"))
+}
+
+htmltools::tagList(
+  publication_table(read.csv("outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv")),
+  publication_table(read.csv("outputs/fuel/inference-audit/thesis-reference-reproduction.csv"))
+)
+```
+
+
+Agreement between the computational routes supports the implementation of the
+chosen estimand and uncertainty calculation. Whether the provisional models
+adequately describe the fuel data remains a separate scientific review question.
 
 ## Prediction and interpretation review {#rd04-inference-review}
 
-**Implemented approach:** use **study-standardized, population-averaged
-expected loads** as the baseline for mean fuel loading in comparable systems.
-Integrate over the fitted random-intercept distributions and include modeled
+For the current display, we'll use study-standardized, population-averaged
+expected loads as the baseline for mean fuel loading in comparable systems.
+These integrate over the fitted random-intercept distributions and include modeled
 zeros, with equal weights for the four study-site contexts. Retain the historical
 zero-random-effect predictions as a clearly labeled reference/sensitivity
 summary in the audit. RD04 now uses this integrated interpretation throughout,
@@ -392,13 +629,14 @@ integrating over random effects. The directly comparable deadwood example
 below separates these changes. Values are Mg/ha, GS treatment.
 
 ```{r}
-#| echo: false
+#| label: rd04-deadwood-gs-example
+#| echo: true
 #| warning: false
 #| message: false
 old_new <- read.csv(file.path(output_root, "fuel/inference-audit/thesis-rd04-deadwood-comparison.csv"))
 old_new <- old_new[old_new$treatment == "gs", c("component", "phase", "thesis_reference", "reference_custom", "integrated_custom")]
 names(old_new) <- c("Component", "Phase", "Thesis reference", "Original RD04 reference", "Current integrated mean")
-knitr::kable(old_new, digits = 2, row.names = FALSE)
+publication_table(old_new)
 ```
 
 Combined thesis vegetation and forest-floor estimates do not directly match
@@ -450,14 +688,15 @@ describe uncertainty in the integrated **mean**, not variation in a new forest
 or transect.
 
 ```{r}
-#| echo: false
+#| label: rd04-integrated-gs-example
+#| echo: true
 audit <- read.csv(file.path(output_root, "fuel/inference-audit/rd04-estimand-comparison.csv"))
 show <- audit[audit$treatment == "gs" & audit$component %in%
                 c("100-hour", "Woody vegetation", "Herbaceous vegetation"), ]
 show <- show[!(show$component == "100-hour" & show$phase == "prepct"), ]
 show <- show[, c("component", "phase", "reference_custom", "integrated_custom", "integrated_lcl", "integrated_ucl")]
 names(show) <- c("Component", "Phase", "Zero-effect reference", "Integrated mean", "95% lower", "95% upper")
-knitr::kable(show, digits = 2, row.names = FALSE)
+publication_table(show)
 ```
 
 The implementation in the executable audit above demonstrates both routes:
@@ -488,8 +727,9 @@ loads with large variance corrections and only four sites.
 agreement of reference point estimates and SEs, integrated point estimates, and
 integrated SEs; the latter agree within a relative/absolute tolerance of
 $10^{-4}$. It checks the integration multiplier against numerical quadrature,
-the matrix predictions against `predict.glmmTMB()`, and the retired script's
-checksum before and after the run. It additionally verifies all four woody
+the matrix predictions against `predict.glmmTMB()`. Historical point estimates
+are recomputed from the current saved fits; the retired generator
+is not evaluated. It additionally verifies all four woody
 mean contrasts with cross-phase covariance and reproduces the 48 thesis fuel
 reference estimates. Outputs and the R/package session record are in
 `publication/outputs/fuel/inference-audit/`.
@@ -515,66 +755,17 @@ The matched-contrast qualification can be stated in its own Methods sentence:
 > covariance, and interpreted as a potential surface-fuel contribution.
 
 
+## 08 - Generate the figure and canonical estimates
 
-## 08 — Generate the figure and canonical estimates
-
-**Purpose.** Generate all 60 estimates, the nine-panel figure, and its provenance.
-
-**Rationale.** Use the explicit provisional-model mapping below and shared inference
-functions. The figure reads saved F01 models directly; audit tables are verification
-evidence, not its estimate input. Preserve the existing layout, interval methods,
-and potential-contribution interpretation.
-
-<details data-review-source="publication/task-rd04.qmd#rd04-08-generate-rd04-integrated-figure">
-<summary>Calculation — rd04-08-generate-rd04-integrated-figure</summary>
+We can now turn the audited calculation into the 60 estimates needed for the
+inventory figure and table. We'll use the mapped F01 models directly, keeping
+the audit tables as checking evidence. First, this formatter gives positive
+means log-scale delta-method intervals and signed differences response-scale
+intervals, allowing the woody-change interval to span zero where appropriate.
 
 ```{r}
-#| label: rd04-08-generate-rd04-integrated-figure
-#| eval: !expr isTRUE(params$recompute)
+#| label: rd04-estimate-rows
 #| echo: true
-#| warning: false
-#| message: false
-local({
-publication_root <- normalizePath(getwd(), winslash = "/")
-script_dir <- file.path(publication_root, "scripts", "fuel")
-paths_common <- publication_paths(publication_root)
-
-source(file.path(script_dir, "rd04-inference-utils.R"))
-
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(ggplot2)
-  library(glmmTMB)
-  library(patchwork)
-  library(readr)
-})
-paths <- publication_fuel_paths(publication_root)
-models_dir <- file.path(publication_root, "outputs", "fuel", "models")
-figures_dir <- file.path(paths$output, "figures")
-tables_dir <- file.path(paths$output, "tables")
-dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
-dir.create(tables_dir, recursive = TRUE, showWarnings = FALSE)
-dir.create(paths$manifests, recursive = TRUE, showWarnings = FALSE)
-
-spec <- tibble::tribble(
-  ~model_id, ~component, ~phase,
-  "prepct_onehr_disp_treatment", "1-hour fuel", "prepct",
-  "postpct_onehr_base", "1-hour fuel", "postpct",
-  "prepct_tenhr_base", "10-hour fuel", "prepct",
-  "postpct_tenhr_base", "10-hour fuel", "postpct",
-  "prepct_hundhr_base", "100-hour fuel", "prepct",
-  "postpct_hundhr_zi_treatment_site_disp_treatment_site_interaction", "100-hour fuel", "postpct",
-  "prepct_thoushr_base", "1,000-hour fuel", "prepct",
-  "postpct_thoushr_zi_treatment", "1,000-hour fuel", "postpct",
-  "woody_phase_zigamma_ziphase_disp1", "Woody vegetation", NA_character_,
-  "prepct_herbaceous_vegetation_base", "Herbaceous vegetation", "prepct",
-  "postpct_herbaceous_vegetation_base", "Herbaceous vegetation", "postpct",
-  "prepct_litter_disp_treatment", "Litter (pre-PCT only)", "prepct",
-  "prepct_duff_base", "Duff (pre-PCT only)", "prepct"
-)
-selection <- read_csv("outputs/fuel/manifests/model-selection-log.csv", show_col_types = FALSE)
-stopifnot(all(spec$model_id %in% selection$provisional_aic_leader),
-          all(file.exists(file.path(models_dir, paste0(spec$model_id, ".rds")))))
 
 summarize_integrated <- function(s, component, model_id, phase = NULL, difference = FALSE) {
   prediction <- custom_integrated(s)
@@ -598,140 +789,154 @@ summarize_integrated <- function(s, component, model_id, phase = NULL, differenc
            "log-scale delta method for integrated mean",
          random_intercept_variance = s$variance)
 }
-
-phase_estimates <- list()
-for (i in seq_len(nrow(spec))) {
-  item <- spec[i, ]
-  model <- readRDS(file.path(models_dir, paste0(item$model_id, ".rds")))
-  phase_arg <- if (is.na(item$phase)) NULL else item$phase
-  s <- integration_setup(model, reference_grid(model, phase_arg))
-  stopifnot(all(rowSums(s$avg$A > 0) == 4L))
-  phase_estimates[[i]] <- summarize_integrated(s, item$component, item$model_id, phase_arg)
-  if (item$component == "Woody vegetation") {
-    difference_component <- summarize_integrated(
-      woody_change_setup(s), "Woody vegetation difference (pre-PCT minus post-PCT)",
-      item$model_id, difference = TRUE)
-  }
-}
-estimates <- bind_rows(bind_rows(phase_estimates), difference_component) |>
-  mutate(
-    treatment = factor(treatment, levels = c("gs", "ld", "ha", "hd")),
-    phase = factor(phase, levels = c("Pre-PCT", "Post-PCT", "Vegetation difference")),
-    component = factor(component, levels = c(
-      "1-hour fuel", "10-hour fuel", "100-hour fuel", "1,000-hour fuel",
-      "Woody vegetation", "Herbaceous vegetation", "Litter (pre-PCT only)",
-      "Duff (pre-PCT only)", "Woody vegetation difference (pre-PCT minus post-PCT)"))
-  ) |>
-  arrange(component, phase, treatment)
-stopifnot(nrow(estimates) == 60L, all(is.finite(estimates$estimate)),
-          all(is.finite(estimates$se)), all(estimates$se >= 0),
-          all(estimates$lcl <= estimates$estimate), all(estimates$ucl >= estimates$estimate))
-# Every displayed woody change must equal the plotted pre-minus-post means.
-woody_means <- filter(estimates, component == "Woody vegetation")
-for (trt in levels(estimates$treatment)) {
-  pre <- filter(woody_means, treatment == trt, phase == "Pre-PCT")$estimate
-  post <- filter(woody_means, treatment == trt, phase == "Post-PCT")$estimate
-  delta <- filter(difference_component, treatment == trt)$estimate
-  stopifnot(abs(pre - post - delta) < 1e-8)
-}
-write_csv(estimates, file.path(tables_dir, "rd04-fuel-model-estimates.csv"))
-difference_component <- filter(estimates, phase == "Vegetation difference")
-
-phase_colors <- c("Pre-PCT" = "#C96F38", "Post-PCT" = "#3F51B5")
-phase_position <- position_dodge(width = 0.52)
-
-phase_panel <- function(component_name) {
-  data <- filter(estimates, .data$component == .env$component_name)
-  ggplot(data, aes(x = treatment, y = estimate, ymin = lcl, ymax = ucl, color = phase, group = phase)) +
-    geom_linerange(linewidth = 2.2, position = phase_position) +
-    geom_point(shape = 21, fill = "black", color = "white", size = 2.5, stroke = 0.6, position = phase_position) +
-    scale_color_manual(values = phase_colors, drop = FALSE) +
-    scale_x_discrete(labels = c(gs = "GS", ld = "LD", ha = "HA", hd = "HD")) +
-    labs(title = component_name, x = NULL, y = expression(Load ~ (Mg %.% ha^-1))) +
-    theme_minimal(base_size = 11) +
-    theme(
-      plot.title = element_text(face = "bold", size = 11),
-      panel.grid.minor = element_blank(),
-      legend.position = "none"
-    )
-}
-
-difference_panel <- function() {
-  data <- difference_component
-  ggplot(data, aes(x = treatment, y = estimate, ymin = lcl, ymax = ucl)) +
-    geom_hline(yintercept = 0, color = "gray45", linewidth = 0.45) +
-    geom_linerange(color = "#5A4A42", linewidth = 2.2) +
-    geom_point(shape = 21, fill = "black", color = "white", size = 2.5, stroke = 0.6) +
-    scale_x_discrete(labels = c(gs = "GS", ld = "LD", ha = "HA", hd = "HD")) +
-    labs(
-      title = "Woody vegetation difference\n(pre-PCT minus post-PCT)",
-      x = NULL,
-      y = expression(Load ~ difference ~ (Mg %.% ha^-1))
-    ) +
-    theme_minimal(base_size = 11) +
-    theme(plot.title = element_text(face = "bold", size = 11), panel.grid.minor = element_blank())
-}
-
-component_order <- levels(estimates$component)
-plots <- lapply(component_order[1:8], phase_panel)
-plots[[9]] <- difference_panel()
-figure <- wrap_plots(plots, ncol = 3, guides = "collect") +
-  plot_layout(guides = "collect")
-
-ggsave(file.path(figures_dir, "rd04-fuel-phase-pct-inventory.png"), figure, width = 10.5, height = 10, dpi = 300, bg = "white")
-
-provenance <- c(
-  "task: RD04",
-  "generator: task-rd04.qmd#rd04-08-generate-rd04-integrated-figure",
-  "figure: figures/rd04-fuel-phase-pct-inventory.png",
-  "estimates: tables/rd04-fuel-model-estimates.csv",
-  "estimand: site-standardized random-effect-integrated mean load including modeled zeros",
-  "random_effects: analytically integrated over all fitted independent Gaussian random intercepts",
-  "site_averaging: equal weights for the four observed study-site contexts",
-  "load_intervals: 95% log-scale delta-method confidence intervals for integrated means",
-  "difference_intervals: 95% response-scale delta-method confidence intervals with joint pre/post covariance",
-  "parameter_covariance: full sdr$cov.fixed including zero-process coefficients and log random-effect SDs",
-  "difference_panel: integrated matched woody mean difference from the same repeated-phase model as woody load panels",
-  "difference_model: woody_phase_zigamma_ziphase_disp1",
-  "pre_pct_only: litter; duff",
-  paste0("model_ids: ", paste(spec$model_id, collapse = "; ")),
-  "selection_status: existing AIC-leading load models used for draft figure; scientific review remains pending"
-)
-write_publication_lines(provenance, file.path(paths$manifests, "rd04-figure-provenance.yml"))
-write_publication_lines(c(provenance, "", sub("[[:blank:]]+$", "", capture.output(sessionInfo()))),
-           file.path(paths$manifests, "rd04-figure-session-info.txt"))
-})
 ```
 
-</details>
-
-**Evidence.** The complete saved cells are available below.
+We'll calculate the phase means and woody change from those fits and collect
+them in one source table for the publication. The table below shows every mean
+and interval behind the figure. Checks ensure all 60 cells are present and that
+woody change equals the difference between the displayed phase means.
 
 ```{r}
-#| label: rd04-08-generate-rd04-integrated-figure-evidence
-#| echo: false
-#| results: asis
-render_csv_review("publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv", output_root)
+#| label: rd04-08-generate-rd04-integrated-figure
+#| echo: true
+#| message: false
+#| warning: false
+
+if (recompute) {
+  publication_root <- normalizePath(getwd(), winslash = "/")
+  paths_common <- publication_paths(publication_root)
+
+  # Reuse the inference functions defined above.
+
+  suppressPackageStartupMessages({
+    library(dplyr)
+    library(ggplot2)
+    library(glmmTMB)
+    library(patchwork)
+    library(readr)
+  })
+  paths <- publication_fuel_paths(publication_root)
+  models_dir <- file.path(publication_root, "outputs", "fuel", "models")
+  figures_dir <- file.path(paths$output, "figures")
+  tables_dir <- file.path(paths$output, "tables")
+  dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+  dir.create(tables_dir, recursive = TRUE, showWarnings = FALSE)
+  dir.create(paths$manifests, recursive = TRUE, showWarnings = FALSE)
+
+  spec <- rd04_spec
+  phase_estimates <- list()
+  for (i in seq_len(nrow(spec))) {
+    item <- spec[i, ]
+    model <- read_saved_model(file.path(models_dir, paste0(item$model_id, ".rds")), "F01")
+    phase_arg <- if (is.na(item$phase)) NULL else item$phase
+    s <- integration_setup(model, reference_grid(model, phase_arg))
+    stopifnot(all(rowSums(s$avg$A > 0) == 4L))
+    phase_estimates[[i]] <- summarize_integrated(s, item$component, item$model_id, phase_arg)
+    if (item$component == "Woody vegetation") {
+      difference_component <- summarize_integrated(
+        woody_change_setup(s), "Woody vegetation difference (pre-PCT minus post-PCT)",
+        item$model_id, difference = TRUE)
+    }
+  }
+  estimates <- bind_rows(bind_rows(phase_estimates), difference_component) |>
+    mutate(
+      treatment = factor(treatment, levels = c("gs", "ld", "ha", "hd")),
+      phase = factor(phase, levels = c("Pre-PCT", "Post-PCT", "Vegetation difference")),
+      component = factor(component, levels = c(
+        "1-hour fuel", "10-hour fuel", "100-hour fuel", "1,000-hour fuel",
+        "Woody vegetation", "Herbaceous vegetation", "Litter (pre-PCT only)",
+        "Duff (pre-PCT only)", "Woody vegetation difference (pre-PCT minus post-PCT)"))
+    ) |>
+    arrange(component, phase, treatment)
+  stopifnot(nrow(estimates) == 60L, all(is.finite(estimates$estimate)),
+            all(is.finite(estimates$se)), all(estimates$se >= 0),
+            all(estimates$lcl <= estimates$estimate), all(estimates$ucl >= estimates$estimate))
+  # Every displayed woody change must equal the plotted pre-minus-post means.
+  woody_means <- filter(estimates, component == "Woody vegetation")
+  for (trt in levels(estimates$treatment)) {
+    pre <- filter(woody_means, treatment == trt, phase == "Pre-PCT")$estimate
+    post <- filter(woody_means, treatment == trt, phase == "Post-PCT")$estimate
+    delta <- filter(difference_component, treatment == trt)$estimate
+    stopifnot(abs(pre - post - delta) < 1e-8)
+  }
+  write_csv(estimates, file.path(tables_dir, "rd04-fuel-model-estimates.csv"))
+}
+
+publication_table(read.csv("outputs/fuel/tables/rd04-fuel-model-estimates.csv"))
 ```
 
-## Completed output
+## Companion estimates table - pending review {#fuel-companion-table}
 
-### Publication execution {#publication-execution}
+The figure makes patterns easier to see, but readers also need the values and
+uncertainty behind them. We'll arrange all 60 estimates and their existing 95%
+confidence intervals into 15 component–phase rows, with treatments in the same
+order as the figure. This reads the canonical estimate CSV without recalculating
+inference. The same table appears in the manuscript supplement; final placement
+remains a review decision.
 
-RD04 inference, audits and display generation use the sole publication
-environment: R 4.6.2 with `publication/renv.lock`. The canonical figure, estimates,
-saved models and producing provenance are under `publication/outputs/fuel/`.
-The scripts retain their prediction, gradient, integration and covariance
-verification checks. Model assumptions and final display decisions remain
-under their existing scientific review states.
+```{r}
+#| label: tbl-rd04-fuel-estimates
+#| echo: true
+#| tbl-cap: "Companion values for the RD04 fuel inventory (candidate appendix table). Entries are mean (lower, upper 95% confidence limits), in Mg ha^-1^. GS = group selection; LD = low-density dispersed retention; HA = high-density aggregated retention; HD = high-density dispersed retention. Load means include modeled zeros, integrate over all fitted random intercepts, and equally weight the four study-site contexts. The signed woody reduction is pre-PCT minus post-PCT from the joint matched phase model, retaining pre/post covariance; it is a potential surface-fuel contribution, not measured slash. Load intervals use the log-scale delta method; reduction intervals use the response-scale delta method. These are intervals for means, not prediction intervals. Models remain provisional; intervals exclude model-selection and component-derivation uncertainty. Post-PCT litter and duff are not estimated."
 
-Historical thesis reference calculations belong to the separate thesis export
-operation. Publication consumes those exported reference values; it has no
-previous-environment replay or retained migration acceptance/difference artifacts.
+# tbl-rd04-fuel-estimates
+fuel_table_source <- read.csv(
+  file.path("outputs",
+            "fuel/tables/rd04-fuel-model-estimates.csv"),
+  stringsAsFactors = FALSE
+)
+fuel_table_keys <- c("component", "phase", "treatment")
+stopifnot(nrow(fuel_table_source) == 60L,
+          !anyDuplicated(fuel_table_source[fuel_table_keys]),
+          all(is.finite(as.matrix(fuel_table_source[c("estimate", "lcl", "ucl")]))),
+          all(fuel_table_source$lcl <= fuel_table_source$estimate),
+          all(fuel_table_source$ucl >= fuel_table_source$estimate))
+fuel_table_rows <- unique(fuel_table_source[c("component", "phase")])
+stopifnot(nrow(fuel_table_rows) == 15L)
+fuel_table <- fuel_table_rows
+for (trt in c("gs", "ld", "ha", "hd")) {
+  values <- vapply(seq_len(nrow(fuel_table_rows)), function(i) {
+    cell <- fuel_table_source[
+      fuel_table_source$component == fuel_table_rows$component[i] &
+      fuel_table_source$phase == fuel_table_rows$phase[i] &
+      fuel_table_source$treatment == trt, ]
+    stopifnot(nrow(cell) == 1L)
+    sprintf("%s (%s, %s)", publication_number(cell$estimate),
+            publication_number(cell$lcl), publication_number(cell$ucl))
+  }, character(1))
+  fuel_table[[toupper(trt)]] <- values
+}
+fuel_table$component <- sub(" (pre-PCT only)", "", fuel_table$component, fixed = TRUE)
+fuel_table$component[fuel_table$phase == "Vegetation difference"] <-
+  "Woody standing-vegetation reduction"
+fuel_table$phase[fuel_table$phase == "Vegetation difference"] <- "Pre minus post"
+names(fuel_table)[1:2] <- c("Component", "Phase")
+write.csv(fuel_table, "outputs/fuel/tables/rd04-fuel-display.csv", row.names = FALSE)
+publication_table(fuel_table)
+```
+
+
+## Publication execution {#publication-execution}
+
+RD04 uses publication R 4.6.2 and `publication/renv.lock`. Committed thesis
+exports supply historical reference values. All prediction, gradient, integration,
+and covariance checks remain in the calculations above.
+
+## Fuel inventory figure {#completed-output}
+
+We'll bring the estimates into nine panels to examine fuel conditions across
+treatments and phases. Component-specific vertical scales keep small loads
+legible alongside coarse wood; comparisons of magnitude should use the axis
+values. Litter and duff appear only before PCT, while a zero line in the woody
+change panel distinguishes estimated reductions from increases. The figure
+below shows uncertainty in the model means, with the potential-contribution
+qualification retained in its caption.
 
 ```{r}
 #| label: fig-rd04-fuel-inventory
-#| echo: false
+#| echo: true
+#| message: false
+#| warning: false
 #| out-width: "100%"
 #| fig-cap: >
 #|   RD04 full fuel inventory by retention treatment. Points are
@@ -745,6 +950,75 @@ previous-environment replay or retained migration acceptance/difference artifact
 #|   It is an inferred potential surface-fuel contribution, not direct slash
 #|   load. Panel-specific y-scales are used.
 
+# fig-rd04-fuel-inventory
+if (recompute) {
+  difference_component <- filter(estimates, phase == "Vegetation difference")
+
+  phase_colors <- c("Pre-PCT" = "#C96F38", "Post-PCT" = "#3F51B5")
+  phase_position <- position_dodge(width = 0.52)
+
+  phase_panel <- function(component_name) {
+    data <- filter(estimates, .data$component == .env$component_name)
+    ggplot(data, aes(x = treatment, y = estimate, ymin = lcl, ymax = ucl, color = phase, group = phase)) +
+      geom_linerange(linewidth = 2.2, position = phase_position) +
+      geom_point(shape = 21, fill = "black", color = "white", size = 2.5, stroke = 0.6, position = phase_position) +
+      scale_color_manual(values = phase_colors, drop = FALSE) +
+      scale_x_discrete(labels = c(gs = "GS", ld = "LD", ha = "HA", hd = "HD")) +
+      labs(title = component_name, x = NULL, y = expression(Load ~ (Mg %.% ha^-1))) +
+      theme_minimal(base_size = 11) +
+      theme(
+        plot.title = element_text(face = "bold", size = 11),
+        panel.grid.minor = element_blank(),
+        legend.position = "none"
+      )
+  }
+
+  difference_panel <- function() {
+    data <- difference_component
+    ggplot(data, aes(x = treatment, y = estimate, ymin = lcl, ymax = ucl)) +
+      geom_hline(yintercept = 0, color = "gray45", linewidth = 0.45) +
+      geom_linerange(color = "#5A4A42", linewidth = 2.2) +
+      geom_point(shape = 21, fill = "black", color = "white", size = 2.5, stroke = 0.6) +
+      scale_x_discrete(labels = c(gs = "GS", ld = "LD", ha = "HA", hd = "HD")) +
+      labs(
+        title = "Woody vegetation difference\n(pre-PCT minus post-PCT)",
+        x = NULL,
+        y = expression(Load ~ difference ~ (Mg %.% ha^-1))
+      ) +
+      theme_minimal(base_size = 11) +
+      theme(plot.title = element_text(face = "bold", size = 11), panel.grid.minor = element_blank())
+  }
+
+  component_order <- levels(estimates$component)
+  plots <- lapply(component_order[1:8], phase_panel)
+  plots[[9]] <- difference_panel()
+  figure <- wrap_plots(plots, ncol = 3, guides = "collect") +
+    plot_layout(guides = "collect")
+
+  ggsave(file.path(figures_dir, "rd04-fuel-phase-pct-inventory.png"), figure, width = 10.5, height = 10, dpi = 300, bg = "white")
+
+  provenance <- c(
+    "task: RD04",
+    "generator: task-rd04.qmd#rd04-08-generate-rd04-integrated-figure",
+    "figure: figures/rd04-fuel-phase-pct-inventory.png",
+    "estimates: tables/rd04-fuel-model-estimates.csv",
+    "estimand: site-standardized random-effect-integrated mean load including modeled zeros",
+    "random_effects: analytically integrated over all fitted independent Gaussian random intercepts",
+    "site_averaging: equal weights for the four observed study-site contexts",
+    "load_intervals: 95% log-scale delta-method confidence intervals for integrated means",
+    "difference_intervals: 95% response-scale delta-method confidence intervals with joint pre/post covariance",
+    "parameter_covariance: full sdr$cov.fixed including zero-process coefficients and log random-effect SDs",
+    "difference_panel: integrated matched woody mean difference from the same repeated-phase model as woody load panels",
+    paste0("difference_model: ", spec$model_id[spec$component == "Woody vegetation"]),
+    "pre_pct_only: litter; duff",
+    paste0("model_ids: ", paste(spec$model_id, collapse = "; ")),
+    "selection_status: existing AIC-leading load models used for draft figure; scientific review remains pending"
+  )
+  write_publication_lines(provenance, file.path(paths$manifests, "rd04-figure-provenance.yml"))
+  write_publication_lines(c(provenance, "", sub("[[:blank:]]+$", "", capture.output(sessionInfo()))),
+             file.path(paths$manifests, "rd04-figure-session-info.txt"))
+}
+
 knitr::include_graphics(file.path(output_root, "fuel/figures/rd04-fuel-phase-pct-inventory.png"))
 ```
 
@@ -755,17 +1029,6 @@ Generated artifacts for this review are
 The figure uses the AIC-leading models documented in the
 [F01 model-review register](task-f01.qmd#f01-record). It is also available
 [in the working manuscript for review in context](draft-results.qmd#rd04-fuel-inventory-draft).
-
-## Companion estimates table — pending review {#fuel-companion-table}
-
-The table below reformats all 60 displayed estimates and their existing 95%
-confidence intervals into 15 component–phase rows, with treatments in the
-same order as the figure. It reads the figure's canonical model-estimate CSV
-directly; no models or intervals are recalculated. The same table is included in the manuscript supplement. It is a candidate
-appendix table; final placement remains a review decision.
-
-{{< include sections/rd04-fuel-estimates-table.qmd >}}
-
 
 
 The former figure-and-table plan has been merged into this task; this is the
@@ -788,46 +1051,9 @@ measured slash and causal PCT effects. The figure is complete; scientific model
 assumptions and final table placement remain under review. The archived stage 06
 implementation documents the superseded display, not the current inference target.
 
-## Reusable helpers and source review {#rd04-source-review}
 
-<details data-review-source="publication/scripts/fuel/rd04-inference-utils.R">
-<summary>rd04-inference-utils.R</summary>
+## Source and display history {#rd04-source-review}
 
-[Download source](repo-files/publication/scripts/fuel/rd04-inference-utils.R)
+Inference functions are defined beside their first use. The superseded zero-effect display is documented in the inference review and Git history.
 
-````r
-{{< include scripts/fuel/rd04-inference-utils.R >}}
-````
-
-</details>
-
-### Retired display history
-
-<details data-review-source="publication/scripts/fuel/retired/06-generate-rd04-figure.R">
-<summary>06-generate-rd04-figure.R — retired (historical implementation)</summary>
-
-[Download source](repo-files/publication/scripts/fuel/retired/06-generate-rd04-figure.R)
-
-````r
-{{< include scripts/fuel/retired/06-generate-rd04-figure.R >}}
-````
-
-</details>
-
-### Retirement record
-
-::: {.included-readme heading-offset="3"}
-{{< include scripts/fuel/retired/README.md >}}
-:::
-
-[Download the retirement note](repo-files/publication/scripts/fuel/retired/README.md).
-
-
-
-{{< include _task-metadata/rd04-files.qmd >}}
-
-```{r}
-#| label: rd04-publish
-#| include: false
-if (isTRUE(params$recompute)) publish_fuel_task("RD04", output_root)
-```
+{{< include /_task-metadata/rd04-files.qmd >}}

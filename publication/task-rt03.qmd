@@ -1,21 +1,22 @@
 ---
-title: "RT03 — fuel Results narrative"
+title: "RT03 - fuel Results narrative"
 sidebar: workflow
 ---
 
 
-{{< include _task-metadata/rt03-status.qmd >}}
+{{< include /_task-metadata/rt03-status.qmd >}}
 
 <span id="rt03-record"></span>
 
 ## Purpose, inputs, and scope
 
-This page owns the fuel Results narrative and its decisions about which claims
-to report and how to qualify them. It consumes the
+With the fuel estimates assembled, we'll work out which patterns the Results
+should report and how to describe their uncertainty. This page draws on the
 [F01 component/model record](task-f01.qmd) and
 [RD04 inference and display record](task-rd04.qmd#rd04-inference-review).
 The [F01](task-f01.qmd) and [RD04](task-rd04.qmd) task pages own their execution order and handoff. The shared
-`sections/results.qmd` contains other topics too; RT03 maintains its fuel subsection.
+`sections/results.qmd` assembles the Results; RT03 maintains the shared fuel
+subsection in `sections/fuel-results.qmd`.
 
 The current instruction authorizes the fuel
 narrative and companion-table draft. The
@@ -58,4 +59,86 @@ accepted fuel methods and [D03](task-d03.qmd) will own the management
 interpretation once their queued work begins. Neither task is completed or
 accepted by the narrative draft.
 
-{{< include _task-metadata/rt03-files.qmd >}}
+
+## Draft Results and numerical source
+
+The hidden setup loads the shared F01 helpers and enables automatic chunk
+labels before any code is displayed.
+
+```{r}
+#| label: rt03-setup
+#| include: false
+
+if (!file.exists("outputs/helpers/task-helpers.rds"))
+  stop("Saved helpers are missing. Run quarto render task-f01.qmd first.")
+invisible(list2env(readRDS("outputs/helpers/task-helpers.rds"), envir = knitr::knit_global()))
+enable_chunk_labels()
+```
+
+The Results values need to stay aligned with the figure as the analysis develops.
+We'll read the saved RD04 means and intervals and format them for inline use,
+without recalculating inference. The saved formatter carries those estimates
+with it and is refreshed on each render. The draft below puts the values in
+context, moving from phase-specific fuel conditions to matched woody change.
+
+```{r}
+#| label: rt03-fuel-narrative-values
+#| echo: true
+
+fuel_results <- read.csv(
+  "outputs/fuel/tables/rd04-fuel-model-estimates.csv",
+  stringsAsFactors = FALSE
+)
+fuel_components <- c(
+  one = "1-hour fuel",
+  ten = "10-hour fuel",
+  hundred = "100-hour fuel",
+  coarse = "1,000-hour fuel",
+  woody = "Woody vegetation",
+  herb = "Herbaceous vegetation",
+  litter = "Litter (pre-PCT only)",
+  duff = "Duff (pre-PCT only)",
+  reduction = "Woody vegetation difference (pre-PCT minus post-PCT)"
+)
+fuel_phases <- c(
+  pre = "Pre-PCT",
+  post = "Post-PCT",
+  change = "Vegetation difference"
+)
+fuel_value <- function(
+  component,
+  phase,
+  treatment,
+  interval = FALSE,
+  digits = 1L
+) {
+  cell <- fuel_results[
+    fuel_results$component == fuel_components[[component]] &
+      fuel_results$phase == fuel_phases[[phase]] &
+      fuel_results$treatment == treatment,
+  ]
+  stopifnot(nrow(cell) == 1L)
+  value <- formatC(cell$estimate, format = "f", digits = digits)
+  if (interval) {
+    value <- paste0(
+      value,
+      " (95% CI ",
+      formatC(cell$lcl, format = "f", digits = digits),
+      " to ",
+      formatC(cell$ucl, format = "f", digits = digits),
+      ")"
+    )
+  }
+  value
+}
+
+# Save the function with the data it uses so other pages can render inline values.
+environment(fuel_value) <- list2env(list(fuel_results = fuel_results,
+  fuel_components = fuel_components, fuel_phases = fuel_phases), parent = baseenv())
+dir.create("outputs/helpers", recursive = TRUE, showWarnings = FALSE)
+saveRDS(fuel_value, "outputs/helpers/fuel-value.rds")
+```
+
+{{< include /sections/fuel-results.qmd >}}
+
+{{< include /_task-metadata/rt03-files.qmd >}}
