@@ -78,9 +78,13 @@ labels before any code is displayed.
 #| label: rd04-setup
 #| include: false
 
-if (!file.exists("outputs/helpers/task-helpers.rds"))
+if (!file.exists("outputs/helpers/task-helpers.rds")) {
   stop("Saved helpers are missing. Run quarto render task-f01.qmd first.")
-invisible(list2env(readRDS("outputs/helpers/task-helpers.rds"), envir = knitr::knit_global()))
+}
+invisible(list2env(
+  readRDS("outputs/helpers/task-helpers.rds"),
+  envir = knitr::knit_global()
+))
 enable_chunk_labels()
 ```
 
@@ -96,7 +100,15 @@ ordinary render here reviews the current tables and figures.
 # A refit also refreshes the results derived from the new models.
 recompute <- isTRUE(params$recompute) || isTRUE(params$refit)
 output_root <- "outputs"
-data.frame(Mode = if (isTRUE(params$refit)) "Refresh after F01 refit" else if (recompute) "Recompute from saved models" else "Review saved results")
+data.frame(
+  Mode = if (isTRUE(params$refit)) {
+    "Refresh after F01 refit"
+  } else if (recompute) {
+    "Recompute from saved models"
+  } else {
+    "Review saved results"
+  }
+)
 ```
 
 ## Inference functions
@@ -113,8 +125,12 @@ functions that follow define the means and uncertainty we want to audit.
 write_publication_lines <- function(text, path) {
   connection <- file(path, open = "wb")
   on.exit(close(connection))
-  writeLines(enc2utf8(sub("[[:blank:]]+$", "", text)), connection,
-             sep = "\n", useBytes = TRUE)
+  writeLines(
+    enc2utf8(sub("[[:blank:]]+$", "", text)),
+    connection,
+    sep = "\n",
+    useBytes = TRUE
+  )
 }
 ```
 
@@ -133,7 +149,9 @@ mean loads.
 reference_grid <- function(model, phase = NULL) {
   keys <- intersect(c("site", "treatment", "phase"), names(model$frame))
   grid <- distinct(model$frame, across(all_of(keys)), .keep_all = TRUE)
-  if (!is.null(phase) && "phase" %in% keys) grid <- filter(grid, .data$phase == .env$phase)
+  if (!is.null(phase) && "phase" %in% keys) {
+    grid <- filter(grid, .data$phase == .env$phase)
+  }
   counts <- count(grid, treatment)
   stopifnot(length(unique(counts$n)) == 1L)
   grid
@@ -144,19 +162,33 @@ reference_grid <- function(model, phase = NULL) {
 averaging_matrix <- function(grid) {
   keys <- intersect(c("treatment", "phase"), names(grid))
   labels <- distinct(grid, across(all_of(keys)))
-  A <- t(vapply(seq_len(nrow(labels)), function(i) {
-    keep <- Reduce(`&`, lapply(keys, function(k) grid[[k]] == labels[[k]][i]))
-    as.numeric(keep) / sum(keep)
-  }, numeric(nrow(grid))))
+  A <- t(vapply(
+    seq_len(nrow(labels)),
+    function(i) {
+      keep <- Reduce(`&`, lapply(keys, function(k) grid[[k]] == labels[[k]][i]))
+      as.numeric(keep) / sum(keep)
+    },
+    numeric(nrow(grid))
+  ))
   list(A = A, labels = labels)
 }
 
 custom_reference <- function(model, grid) {
-  p <- predict(model, newdata = grid, type = "response", re.form = NA,
-               allow.new.levels = TRUE, se.fit = TRUE, cov.fit = TRUE)
+  p <- predict(
+    model,
+    newdata = grid,
+    type = "response",
+    re.form = NA,
+    allow.new.levels = TRUE,
+    se.fit = TRUE,
+    cov.fit = TRUE
+  )
   avg <- averaging_matrix(grid)
-  transform(avg$labels, estimate = as.vector(avg$A %*% p$fit),
-            std.error = sqrt(diag(avg$A %*% p$cov.fit %*% t(avg$A))))
+  transform(
+    avg$labels,
+    estimate = as.vector(avg$A %*% p$fit),
+    std.error = sqrt(diag(avg$A %*% p$cov.fit %*% t(avg$A)))
+  )
 }
 ```
 
@@ -175,24 +207,47 @@ the function checks those assumptions before returning its inputs.
 # This deliberately fails on slopes, correlated effects, offsets, or other links.
 integration_setup <- function(model, grid) {
   vc <- VarCorr(model)
-  stopifnot(length(vc$zi) == 0L, length(vc$disp) == 0L,
-            all(vapply(vc$cond, function(x) identical(dim(x), c(1L, 1L)), logical(1))))
-  X <- model.matrix(delete.response(terms(formula(model, fixed.only = TRUE))), grid)
+  stopifnot(
+    length(vc$zi) == 0L,
+    length(vc$disp) == 0L,
+    all(vapply(vc$cond, function(x) identical(dim(x), c(1L, 1L)), logical(1)))
+  )
+  X <- model.matrix(
+    delete.response(terms(formula(model, fixed.only = TRUE))),
+    grid
+  )
   Z <- model.matrix(formula(model, component = "zi", fixed.only = TRUE), grid)
   par <- model$fit$par
   ib <- which(names(par) == "beta")
   iz <- which(names(par) == "betazi")
   it <- which(names(par) == "theta")
-  stopifnot(ncol(X) == length(ib), ncol(Z) == length(iz),
-            length(it) == length(vc$cond), model$sdr$pdHess,
-            isTRUE(all.equal(unname(par), unname(model$sdr$par.fixed))),
-            is.null(model.offset(model$frame)),
-            family(model)$link %in% c("log", "identity"))
+  stopifnot(
+    ncol(X) == length(ib),
+    ncol(Z) == length(iz),
+    length(it) == length(vc$cond),
+    model$sdr$pdHess,
+    isTRUE(all.equal(unname(par), unname(model$sdr$par.fixed))),
+    is.null(model.offset(model$frame)),
+    family(model)$link %in% c("log", "identity")
+  )
   variance <- sum(vapply(vc$cond, function(x) x[1, 1], numeric(1)))
-  stopifnot(isTRUE(all.equal(variance, sum(exp(2 * par[it])), tolerance = 1e-8)))
-  list(X = X, Z = Z, par = par, V = model$sdr$cov.fixed,
-       ib = ib, iz = iz, it = it, link = family(model)$link,
-       avg = averaging_matrix(grid), variance = variance)
+  stopifnot(isTRUE(all.equal(
+    variance,
+    sum(exp(2 * par[it])),
+    tolerance = 1e-8
+  )))
+  list(
+    X = X,
+    Z = Z,
+    par = par,
+    V = model$sdr$cov.fixed,
+    ib = ib,
+    iz = iz,
+    it = it,
+    link = family(model)$link,
+    avg = averaging_matrix(grid),
+    variance = variance
+  )
 }
 ```
 
@@ -208,23 +263,61 @@ the resulting estimates and compare them with an independent calculation.
 
 # Independent analytic derivatives for the custom delta-method implementation.
 custom_integrated <- function(s) {
+  # s contains the prediction grid, fitted parameters, and their joint covariance.
+  # ib, iz, and it locate the conditional coefficients, zero-model coefficients,
+  # and log random-intercept SDs within that same parameter vector.
+  # X %*% beta gives each grid row's linear predictor with random effects zero.
   eta <- drop(s$X %*% s$par[s$ib])
-  pzero <- if (length(s$iz)) plogis(drop(s$Z %*% s$par[s$iz])) else rep(0, length(eta))
+  # plogis converts zero-model log odds to the probability of a structural zero.
+  # With no zero component, that probability is zero for every grid row.
+  pzero <- if (length(s$iz)) {
+    plogis(drop(s$Z %*% s$par[s$iz]))
+  } else {
+    rep(0, length(eta))
+  }
   if (s$link == "log") {
+    # For a mean-zero Gaussian random intercept b with variance v,
+    # E[exp(eta + b)] = exp(eta + v/2), not exp(eta). Independent intercept
+    # variances add, so s$variance includes every modeled intercept level.
+    # Multiplying by (1 - pzero) includes the zero observations in the mean.
+    # This exact integration concerns random effects, not Gamma residual noise.
     mu <- exp(eta + s$variance / 2) * (1 - pzero)
+    # D is a sensitivity table: one row per grid row, one column per parameter.
+    # Each entry is the derivative of that row's mean with respect to a parameter.
+    # The delta method uses these slopes to propagate parameter uncertainty.
     D <- matrix(0, nrow(s$X), length(s$par))
+    # Changing a conditional coefficient changes the mean by mu * its predictor.
     D[, s$ib] <- mu * s$X
-    if (length(s$iz)) D[, s$iz] <- -mu * pzero * s$Z
+    # A larger zero probability reduces the overall mean; the logit derivative
+    # simplifies to -mu * pzero * its zero-model predictor.
+    if (length(s$iz)) {
+      D[, s$iz] <- -mu * pzero * s$Z
+    }
+    # glmmTMB stores theta = log(SD), so each variance is exp(2 * theta).
+    # d(v/2)/d(theta_k) = exp(2 * theta_k); outer() applies this to every row.
+    # These columns retain uncertainty in the integration multiplier itself.
     D[, s$it] <- outer(mu, exp(2 * s$par[s$it]))
   } else {
     stopifnot(length(s$iz) == 0L)
+    # With an identity link, E[eta + b] = eta: mean-zero random effects do not
+    # change the expected load. Only conditional coefficients enter its gradient.
     mu <- eta
     D <- matrix(0, nrow(s$X), length(s$par))
     D[, s$ib] <- s$X
   }
+  # A forms equal-site means, or pre-minus-post contrasts after woody_change_setup.
+  # Apply the same weights to the sensitivities to obtain the target's gradient G.
   G <- s$avg$A %*% D
-  list(estimate = drop(s$avg$A %*% mu),
-       se = sqrt(pmax(0, diag(G %*% s$V %*% t(G)))), G = G)
+  # Delta-method covariance = G V G'. V includes covariance between coefficients
+  # and variance parameters, and keeps shared-parameter predictions correlated.
+  # Dispersion parameters have zero derivatives because they do not enter this
+  # expected-value formula. sqrt(diag(...)) gives each target's standard error;
+  # pmax guards against tiny negative variances from numerical roundoff.
+  list(
+    estimate = drop(s$avg$A %*% mu),
+    se = sqrt(pmax(0, diag(G %*% s$V %*% t(G)))),
+    G = G
+  )
 }
 ```
 
@@ -241,14 +334,23 @@ paired comparison. This function supplies the change estimates checked below.
 # covariance through a single gradient and the full parameter covariance.
 woody_change_setup <- function(s) {
   labels <- s$avg$labels
-  stopifnot(all(c("phase", "treatment") %in% names(labels)),
-            setequal(unique(as.character(labels$phase)), c("prepct", "postpct")))
+  stopifnot(
+    all(c("phase", "treatment") %in% names(labels)),
+    setequal(unique(as.character(labels$phase)), c("prepct", "postpct"))
+  )
   treatments <- unique(as.character(labels$treatment))
-  C <- t(vapply(treatments, function(trt) {
-    stopifnot(sum(labels$treatment == trt & labels$phase == "prepct") == 1L,
-              sum(labels$treatment == trt & labels$phase == "postpct") == 1L)
-    as.numeric(labels$treatment == trt) * ifelse(labels$phase == "prepct", 1, -1)
-  }, numeric(nrow(labels))))
+  C <- t(vapply(
+    treatments,
+    function(trt) {
+      stopifnot(
+        sum(labels$treatment == trt & labels$phase == "prepct") == 1L,
+        sum(labels$treatment == trt & labels$phase == "postpct") == 1L
+      )
+      as.numeric(labels$treatment == trt) *
+        ifelse(labels$phase == "prepct", 1, -1)
+    },
+    numeric(nrow(labels))
+  ))
   s$avg$A <- C %*% s$avg$A
   s$avg$labels <- data.frame(treatment = treatments)
   s
@@ -268,17 +370,54 @@ routes then checks uncertainty in the integration adjustment as well as the mean
 # table, including theta (log SDs), not just the conditional fixed coefficients.
 # avg_predictions(re.form=NA) alone does NOT integrate over random effects.
 marginaleffects_integrated <- function(s) {
-  parameters <- data.frame(term = paste0("p", seq_along(s$par)),
-                           estimate = unname(s$par))
+  # Supply ALL estimated nonrandom parameters, including log random-effect SDs.
+  # The package's ordinary glmmTMB coefficient extractor uses fixef(), which
+  # omits those SD parameters. Unique p1, p2, ... labels preserve their positions
+  # despite repeated internal names such as beta and theta; V uses this order too.
+  parameters <- data.frame(
+    term = paste0("p", seq_along(s$par)),
+    estimate = unname(s$par)
+  )
+  # A "functional" is simply a recipe mapping parameters to the means we want.
+  # hypotheses() perturbs the supplied estimates and reruns this recipe to learn
+  # its sensitivities numerically, independently of the hand-derived D above.
   functional <- function(x) {
     b <- x$estimate
     eta <- drop(s$X %*% b[s$ib])
-    pzero <- if (length(s$iz)) plogis(drop(s$Z %*% b[s$iz])) else rep(0, length(eta))
-    mu <- if (s$link == "log") exp(eta + sum(exp(2 * b[s$it])) / 2) * (1 - pzero) else eta
-    data.frame(term = seq_len(nrow(s$avg$labels)), estimate = drop(s$avg$A %*% mu))
+    pzero <- if (length(s$iz)) {
+      plogis(drop(s$Z %*% b[s$iz]))
+    } else {
+      rep(0, length(eta))
+    }
+    # Recompute v = sum(exp(2 * theta)) for EACH perturbed parameter vector.
+    # Reusing s$variance here would hold the adjustment fixed and lose its
+    # uncertainty. The formula integrates Gaussian intercepts exactly; only
+    # the derivatives and the resulting delta-method uncertainty are approximate.
+    mu <- if (s$link == "log") {
+      exp(eta + sum(exp(2 * b[s$it])) / 2) * (1 - pzero)
+    } else {
+      eta
+    }
+    # Use the same site weights (or woody contrast weights) as the analytic route.
+    # Return one estimate per target in the format hypotheses() expects.
+    data.frame(
+      term = seq_len(nrow(s$avg$labels)),
+      estimate = drop(s$avg$A %*% mu)
+    )
   }
-  marginaleffects::hypotheses(parameters, hypothesis = functional, vcov = s$V,
-             numderiv = "fdcenter", conf_level = .95)
+  # fdcenter estimates each slope from small upward AND downward perturbations.
+  # The package then combines those slopes with the supplied FULL covariance V,
+  # implementing the same G V G' calculation as custom_integrated(). This checks
+  # derivatives, not the shared model assumptions or choice of prediction grid.
+  # Its default intervals are response-scale Wald intervals; the figure builds
+  # positive mean intervals on the log scale later, using the audited SEs.
+  marginaleffects::hypotheses(
+    parameters,
+    hypothesis = functional,
+    vcov = s$V,
+    numderiv = "fdcenter",
+    conf_level = .95
+  )
 }
 ```
 
@@ -295,17 +434,38 @@ These are the current provisional leaders; their scientific review remains open.
 #| message: false
 #| warning: false
 
-selection <- readr::read_csv("outputs/fuel/manifests/model-selection-log.csv", show_col_types = FALSE)
-component_labels <- c(onehr = "1-hour fuel", tenhr = "10-hour fuel", hundhr = "100-hour fuel",
-  thoushr = "1,000-hour fuel", herbaceous_vegetation = "Herbaceous vegetation",
-  litter = "Litter (pre-PCT only)", duff = "Duff (pre-PCT only)")
+selection <- readr::read_csv(
+  "outputs/fuel/manifests/model-selection-log.csv",
+  show_col_types = FALSE
+)
+component_labels <- c(
+  onehr = "1-hour fuel",
+  tenhr = "10-hour fuel",
+  hundhr = "100-hour fuel",
+  thoushr = "1,000-hour fuel",
+  herbaceous_vegetation = "Herbaceous vegetation",
+  litter = "Litter (pre-PCT only)",
+  duff = "Duff (pre-PCT only)"
+)
 rd04_spec <- selection |>
-  dplyr::filter(response %in% names(component_labels), grepl("phase-specific", analysis)) |>
-  dplyr::transmute(model_id = provisional_aic_leader,
-    component = unname(component_labels[response]), phase = sub(":.*", "", analysis))
-rd04_spec <- dplyr::bind_rows(rd04_spec,
-  dplyr::transmute(dplyr::filter(selection, response == "woody vegetation load"),
-    model_id = provisional_aic_leader, component = "Woody vegetation", phase = NA_character_))
+  dplyr::filter(
+    response %in% names(component_labels),
+    grepl("phase-specific", analysis)
+  ) |>
+  dplyr::transmute(
+    model_id = provisional_aic_leader,
+    component = unname(component_labels[response]),
+    phase = sub(":.*", "", analysis)
+  )
+rd04_spec <- dplyr::bind_rows(
+  rd04_spec,
+  dplyr::transmute(
+    dplyr::filter(selection, response == "woody vegetation load"),
+    model_id = provisional_aic_leader,
+    component = "Woody vegetation",
+    phase = NA_character_
+  )
+)
 stopifnot(nrow(rd04_spec) == 13L)
 
 publication_table(rd04_spec)
@@ -343,66 +503,146 @@ if (recompute) {
   dir.create(audit_dir, recursive = TRUE, showWarnings = FALSE)
 
   # Read model identities from the current F01 register.
-  spec <- bind_rows(filter(rd04_spec, !is.na(phase)),
-    mutate(filter(rd04_spec, component == "Woody vegetation"), phase = "prepct"),
-    mutate(filter(rd04_spec, component == "Woody vegetation"), phase = "postpct")) |>
-    mutate(component = sub(" fuel$", "", component),
-           component = sub(" (pre-PCT only)", "", component, fixed = TRUE))
+  spec <- bind_rows(
+    filter(rd04_spec, !is.na(phase)),
+    mutate(
+      filter(rd04_spec, component == "Woody vegetation"),
+      phase = "prepct"
+    ),
+    mutate(
+      filter(rd04_spec, component == "Woody vegetation"),
+      phase = "postpct"
+    )
+  ) |>
+    mutate(
+      component = sub(" fuel$", "", component),
+      component = sub(" (pre-PCT only)", "", component, fixed = TRUE)
+    )
   # Audit the signed alternative alongside the joint woody phase model.
-  spec <- bind_rows(spec, transmute(filter(selection, response == "woody standing-vegetation reduction"),
-    model_id = provisional_aic_leader, component = "Woody difference", phase = NA_character_))
+  spec <- bind_rows(
+    spec,
+    transmute(
+      filter(selection, response == "woody standing-vegetation reduction"),
+      model_id = provisional_aic_leader,
+      component = "Woody difference",
+      phase = NA_character_
+    )
+  )
 
   audit <- list()
   structures <- list()
   for (i in seq_len(nrow(spec))) {
     item <- spec[i, ]
     message("Auditing ", item$model_id, " ", item$phase)
-    model <- read_saved_model(file.path(models_dir, paste0(item$model_id, ".rds")), "F01")
+    model <- read_saved_model(
+      file.path(models_dir, paste0(item$model_id, ".rds")),
+      "F01"
+    )
     phase_arg <- if (is.na(item$phase)) NULL else item$phase
     grid <- reference_grid(model, phase_arg)
     avg <- averaging_matrix(grid)
     reference <- custom_reference(model, grid)
-    me <- as.data.frame(avg_predictions(model, newdata = grid, type = "response",
-                         by = intersect(c("treatment", "phase"), names(grid)),
-                         re.form = NA, allow.new.levels = TRUE))
-    me <- me[match(as.character(reference$treatment), as.character(me$treatment)), ]
+    me <- as.data.frame(avg_predictions(
+      model,
+      newdata = grid,
+      type = "response",
+      by = intersect(c("treatment", "phase"), names(grid)),
+      re.form = NA,
+      allow.new.levels = TRUE
+    ))
+    me <- me[
+      match(as.character(reference$treatment), as.character(me$treatment)),
+    ]
     s <- integration_setup(model, grid)
     integrated <- custom_integrated(s)
     me_integrated <- as.data.frame(marginaleffects_integrated(s))
-    stopifnot(max(abs(reference$estimate - me$estimate)) < 1e-6,
-              max(abs(reference$std.error - me$std.error) / pmax(1, reference$std.error)) < 1e-4,
-              max(abs(integrated$estimate - me_integrated$estimate)) < 1e-6,
-              max(abs(integrated$se - me_integrated$std.error) / pmax(1, integrated$se)) < 1e-4)
+    stopifnot(
+      max(abs(reference$estimate - me$estimate)) < 1e-6,
+      max(
+        abs(reference$std.error - me$std.error) / pmax(1, reference$std.error)
+      ) <
+        1e-4,
+      max(abs(integrated$estimate - me_integrated$estimate)) < 1e-6,
+      max(
+        abs(integrated$se - me_integrated$std.error) / pmax(1, integrated$se)
+      ) <
+        1e-4
+    )
     # Verify integration at a point using numerical quadrature, independently of
     # the closed-form exp(v/2) calculation (including near-zero variances).
     if (s$link == "log") {
-      quadrature <- integrate(function(z) exp(sqrt(s$variance) * z) * dnorm(z),
-                              lower = -12, upper = 12, rel.tol = 1e-9)$value
+      quadrature <- integrate(
+        function(z) exp(sqrt(s$variance) * z) * dnorm(z),
+        lower = -12,
+        upper = 12,
+        rel.tol = 1e-9
+      )$value
       stopifnot(abs(quadrature - exp(s$variance / 2)) < 1e-7)
     }
     # Check matrix construction against the model's own predict implementation.
-    row0 <- if (s$link == "log") exp(drop(s$X %*% s$par[s$ib])) else drop(s$X %*% s$par[s$ib])
-    if (length(s$iz)) row0 <- row0 * (1 - plogis(drop(s$Z %*% s$par[s$iz])))
-    stopifnot(max(abs(row0 - predict(model, grid, type = "response", re.form = NA))) < 1e-6)
+    row0 <- if (s$link == "log") {
+      exp(drop(s$X %*% s$par[s$ib]))
+    } else {
+      drop(s$X %*% s$par[s$ib])
+    }
+    if (length(s$iz)) {
+      row0 <- row0 * (1 - plogis(drop(s$Z %*% s$par[s$iz])))
+    }
+    stopifnot(
+      max(abs(row0 - predict(model, grid, type = "response", re.form = NA))) <
+        1e-6
+    )
     # Average ALL observed rows within site, then equally across sites; retaining
     # only one corner/transect per site would give an arbitrary conditional mean.
     observed <- model$frame
-    if (!is.null(phase_arg) && "phase" %in% names(observed)) observed <- filter(observed, .data$phase == .env$phase_arg)
+    if (!is.null(phase_arg) && "phase" %in% names(observed)) {
+      observed <- filter(observed, .data$phase == .env$phase_arg)
+    }
     conditional <- observed |>
-      mutate(predicted = as.numeric(predict(model, observed, type = "response", re.form = NULL))) |>
-      group_by(across(all_of(intersect(c("site", "treatment", "phase"), names(observed))))) |>
+      mutate(
+        predicted = as.numeric(predict(
+          model,
+          observed,
+          type = "response",
+          re.form = NULL
+        ))
+      ) |>
+      group_by(across(all_of(intersect(
+        c("site", "treatment", "phase"),
+        names(observed)
+      )))) |>
       summarise(predicted = mean(predicted), .groups = "drop") |>
-      group_by(across(all_of(intersect(c("treatment", "phase"), names(observed))))) |>
+      group_by(across(all_of(intersect(
+        c("treatment", "phase"),
+        names(observed)
+      )))) |>
       summarise(predicted = mean(predicted), .groups = "drop")
-    fitted_groups <- conditional$predicted[match(as.character(reference$treatment), as.character(conditional$treatment))]
+    fitted_groups <- conditional$predicted[match(
+      as.character(reference$treatment),
+      as.character(conditional$treatment)
+    )]
     # Marginal mean intervals: log-delta intervals stay positive without truncation;
     # the signed identity-link difference uses ordinary response-scale intervals.
-    lcl <- if (s$link == "log") integrated$estimate * exp(-qnorm(.975) * integrated$se / integrated$estimate) else integrated$estimate - qnorm(.975) * integrated$se
-    ucl <- if (s$link == "log") integrated$estimate * exp(qnorm(.975) * integrated$se / integrated$estimate) else integrated$estimate + qnorm(.975) * integrated$se
+    lcl <- if (s$link == "log") {
+      integrated$estimate *
+        exp(-qnorm(.975) * integrated$se / integrated$estimate)
+    } else {
+      integrated$estimate - qnorm(.975) * integrated$se
+    }
+    ucl <- if (s$link == "log") {
+      integrated$estimate *
+        exp(qnorm(.975) * integrated$se / integrated$estimate)
+    } else {
+      integrated$estimate + qnorm(.975) * integrated$se
+    }
     audit[[i]] <- tibble(
-      model_id = item$model_id, component = item$component, phase = item$phase,
-      treatment = as.character(reference$treatment), n_sites = rowSums(avg$A > 0),
-      reference_custom = reference$estimate, reference_marginaleffects = me$estimate,
+      model_id = item$model_id,
+      component = item$component,
+      phase = item$phase,
+      treatment = as.character(reference$treatment),
+      n_sites = rowSums(avg$A > 0),
+      reference_custom = reference$estimate,
+      reference_marginaleffects = me$estimate,
       corrected_reference_se = reference$std.error,
       marginaleffects_reference_se = me$std.error,
       fitted_group_site_balanced_mean = fitted_groups,
@@ -412,12 +652,16 @@ if (recompute) {
       integrated_marginaleffects = me_integrated$estimate,
       integrated_se_custom = integrated$se,
       integrated_se_marginaleffects = me_integrated$std.error,
-      integrated_lcl = lcl, integrated_ucl = ucl
+      integrated_lcl = lcl,
+      integrated_ucl = ucl
     )
-    structures[[i]] <- tibble(model_id = item$model_id, phase = item$phase,
-                              conditional = deparse1(formula(model)),
-                              zero = deparse1(formula(model, component = "zi")),
-                              dispersion = deparse1(formula(model, component = "disp")))
+    structures[[i]] <- tibble(
+      model_id = item$model_id,
+      phase = item$phase,
+      conditional = deparse1(formula(model)),
+      zero = deparse1(formula(model, component = "zi")),
+      dispersion = deparse1(formula(model, component = "disp"))
+    )
   }
   audit <- bind_rows(audit)
   write_csv(audit, file.path(audit_dir, "rd04-estimand-comparison.csv"))
@@ -427,8 +671,12 @@ if (recompute) {
 }
 
 htmltools::tagList(
-  publication_table(read.csv("outputs/fuel/inference-audit/rd04-estimand-comparison.csv")),
-  publication_table(read.csv("outputs/fuel/inference-audit/model-structures.csv"))
+  publication_table(read.csv(
+    "outputs/fuel/inference-audit/rd04-estimand-comparison.csv"
+  )),
+  publication_table(read.csv(
+    "outputs/fuel/inference-audit/model-structures.csv"
+  ))
 )
 ```
 
@@ -448,14 +696,22 @@ the phase means.
 if (recompute) {
   # A coherent mean change uses the same repeated-phase model on both sides and
   # its cross-phase covariance. Compare with the independently fitted t model.
-  woody <- read_saved_model(file.path(models_dir, paste0(spec$model_id[spec$component == "Woody vegetation"][1], ".rds")), "F01")
+  woody <- read_saved_model(
+    file.path(
+      models_dir,
+      paste0(spec$model_id[spec$component == "Woody vegetation"][1], ".rds")
+    ),
+    "F01"
+  )
   s <- integration_setup(woody, reference_grid(woody))
   s <- woody_change_setup(s)
   treatments <- as.character(s$avg$labels$treatment)
   change <- custom_integrated(s)
   change_me <- as.data.frame(marginaleffects_integrated(s))
-  stopifnot(max(abs(change$estimate - change_me$estimate)) < 1e-6,
-            max(abs(change$se - change_me$std.error) / pmax(1, change$se)) < 1e-4)
+  stopifnot(
+    max(abs(change$estimate - change_me$estimate)) < 1e-6,
+    max(abs(change$se - change_me$std.error) / pmax(1, change$se)) < 1e-4
+  )
   observed <- woody$frame |>
     group_by(treatment, phase, site) |>
     summarise(load = mean(load_mgha), .groups = "drop") |>
@@ -464,19 +720,35 @@ if (recompute) {
     pivot_wider(names_from = phase, values_from = load) |>
     mutate(observed_difference = prepct - postpct)
   phase_change <- tibble(
-    treatment = treatments, phase_model_difference = change$estimate,
+    treatment = treatments,
+    phase_model_difference = change$estimate,
     phase_model_difference_marginaleffects = change_me$estimate,
-    se_custom = change$se, se_marginaleffects = change_me$std.error,
+    se_custom = change$se,
+    se_marginaleffects = change_me$std.error,
     lcl = change$estimate - qnorm(.975) * change$se,
     ucl = change$estimate + qnorm(.975) * change$se
   ) |>
-    left_join(select(observed, treatment, observed_difference), by = "treatment") |>
-    left_join(select(filter(audit, component == "Woody difference"), treatment,
-                     separate_t_model_difference = integrated_custom), by = "treatment")
-  write_csv(phase_change, file.path(audit_dir, "woody-mean-change-comparison.csv"))
+    left_join(
+      select(observed, treatment, observed_difference),
+      by = "treatment"
+    ) |>
+    left_join(
+      select(
+        filter(audit, component == "Woody difference"),
+        treatment,
+        separate_t_model_difference = integrated_custom
+      ),
+      by = "treatment"
+    )
+  write_csv(
+    phase_change,
+    file.path(audit_dir, "woody-mean-change-comparison.csv")
+  )
 }
 
-publication_table(read.csv("outputs/fuel/inference-audit/woody-mean-change-comparison.csv"))
+publication_table(read.csv(
+  "outputs/fuel/inference-audit/woody-mean-change-comparison.csv"
+))
 ```
 
 Some differences from the thesis may come from revised fits, and others from
@@ -495,28 +767,60 @@ if (recompute) {
   # Reproduce the thesis RESULTS grid on the original saved models, without
   # executing or modifying any thesis notebook or changing its fitted models.
   # Historical predictions were replayed and verified in the thesis environment.
-  thesis_reference <- file.path(paths_common$input, "fuel/thesis-reference-reproduction.csv")
+  thesis_reference <- file.path(
+    paths_common$input,
+    "fuel/thesis-reference-reproduction.csv"
+  )
   thesis_results <- read_csv(thesis_reference, show_col_types = FALSE)
-  stopifnot(file.copy(thesis_reference,
-                     file.path(audit_dir, "thesis-reference-reproduction.csv"), overwrite = TRUE))
-  lookup <- c("1-hour" = "onehr", "10-hour" = "tenhr", "100-hour" = "hundhr", "1,000-hour" = "thoushr")
+  stopifnot(file.copy(
+    thesis_reference,
+    file.path(audit_dir, "thesis-reference-reproduction.csv"),
+    overwrite = TRUE
+  ))
+  lookup <- c(
+    "1-hour" = "onehr",
+    "10-hour" = "tenhr",
+    "100-hour" = "hundhr",
+    "1,000-hour" = "thoushr"
+  )
   comparison <- audit |>
     filter(component %in% names(lookup)) |>
     mutate(thesis_class = unname(lookup[component])) |>
-    left_join(select(thesis_results, phase, thesis_class, treatment, thesis_reference, thesis_se),
-              by = c("phase", "thesis_class", "treatment")) |>
+    left_join(
+      select(
+        thesis_results,
+        phase,
+        thesis_class,
+        treatment,
+        thesis_reference,
+        thesis_se
+      ),
+      by = c("phase", "thesis_class", "treatment")
+    ) |>
     mutate(reference_change = reference_custom - thesis_reference)
-  write_csv(comparison, file.path(audit_dir, "thesis-rd04-deadwood-comparison.csv"))
+  write_csv(
+    comparison,
+    file.path(audit_dir, "thesis-rd04-deadwood-comparison.csv")
+  )
 
-  write_publication_lines(c("RD04 inference audit; existing fitted models; no refitting or model selection.",
-               "Integrated SEs include beta, betazi, and log-SD covariance via sdr$cov.fixed.",
-               "Intervals describe estimated means, not new-site or new-observation predictions.",
-               sub("[[:blank:]]+$", "", capture.output(sessionInfo()))), file.path(audit_dir, "session-info.txt"))
+  write_publication_lines(
+    c(
+      "RD04 inference audit; existing fitted models; no refitting or model selection.",
+      "Integrated SEs include beta, betazi, and log-SD covariance via sdr$cov.fixed.",
+      "Intervals describe estimated means, not new-site or new-observation predictions.",
+      sub("[[:blank:]]+$", "", capture.output(sessionInfo()))
+    ),
+    file.path(audit_dir, "session-info.txt")
+  )
 }
 
 htmltools::tagList(
-  publication_table(read.csv("outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv")),
-  publication_table(read.csv("outputs/fuel/inference-audit/thesis-reference-reproduction.csv"))
+  publication_table(read.csv(
+    "outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv"
+  )),
+  publication_table(read.csv(
+    "outputs/fuel/inference-audit/thesis-reference-reproduction.csv"
+  ))
 )
 ```
 
@@ -633,9 +937,27 @@ below separates these changes. Values are Mg/ha, GS treatment.
 #| echo: true
 #| warning: false
 #| message: false
-old_new <- read.csv(file.path(output_root, "fuel/inference-audit/thesis-rd04-deadwood-comparison.csv"))
-old_new <- old_new[old_new$treatment == "gs", c("component", "phase", "thesis_reference", "reference_custom", "integrated_custom")]
-names(old_new) <- c("Component", "Phase", "Thesis reference", "Original RD04 reference", "Current integrated mean")
+old_new <- read.csv(file.path(
+  output_root,
+  "fuel/inference-audit/thesis-rd04-deadwood-comparison.csv"
+))
+old_new <- old_new[
+  old_new$treatment == "gs",
+  c(
+    "component",
+    "phase",
+    "thesis_reference",
+    "reference_custom",
+    "integrated_custom"
+  )
+]
+names(old_new) <- c(
+  "Component",
+  "Phase",
+  "Thesis reference",
+  "Original RD04 reference",
+  "Current integrated mean"
+)
 publication_table(old_new)
 ```
 
@@ -690,12 +1012,32 @@ or transect.
 ```{r}
 #| label: rd04-integrated-gs-example
 #| echo: true
-audit <- read.csv(file.path(output_root, "fuel/inference-audit/rd04-estimand-comparison.csv"))
-show <- audit[audit$treatment == "gs" & audit$component %in%
-                c("100-hour", "Woody vegetation", "Herbaceous vegetation"), ]
+audit <- read.csv(file.path(
+  output_root,
+  "fuel/inference-audit/rd04-estimand-comparison.csv"
+))
+show <- audit[
+  audit$treatment == "gs" &
+    audit$component %in%
+      c("100-hour", "Woody vegetation", "Herbaceous vegetation"),
+]
 show <- show[!(show$component == "100-hour" & show$phase == "prepct"), ]
-show <- show[, c("component", "phase", "reference_custom", "integrated_custom", "integrated_lcl", "integrated_ucl")]
-names(show) <- c("Component", "Phase", "Zero-effect reference", "Integrated mean", "95% lower", "95% upper")
+show <- show[, c(
+  "component",
+  "phase",
+  "reference_custom",
+  "integrated_custom",
+  "integrated_lcl",
+  "integrated_ucl"
+)]
+names(show) <- c(
+  "Component",
+  "Phase",
+  "Zero-effect reference",
+  "Integrated mean",
+  "95% lower",
+  "95% upper"
+)
 publication_table(show)
 ```
 
@@ -767,27 +1109,59 @@ intervals, allowing the woody-change interval to span zero where appropriate.
 #| label: rd04-estimate-rows
 #| echo: true
 
-summarize_integrated <- function(s, component, model_id, phase = NULL, difference = FALSE) {
+summarize_integrated <- function(
+  s,
+  component,
+  model_id,
+  phase = NULL,
+  difference = FALSE
+) {
   prediction <- custom_integrated(s)
   # Means use log-delta intervals; signed differences use response-scale ones.
-  low <- if (difference) prediction$estimate - qnorm(.975) * prediction$se else
-    prediction$estimate * exp(-qnorm(.975) * prediction$se / prediction$estimate)
-  high <- if (difference) prediction$estimate + qnorm(.975) * prediction$se else
+  low <- if (difference) {
+    prediction$estimate - qnorm(.975) * prediction$se
+  } else {
+    prediction$estimate *
+      exp(-qnorm(.975) * prediction$se / prediction$estimate)
+  }
+  high <- if (difference) {
+    prediction$estimate + qnorm(.975) * prediction$se
+  } else {
     prediction$estimate * exp(qnorm(.975) * prediction$se / prediction$estimate)
+  }
   labels <- s$avg$labels
-  phase_values <- if (difference) rep("Vegetation difference", nrow(labels)) else {
-    values <- if ("phase" %in% names(labels)) as.character(labels$phase) else rep(phase, nrow(labels))
+  phase_values <- if (difference) {
+    rep("Vegetation difference", nrow(labels))
+  } else {
+    values <- if ("phase" %in% names(labels)) {
+      as.character(labels$phase)
+    } else {
+      rep(phase, nrow(labels))
+    }
     stopifnot(all(values %in% c("prepct", "postpct")))
     ifelse(values == "prepct", "Pre-PCT", "Post-PCT")
   }
-  tibble(component = component, phase = phase_values,
-         treatment = as.character(labels$treatment), estimate = prediction$estimate,
-         se = prediction$se, lcl = low, ucl = high, model_id = model_id,
-         estimand = if (difference) "integrated matched woody mean difference (pre-PCT minus post-PCT)" else
-           "site-standardized random-effect-integrated expected load",
-         interval_method = if (difference) "response-scale delta method with joint phase covariance" else
-           "log-scale delta method for integrated mean",
-         random_intercept_variance = s$variance)
+  tibble(
+    component = component,
+    phase = phase_values,
+    treatment = as.character(labels$treatment),
+    estimate = prediction$estimate,
+    se = prediction$se,
+    lcl = low,
+    ucl = high,
+    model_id = model_id,
+    estimand = if (difference) {
+      "integrated matched woody mean difference (pre-PCT minus post-PCT)"
+    } else {
+      "site-standardized random-effect-integrated expected load"
+    },
+    interval_method = if (difference) {
+      "response-scale delta method with joint phase covariance"
+    } else {
+      "log-scale delta method for integrated mean"
+    },
+    random_intercept_variance = s$variance
+  )
 }
 ```
 
@@ -827,30 +1201,59 @@ if (recompute) {
   phase_estimates <- list()
   for (i in seq_len(nrow(spec))) {
     item <- spec[i, ]
-    model <- read_saved_model(file.path(models_dir, paste0(item$model_id, ".rds")), "F01")
+    model <- read_saved_model(
+      file.path(models_dir, paste0(item$model_id, ".rds")),
+      "F01"
+    )
     phase_arg <- if (is.na(item$phase)) NULL else item$phase
     s <- integration_setup(model, reference_grid(model, phase_arg))
     stopifnot(all(rowSums(s$avg$A > 0) == 4L))
-    phase_estimates[[i]] <- summarize_integrated(s, item$component, item$model_id, phase_arg)
+    phase_estimates[[i]] <- summarize_integrated(
+      s,
+      item$component,
+      item$model_id,
+      phase_arg
+    )
     if (item$component == "Woody vegetation") {
       difference_component <- summarize_integrated(
-        woody_change_setup(s), "Woody vegetation difference (pre-PCT minus post-PCT)",
-        item$model_id, difference = TRUE)
+        woody_change_setup(s),
+        "Woody vegetation difference (pre-PCT minus post-PCT)",
+        item$model_id,
+        difference = TRUE
+      )
     }
   }
   estimates <- bind_rows(bind_rows(phase_estimates), difference_component) |>
     mutate(
       treatment = factor(treatment, levels = c("gs", "ld", "ha", "hd")),
-      phase = factor(phase, levels = c("Pre-PCT", "Post-PCT", "Vegetation difference")),
-      component = factor(component, levels = c(
-        "1-hour fuel", "10-hour fuel", "100-hour fuel", "1,000-hour fuel",
-        "Woody vegetation", "Herbaceous vegetation", "Litter (pre-PCT only)",
-        "Duff (pre-PCT only)", "Woody vegetation difference (pre-PCT minus post-PCT)"))
+      phase = factor(
+        phase,
+        levels = c("Pre-PCT", "Post-PCT", "Vegetation difference")
+      ),
+      component = factor(
+        component,
+        levels = c(
+          "1-hour fuel",
+          "10-hour fuel",
+          "100-hour fuel",
+          "1,000-hour fuel",
+          "Woody vegetation",
+          "Herbaceous vegetation",
+          "Litter (pre-PCT only)",
+          "Duff (pre-PCT only)",
+          "Woody vegetation difference (pre-PCT minus post-PCT)"
+        )
+      )
     ) |>
     arrange(component, phase, treatment)
-  stopifnot(nrow(estimates) == 60L, all(is.finite(estimates$estimate)),
-            all(is.finite(estimates$se)), all(estimates$se >= 0),
-            all(estimates$lcl <= estimates$estimate), all(estimates$ucl >= estimates$estimate))
+  stopifnot(
+    nrow(estimates) == 60L,
+    all(is.finite(estimates$estimate)),
+    all(is.finite(estimates$se)),
+    all(estimates$se >= 0),
+    all(estimates$lcl <= estimates$estimate),
+    all(estimates$ucl >= estimates$estimate)
+  )
   # Every displayed woody change must equal the plotted pre-minus-post means.
   woody_means <- filter(estimates, component == "Woody vegetation")
   for (trt in levels(estimates$treatment)) {
@@ -881,37 +1284,58 @@ remains a review decision.
 
 # tbl-rd04-fuel-estimates
 fuel_table_source <- read.csv(
-  file.path("outputs",
-            "fuel/tables/rd04-fuel-model-estimates.csv"),
+  file.path("outputs", "fuel/tables/rd04-fuel-model-estimates.csv"),
   stringsAsFactors = FALSE
 )
 fuel_table_keys <- c("component", "phase", "treatment")
-stopifnot(nrow(fuel_table_source) == 60L,
-          !anyDuplicated(fuel_table_source[fuel_table_keys]),
-          all(is.finite(as.matrix(fuel_table_source[c("estimate", "lcl", "ucl")]))),
-          all(fuel_table_source$lcl <= fuel_table_source$estimate),
-          all(fuel_table_source$ucl >= fuel_table_source$estimate))
+stopifnot(
+  nrow(fuel_table_source) == 60L,
+  !anyDuplicated(fuel_table_source[fuel_table_keys]),
+  all(is.finite(as.matrix(fuel_table_source[c("estimate", "lcl", "ucl")]))),
+  all(fuel_table_source$lcl <= fuel_table_source$estimate),
+  all(fuel_table_source$ucl >= fuel_table_source$estimate)
+)
 fuel_table_rows <- unique(fuel_table_source[c("component", "phase")])
 stopifnot(nrow(fuel_table_rows) == 15L)
 fuel_table <- fuel_table_rows
 for (trt in c("gs", "ld", "ha", "hd")) {
-  values <- vapply(seq_len(nrow(fuel_table_rows)), function(i) {
-    cell <- fuel_table_source[
-      fuel_table_source$component == fuel_table_rows$component[i] &
-      fuel_table_source$phase == fuel_table_rows$phase[i] &
-      fuel_table_source$treatment == trt, ]
-    stopifnot(nrow(cell) == 1L)
-    sprintf("%s (%s, %s)", publication_number(cell$estimate),
-            publication_number(cell$lcl), publication_number(cell$ucl))
-  }, character(1))
+  values <- vapply(
+    seq_len(nrow(fuel_table_rows)),
+    function(i) {
+      cell <- fuel_table_source[
+        fuel_table_source$component == fuel_table_rows$component[i] &
+          fuel_table_source$phase == fuel_table_rows$phase[i] &
+          fuel_table_source$treatment == trt,
+      ]
+      stopifnot(nrow(cell) == 1L)
+      sprintf(
+        "%s (%s, %s)",
+        publication_number(cell$estimate),
+        publication_number(cell$lcl),
+        publication_number(cell$ucl)
+      )
+    },
+    character(1)
+  )
   fuel_table[[toupper(trt)]] <- values
 }
-fuel_table$component <- sub(" (pre-PCT only)", "", fuel_table$component, fixed = TRUE)
+fuel_table$component <- sub(
+  " (pre-PCT only)",
+  "",
+  fuel_table$component,
+  fixed = TRUE
+)
 fuel_table$component[fuel_table$phase == "Vegetation difference"] <-
   "Woody standing-vegetation reduction"
-fuel_table$phase[fuel_table$phase == "Vegetation difference"] <- "Pre minus post"
+fuel_table$phase[
+  fuel_table$phase == "Vegetation difference"
+] <- "Pre minus post"
 names(fuel_table)[1:2] <- c("Component", "Phase")
-write.csv(fuel_table, "outputs/fuel/tables/rd04-fuel-display.csv", row.names = FALSE)
+write.csv(
+  fuel_table,
+  "outputs/fuel/tables/rd04-fuel-display.csv",
+  row.names = FALSE
+)
 publication_table(fuel_table)
 ```
 
@@ -959,12 +1383,33 @@ if (recompute) {
 
   phase_panel <- function(component_name) {
     data <- filter(estimates, .data$component == .env$component_name)
-    ggplot(data, aes(x = treatment, y = estimate, ymin = lcl, ymax = ucl, color = phase, group = phase)) +
+    ggplot(
+      data,
+      aes(
+        x = treatment,
+        y = estimate,
+        ymin = lcl,
+        ymax = ucl,
+        color = phase,
+        group = phase
+      )
+    ) +
       geom_linerange(linewidth = 2.2, position = phase_position) +
-      geom_point(shape = 21, fill = "black", color = "white", size = 2.5, stroke = 0.6, position = phase_position) +
+      geom_point(
+        shape = 21,
+        fill = "black",
+        color = "white",
+        size = 2.5,
+        stroke = 0.6,
+        position = phase_position
+      ) +
       scale_color_manual(values = phase_colors, drop = FALSE) +
       scale_x_discrete(labels = c(gs = "GS", ld = "LD", ha = "HA", hd = "HD")) +
-      labs(title = component_name, x = NULL, y = expression(Load ~ (Mg %.% ha^-1))) +
+      labs(
+        title = component_name,
+        x = NULL,
+        y = expression(Load ~ (Mg %.% ha^-1))
+      ) +
       theme_minimal(base_size = 11) +
       theme(
         plot.title = element_text(face = "bold", size = 11),
@@ -978,7 +1423,13 @@ if (recompute) {
     ggplot(data, aes(x = treatment, y = estimate, ymin = lcl, ymax = ucl)) +
       geom_hline(yintercept = 0, color = "gray45", linewidth = 0.45) +
       geom_linerange(color = "#5A4A42", linewidth = 2.2) +
-      geom_point(shape = 21, fill = "black", color = "white", size = 2.5, stroke = 0.6) +
+      geom_point(
+        shape = 21,
+        fill = "black",
+        color = "white",
+        size = 2.5,
+        stroke = 0.6
+      ) +
       scale_x_discrete(labels = c(gs = "GS", ld = "LD", ha = "HA", hd = "HD")) +
       labs(
         title = "Woody vegetation difference\n(pre-PCT minus post-PCT)",
@@ -986,7 +1437,10 @@ if (recompute) {
         y = expression(Load ~ difference ~ (Mg %.% ha^-1))
       ) +
       theme_minimal(base_size = 11) +
-      theme(plot.title = element_text(face = "bold", size = 11), panel.grid.minor = element_blank())
+      theme(
+        plot.title = element_text(face = "bold", size = 11),
+        panel.grid.minor = element_blank()
+      )
   }
 
   component_order <- levels(estimates$component)
@@ -995,7 +1449,14 @@ if (recompute) {
   figure <- wrap_plots(plots, ncol = 3, guides = "collect") +
     plot_layout(guides = "collect")
 
-  ggsave(file.path(figures_dir, "rd04-fuel-phase-pct-inventory.png"), figure, width = 10.5, height = 10, dpi = 300, bg = "white")
+  ggsave(
+    file.path(figures_dir, "rd04-fuel-phase-pct-inventory.png"),
+    figure,
+    width = 10.5,
+    height = 10,
+    dpi = 300,
+    bg = "white"
+  )
 
   provenance <- c(
     "task: RD04",
@@ -1009,17 +1470,28 @@ if (recompute) {
     "difference_intervals: 95% response-scale delta-method confidence intervals with joint pre/post covariance",
     "parameter_covariance: full sdr$cov.fixed including zero-process coefficients and log random-effect SDs",
     "difference_panel: integrated matched woody mean difference from the same repeated-phase model as woody load panels",
-    paste0("difference_model: ", spec$model_id[spec$component == "Woody vegetation"]),
+    paste0(
+      "difference_model: ",
+      spec$model_id[spec$component == "Woody vegetation"]
+    ),
     "pre_pct_only: litter; duff",
     paste0("model_ids: ", paste(spec$model_id, collapse = "; ")),
     "selection_status: existing AIC-leading load models used for draft figure; scientific review remains pending"
   )
-  write_publication_lines(provenance, file.path(paths$manifests, "rd04-figure-provenance.yml"))
-  write_publication_lines(c(provenance, "", sub("[[:blank:]]+$", "", capture.output(sessionInfo()))),
-             file.path(paths$manifests, "rd04-figure-session-info.txt"))
+  write_publication_lines(
+    provenance,
+    file.path(paths$manifests, "rd04-figure-provenance.yml")
+  )
+  write_publication_lines(
+    c(provenance, "", sub("[[:blank:]]+$", "", capture.output(sessionInfo()))),
+    file.path(paths$manifests, "rd04-figure-session-info.txt")
+  )
 }
 
-knitr::include_graphics(file.path(output_root, "fuel/figures/rd04-fuel-phase-pct-inventory.png"))
+knitr::include_graphics(file.path(
+  output_root,
+  "fuel/figures/rd04-fuel-phase-pct-inventory.png"
+))
 ```
 
 Generated artifacts for this review are
