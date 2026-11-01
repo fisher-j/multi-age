@@ -111,9 +111,6 @@ def check():
                     if path.endswith((".R", ".csv"))
                 }
                 chunks = calculation_chunks(project / f"task-{key}.qmd")
-                expected_labels = task.get("calculation_chunks", [])
-                if list(chunks) != expected_labels:
-                    errors.append(f"{task['id']}: calculation chunk order/coverage differs from metadata")
                 expected.update(f"publication/task-{key}.qmd#{label}" for label in chunks)
                 if set(reviews) != expected:
                     errors.append(f"{task['id']}: inline review must include exactly its maintained R scripts and produced CSVs")
@@ -172,7 +169,7 @@ def calculation_chunks(source):
     for match in re.finditer(r"```\{r\}\n((?:#\|[^\n]*\n)*)(.*?)\n```", source.read_text(encoding="utf-8"), re.S):
         options, code = match.groups()
         label = re.search(r"#\| label: (.+)", options)
-        if label and re.search(r"#\| eval: !expr task_selected\(", options):
+        if label and "#| eval: !expr isTRUE(params$recompute)" in options:
             if label[1] in result:
                 raise ValueError(f"Duplicate calculation label: {label[1]}")
             result[label[1]] = code

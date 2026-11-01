@@ -1,16 +1,11 @@
-params:
-  recompute:
-    value: []
-
 project:
   type: website
   execute-dir: project
   output-dir: ../docs/publication
   pre-render:
-    - python scripts/render-hooks.py pre
+    - python scripts/check-analysis.py --inputs-only
+    - python scripts/prepare-workflow.py
     - cmd.exe /c "..\analysis\scripts\sync_zotero_library.bat"
-  post-render:
-    - python scripts/render-hooks.py post
   resources:
     - repo-files/**
     - "!.runs/**"

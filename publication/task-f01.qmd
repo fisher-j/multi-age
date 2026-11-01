@@ -1,17 +1,16 @@
 ---
 title: "F01 — fuel-component separation and model exploration"
 params:
-  recompute:
-    value: []
+  recompute: false
 sidebar: workflow
 ---
 
 ```{r}
-#| label: publication-render-setup
+#| label: fuel-task-setup
 #| include: false
 source("scripts/task-execution.R")
-publication_setup(params$recompute)
 source("scripts/render-csv-review.R")
+output_root <- if (isTRUE(params$recompute)) prepare_fuel_task("F01") else "outputs"
 ```
 
 
@@ -42,8 +41,8 @@ candidate and diagnostic; do not treat an AIC leader as a selected model.
 ## Execution and inputs {#publication-execution}
 
 This page is the authoritative run order for F01. Review is the default;
-select `F01` in Quarto's `recompute` parameter under the `recompute` profile
-to execute all five stages once. Each calculation remains visible in either mode.
+run `run-publication.bat f01` from the repository root (or render this page
+with `-P recompute:true`) to execute all five stages once. Each calculation remains visible in either mode.
 Publication R 4.6.2, the unchanged lockfile and committed thesis exports define
 the calculation environment. Outputs are staged and validated before promotion.
 
@@ -58,13 +57,11 @@ the calculation environment. Outputs are staged and validated before promotion.
 
 ```{r}
 #| label: f01-01-derive-components
-#| eval: !expr task_selected("F01")
+#| eval: !expr isTRUE(params$recompute)
 #| echo: true
 #| warning: false
 #| message: false
-task_begin("F01")
 source("scripts/fuel/00-fuel-config.R")
-task_progress("f01-01-derive-components")
 local({
 # Finney and Martin (1993), model 3: cumulative forest-floor mass (Mg ha^-1)
 # from the surface to depth ds_cm within a profile of total depth dp_cm.
@@ -78,7 +75,7 @@ finney_martin_cumulative_load <- function(ds_cm, dp_cm) {
   result
 }
 
-publication_root <- .publication_render$root
+publication_root <- normalizePath(getwd(), winslash = "/")
 script_dir <- file.path(publication_root, "scripts", "fuel")
 paths_common <- publication_paths(publication_root)
 
@@ -336,8 +333,8 @@ close(provenance_connection)
 #| label: f01-01-derive-components-evidence
 #| echo: false
 #| results: asis
-render_csv_review("publication/outputs/fuel/data/fuel-component-data-dictionary.csv")
-render_csv_review("publication/outputs/fuel/data/fuel-pairing-qc.csv")
+render_csv_review("publication/outputs/fuel/data/fuel-component-data-dictionary.csv", output_root)
+render_csv_review("publication/outputs/fuel/data/fuel-pairing-qc.csv", output_root)
 ```
 
 **Interpretation and review state.** The dictionary and pairing audit define the subsequent model inputs; fuel-bed depth remains available for protocol review.
@@ -353,13 +350,12 @@ render_csv_review("publication/outputs/fuel/data/fuel-pairing-qc.csv")
 
 ```{r}
 #| label: f01-02-explore-components
-#| eval: !expr task_selected("F01")
+#| eval: !expr isTRUE(params$recompute)
 #| echo: true
 #| warning: false
 #| message: false
-task_progress("f01-02-explore-components")
 local({
-publication_root <- .publication_render$root
+publication_root <- normalizePath(getwd(), winslash = "/")
 script_dir <- file.path(publication_root, "scripts", "fuel")
 paths_common <- publication_paths(publication_root)
 
@@ -477,10 +473,10 @@ write_csv(paired_candidate, file.path(paths$manifests, "woody-pct-contrast-model
 #| label: f01-02-explore-components-evidence
 #| echo: false
 #| results: asis
-render_csv_review("publication/outputs/fuel/data/fuel-component-exploration-summary.csv")
-render_csv_review("publication/outputs/fuel/data/woody-pct-contrast-exploration-summary.csv")
-render_csv_review("publication/outputs/fuel/manifests/fuel-component-model-candidates.csv")
-render_csv_review("publication/outputs/fuel/manifests/woody-pct-contrast-model-candidate.csv")
+render_csv_review("publication/outputs/fuel/data/fuel-component-exploration-summary.csv", output_root)
+render_csv_review("publication/outputs/fuel/data/woody-pct-contrast-exploration-summary.csv", output_root)
+render_csv_review("publication/outputs/fuel/manifests/fuel-component-model-candidates.csv", output_root)
+render_csv_review("publication/outputs/fuel/manifests/woody-pct-contrast-model-candidate.csv", output_root)
 ```
 
 **Interpretation and review state.** These summaries describe observed loads; they neither fit nor accept a model.
@@ -496,17 +492,16 @@ render_csv_review("publication/outputs/fuel/manifests/woody-pct-contrast-model-c
 
 ```{r}
 #| label: f01-03-fit-phase-components
-#| eval: !expr task_selected("F01")
+#| eval: !expr isTRUE(params$recompute)
 #| echo: true
 #| warning: false
 #| message: false
-task_progress("f01-03-fit-phase-components")
 local({
 # Preserve the fresh-Rscript RNG boundary of this historical fitting stage.
 # DHARMa 0.5.0 consumes an extra draw when .Random.seed is initially absent.
 if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
   rm(".Random.seed", envir = .GlobalEnv)
-publication_root <- .publication_render$root
+publication_root <- normalizePath(getwd(), winslash = "/")
 script_dir <- file.path(publication_root, "scripts", "fuel")
 paths_common <- publication_paths(publication_root)
 
@@ -610,7 +605,7 @@ write_csv(registry, file.path(paths$manifests, "phase-component-model-registry.c
 #| label: f01-03-fit-phase-components-evidence
 #| echo: false
 #| results: asis
-render_csv_review("publication/outputs/fuel/manifests/phase-component-model-registry.csv")
+render_csv_review("publication/outputs/fuel/manifests/phase-component-model-registry.csv", output_root)
 ```
 
 **Interpretation and review state.** Convergence and diagnostic follow-up remain visible in the registry; a successful fit is not scientific acceptance.
@@ -626,17 +621,16 @@ render_csv_review("publication/outputs/fuel/manifests/phase-component-model-regi
 
 ```{r}
 #| label: f01-04-fit-woody-pct-models
-#| eval: !expr task_selected("F01")
+#| eval: !expr isTRUE(params$recompute)
 #| echo: true
 #| warning: false
 #| message: false
-task_progress("f01-04-fit-woody-pct-models")
 local({
 # This stage formerly started in a separate Rscript process. Restore its empty
 # initial RNG state; the diagnostic seed and unconditional simulations are unchanged.
 if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
   rm(".Random.seed", envir = .GlobalEnv)
-publication_root <- .publication_render$root
+publication_root <- normalizePath(getwd(), winslash = "/")
 script_dir <- file.path(publication_root, "scripts", "fuel")
 paths_common <- publication_paths(publication_root)
 
@@ -829,7 +823,7 @@ write_csv(bind_rows(phase_registry, delta_registry), file.path(paths$manifests, 
 #| label: f01-04-fit-woody-pct-models-evidence
 #| echo: false
 #| results: asis
-render_csv_review("publication/outputs/fuel/manifests/woody-pct-model-registry.csv")
+render_csv_review("publication/outputs/fuel/manifests/woody-pct-model-registry.csv", output_root)
 ```
 
 **Interpretation and review state.** RD04 uses the joint phase model for consistent woody means and their covariance-aware difference; the signed candidates remain auditable comparisons.
@@ -845,13 +839,12 @@ render_csv_review("publication/outputs/fuel/manifests/woody-pct-model-registry.c
 
 ```{r}
 #| label: f01-05-evaluate-and-select-models
-#| eval: !expr task_selected("F01")
+#| eval: !expr isTRUE(params$recompute)
 #| echo: true
 #| warning: false
 #| message: false
-task_progress("f01-05-evaluate-and-select-models")
 local({
-publication_root <- .publication_render$root
+publication_root <- normalizePath(getwd(), winslash = "/")
 script_dir <- file.path(publication_root, "scripts", "fuel")
 paths_common <- publication_paths(publication_root)
 
@@ -910,7 +903,6 @@ selection_log <- registry |>
 write_csv(registry, file.path(paths$manifests, "model-comparison.csv"))
 write_csv(selection_log, file.path(paths$manifests, "model-selection-log.csv"))
 })
-task_complete("F01")
 ```
 
 </details>
@@ -921,8 +913,8 @@ task_complete("F01")
 #| label: f01-05-evaluate-and-select-models-evidence
 #| echo: false
 #| results: asis
-render_csv_review("publication/outputs/fuel/manifests/model-comparison.csv")
-render_csv_review("publication/outputs/fuel/manifests/model-selection-log.csv")
+render_csv_review("publication/outputs/fuel/manifests/model-comparison.csv", output_root)
+render_csv_review("publication/outputs/fuel/manifests/model-selection-log.csv", output_root)
 ```
 
 **Interpretation and review state.** Saved models, full comparisons and provisional leaders are the handoff to RD04; no final model selection is made here.
@@ -950,7 +942,7 @@ the displayed definitions and the downloadable record remain aligned.
 #| tbl-cap: "Publication fuel-component dictionary generated by F01."
 
 dictionary <- read.csv(
-  task_artifact("outputs/fuel/data/fuel-component-data-dictionary.csv"),
+  file.path(output_root, "fuel/data/fuel-component-data-dictionary.csv"),
   check.names = FALSE
 )
 knitr::kable(dictionary, format = "html", escape = TRUE)
@@ -972,7 +964,7 @@ when deciding whether to accept, revise, or replace a leader.
 #| tbl-cap: "Provisional AIC-leading fuel models generated by F01; all remain eligible for scientific review, not final selections."
 
 leaders <- read.csv(
-  task_artifact("outputs/fuel/manifests/model-selection-log.csv"),
+  file.path(output_root, "fuel/manifests/model-selection-log.csv"),
   check.names = FALSE
 )
 leaders <- leaders[, c("response", "analysis", "provisional_aic_leader",
@@ -1070,11 +1062,11 @@ candidate fitting must be documented here before regenerating dependent outputs.
 
 </details>
 
-```{r}
-#| label: f01-execution-review
-#| echo: false
-#| results: asis
-task_review_state("F01")
-```
 
 {{< include _task-metadata/f01-files.qmd >}}
+
+```{r}
+#| label: f01-publish
+#| include: false
+if (isTRUE(params$recompute)) publish_fuel_task("F01", output_root)
+```

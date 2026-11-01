@@ -1,5 +1,5 @@
 # Display a saved CSV directly; keep formulas and numeric text literal.
-render_csv_review <- function(relative) {
+render_csv_review <- function(relative, output_root = "outputs") {
   escape_html <- function(text) {
     text <- gsub("&", "&amp;", text, fixed = TRUE)
     text <- gsub("<", "&lt;", text, fixed = TRUE)
@@ -7,7 +7,7 @@ render_csv_review <- function(relative) {
     gsub('"', "&quot;", text, fixed = TRUE)
   }
   data <- read.csv(
-    task_artifact(relative), colClasses = "character", na.strings = NULL,
+    file.path(output_root, sub("^publication/outputs/", "", relative)), colClasses = "character", na.strings = NULL,
     check.names = FALSE, strip.white = FALSE, fileEncoding = "UTF-8-BOM"
   )
   name <- escape_html(basename(relative))

@@ -1,8 +1,5 @@
 ---
 title: Introduction
-params:
-  recompute:
-    value: []
 sidebar: manuscript
 format:
   html:
@@ -10,14 +7,6 @@ format:
       text: |
         <style>#title-block-header { display: none; }</style>
 ---
-
-```{r}
-#| label: publication-render-setup
-#| include: false
-source("scripts/task-execution.R")
-publication_setup(params$recompute)
-source("scripts/render-csv-review.R")
-```
 
 
 {{< include sections/introduction.qmd >}}

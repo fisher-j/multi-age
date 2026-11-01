@@ -52,7 +52,6 @@ pushd "%~dp0publication"
 if errorlevel 1 exit /b 1
 quarto render %RENDER_ARGS%
 set "RESULT=%ERRORLEVEL%"
-if not "%RESULT%"=="0" python scripts/render-hooks.py failed
 popd
 exit /b %RESULT%
 

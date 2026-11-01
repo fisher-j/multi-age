@@ -19,7 +19,8 @@
 #|   litter and duff are not estimated.
 
 fuel_table_source <- read.csv(
-  task_artifact("outputs/fuel/tables/rd04-fuel-model-estimates.csv"),
+  file.path(Sys.getenv("PUBLICATION_OUTPUT_ROOT", unset = "outputs"),
+            "fuel/tables/rd04-fuel-model-estimates.csv"),
   stringsAsFactors = FALSE
 )
 fuel_table_keys <- c("component", "phase", "treatment")

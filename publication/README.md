@@ -45,37 +45,37 @@ publication work.
 
 ## Independent calculations and selective review
 
-Review is the default: calculation code is displayed while evidence is read from saved
-artifacts; fitted-model caches are unnecessary. Recompute F01 and RD04 with:
+Review is the default: calculation code is displayed and evidence is read from
+saved outputs. Ordinary rendering never fits models and needs no model cache.
+Explicitly recompute from the repository root:
 
 ```bat
-render-products.bat publication --profile recompute --execute-params recompute-fuel.yml --to html
+run-publication.bat f01
+run-publication.bat rd04
+run-publication.bat fuel
 ```
 
-A native parameter file such as `recompute: [RD04]` changes only selected tasks.
-Unselected pages review canonical outputs; selected producers supply staged
-outputs to all consumers. Fingerprints identify changed upstream inputs without
-silently recomputing downstream tasks or accepting models. A selected producer's
-missing outputs are errors, never canonical fallbacks.
+`f01` executes the five calculation chunks in `task-f01.qmd` order. `rd04`
+executes the audit and figure chunks in `task-rd04.qmd` order using saved F01
+models and registers. Missing inputs or fitted models fail with an error.
+`fuel` runs F01 then RD04, each in its own Quarto/R session. There is no automatic
+dependency expansion: F01 alone leaves RD04 unchanged; RD04 alone never refits
+F01. The equivalent single-page invocation is
+`render-products.bat publication task-rd04.qmd -P recompute:true --output-dir .runs/rd04/site --to html`.
+Only the two fuel task pages declare this boolean parameter; its default is false.
 
-Parameter-file paths are relative to `publication/`, where the wrapper runs
-Quarto. `recompute: []` reviews everything. Only F01 and RD04 currently support
-whole-task recomputation; nonempty selections require `--profile recompute`.
-Quarto orders F01 before RD04 and gives each page its own R session. Selection
-never expands implicitly: RD04 alone needs saved F01 models; F01 alone does not
-regenerate RD04 estimates.
+Each task starts with an empty `.runs/f01/outputs` or `.runs/rd04/outputs`.
+Calculations and that page's evidence use this one output directory; RD04 reads
+its F01 inputs directly from canonical `outputs/fuel/`. After every calculation
+and display chunk succeeds, task-specific output checks run and the staged files
+are copied into canonical `outputs/`. A calculation/check failure preserves the
+last successful outputs. Scratch directories are reused automatically on rerun.
+There are no backups or rollback for a copy failure. Recompute HTML stays in the
+task's `.runs/<task>/site`; render normally afterward to refresh the website and
+downloads from saved outputs.
 
-Pre-render hooks check exports/environment and prepare staging. Native execution
-parameters are checked in shared document setup before calculations. Post-render
-hooks validate outputs and private model/data files, refresh staged downloads,
-then promote selected tasks only. Failed renders do not promote. HTML remains in
-`.runs/<run-name>/site`; render normally after promotion for the canonical site.
-Use `--output-dir .runs/<new-run-name>/site` for another run; existing execution
-records are never overwritten.
-
-`run-publication.bat fuel` delegates to this render. `all` runs fuel followed by
-regeneration, validating/promoting each domain independently. `regeneration`
-retains its existing sequence (01, 02, 03, 05, 04), staging and checks.
+`all` runs fuel followed by regeneration. `regeneration` retains its separate
+script sequence (01, 02, 03, 05, 04), numerical checks, and staged output copy.
 Run `run-publication.bat regeneration` from the repository root for that
 sequence. Individual regeneration scripts can also be run or sourced from
 `publication/` in its R environment, for example
@@ -96,8 +96,8 @@ This is a thesis-input integrity check, not an old publication execution mode.
 Normal publication validation never opens thesis objects. Historical thesis
 reproduction and deliberate export refresh remain separate operations.
 
-Quarto first runs `python scripts/prepare-workflow.py` (Python 3.10+ standard
-library only), then the existing bibliography synchronization. The preparation
+Quarto checks the committed exports, runs `python scripts/prepare-workflow.py`
+(Python 3.10+ standard library only), then synchronizes the bibliography. The preparation
 script regenerates task summaries and the register, validates repository paths,
 and copies explicitly linked current files into ignored `repo-files/`. Quarto
 copies those downloads into `docs/publication/repo-files/`. A SHA-256 manifest
@@ -133,7 +133,8 @@ figure history (stages 07-08 and historical 06); RT03 owns fuel Results claims.
 This README owns execution instructions; pipeline guides link here and to the
 task records.
 There is no pipeline map, continuous review page, or separate analytical runner.
-Scientific specifications and orchestration live directly in the task pages.
+Scientific specifications and calculation order live directly in the task pages.
+The runtime wrapper explicitly invokes F01 followed by RD04 when both are requested.
 
 Fuel task metadata distinguishes these roles:
 
@@ -157,13 +158,10 @@ unique labels, are displayed in both modes, and are checked against QMD source.
 CSV reviews preserve every cell. Shared manuscript prose and the companion table
 remain presentation includes.
 
-`recomputable` opts a task into selection; `calculation_chunks` records its ordered
-labels. `private_inputs` and `private_outputs` inventory model/data files and
-execution manifests without adding downloads. Selected tasks record source and
-input artifact hashes. QMD parameter defaults are declared in each document for
-knitr; the project uses the same empty-list default.
-`execution_manifest` names each task's private provenance record. Reusable
-rendering infrastructure does not determine the task's scientific run order.
+Task selection and calculation order do not use task metadata. The two QMDs
+define their calculation order directly. `tasks.json` retains source/output links, summaries, and review
+coverage; private model inventories, execution manifests, and per-task
+fingerprints are not recorded.
 
 The pre-render preparation rejects duplicate output ownership and invalid
 upstream task IDs. Website validation checks complete source and CSV review

@@ -33,12 +33,14 @@ def validate_exports(project, protected=False):
     return errors
 
 
-def validate_outputs(project, outputs, domains, require_models=False):
+def validate_outputs(project, outputs, domains, require_models=False, task_id=None):
     errors = []
     tasks = json.loads((project / "tasks.json").read_text(encoding="utf-8"))
     required = set()
     for task in tasks:
-        for field in ("files", "outputs", "inputs"):
+        if task_id and task["id"] != task_id:
+            continue
+        for field in (("outputs",) if task_id else ("files", "outputs", "inputs")):
             for name in task.get(field, []):
                 prefix = "publication/outputs/"
                 if name.startswith(prefix):
@@ -99,6 +101,7 @@ def main():
     parser.add_argument("--inputs-only", action="store_true")
     parser.add_argument("--protected", action="store_true")
     parser.add_argument("--require-models", action="store_true")
+    parser.add_argument("--task", choices=("F01", "RD04"), help="Check only this task's staged outputs")
     parser.add_argument("--outputs", type=Path, default=PROJECT / "outputs")
     parser.add_argument("--domains", default="fuel,regeneration")
     parser.add_argument("--report", type=Path)
@@ -106,9 +109,11 @@ def main():
     domains = args.domains.split(",")
     if not domains or any(domain not in ("fuel", "regeneration") for domain in domains):
         parser.error("--domains must contain fuel and/or regeneration")
+    if args.task and domains != ["fuel"]:
+        parser.error("--task requires --domains fuel")
     errors = validate_exports(PROJECT, args.protected)
     if not args.inputs_only:
-        errors.extend(validate_outputs(PROJECT, args.outputs.resolve(), domains, args.require_models))
+        errors.extend(validate_outputs(PROJECT, args.outputs.resolve(), domains, args.require_models, args.task))
     result = dict(valid=not errors, errors=errors, domains=domains,
                   outputs=str(args.outputs.resolve()), required_model_check=args.require_models)
     if args.report:

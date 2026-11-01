@@ -10,8 +10,7 @@
       "publication/scripts/fuel/00-fuel-config.R",
       "publication/scripts/fuel/03-model-utils.R",
       "publication/scripts/task-execution.R",
-      "publication/scripts/verify-environment.R",
-      "publication/scripts/render-hooks.py"
+      "publication/scripts/verify-environment.R"
     ],
     "summary": "The [component definitions](task-f01.qmd#decisions-made) separate vegetation components and pre-PCT litter/duff, omitting post-PCT forest-floor estimates. The [executable analytical sequence](task-f01.qmd#publication-execution) integrates derivation, exploration, candidate-fitting code, and complete CSV evidence; reusable helpers have their own source review. The [model-review register](task-f01.qmd#rendered-provisional-model-review-register) reports provisional AIC leaders, not final selections. Prediction, inference, and display decisions belong to [RD04](task-rd04.qmd#rd04-inference-review); the task pages own calculation order and selective recomputation. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task independently or render its saved evidence.",
     "outputs": [
@@ -77,26 +76,7 @@
       "publication/inputs/thesis/data-dictionary.csv"
     ],
     "depends_on": [],
-    "inline_review": true,
-    "private_inputs": [
-      "publication/inputs/thesis/fuel-measurements.rds",
-      "publication/inputs/thesis/fuel-deadwood-loads.rds"
-    ],
-    "private_outputs": [
-      "publication/outputs/fuel/data/*.rds",
-      "publication/outputs/fuel/models/*.rds",
-      "publication/outputs/fuel/manifests/input-provenance.yml",
-      "publication/outputs/fuel/manifests/f01-execution.json"
-    ],
-    "recomputable": true,
-    "calculation_chunks": [
-      "f01-01-derive-components",
-      "f01-02-explore-components",
-      "f01-03-fit-phase-components",
-      "f01-04-fit-woody-pct-models",
-      "f01-05-evaluate-and-select-models"
-    ],
-    "execution_manifest": "publication/outputs/fuel/manifests/f01-execution.json"
+    "inline_review": true
   },
   {
     "id": "RD04",
@@ -132,21 +112,7 @@
     "depends_on": [
       "F01"
     ],
-    "inline_review": true,
-    "private_inputs": [
-      "publication/outputs/fuel/models/*.rds"
-    ],
-    "private_outputs": [
-      "publication/outputs/fuel/inference-audit/session-info.txt",
-      "publication/outputs/fuel/manifests/rd04-figure-session-info.txt",
-      "publication/outputs/fuel/manifests/rd04-execution.json"
-    ],
-    "recomputable": true,
-    "calculation_chunks": [
-      "rd04-07-audit-rd04-inference",
-      "rd04-08-generate-rd04-integrated-figure"
-    ],
-    "execution_manifest": "publication/outputs/fuel/manifests/rd04-execution.json"
+    "inline_review": true
   },
   {
     "id": "RD02",

@@ -10,5 +10,5 @@ set "RESULT=%ERRORLEVEL%"
 popd
 exit /b %RESULT%
 :usage
-echo Usage: run-publication.bat ^<restore^|fuel^|regeneration^|all^|check^>
+echo Usage: run-publication.bat ^<restore^|f01^|rd04^|fuel^|regeneration^|all^|check^>
 exit /b 1

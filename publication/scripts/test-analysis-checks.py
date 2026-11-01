@@ -46,6 +46,19 @@ class PublicationValidationTests(unittest.TestCase):
             self.assertFalse(checks.validate_outputs(root, root / "outputs", ["fuel"]))
             self.assertTrue(checks.validate_outputs(root, root / "outputs", ["fuel"], require_models=True))
 
+    def test_task_checks_need_only_its_own_staged_outputs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self.project(root)
+            (root / "tasks.json").write_text(json.dumps([
+                dict(id="F01", outputs=["publication/outputs/fuel/tables/estimates.csv"],
+                     inputs=["publication/outputs/fuel/upstream.csv"]),
+                dict(id="RD04", outputs=["publication/outputs/fuel/rd04.csv"]),
+            ]), encoding="utf-8")
+            self.assertFalse(checks.validate_outputs(root, root / "outputs", ["fuel"], task_id="F01"))
+            self.assertTrue(checks.validate_outputs(root, root / "outputs", ["fuel"], task_id="RD04"))
+            self.assertTrue(checks.validate_outputs(root, root / "outputs", ["fuel"]))
+
     def test_modified_export_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

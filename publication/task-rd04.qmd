@@ -1,19 +1,18 @@
 ---
 title: "RD04 — fuel phase and PCT display"
 params:
-  recompute:
-    value: []
+  recompute: false
 sidebar: workflow
 filters:
   - filters/include-heading-offset.lua
 ---
 
 ```{r}
-#| label: publication-render-setup
+#| label: fuel-task-setup
 #| include: false
 source("scripts/task-execution.R")
-publication_setup(params$recompute)
 source("scripts/render-csv-review.R")
+output_root <- if (isTRUE(params$recompute)) prepare_fuel_task("RD04") else "outputs"
 ```
 
 
@@ -93,15 +92,13 @@ F01 supplies saved models; this audit does not refit or select them.
 
 ```{r}
 #| label: rd04-07-audit-rd04-inference
-#| eval: !expr task_selected("RD04")
+#| eval: !expr isTRUE(params$recompute)
 #| echo: true
 #| warning: false
 #| message: false
-task_begin("RD04")
 source("scripts/fuel/00-fuel-config.R")
-task_progress("rd04-07-audit-rd04-inference")
 local({
-publication_root <- .publication_render$root
+publication_root <- normalizePath(getwd(), winslash = "/")
 script_dir <- file.path(publication_root, "scripts", "fuel")
 paths_common <- publication_paths(publication_root)
 
@@ -112,7 +109,7 @@ suppressPackageStartupMessages({
   library(readr)
   library(tidyr)
 })
-models_dir <- file.path(task_root("F01"), "fuel", "models")
+models_dir <- file.path(publication_root, "outputs", "fuel", "models")
 audit_dir <- file.path(paths_common$output, "fuel/inference-audit")
 dir.create(audit_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -282,11 +279,11 @@ print(select(audit, component, phase, treatment, reference_custom, integrated_cu
 #| label: rd04-07-audit-rd04-inference-evidence
 #| echo: false
 #| results: asis
-render_csv_review("publication/outputs/fuel/inference-audit/rd04-estimand-comparison.csv")
-render_csv_review("publication/outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv")
-render_csv_review("publication/outputs/fuel/inference-audit/woody-mean-change-comparison.csv")
-render_csv_review("publication/outputs/fuel/inference-audit/model-structures.csv")
-render_csv_review("publication/outputs/fuel/inference-audit/thesis-reference-reproduction.csv")
+render_csv_review("publication/outputs/fuel/inference-audit/rd04-estimand-comparison.csv", output_root)
+render_csv_review("publication/outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv", output_root)
+render_csv_review("publication/outputs/fuel/inference-audit/woody-mean-change-comparison.csv", output_root)
+render_csv_review("publication/outputs/fuel/inference-audit/model-structures.csv", output_root)
+render_csv_review("publication/outputs/fuel/inference-audit/thesis-reference-reproduction.csv", output_root)
 ```
 
 **Interpretation and review state.** Numerical agreement verifies the implemented estimand and uncertainty calculation. It does not accept the provisional model assumptions.
@@ -398,7 +395,7 @@ below separates these changes. Values are Mg/ha, GS treatment.
 #| echo: false
 #| warning: false
 #| message: false
-old_new <- read.csv(task_artifact("outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv"))
+old_new <- read.csv(file.path(output_root, "fuel/inference-audit/thesis-rd04-deadwood-comparison.csv"))
 old_new <- old_new[old_new$treatment == "gs", c("component", "phase", "thesis_reference", "reference_custom", "integrated_custom")]
 names(old_new) <- c("Component", "Phase", "Thesis reference", "Original RD04 reference", "Current integrated mean")
 knitr::kable(old_new, digits = 2, row.names = FALSE)
@@ -454,7 +451,7 @@ or transect.
 
 ```{r}
 #| echo: false
-audit <- read.csv(task_artifact("outputs/fuel/inference-audit/rd04-estimand-comparison.csv"))
+audit <- read.csv(file.path(output_root, "fuel/inference-audit/rd04-estimand-comparison.csv"))
 show <- audit[audit$treatment == "gs" & audit$component %in%
                 c("100-hour", "Woody vegetation", "Herbaceous vegetation"), ]
 show <- show[!(show$component == "100-hour" & show$phase == "prepct"), ]
@@ -533,13 +530,12 @@ and potential-contribution interpretation.
 
 ```{r}
 #| label: rd04-08-generate-rd04-integrated-figure
-#| eval: !expr task_selected("RD04")
+#| eval: !expr isTRUE(params$recompute)
 #| echo: true
 #| warning: false
 #| message: false
-task_progress("rd04-08-generate-rd04-integrated-figure")
 local({
-publication_root <- .publication_render$root
+publication_root <- normalizePath(getwd(), winslash = "/")
 script_dir <- file.path(publication_root, "scripts", "fuel")
 paths_common <- publication_paths(publication_root)
 
@@ -553,7 +549,7 @@ suppressPackageStartupMessages({
   library(readr)
 })
 paths <- publication_fuel_paths(publication_root)
-models_dir <- file.path(task_root("F01"), "fuel", "models")
+models_dir <- file.path(publication_root, "outputs", "fuel", "models")
 figures_dir <- file.path(paths$output, "figures")
 tables_dir <- file.path(paths$output, "tables")
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
@@ -576,7 +572,7 @@ spec <- tibble::tribble(
   "prepct_litter_disp_treatment", "Litter (pre-PCT only)", "prepct",
   "prepct_duff_base", "Duff (pre-PCT only)", "prepct"
 )
-selection <- read_csv(task_artifact("outputs/fuel/manifests/model-selection-log.csv"), show_col_types = FALSE)
+selection <- read_csv("outputs/fuel/manifests/model-selection-log.csv", show_col_types = FALSE)
 stopifnot(all(spec$model_id %in% selection$provisional_aic_leader),
           all(file.exists(file.path(models_dir, paste0(spec$model_id, ".rds")))))
 
@@ -705,7 +701,6 @@ write_publication_lines(provenance, file.path(paths$manifests, "rd04-figure-prov
 write_publication_lines(c(provenance, "", sub("[[:blank:]]+$", "", capture.output(sessionInfo()))),
            file.path(paths$manifests, "rd04-figure-session-info.txt"))
 })
-task_complete("RD04")
 ```
 
 </details>
@@ -716,7 +711,7 @@ task_complete("RD04")
 #| label: rd04-08-generate-rd04-integrated-figure-evidence
 #| echo: false
 #| results: asis
-render_csv_review("publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv")
+render_csv_review("publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv", output_root)
 ```
 
 ## Completed output
@@ -750,7 +745,7 @@ previous-environment replay or retained migration acceptance/difference artifact
 #|   It is an inferred potential surface-fuel contribution, not direct slash
 #|   load. Panel-specific y-scales are used.
 
-knitr::include_graphics(task_artifact("outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png"))
+knitr::include_graphics(file.path(output_root, "fuel/figures/rd04-fuel-phase-pct-inventory.png"))
 ```
 
 Generated artifacts for this review are
@@ -827,12 +822,12 @@ implementation documents the superseded display, not the current inference targe
 
 [Download the retirement note](repo-files/publication/scripts/fuel/retired/README.md).
 
-```{r}
-#| label: rd04-execution-review
-#| echo: false
-#| results: asis
-task_review_state("RD04")
-```
 
 
 {{< include _task-metadata/rd04-files.qmd >}}
+
+```{r}
+#| label: rd04-publish
+#| include: false
+if (isTRUE(params$recompute)) publish_fuel_task("RD04", output_root)
+```
