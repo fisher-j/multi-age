@@ -1,0 +1,64 @@
+task: RD04
+generator: task-rd04.qmd#rd04-08-generate-rd04-integrated-figure
+figure: figures/rd04-fuel-phase-pct-inventory.png
+estimates: tables/rd04-fuel-model-estimates.csv
+estimand: site-standardized random-effect-integrated mean load including modeled zeros
+random_effects: analytically integrated over all fitted independent Gaussian random intercepts
+site_averaging: equal weights for the four observed study-site contexts
+load_intervals: 95% log-scale delta-method confidence intervals for integrated means
+difference_intervals: 95% response-scale delta-method confidence intervals with joint pre/post covariance
+parameter_covariance: full sdr$cov.fixed including zero-process coefficients and log random-effect SDs
+difference_panel: integrated matched woody mean difference from the same repeated-phase model as woody load panels
+difference_model: woody_phase_zigamma_ziphase_disp1
+pre_pct_only: litter; duff
+model_ids: prepct_duff_base; postpct_herbaceous_vegetation_base; prepct_herbaceous_vegetation_base; postpct_hundhr_zi_treatment_site_disp_treatment_site_interaction; prepct_hundhr_base; prepct_litter_disp_treatment; postpct_onehr_base; prepct_onehr_disp_treatment; postpct_tenhr_base; prepct_tenhr_base; postpct_thoushr_zi_treatment; prepct_thoushr_base; woody_phase_zigamma_ziphase_disp1
+selection_status: existing AIC-leading load models used for draft figure; scientific review remains pending
+
+R version 4.6.2 (2026-10-29 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+  LAPACK version 3.12.1
+
+locale:
+[1] LC_COLLATE=C                        LC_CTYPE=English_United States.utf8
+[3] LC_MONETARY=C                       LC_NUMERIC=C
+[5] LC_TIME=C
+
+time zone: America/Los_Angeles
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base
+
+other attached packages:
+[1] patchwork_1.3.2       ggplot2_4.0.3         tidyr_1.3.2
+[4] readr_2.2.0           marginaleffects_1.0.0 glmmTMB_1.1.15.2
+[7] dplyr_1.2.1
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6        TMB_1.9.25          xfun_0.62
+ [4] bslib_0.12.0        htmlwidgets_1.6.4   insight_1.7.0
+ [7] lattice_0.23-1      tzdb_0.5.0          numDeriv_2016.8-1.1
+[10] vctrs_0.7.3         tools_4.6.2         Rdpack_2.6.6
+[13] crosstalk_1.2.2     generics_0.1.4      parallel_4.6.2
+[16] sandwich_3.1-3      tibble_3.3.1        pkgconfig_2.0.3
+[19] Matrix_1.7-6        data.table_1.18.6.1 checkmate_2.3.4
+[22] RColorBrewer_1.1-3  S7_0.2.2            lifecycle_1.0.5
+[25] farver_2.1.2        compiler_4.6.2      codetools_0.2-20
+[28] htmltools_0.5.9     sass_0.4.10         yaml_2.3.12
+[31] pillar_1.11.1       nloptr_2.2.1        crayon_1.5.3
+[34] jquerylib_0.1.4     RTMB_2.0            MASS_7.3-66
+[37] DT_0.34.0           cachem_1.1.0        reformulas_0.4.4
+[40] boot_1.3-32         nlme_3.1-171        tidyselect_1.2.1
+[43] digest_0.6.39       purrr_1.2.2         labeling_0.4.3
+[46] splines_4.6.2       fastmap_1.2.0       grid_4.6.2
+[49] cli_3.6.6           magrittr_2.0.5      withr_3.0.3
+[52] scales_1.4.0        backports_1.5.1     bit64_4.8.6
+[55] rmarkdown_2.32      bit_4.6.0           otel_0.2.0
+[58] lme4_2.1-0          zoo_1.9-1           hms_1.1.4
+[61] evaluate_1.0.5      knitr_1.52          rbibutils_2.4.1
+[64] mgcv_1.9-4          rlang_1.3.0         Rcpp_1.1.2
+[67] glue_1.8.1          renv_1.3.1          vroom_1.7.1
+[70] minqa_1.2.8         jsonlite_2.0.0      R6_2.6.1

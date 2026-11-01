@@ -20,9 +20,9 @@ AIC-leading fitted publication models. Its position in the register is an
 organizational sequence, not a required execution order relative to RD02 or
 RD03.
 
-The [prediction and interpretation review](#rd04-inference-review) below now
-compares the thesis and RD04 estimands, demonstrates both prediction
-implementations, and records the Methods wording. The figure now uses
+The [prediction and interpretation review](#rd04-inference-review) below
+collects the thesis comparison, explains the integrated estimand, and records
+the Methods wording. The figure now uses
 random-effect-integrated mean loads throughout and the joint woody phase model
 for the displayed pre-minus-post mean change. The completed display and its
 model assumptions are recorded below.
@@ -839,57 +839,88 @@ publication_table(read.csv(
 ))
 ```
 
-How much of the change from the thesis comes from the fitted model, and how
-much comes from integrating over random effects? We'll compare the four
-deadwood classes, whose load inputs are carried forward unchanged from the
-thesis. The thesis references are exported predictions from the saved
-`fuel_tmb` models in `analysis/fuel_modeling_round_3.rda`, replayed in the thesis
-environment. The current references and integrated means use the separately
-fitted publication models from F01. RD04 reads those saved results; this
-comparison neither refits models nor makes new-observation predictions.
+Agreement between the computational routes supports the implementation of the
+chosen estimand and uncertainty calculation. Whether the provisional models
+adequately describe the fuel data remains a separate scientific review question.
 
-The two eras share a log-link Gamma load model with treatment as a fixed
-effect and random intercepts for site, site-by-treatment block, and corner
-within block. The thesis calls the nested corner identifier `corner`; F01
-calls it `design_corner`. That name change preserves the grouping structure.
-The zero and dispersion specifications are not equivalent in every case:
+## Prediction and interpretation review {#rd04-inference-review}
 
-| Component | Phase | Change from thesis specification to current F01 leader |
-|---|---|---|
-| 1-hour | Pre-PCT | Zero: `~1` to `~0` (ordinary Gamma; no observed zeros). Dispersion: `~1` to `~treatment`. |
-| 10-hour | Pre-PCT | Zero and dispersion: both `~treatment` to `~1`. |
-| 100-hour | Pre-PCT | Same specification: zero `~1`, dispersion `~1`. |
-| 1,000-hour | Pre-PCT | Same specification: zero `~1`, dispersion `~1`. |
-| 1-hour | Post-PCT | Same zero model (`~1`); dispersion `~treatment + site` to `~1`. |
-| 10-hour | Post-PCT | Same specification: zero `~1`, dispersion `~1`. |
-| 100-hour | Post-PCT | Same zero model (`~treatment + site`); dispersion `~treatment + site` to `~treatment * site`. |
-| 1,000-hour | Post-PCT | Zero: `~1` to `~treatment`; dispersion remains `~1`. |
+For the current display, we'll use study-standardized, population-averaged
+expected loads: these include modeled zeros, integrate over the fitted
+random-intercept distributions, and equally weight the four study-site contexts.
+The historical zero-random-effect target remains a sensitivity reference. The
+fitted load models remain provisional pending scientific review.
 
-The historical specifications come from
-`analysis/analysis/fuel_modeling_round_3.qmd` and its saved models; the current
-ones are recorded in the model-formula table above. “Same specification” means
-equivalent model terms, not the same fitted object or coefficients. The F01
-leaders remain provisional. Combined thesis vegetation and forest-floor
-components are excluded because they do not directly match the current
-woody/herbaceous and litter/duff definitions.
+### What the prediction arguments actually do
 
-The compact table below keeps the thesis reference as a baseline and shows
-three signed changes, all in Mg/ha:
+In our fuel models, `type = "response"` includes modeled zeros, while
+`re.form = NA` sets random effects to zero and `re.form = NULL` conditions on
+fitted effects for known sampling units. Averaging predictions with
+`marginaleffects` does not integrate over random effects, and
+`allow.new.levels = TRUE` only permits new grouping IDs. RD04 instead integrates
+the response mean over all fitted Gaussian random intercepts, then averages
+equally across the four site contexts; this retains the fixed site effects in
+the post-PCT 100-hour model's zero component. The resulting intervals describe
+uncertainty in mean loads, rather than variation among new forests or transects
+(see the [prediction documentation](https://glmmtmb.github.io/glmmTMB/reference/predict.glmmTMB.html)).
 
-- **Fit change** is the current zero-random-effect reference minus the thesis
-  zero-random-effect reference. It holds the prediction target constant and
-  includes the consequences of refitting and any specification changes; it
-  does not isolate a specification effect from other fitting differences.
-- **Integration change** is the current integrated mean minus its
-  zero-random-effect reference, holding the current fit fixed.
-- **Total change** is the current integrated mean minus the thesis reference,
-  equal to the sum of the two changes above before rounding.
+### Thesis comparison {#rd04-thesis-comparison}
 
-Positive values indicate increases. Current estimates, SEs, intervals, and
-integration multipliers are already displayed in the earlier audit, so we
-omit them here. These differences summarize point estimates, not significance
-tests. The full comparison and historical reference exports remain available
-in the task's file review.
+How much of the change from the thesis reflects a different fitted model,
+and how much reflects integration over random effects? We'll collect all
+current fuel components and the historical references here, separating changes
+in the prediction target from changes in component definitions.
+
+The thesis Results wrapper, `marginaleffects_to_emmeans()` in
+`analysis/thesis/results.qmd`, used `type = "response", re.form = NA` for both
+predictions and comparisons, with an equally weighted treatment-by-site grid
+for fuels. Converting these predictions to `emmeans` objects did not change
+their estimand. The original RD04 also used zero random effects and equal-site
+weights; its valid nested-ID grid gave the same standardization. Thus,
+differences between those references reflect fitted models and component
+definitions, rather than the choice of prediction software. Current RD04 adds
+random-effect integration while retaining equal-site weighting.
+
+The 48 thesis references were reproduced from the saved `fuel_tmb` models in
+`analysis/fuel_modeling_round_3.rda` in the thesis environment and committed as
+an input export. Current references and integrated means come from F01's saved
+publication fits. For deadwood, both eras use log-link Gamma models with a
+treatment effect and random intercepts for site, block, and corner within block;
+F01's `design_corner` preserves the thesis `corner` grouping. Some zero and
+dispersion specifications changed: pre-PCT 1-hour removes the zero component
+and adds treatment-specific dispersion; pre-PCT 10-hour removes treatment terms
+from both components; post-PCT 1-hour removes treatment/site dispersion terms;
+post-PCT 100-hour adds their dispersion interaction; and post-PCT 1,000-hour
+adds treatment-specific zero probabilities. The other deadwood specifications
+are equivalent, although they are separate fits. Historical terms are recorded
+in `analysis/analysis/fuel_modeling_round_3.qmd`; current terms appear in the
+model-structure audit above. The F01 leaders remain provisional.
+
+Only the four deadwood classes have matching component definitions. The thesis
+combined woody and herbaceous vegetation, combined pre-PCT litter and duff,
+and modeled a combined vegetation difference. We retain these historical rows
+alongside the separate current components and joint woody contrast, with their
+comparison status explicit. We do not repeat a combined thesis value against
+each separate component or treat a sum of separately fitted means as an
+equivalent historical fit. The separate Student-t woody-difference candidate
+remains in the earlier contrast audit; the table here uses the joint-model
+contrast chosen for the current display.
+
+The table covers all four treatments, with loads and changes in Mg/ha.
+**Fit change** is the current zero-effect reference minus the thesis reference
+for matching deadwood rows; it includes refitting and specification differences,
+without isolating their individual effects. **Integration change** is the
+current integrated mean minus its zero-effect reference, holding the fit fixed.
+**Total change** is the sum of those changes for matching rows. Positive values
+indicate increases; these are point-estimate differences, not significance
+tests. Blank cells indicate that a counterpart or like-for-like difference is
+unavailable. The table also reports current integrated means and their 95%
+confidence intervals.
+
+We'll assemble this comparison from the saved audit and historical export on
+each render. Woody change uses the saved joint-model estimate and interval,
+with its zero-effect reference derived from the same model's phase means.
+This combines existing results without refitting or recalculating inference.
 
 ```{r}
 #| label: rd04-07-thesis-comparison
@@ -897,48 +928,98 @@ in the task's file review.
 #| message: false
 #| warning: false
 
-if (recompute) {
-  # Read the thesis RESULTS grid already replayed and verified in the thesis
-  # environment. This task uses that export without executing historical fits.
-  thesis_reference <- file.path(
-    paths_common$input,
-    "fuel/thesis-reference-reproduction.csv"
+thesis_reference_path <- "inputs/thesis/fuel/thesis-reference-reproduction.csv"
+thesis_results <- readr::read_csv(thesis_reference_path, show_col_types = FALSE)
+audit_saved <- readr::read_csv(
+  "outputs/fuel/inference-audit/rd04-estimand-comparison.csv",
+  show_col_types = FALSE
+)
+woody_saved <- readr::read_csv(
+  "outputs/fuel/inference-audit/woody-mean-change-comparison.csv",
+  show_col_types = FALSE
+)
+lookup <- c(
+  "1-hour" = "onehr", "10-hour" = "tenhr",
+  "100-hour" = "hundhr", "1,000-hour" = "thoushr"
+)
+# Phase means retain their own definitions; only deadwood has a thesis match.
+current <- audit_saved |>
+  dplyr::filter(component != "Woody difference") |>
+  dplyr::select(
+    model_id, component, phase, treatment, reference_estimate,
+    integrated_estimate, integrated_lcl, integrated_ucl
+  ) |>
+  dplyr::mutate(thesis_class = unname(lookup[component])) |>
+  dplyr::left_join(
+    dplyr::select(
+      thesis_results, phase, thesis_class, treatment, thesis_reference
+    ),
+    by = c("phase", "thesis_class", "treatment"),
+    relationship = "many-to-one"
+  ) |>
+  dplyr::mutate(comparison_status = ifelse(
+    is.na(thesis_class), "Current component only", "Matched deadwood"
+  ))
+
+# The displayed woody contrast uses the joint fit, not the alternative t model.
+woody_reference <- audit_saved |>
+  dplyr::filter(component == "Woody vegetation") |>
+  dplyr::select(model_id, treatment, phase, reference_estimate) |>
+  tidyr::pivot_wider(names_from = phase, values_from = reference_estimate) |>
+  dplyr::transmute(
+    model_id, treatment, reference_estimate = prepct - postpct
   )
-  thesis_results <- read_csv(thesis_reference, show_col_types = FALSE)
+woody_comparison <- woody_saved |>
+  dplyr::left_join(woody_reference, by = "treatment", relationship = "one-to-one") |>
+  dplyr::transmute(
+    model_id, component = "Woody vegetation difference", phase = "difference",
+    treatment, reference_estimate,
+    integrated_estimate = phase_model_difference,
+    integrated_lcl = lcl, integrated_ucl = ucl,
+    thesis_class = NA_character_, thesis_reference = NA_real_,
+    comparison_status = "Current woody contrast only"
+  )
+
+# Keep unmatched historical components as their own rows, without invented matches.
+historical_labels <- c(
+  veg = "Combined vegetation (thesis)",
+  dufflitter = "Combined litter and duff (thesis)",
+  veg_diff = "Combined vegetation difference (thesis)"
+)
+historical_only <- thesis_results |>
+  dplyr::filter(thesis_class %in% names(historical_labels)) |>
+  dplyr::transmute(
+    model_id = NA_character_,
+    component = unname(historical_labels[thesis_class]),
+    phase = ifelse(thesis_class == "veg_diff", "difference", phase),
+    treatment, thesis_class, thesis_reference,
+    comparison_status = "Thesis combined component only"
+  )
+comparison <- dplyr::bind_rows(current, woody_comparison, historical_only) |>
+  dplyr::mutate(
+    reference_change = reference_estimate - thesis_reference,
+    integration_change = integrated_estimate - reference_estimate,
+    total_change = integrated_estimate - thesis_reference
+  ) |>
+  dplyr::arrange(component, phase, treatment)
+stopifnot(
+  nrow(current) == 56L, nrow(woody_comparison) == 4L,
+  nrow(historical_only) == 16L, nrow(comparison) == 76L,
+  sum(comparison$comparison_status == "Matched deadwood") == 32L,
+  sum(!is.na(comparison$thesis_reference)) == nrow(thesis_results),
+  all(is.finite(comparison$reference_change[
+    comparison$comparison_status == "Matched deadwood"
+  ]))
+)
+readr::write_csv(
+  comparison, "outputs/fuel/inference-audit/thesis-rd04-comparison.csv"
+)
+if (recompute) {
   stopifnot(file.copy(
-    thesis_reference,
+    thesis_reference_path,
     file.path(audit_dir, "thesis-reference-reproduction.csv"),
     overwrite = TRUE
   ))
-  lookup <- c(
-    "1-hour" = "onehr",
-    "10-hour" = "tenhr",
-    "100-hour" = "hundhr",
-    "1,000-hour" = "thoushr"
-  )
-  # Match only directly comparable deadwood classes, phases, and treatments.
-  # The reference difference holds the zero-random-effect target constant;
-  # integrated_estimate separately records the effect of changing that target.
-  comparison <- audit |>
-    filter(component %in% names(lookup)) |>
-    mutate(thesis_class = unname(lookup[component])) |>
-    left_join(
-      select(
-        thesis_results,
-        phase,
-        thesis_class,
-        treatment,
-        thesis_reference,
-        thesis_se
-      ),
-      by = c("phase", "thesis_class", "treatment")
-    ) |>
-    mutate(reference_change = reference_estimate - thesis_reference)
-  write_csv(
-    comparison,
-    file.path(audit_dir, "thesis-rd04-deadwood-comparison.csv")
-  )
-
   write_publication_lines(
     c(
       "RD04 inference audit; existing fitted models; no refitting or model selection.",
@@ -949,169 +1030,54 @@ if (recompute) {
     file.path(audit_dir, "session-info.txt")
   )
 }
-
-comparison_display <- read.csv(
-  "outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv"
-) |>
-  dplyr::transmute(
-    Component = component,
-    Phase = phase,
-    Treatment = treatment,
-    `Thesis reference` = thesis_reference,
-    `Fit change` = reference_change,
-    `Integration change` = integrated_estimate - reference_estimate,
-    `Total change` = integrated_estimate - thesis_reference
-  )
-publication_table(comparison_display)
-```
-
-This separates the change between historical and current fits from the
-additional change in prediction target within the current fit. Shared model
-terms alone do not make the two eras' fitted estimates identical, and a
-nonzero fit change is not evidence that one model is scientifically preferable.
-
-Agreement between the computational routes supports the implementation of the
-chosen estimand and uncertainty calculation. Whether the provisional models
-adequately describe the fuel data remains a separate scientific review question.
-
-## Prediction and interpretation review {#rd04-inference-review}
-
-For the current display, we'll use study-standardized, population-averaged
-expected loads as the baseline for mean fuel loading in comparable systems.
-These integrate over the fitted random-intercept distributions and include modeled
-zeros, with equal weights for the four study-site contexts. Retain the historical
-zero-random-effect predictions as a clearly labeled reference/sensitivity
-summary in the audit. RD04 now uses this integrated interpretation throughout,
-with woody mean change derived from the joint phase model; the fitted load
-models remain provisional pending scientific review. The original generator
-has been retired in favor of the stage-08 calculation on this page.
-
-### What the prediction arguments actually do
-
-| Calculation | Quantity estimated | Appropriate interpretation |
-|---|---|---|
-| `re.form = NULL` with known grouping IDs | Expected response conditional on fitted random effects for those sites, blocks, corners, and transects | Conditions in the sampled units; average over an explicitly weighted set of these units if that is the target |
-| `re.form = NA` (or `~0`) | Expected response with all random effects set to zero | A reference at the center of the latent random-effect distribution |
-| `re.form = NULL`, with selected random-only grouping variables set to `NA` in `newdata` | Retains known-group effects for the remaining grouping variables and sets the selected groups' effects to zero | A conditional reference, e.g., a known site with zero lower-level effects |
-| Integrate expected responses over the fitted random-effect distribution | Arithmetic expected load for a population of exchangeable sampling units | The model-based mean-load baseline used in RD04 |
-
-`marginaleffects` passes the random-effect arguments to the fitted model's
-prediction method. Its `by` argument and `avg_predictions()` average the
-predictions supplied to them; they do not change zero-effect predictions into
-random-effect-integrated predictions. This distinction follows the
-[mixed-model vignette](https://marginaleffects.com/bonus/lme4.html), the
-[prediction reference](https://marginaleffects.com/man/r/predictions.html),
-and the distinction between observed-group averaging and new-group integration
-in the [Bayesian vignette](https://marginaleffects.com/bonus/brms.html#averaging-marginalizing-integrating-random-effects).
-
-For `glmmTMB`, arbitrary formulas selecting random effects in `re.form` are
-not supported. Selected grouping variables can instead be set to `NA`, but
-this is unsuitable when a variable is also required as a fixed predictor:
-`site`, for example, must remain defined for the post-PCT 100-hour model's zero
-component. `allow.new.levels = TRUE` permits new grouping IDs; it does not
-request integration over their possible effects. See the
-[model's prediction documentation](https://glmmtmb.github.io/glmmTMB/reference/predict.glmmTMB.html).
-
-Two different uses of “conditional” also need separating: `type = "conditional"`
-requests the conditional-distribution mean, whereas `re.form` controls
-conditioning on random effects. For these zero-inflated Gamma models,
-`type = "response"` returns $(1-p_0)\mu_+$, including the modeled probability
-of zero, while `type = "conditional"` returns $\mu_+$. Dispersion parameters
-affect variability and estimation but are not additional multipliers of this
-response mean. Gamma sampling variability should not receive a lognormal
-residual-variance correction.
-
-### Alignment of the thesis code and interpretation
-
-The controlling Results function is `marginaleffects_to_emmeans()` in
-`analysis/thesis/results.qmd`: **both predictions and comparisons use
-`re.form = NA`**. For fuel loads, its pre- and post-PCT calls use
-`tidyr::expand(data, treatment, site)`, giving equal site weights. Passing the
-predictions and pairwise-difference standard errors into `emmeans::emmobj()`
-changes their representation, not their underlying estimand. The earlier
-`re.form = NULL` exploratory basal-area plots in `regen_visualize.qmd` are
-not the calls controlling the thesis Results.
-
-| Thesis statement or presentation | Assessment |
-|---|---|
-| Methods: predictions incorporate all components and average over random effects to obtain population means | Partly aligned: response predictions can include the zero component, but the wrapper sets random effects to zero before averaging. The random effects were not integrated out. |
-| Methods: estimates apply to equal proportions of similar sites, specifically north- and south-facing aspects | Equal site weights are explicit for fuel grids. Zeroing site random effects does not reproduce an aspect mixture on a nonlinear response scale; aspect was not a fixed adjustment variable. Transport requires an exchangeability assumption beyond the prediction settings. |
-| Fuel Results: “expected value” and “estimated marginal means” | Valid if identified as site-standardized expectations **at zero random effects**. Too broad if read as arithmetic population-average loads across forest heterogeneity. |
-| Discussion: compare “average” loads with other forest studies | State whether each value is an observed mean, a zero-effect reference, or an integrated model mean, and check component definitions and sampling protocols. These quantities are not interchangeable. |
-| Post-PCT caption: vegetation difference “represents slash fuels recruited to the forest floor” | Overstates the measurement: standing-vegetation reduction is an inferred potential contribution, not measured slash deposition. RD04's qualified caption is better aligned. |
-| Results: pre/post estimates are not statistically comparable because model structures differ | Different structures alone do not prevent comparison. Formal phase differences need an explicit common estimand and their covariance, accounting for pairing. Separate phase CIs do not supply a paired change test. |
-| Discussion/conclusions: PCT “resulted in” or “generated” the observed dead-fuel changes | The observed transition supports association; attributing all change to PCT requires the design/time assumptions. No unthinned contemporaneous comparison is used by these predictions. |
-
-The same wrapper controls regeneration and sprout Results. Basal area,
-Douglas-fir counts, and year-10 height use nonlinear links, so zero-effect and
-integrated means can differ there too. Height increment uses an identity link;
-integration over mean-zero random effects leaves its expected value unchanged,
-for a fixed covariate distribution. The Results grids also vary: treatment
-height-increment summaries explicitly balance years, whereas the by-year
-analysis uses `newdata = NULL` and averages within observed species/year cells.
-Those are different standardization choices and should be described separately.
-The fuel integration code below is deliberately restricted to its audited model
-structures; it is not a general-purpose replacement for those other analyses.
-
-One numerical provenance issue also deserves attention: the Discussion reports
-about **42 Mg/ha** of pre-PCT 1,000-hour fuel. Reproducing the Results wrapper on
-the saved thesis models gives an equal-treatment reference mean of **32.63
-Mg/ha**. The Discussion value may be an observed summary, but it should not be
-presented as the grand mean of these particular model predictions without a
-separate source. The audit preserves all reproduced thesis fuel estimates.
-
-### How RD04 compares with the thesis
-
-The original RD04 and thesis fuel Results used the **same zero-random-effect
-target** and equal-site weighting. Both used valid prediction grids: the thesis
-expanded the observed treatment and site levels, and RD04 retained observed
-rows with valid nested identifiers, one per site/treatment/phase. Neither
-approach introduced a grid discrepancy for these zero-effect predictions.
-The updated RD04 retains equal-site weighting and integrates over random
-effects. Every phase-specific mean averages four site contexts; post-PCT
-100-hour fuel additionally retains fixed site effects in its zero component.
-
-Numerical changes from the thesis to the original RD04 arose from revised
-fitted models and component definitions, not a switch from `marginaleffects`
-to custom prediction. The updated figure also changes the estimand by
-integrating over random effects. The directly comparable deadwood example
-below separates these changes. Values are Mg/ha, GS treatment.
-
-```{r}
-#| label: rd04-deadwood-gs-example
-#| echo: true
-#| warning: false
-#| message: false
-# Show like-for-like GS deadwood references before the integrated mean, so
-# revised fits/components and the integration adjustment remain distinguishable.
-old_new <- read.csv(file.path(
-  output_root,
-  "fuel/inference-audit/thesis-rd04-deadwood-comparison.csv"
+publication_table(dplyr::transmute(
+  comparison,
+  Component = component,
+  Phase = dplyr::recode(
+    phase, prepct = "Pre-PCT", postpct = "Post-PCT",
+    difference = "Pre-PCT minus post-PCT"
+  ),
+  Treatment = toupper(treatment),
+  `Comparison status` = comparison_status,
+  `Thesis reference` = thesis_reference,
+  `Current zero-effect reference` = reference_estimate,
+  `Current integrated mean` = integrated_estimate,
+  `95% lower` = integrated_lcl, `95% upper` = integrated_ucl,
+  `Fit change` = reference_change,
+  `Integration change` = integration_change,
+  `Total change` = total_change
 ))
-old_new <- old_new[
-  old_new$treatment == "gs",
-  c(
-    "component",
-    "phase",
-    "thesis_reference",
-    "reference_estimate",
-    "integrated_estimate"
-  )
-]
-names(old_new) <- c(
-  "Component",
-  "Phase",
-  "Thesis reference",
-  "Original RD04 reference",
-  "Current integrated mean"
-)
-publication_table(old_new)
 ```
 
-Combined thesis vegetation and forest-floor estimates do not directly match
-the new woody/herbaceous and litter/duff components.
+This comparison separates fitting differences from the additional integration
+adjustment wherever the component definitions match. Integration matters most
+for herbaceous loads, whose means roughly double, and less for duff; the
+earlier audit gives the exact multipliers. Larger means do not establish that
+a model is preferable, and the vegetation and forest-floor rows document a
+change in scientific definition rather than a like-for-like thesis comparison.
 
-### Implemented target and worked demonstration
+The thesis Methods described averaging over random effects, but the Results
+code set them to zero. Its fuel estimates are therefore equal-site,
+zero-effect references rather than arithmetic population means. Equal site
+weights also do not establish a regional or 50:50 aspect-standardized target;
+transport to comparable forests still requires exchangeability assumptions.
+For comparisons with other studies, we need to distinguish observed means,
+zero-effect references, and integrated means, as well as component definitions
+and sampling protocols. One unresolved provenance issue is the thesis
+Discussion's approximately **42 Mg/ha** of pre-PCT 1,000-hour fuel: the reproduced
+model references average **32.63 Mg/ha** across treatments. The larger value
+needs its own source if retained.
+
+Interpretation of change also needs care. Different model structures do not
+by themselves prevent phase comparisons, but formal differences require a
+common estimand and covariance accounting for pairing; separate phase CIs are
+insufficient. The current joint woody contrast meets that requirement, while
+representing a potential surface-fuel contribution rather than measured slash
+deposition. The pre/post transition supports association with PCT; attributing
+all change to PCT requires additional design/time assumptions because these
+predictions have no contemporaneous unthinned comparison.
+
+### Integrated mean and uncertainty
 
 For a treatment $t$, phase $h$, and equally weighted site contexts $s$, define
 
@@ -1149,46 +1115,6 @@ for any arbitrary new forest. Four sites also provide limited information
 about the site-variance distribution. A regional mean, or an explicitly
 50:50 aspect-standardized mean, would need a justified target distribution
 and sufficient covariate information to support that standardization.
-
-The demonstration holds fitted load models fixed and changes the estimand;
-woody change now uses their joint phase model. Selected
-GS examples below show why the distinction matters (Mg/ha). The intervals
-describe uncertainty in the integrated **mean**, not variation in a new forest
-or transect.
-
-```{r}
-#| label: rd04-integrated-gs-example
-#| echo: true
-# Select examples illustrating integration while retaining each phase's audited
-# mean interval. These are saved estimates, not a new subset of the fitting data.
-audit <- read.csv(file.path(
-  output_root,
-  "fuel/inference-audit/rd04-estimand-comparison.csv"
-))
-show <- audit[
-  audit$treatment == "gs" &
-    audit$component %in%
-      c("100-hour", "Woody vegetation", "Herbaceous vegetation"),
-]
-show <- show[!(show$component == "100-hour" & show$phase == "prepct"), ]
-show <- show[, c(
-  "component",
-  "phase",
-  "reference_estimate",
-  "integrated_estimate",
-  "integrated_lcl",
-  "integrated_ucl"
-)]
-names(show) <- c(
-  "Component",
-  "Phase",
-  "Zero-effect reference",
-  "Integrated mean",
-  "95% lower",
-  "95% upper"
-)
-publication_table(show)
-```
 
 The single method check above verifies both routes:
 

@@ -83,7 +83,7 @@
       "publication/task-rd04.qmd",
       "publication/sections/rd04-fuel-estimates-table.qmd"
     ],
-    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) compares thesis and publication predictions and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. A single tolerance check verifies analytic and marginaleffects agreement; later audit tables and figure calculations use the analytic route. The [source review](task-rd04.qmd#rd04-source-review) explains the inline inference functions and display history; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task from saved F01 models while other tasks remain in review mode.",
+    "summary": "The [nine-panel inventory](task-rd04.qmd#completed-output) reports phase-specific fuel loads and a matched woody-vegetation contrast. The [inference review](task-rd04.qmd#rd04-inference-review) collects all current fuel components and historical references in one comparison table, marks unmatched component definitions, and documents the switch to random-effect-integrated means, with woody change derived from the joint phase model and its pre/post covariance. A [companion table](task-rd04.qmd#fuel-companion-table) reformats all 60 estimates from the canonical CSV. Model assumptions and final table placement remain under review. A single tolerance check verifies analytic and marginaleffects agreement; later audit tables and figure calculations use the analytic route. The [source review](task-rd04.qmd#rd04-source-review) explains the inline inference functions and display history; F01 supplies the fitted-model record. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow. Quarto can recompute this whole task from saved F01 models while other tasks remain in review mode.",
     "outputs": [
       "publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
       "publication/outputs/fuel/tables/rd04-fuel-model-estimates.csv",
@@ -91,7 +91,7 @@
       "publication/outputs/fuel/manifests/rd04-figure-session-info.txt",
       "publication/outputs/fuel/inference-audit/rd04-method-agreement.csv",
       "publication/outputs/fuel/inference-audit/rd04-estimand-comparison.csv",
-      "publication/outputs/fuel/inference-audit/thesis-rd04-deadwood-comparison.csv",
+      "publication/outputs/fuel/inference-audit/thesis-rd04-comparison.csv",
       "publication/outputs/fuel/inference-audit/woody-mean-change-comparison.csv",
       "publication/outputs/fuel/inference-audit/model-structures.csv",
       "publication/outputs/fuel/inference-audit/thesis-reference-reproduction.csv",
@@ -106,6 +106,7 @@
       "analysis/scripts/export-publication-inputs.R",
       "analysis/scripts/publication-export/fuel-historical-reference.R",
       "analysis/analysis/fuel_modeling_round_3.qmd",
+      "analysis/thesis/results.qmd",
       "publication/outputs/helpers/task-helpers.rds"
     ],
     "depends_on": [
