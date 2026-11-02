@@ -1,0 +1,12 @@
+task: RD02 historical thesis results
+generator: task-rd02.qmd#fig-rd02-historical-reference
+source: rd02-thesis-results.csv; thesis results_appendix_deps.rda regen_all
+model_id: thesis_mba_m5
+model_refitted: no
+target: expected basal area including zeros; random effects set to zero
+interval: original response-scale asymptotic normal 95% intervals; negative limits
+  retained
+distinction: rd02-basal-area-model-estimates.csv contains retrospective integrated
+  historical-model means, not thesis figure values
+checks: 16 emmeans cells match zero-effect predictions/SEs and estimate +/- qnorm(.975)*SE
+  in thesis exporter

@@ -1,0 +1,25 @@
+task: RD02 separate species with site and macro-plot random effects
+data: 64 RW and 64 TO observations; 4 sites, 16 macro plots, 64 vegetation plots per
+  species
+species_formula: ba_ha ~ treat + (1 | site/treat); ziGamma(log), zero ~1, dispersion
+  ~1
+candidate_formulas:
+  joint_site_species_rwto: ba_ha ~ treat * spp + (1 | site:spp)
+  joint_full_nested_rwto: ba_ha ~ treat * spp + (1 | site/treat/plot)
+  joint_combined_rwto: ba_ha ~ treat * spp + (1 | site/treat/plot) + (1 | site:spp)
+joint_comparisons: all refitted on the SAME 128 RW/TO rows; no AIC comparison with
+  earlier 256-row fits
+paired_likelihood: sum species log likelihoods and parameter counts; assumes independence
+  between species
+diagnostics: 1000 unconditional DHARMa simulations, seed 20261030, plus treatment
+  plots
+optimizer_sensitivity: BFGS from all random SDs 0.3; objective agreement checked within
+  1e-4
+prediction_checks: 24 joint means checked here; 8 RW/TO means reused from the 16 checked
+  selected means
+intervals: 95% log-scale delta method including all conditional random SD uncertainty;
+  approximate near boundary
+review: plot-level RE omitted as requested; 4 site and 16 nested macro-plot groups
+  per species
+selection: joint sensitivity fits plus authoritative selected RW/TO fits; no duplicate
+  separate fitting

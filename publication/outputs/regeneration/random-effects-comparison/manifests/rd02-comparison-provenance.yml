@@ -12,7 +12,7 @@ diagnostics:
   seed: 20261030
   simulations: 1000
   refit: no
-  random_effect_simulation: unconditional glmmTMB simulate default in installed version
+  random_effect_simulation: explicit unconditional simulation via F01 helper
   baseline_tail_sensitivity: 10000 simulations; seed 20261031
 optimizer_sensitivity: BFGS from random SDs 0.3, objective checked within 1e-4 of
   nlminb
@@ -21,4 +21,4 @@ means: exact integration over all conditional Gaussian random intercepts, includ
 intervals: 95% log-scale delta method with full parameter covariance
 tests: AIC comparison; primary covariance structures are not nested in one another,
   so no ordinary LRT
-selection: comparison only; original lead figure and model not replaced
+selection: sensitivity evidence; separate species models remain selected

@@ -130,7 +130,7 @@
   },
   {
     "id": "RD02",
-    "title": "regeneration basal-area/density display",
+    "title": "regeneration basal area display",
     "status": "Separate models selected; displays pending review",
     "target": "RW/TO Results figure and all-species supplement table",
     "files": [
@@ -138,26 +138,93 @@
       "publication/sections/rd02-regeneration-display.qmd",
       "publication/sections/rd02-species-estimates-table.qmd"
     ],
-    "summary": "The [overall sensitivity review](task-rd02.qmd#rd02-random-effects-review) examines joint random-effect structures and same-data species comparisons; the [focused RW/TO comparison](task-rd02.qmd#rd02-separate-species-review) examines separate fitting and species-specific variances. The [recorded selection](task-rd02.qmd#rd02-review-recommendation) uses four separate zero-inflated Gamma models with site and nested macro-plot intercepts. Prediction, gradient, integration, and optimizer checks accompany the RW/TO Results figure and all-category supplement estimates; display review remains open. Runs solely in the locked publication environment from committed thesis exports; current outputs and in-stage computational checks define the workflow.",
+    "summary": "The [thesis-results figure](task-rd02.qmd#rd02-01) reproduces original zero-effect means and intervals; the [statistical framework](task-rd02.qmd#rd02-inference-review) distinguishes the current integrated target. One [consolidated sensitivity figure](task-rd02.qmd#rd02-04) compares joint and separate configurations, with supporting tables folded. The [model decision](task-rd02.qmd#rd02-review-recommendation) retains separate species models for biological interpretation despite stronger joint-model AIC support. Boundary variances, four-site uncertainty, zero-process assumptions, and the historical tail flag remain explicit limitations. RW/TO fits are reused from the authoritative four-category collection. Displays remain under review.",
     "inputs": [
       "publication/inputs/thesis/README.md",
       "publication/inputs/thesis/manifest.json",
       "analysis/scripts/export-publication-inputs.R",
       "analysis/scripts/publication-export/rd02-historical-reference.R",
-      "publication/outputs/helpers/task-helpers.rds"
+      "publication/outputs/helpers/task-helpers.rds",
+      "publication/inputs/thesis/regeneration-measurements.rds",
+      "publication/inputs/thesis/regeneration/saved-model-reference.rds",
+      "publication/inputs/thesis/regeneration/inference-audit/rd02-estimand-comparison.csv",
+      "publication/inputs/thesis/regeneration/inference-audit/rd02-reference-grid.csv",
+      "publication/inputs/thesis/regeneration/tables/rd02-basal-area-model-estimates.csv",
+      "publication/inputs/thesis/regeneration/tables/rd02-observed-basal-area-summary.csv",
+      "publication/inputs/thesis/regeneration/tables/rd02-thesis-results.csv"
     ],
     "outputs": [
+      "publication/outputs/regeneration/figures/rd02-regeneration-basal-area.pdf",
+      "publication/outputs/regeneration/figures/rd02-regeneration-basal-area.png",
+      "publication/outputs/regeneration/inference-audit/rd02-estimand-comparison.csv",
+      "publication/outputs/regeneration/inference-audit/rd02-reference-grid.csv",
+      "publication/outputs/regeneration/manifests/rd02-figure-provenance.yml",
+      "publication/outputs/regeneration/manifests/rd02-session-info.txt",
+      "publication/outputs/regeneration/overall-sensitivity/figures/rd02-overall-sensitivity.pdf",
+      "publication/outputs/regeneration/overall-sensitivity/figures/rd02-overall-sensitivity.png",
+      "publication/outputs/regeneration/overall-sensitivity/manifests/rd02-overall-provenance.yml",
+      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-dharma-tests.csv",
+      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv",
+      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv",
+      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-variance-components.csv",
+      "publication/outputs/regeneration/random-effects-comparison/diagnostics/full_nested-by-species-treatment.png",
+      "publication/outputs/regeneration/random-effects-comparison/diagnostics/full_nested-dharma.png",
+      "publication/outputs/regeneration/random-effects-comparison/diagnostics/nested_plus_site_species-by-species-treatment.png",
+      "publication/outputs/regeneration/random-effects-comparison/diagnostics/nested_plus_site_species-dharma.png",
+      "publication/outputs/regeneration/random-effects-comparison/diagnostics/thesis_site_species-by-species-treatment.png",
+      "publication/outputs/regeneration/random-effects-comparison/diagnostics/thesis_site_species-dharma.png",
+      "publication/outputs/regeneration/random-effects-comparison/manifests/rd02-comparison-provenance.yml",
+      "publication/outputs/regeneration/random-effects-comparison/manifests/rd02-comparison-session-info.txt",
+      "publication/outputs/regeneration/random-effects-comparison/tables/rd02-baseline-tail-observations.csv",
+      "publication/outputs/regeneration/random-effects-comparison/tables/rd02-baseline-tail-sensitivity.csv",
+      "publication/outputs/regeneration/random-effects-comparison/tables/rd02-dharma-tests.csv",
+      "publication/outputs/regeneration/random-effects-comparison/tables/rd02-integrated-model-comparison.csv",
+      "publication/outputs/regeneration/random-effects-comparison/tables/rd02-model-comparison.csv",
+      "publication/outputs/regeneration/random-effects-comparison/tables/rd02-optimizer-sensitivity.csv",
+      "publication/outputs/regeneration/random-effects-comparison/tables/rd02-random-effect-variances.csv",
+      "publication/outputs/regeneration/selected-species-models/diagnostics/df-by-treatment.png",
+      "publication/outputs/regeneration/selected-species-models/diagnostics/df-dharma.png",
+      "publication/outputs/regeneration/selected-species-models/diagnostics/other-by-treatment.png",
+      "publication/outputs/regeneration/selected-species-models/diagnostics/other-dharma.png",
+      "publication/outputs/regeneration/selected-species-models/diagnostics/rw-by-treatment.png",
+      "publication/outputs/regeneration/selected-species-models/diagnostics/rw-dharma.png",
+      "publication/outputs/regeneration/selected-species-models/diagnostics/to-by-treatment.png",
+      "publication/outputs/regeneration/selected-species-models/diagnostics/to-dharma.png",
+      "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.pdf",
+      "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png",
+      "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml",
+      "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-session-info.txt",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-display.csv",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-fit-register.csv",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-optimizer-checks.csv",
-      "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml",
-      "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png",
-      "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.pdf",
-      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv",
-      "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-display.csv"
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_combined_rwto-by-treatment.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_combined_rwto-dharma.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_full_nested_rwto-by-treatment.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_full_nested_rwto-dharma.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_site_species_rwto-by-treatment.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_site_species_rwto-dharma.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/rw_full_nested-by-treatment.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/rw_full_nested-dharma.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/rw_site_macro-by-treatment.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/rw_site_macro-dharma.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/to_full_nested-by-treatment.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/to_full_nested-dharma.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/to_site_macro-by-treatment.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/to_site_macro-dharma.png",
+      "publication/outputs/regeneration/separate-species-comparison/manifests/rd02-species-comparison-provenance.yml",
+      "publication/outputs/regeneration/separate-species-comparison/manifests/rd02-species-comparison-session-info.txt",
+      "publication/outputs/regeneration/separate-species-comparison/tables/rd02-rwto-aic-comparison.csv",
+      "publication/outputs/regeneration/separate-species-comparison/tables/rd02-species-dharma-tests.csv",
+      "publication/outputs/regeneration/separate-species-comparison/tables/rd02-species-fit-register.csv",
+      "publication/outputs/regeneration/separate-species-comparison/tables/rd02-species-integrated-estimates.csv",
+      "publication/outputs/regeneration/separate-species-comparison/tables/rd02-species-optimizer-checks.csv",
+      "publication/outputs/regeneration/separate-species-comparison/tables/rd02-species-variance-components.csv",
+      "publication/outputs/regeneration/tables/rd02-basal-area-model-estimates.csv",
+      "publication/outputs/regeneration/tables/rd02-observed-basal-area-summary.csv",
+      "publication/outputs/regeneration/tables/rd02-thesis-results.csv"
     ],
     "depends_on": [
       "F01"
@@ -181,11 +248,21 @@
     "status": "Queued - after RD02",
     "target": "1–2 manuscript pages",
     "files": [
-      "publication/sections/results.qmd",
-      "publication/sections/rd02-regeneration-display.qmd",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv"
+      "publication/task-rt01.qmd",
+      "publication/sections/results.qmd"
     ],
-    "summary": "After RD02 acceptance, the proposal is to draft a 1–2-page regeneration Results subsection around the accepted display, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Every quantitative claim must be traceable to an accepted display or linked table."
+    "summary": "After RD02 acceptance, the proposal is to draft a 1–2-page regeneration Results subsection around the accepted display, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Every quantitative claim must be traceable to an accepted display or linked table.",
+    "inputs": [
+      "publication/task-rd02.qmd",
+      "publication/sections/rd02-regeneration-display.qmd",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
+      "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png",
+      "publication/outputs/helpers/task-helpers.rds"
+    ],
+    "depends_on": [
+      "F01",
+      "RD02"
+    ]
   },
   {
     "id": "RT02",
@@ -259,7 +336,16 @@
       "publication/sections/supplement.qmd",
       "analysis/analysis/sprout_modeling.qmd"
     ],
-    "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02."
+    "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02.",
+    "inputs": [
+      "publication/task-rd02.qmd",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv"
+    ],
+    "depends_on": [
+      "RD02",
+      "RT01",
+      "RT02"
+    ]
   },
   {
     "id": "M03",
@@ -386,7 +472,10 @@
       "publication/outputs/helpers/task-helpers.rds",
       "publication/outputs/helpers/fuel-value.rds",
       "publication/outputs/fuel/figures/rd04-fuel-phase-pct-inventory.png",
-      "publication/sections/fuel-results.qmd"
+      "publication/sections/fuel-results.qmd",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
+      "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png",
+      "publication/sections/methods.qmd"
     ],
     "depends_on": [
       "F01",

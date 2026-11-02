@@ -22,6 +22,21 @@ spec.loader.exec_module(website)
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_rd02_figures_stay_visible_and_supporting_tables_start_folded(self):
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "task.html"
+            markup = ('<img src="outputs/rd02-regeneration-basal-area.png">'
+                      '<details id="rd02-historical-details"><summary>History</summary></details>'
+                      '<img src="outputs/rd02-overall-sensitivity.png">'
+                      '<details id="rd02-comparison-details"><summary>Fits</summary></details>')
+            page.write_text(markup, encoding="utf-8")
+            self.assertEqual(website.rd02_review_errors(website.Document(page)), [])
+            page.write_text(markup.replace('id="rd02-comparison-details"',
+                                           'id="rd02-comparison-details" open'), encoding="utf-8")
+            self.assertTrue(website.rd02_review_errors(website.Document(page)))
+            page.write_text('<details>' + markup + '</details>', encoding="utf-8")
+            self.assertTrue(website.rd02_review_errors(website.Document(page)))
+
     def test_csv_formula_tildes_are_not_rendered_as_markdown_subscripts(self):
         with tempfile.TemporaryDirectory() as directory:
             page = Path(directory) / "task.html"

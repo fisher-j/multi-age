@@ -1,0 +1,24 @@
+task: RD02 random-effects comparison
+source: publication/inputs/thesis/regeneration-measurements.rds
+data: same 256 species-plot rows; 4 sites, 16 treatment macro plots, 64 vegetation
+  plots
+candidate_formulas:
+  thesis_site_species: ba_ha ~ treat * spp + (1 | site:spp)
+  full_nested: ba_ha ~ treat * spp + (1 | site/treat/plot)
+  nested_plus_site_species: ba_ha ~ treat * spp + (1 | site/treat/plot) + (1 | site:spp)
+fixed_components: ziGamma(log); conditional treat*spp; zero ~spp; dispersion ~spp
+fit: maximum likelihood; nlminb; iter.max=eval.max=10000
+diagnostics:
+  seed: 20261030
+  simulations: 1000
+  refit: no
+  random_effect_simulation: explicit unconditional simulation via F01 helper
+  baseline_tail_sensitivity: 10000 simulations; seed 20261031
+optimizer_sensitivity: BFGS from random SDs 0.3, objective checked within 1e-4 of
+  nlminb
+means: exact integration over all conditional Gaussian random intercepts, including
+  zeros
+intervals: 95% log-scale delta method with full parameter covariance
+tests: AIC comparison; primary covariance structures are not nested in one another,
+  so no ordinary LRT
+selection: sensitivity evidence; separate species models remain selected

@@ -11,7 +11,7 @@ output <- normalizePath("../publication", mustWork = TRUE)
 output <- file.path(output, "inputs", "thesis")
 dir.create(output, recursive = TRUE, showWarnings = FALSE)
 inputs <- c("summarize_collected_data.rda", "calculate_fuel_load.rda",
-            "fuel_modeling_round_3.rda", "regen_visualize.rda", "renv.lock", ".Rprofile")
+            "fuel_modeling_round_3.rda", "regen_visualize.rda", "results_appendix_deps.rda", "renv.lock", ".Rprofile")
 sha <- function(path) digest::digest(readBin(path, "raw", n = file.info(path)$size),
                                     serialize = FALSE, algo = "sha256")
 protected <- vapply(inputs, sha, character(1))

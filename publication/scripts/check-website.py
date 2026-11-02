@@ -52,10 +52,20 @@ class Document(HTMLParser):
         self.widgets = []
         self.review_tables = {}
         self.widget_errors = []
+        self.details = []
+        self.details_by_id = {}
+        self.images_in_details = {}
+        self.table_details = {}
         self.feed(path.read_text(encoding="utf-8"))
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == "details":
+            self.details.append(attrs)
+            if "id" in attrs:
+                self.details_by_id[attrs["id"]] = attrs
+        if tag == "img":
+            self.images_in_details[attrs.get("src", "")] = tuple(self.details)
         if tag == "div":
             self.div_ids.append(attrs.get("id", ""))
             if "datatables" in attrs.get("class", "").split():
@@ -105,6 +115,7 @@ class Document(HTMLParser):
             label = next((id for id in reversed(self.div_ids) if id.startswith("tbl-")), None)
             if label:
                 self.result_tables[label] = rows
+                self.table_details[label] = tuple(self.details)
             if (self.review_source or "").endswith(".csv"):
                 self.review_tables[self.review_source] = rows
             options = payload["options"]
@@ -119,6 +130,7 @@ class Document(HTMLParser):
             self.result_table = None
         if tag == "details":
             self.review_source = None
+            self.details.pop()
         if tag in ("td", "th"):
             self.in_cell = False
         if tag == "section" and self.sections:
@@ -129,6 +141,20 @@ class Document(HTMLParser):
             self.widget_script.append(data)
         if self.result_table and self.in_cell:
             self.result_tables[self.result_table][-1][-1] += data
+
+
+def rd02_review_errors(doc):
+    errors = []
+    for id in ("rd02-historical-details", "rd02-comparison-details"):
+        if id not in doc.details_by_id or "open" in doc.details_by_id[id]:
+            errors.append(f"{id} must exist and start collapsed")
+    for name in ("rd02-regeneration-basal-area.png", "rd02-overall-sensitivity.png"):
+        images = [parents for src, parents in doc.images_in_details.items() if src.endswith(name)]
+        if len(images) != 1 or images[0]:
+            errors.append(f"{name} must be visible outside folded details")
+    if doc.table_details.get("tbl-rd02-selected-species-estimates"):
+        errors.append("Publication estimates table must remain unfolded")
+    return errors
 
 
 def check():
@@ -198,6 +224,8 @@ def check():
             if doc and doc.result_tables.get(label) != expected:
                 errors.append(f"{page}: rendered table cells differ from saved CSV: {label}")
     rd02 = documents.get(output / "task-rd02.html")
+    if rd02:
+        errors.extend(f"task-rd02.html: {error}" for error in rd02_review_errors(rd02))
     if rd02 and len(rd02.result_tables.get("tbl-rd02-random-effects-fit", [])) != 9:
         errors.append("task-rd02.html: sensitivity table must render all eight model rows")
     import importlib.util

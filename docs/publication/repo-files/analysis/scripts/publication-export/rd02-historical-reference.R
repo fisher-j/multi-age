@@ -120,6 +120,30 @@ estimates <- estimates |>
   arrange(spp, treat)
 write.csv(estimates, file.path(out, "tables/rd02-basal-area-model-estimates.csv"), row.names = FALSE)
 write.csv(audit, file.path(out, "inference-audit/rd02-estimand-comparison.csv"), row.names = FALSE)
+# Recover the actual response-scale intervals carried into the thesis figures.
+# Saved emmeans objects retain the original prediction SEs; rebuilding intervals
+# from the integrated export would change both target and interval method.
+thesis_results <- new.env()
+load("results_appendix_deps.rda", envir = thesis_results)
+thesis_table <- bind_rows(purrr::map(seq_len(nrow(thesis_results$regen_all)), function(i) {
+  result <- as.data.frame(emmeans::emmeans(thesis_results$regen_all$emmobj[[i]], ~level))
+  data.frame(spp = as.character(thesis_results$regen_all$spp[i]), treat = result$level,
+             estimate = result$estimate, se = result$SE,
+             lcl = result$asymp.LCL, ucl = result$asymp.UCL)
+}))
+index <- match(key(thesis_table), key(audit))
+stopifnot(nrow(thesis_table) == 16L, !anyNA(index),
+          !anyDuplicated(thesis_table[c("spp", "treat")]),
+          max(abs(thesis_table$estimate - audit$zero_effect_reference[index])) < 1e-8,
+          max(abs(thesis_table$se - audit$zero_effect_se[index]) /
+                pmax(1, audit$zero_effect_se[index])) < 1e-4,
+          max(abs(thesis_table$lcl - (thesis_table$estimate - qnorm(.975) * thesis_table$se))) < 1e-8,
+          max(abs(thesis_table$ucl - (thesis_table$estimate + qnorm(.975) * thesis_table$se))) < 1e-8)
+thesis_table$unit <- "m2 ha-1"
+thesis_table$model_id <- "thesis_mba_m5"
+thesis_table$estimand <- "expected basal area including zeros, random effects set to zero"
+thesis_table$interval_method <- "thesis response-scale asymptotic 95% normal interval"
+write.csv(thesis_table, file.path(out, "tables/rd02-thesis-results.csv"), row.names = FALSE)
 write.csv(grid[, c("site", "treat", "spp")],
           file.path(out, "inference-audit/rd02-reference-grid.csv"), row.names = FALSE)
 observed <- saved$regen_pa |>
