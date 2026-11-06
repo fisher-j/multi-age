@@ -131,14 +131,14 @@
   {
     "id": "RD02",
     "title": "regeneration basal area display",
-    "status": "Reopened - zero-process sensitivity for review; accepted baseline retained",
+    "status": "Completed - redwood treatment-dependent zeros and publication displays accepted",
     "target": "RW/TO Results figure and all-species supplement table",
     "files": [
       "publication/task-rd02.qmd",
       "publication/sections/rd02-regeneration-display.qmd",
       "publication/sections/rd02-species-estimates-table.qmd"
     ],
-    "summary": "The four separate species-category hurdle-Gamma models and publication displays remain the [accepted baseline](task-rd02.qmd#rd02-review-recommendation). RD02 is reopened for [zero-process sensitivity](task-rd02.qmd#rd02-zero-sensitivity): constant versus site-varying zero probabilities for all four categories, plus treatment and treatment-plus-site alternatives for redwood. Integrated means include zero-process site variation and its uncertainty. Alternatives are exploratory pending review; downstream drafts retain the accepted estimates. The earlier [covariance sensitivity review](task-rd02.qmd#rd02-04), four-site uncertainty, and boundary warnings remain relevant.",
+    "summary": "RD02 is complete. The [selected models](task-rd02.qmd#rd02-selected-models) retain four separate hurdle-Gamma fits with treatment and site/macro-plot intercepts in the positive component. Redwood now includes treatment in its zero component; the other categories retain constant zero probabilities. The [zero-process review](task-rd02.qmd#rd02-zero-sensitivity) documents the occurrence rationale and modest AIC advantage (0.85) over the redwood constant-zero baseline. Updated integrated means, full-covariance delta intervals, RW/TO Results figure, and four-category supplement table are accepted. Earlier [constant-zero covariance comparisons](task-rd02.qmd#rd02-04) remain distinct from the final selection. Four-site uncertainty, boundary variances, model-selection uncertainty, and unassessed bootstrap coverage remain limitations; formal pairwise treatment contrasts have not been performed.",
     "inputs": [
       "publication/inputs/thesis/README.md",
       "publication/inputs/thesis/manifest.json",
@@ -254,17 +254,22 @@
       "publication/outputs/regeneration/zero-process-sensitivity/manifests/rd02-zero-provenance.yml",
       "publication/outputs/regeneration/zero-process-sensitivity/manifests/rd02-zero-session-info.txt",
       "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_site.rds",
-      "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_treatment.rds",
+      "publication/outputs/regeneration/selected-species-models/models/rw_zi_treatment.rds",
       "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_treatment_site.rds",
       "publication/outputs/regeneration/zero-process-sensitivity/models/to_zi_site.rds",
       "publication/outputs/regeneration/zero-process-sensitivity/models/df_zi_site.rds",
       "publication/outputs/regeneration/zero-process-sensitivity/models/other_zi_site.rds",
       "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_site-bfgs.rds",
-      "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_treatment-bfgs.rds",
+      "publication/outputs/regeneration/selected-species-models/models/rw_zi_treatment-bfgs.rds",
       "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_treatment_site-bfgs.rds",
       "publication/outputs/regeneration/zero-process-sensitivity/models/to_zi_site-bfgs.rds",
       "publication/outputs/regeneration/zero-process-sensitivity/models/df_zi_site-bfgs.rds",
-      "publication/outputs/regeneration/zero-process-sensitivity/models/other_zi_site-bfgs.rds"
+      "publication/outputs/regeneration/zero-process-sensitivity/models/other_zi_site-bfgs.rds",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-constant-zero-species-fit-register.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-constant-zero-species-estimates.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-constant-zero-species-variances.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-constant-zero-species-diagnostics.csv",
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-constant-zero-species-optimizer-checks.csv"
     ],
     "depends_on": [
       "F01"
@@ -285,14 +290,14 @@
   {
     "id": "RT01",
     "title": "regeneration Results narrative",
-    "status": "Queued - accepted baseline available; zero-process sensitivity under review",
+    "status": "Queued - ready after completed RD02",
     "target": "1–2 manuscript pages",
     "files": [
       "publication/task-rt01.qmd",
       "publication/sections/results.qmd",
       "publication/draft-results.qmd"
     ],
-    "summary": "The accepted RD02 separate-species estimates remain the baseline while its zero-process sensitivity is reviewed. Draft a 1–2-page regeneration Results subsection around the accepted display, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Do not substitute exploratory alternatives without a model decision. Every quantitative claim must be traceable to an accepted display or linked table.",
+    "summary": "RD02 is complete with treatment-dependent redwood zero probabilities and constant zeros for the other species categories. Draft a 1–2-page regeneration Results subsection from the updated accepted display and canonical estimates, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Report population-average means and approximate confidence intervals without implying that formal pairwise contrasts have been performed. Every quantitative claim must be traceable to an accepted display or linked table.",
     "inputs": [
       "publication/task-rd02.qmd",
       "publication/sections/rd02-regeneration-display.qmd",
@@ -382,7 +387,8 @@
     "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02.",
     "inputs": [
       "publication/task-rd02.qmd",
-      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv"
+      "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
+      "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml"
     ],
     "depends_on": [
       "RD02",
@@ -518,7 +524,9 @@
       "publication/sections/fuel-results.qmd",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
       "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png",
-      "publication/sections/methods.qmd"
+      "publication/sections/methods.qmd",
+      "publication/task-rd02.qmd",
+      "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml"
     ],
     "depends_on": [
       "F01",

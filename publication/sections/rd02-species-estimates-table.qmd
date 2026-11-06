@@ -1,7 +1,7 @@
 ```{r}
 #| label: tbl-rd02-selected-species-estimates
 #| echo: false
-#| tbl-cap: "Regeneration basal area 10 years after harvest for all four species categories. Entries are arithmetic mean (lower, upper 95% confidence limits), in m^2^ ha^-1^. Each category was modeled separately using zero-inflated Gamma responses, treatment as a fixed effect, and site and macro-plot-within-site random intercepts. Means include modeled zeros and integrate over both random-effect distributions. Intervals use the full-parameter log-scale delta method and describe uncertainty in means. Each model uses 64 vegetation plots across four sites and 16 macro plots. GS = group selection; LD = low-density dispersed retention; HA = high-density aggregated retention; HD = high-density dispersed retention."
+#| tbl-cap: "Regeneration basal area 10 years after harvest for all four species categories. Entries are arithmetic mean (lower, upper 95% confidence limits), in m^2^ ha^-1^. Each category was modeled separately using zero-inflated Gamma responses, treatment as a fixed effect, and site and macro-plot-within-site random intercepts. Redwood zero probability varies by treatment; other categories retain constant zero probabilities. No zero-component random effects are retained. Means include modeled zeros and integrate over both positive-component random-effect distributions. Intervals use the full-parameter log-scale delta method and describe uncertainty in means. Each model uses 64 vegetation plots across four sites and 16 macro plots. GS = group selection; LD = low-density dispersed retention; HA = high-density aggregated retention; HD = high-density dispersed retention."
 
 # tbl-rd02-selected-species-estimates
 rd02_selected_table <- read.csv(

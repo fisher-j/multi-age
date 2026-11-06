@@ -1,27 +1,29 @@
 task: RD02 selected species-category models
 selected_structure: four independent species-category models
-selection_basis: User confirmed four separate species models after joint diagonal
-  sensitivity review; species-specific biological interpretation and variances, not
-  minimum AIC
+selection_basis: User selected treatment-dependent redwood zeros after occurrence
+  sensitivity; other categories retain constant zeros; modest AIC support and biological
+  occurrence response
 categories:
 - Redwood
 - Tanoak
 - Douglas-fir
 - Other species
 formula: ba_ha ~ treat + (1 | site/treat)
-family: zero-inflated Gamma; conditional log link; zero ~1; dispersion ~1
+family: zero-inflated Gamma; conditional log link; redwood zero ~treat, other categories
+  zero ~1; dispersion ~1
 design: 64 vegetation-plot observations per category; 4 site and 16 nested macro-plot
   intercept groups; no plot-level RE
 target: arithmetic expected basal area including zeros and analytically integrating
   site and macro-plot intercepts
-intervals: 95% log-scale delta method; full parameter covariance including both random
-  SDs
+intervals: 95% log-scale delta method; full parameter covariance including conditional
+  and zero coefficients and both random SDs
 checks: '16 mean cells: predict, numerical gradients, quadrature; BFGS optimizer checks;
-  RW/TO comparison reuses these authoritative fits and estimates'
+  selected redwood reproduces evaluated treatment-zero fit; constant-zero covariance
+  comparisons retain their own source tables'
 diagnostics: 1000 unconditional DHARMa simulations per category; seed 20261030; residual
   plots by treatment
 artifacts: RW/TO figure in Results; four-category estimate table in supplement
 figure_layout: two species panels with different vertical scales to retain interval
   legibility
-status: 'Accepted baseline: four separate species models and publication displays;
-  zero-process sensitivity reopened for review'
+status: RD02 complete; redwood treatment-dependent zeros and other-species constant
+  zeros accepted with refreshed publication displays

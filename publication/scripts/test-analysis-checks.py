@@ -1,6 +1,8 @@
 """Current-output and export-integrity validation regression tests."""
 import importlib.util
+import csv
 import json
+import math
 from pathlib import Path
 import tempfile
 import unittest
@@ -11,6 +13,25 @@ spec.loader.exec_module(checks)
 
 
 class PublicationValidationTests(unittest.TestCase):
+    def test_selected_regeneration_matches_accepted_zero_models(self):
+        root = Path(__file__).resolve().parents[1] / "outputs/regeneration"
+        def rows(relative):
+            with (root / relative).open(encoding="utf-8", newline="") as stream:
+                return list(csv.DictReader(stream))
+        selected = rows("selected-species-models/tables/rd02-selected-species-estimates.csv")
+        candidates = {(r["model_id"], r["treat"]): r for r in rows(
+            "zero-process-sensitivity/tables/rd02-zero-integrated-estimates.csv")}
+        self.assertEqual(len(selected), 16)
+        for row in selected:
+            expected_id = "rw_zi_treatment" if row["spp"] == "rw" else row["spp"] + "_site_macro"
+            self.assertEqual(row["model_id"], expected_id)
+            reference = candidates[expected_id, row["treat"]]
+            for field in ("estimate", "se", "lcl", "ucl"):
+                self.assertTrue(math.isclose(float(row[field]), float(reference[field]),
+                                             rel_tol=1e-7, abs_tol=1e-10))
+        for row in rows("selected-species-models/tables/rd02-selected-species-fit-register.csv"):
+            self.assertEqual(row["zero_formula"], "~treat" if row["spp"] == "rw" else "~1")
+
     def project(self, root, text="estimate,se,lcl,ucl\n1,0.1,0.8,1.2\n"):
         path = root / "outputs/fuel/tables/estimates.csv"
         path.parent.mkdir(parents=True)
