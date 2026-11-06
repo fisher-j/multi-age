@@ -135,6 +135,46 @@ class WorkflowTests(unittest.TestCase):
                 'error <- tryCatch(read_saved_model("absent.rds", "RD02"), error=conditionMessage)\n' +
                 'stopifnot(grepl("quarto render task-rd02.qmd -P refit:true", error, fixed=TRUE))\n')
 
+    def test_rd02_integrates_site_variation_in_zero_probability(self):
+        project = Path(__file__).resolve().parents[1]
+        document = (project / "task-rd02.qmd").read_text(encoding="utf-8")
+        helper = re.search(r"```\{r\}\n#\| label: rd02-integrated-means\n(.*?)\n```",
+                           document, re.S)[1]
+        code = "library(glmmTMB)\nlibrary(dplyr)\n" + helper + r'''
+set.seed(217)
+d <- expand.grid(plot=1:30, treat=factor(c("gs", "ld", "ha", "hd")), site=factor(1:4))
+site_positive <- c(-.6, .5, -.2, .3)
+site_zero <- c(-1.5, -.5, .5, 1.5)
+macro <- rnorm(16, sd=.3)
+mu <- exp(1 + c(0, -.2, -.4, -.6)[d$treat] + site_positive[d$site] +
+          macro[as.integer(interaction(d$site, d$treat))])
+d$ba_ha <- rgamma(nrow(d), shape=3, scale=mu/3)
+d$ba_ha[runif(nrow(d)) < plogis(-.4 + site_zero[d$site])] <- 0
+m <- glmmTMB(ba_ha ~ treat + (1 | site/treat), data=d, family=ziGamma("log"),
+             ziformula=~1 + (1 | site),
+             control=glmmTMBControl(optCtrl=list(iter.max=10000, eval.max=10000)))
+result <- integrated_means(m, "fixture", species="rw")
+# Independent midpoint-normal quadrature checks the marginal probability.
+z <- qnorm((seq_len(200000)-.5)/200000)
+p <- mean(plogis(unname(fixef(m)$zi) + sqrt(VarCorr(m)$zi$site[1,1])*z))
+conditional_variance <- sum(vapply(VarCorr(m)$cond, function(v) v[1,1], numeric(1)))
+grid <- d[match(result$treat, d$treat), ]
+X <- model.matrix(~treat, grid)
+expected <- exp(drop(X %*% fixef(m)$cond) + conditional_variance/2)*(1-p)
+stopifnot(max(abs(result$marginal_zero_probability-p)) < 1e-6,
+          max(abs(result$estimate/expected-1)) < 1e-6,
+          all(result$lcl < result$estimate), all(result$estimate < result$ucl),
+          max(abs(result$estimate/result$estimate[1] -
+                  exp(drop(X %*% fixef(m)$cond) - drop(X[1,,drop=FALSE] %*% fixef(m)$cond)))) < 1e-7)
+# The constant-zero boundary remains the original analytic calculation.
+baseline <- update(m, ziformula=~1)
+b <- integrated_means(baseline, "baseline", species="rw")
+stopifnot(max(abs(b$marginal_zero_probability-plogis(fixef(baseline)$zi))) < 1e-12)
+'''
+        result = subprocess.run([shutil.which("Rscript"), "-"], input=code, text=True,
+                                cwd=project, capture_output=True, encoding="utf-8")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_chunk_labels_are_added_once_to_echoed_code(self):
         project = Path(__file__).resolve().parents[1]
         document = (project / "task-f01.qmd").read_text(encoding="utf-8")

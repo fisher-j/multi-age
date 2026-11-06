@@ -1,0 +1,19 @@
+task: RD02 exploratory zero-process sensitivity
+data: 64 vegetation plots per species category; 4 sites and 16 macro plots
+conditional_formula: ba_ha ~ treat + (1 | site/treat)
+family: ziGamma(log); dispersion ~1
+zero_candidates:
+- ~1 baseline
+- ~1 + (1 | site) all four categories
+- ~treat and ~treat + (1 | site) redwood only
+target: expected basal area including zeros, integrated over independent conditional
+  and zero random effects
+integration: analytic conditional lognormal expectation; adaptive logistic-normal
+  integration, relative tolerance 1e-10
+uncertainty: full-covariance log-scale delta intervals; includes zero-site log-SD;
+  no model-selection uncertainty
+limitations: 4 sites; sparse tanoak zeros; independent component random effects; no
+  bootstrap coverage or formal variance test
+diagnostics: 1000 unconditional DHARMa simulations, seed 20261030; site and treatment
+  zero-count envelopes
+status: Exploratory alternatives; accepted publication estimates unchanged

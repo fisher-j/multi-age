@@ -4,6 +4,8 @@ params:
   recompute: false
   refit: false
   refit_diagonal: false
+  refit_zero: false
+  recompute_zero: false
 sidebar: workflow
 ---
 
@@ -24,8 +26,9 @@ supplement table, including Douglas-fir and other species. Basal area is measure
 in m² ha⁻¹; this task does not analyze stem counts. Following the model comparison,
 we retain the four separate species models as the final selection. The RW/TO
 Results figure and four-category supplement table are accepted for downstream
-publication drafting, and RD02 is complete. The scientific limitations documented
-below remain part of that decision.
+publication drafting. We now extend RD02 with an exploratory sensitivity analysis
+of site and treatment differences in zero probability. The accepted models remain
+the baseline pending review of that evidence.
 
 ## Setup and execution
 
@@ -34,7 +37,10 @@ analysis stays here. An ordinary render reviews saved evidence.
 `-P recompute:true` refreshes calculations from saved models; `-P refit:true`
 also refits them. `-P refit_diagonal:true` fits only the two diagonal candidates
 and recomputes the comparisons from the other saved fits. Missing models are
-prerequisites, not permission to refit.
+prerequisites, not permission to refit. `-P refit_zero:true` fits only the six
+new zero-process alternatives and refreshes their sensitivity results; it reads
+the accepted species models without refitting them.
+`-P recompute_zero:true` refreshes just this sensitivity from its saved fits.
 
 ```{r}
 #| label: rd02-setup
@@ -67,6 +73,8 @@ regeneration_root <- file.path(paths_common$output, "regeneration")
 joint_root <- file.path(regeneration_root, "random-effects-comparison")
 species_root <- file.path(regeneration_root, "separate-species-comparison")
 selected_root <- file.path(regeneration_root, "selected-species-models")
+zero_root <- file.path(regeneration_root, "zero-process-sensitivity")
+zero_recompute <- recompute || isTRUE(params$refit_zero) || isTRUE(params$recompute_zero)
 species_order <- c("rw", "to", "df", "other")
 species_labels <- c(rw = "Redwood", to = "Tanoak", df = "Douglas-fir", other = "Other species")
 seed <- 20261030L
@@ -254,7 +262,11 @@ Boundary variances and four-site estimation limit the asymptotic approximation;
 refitted bootstrap assessment has not been done.
 
 We'll define the integrated calculation with its prediction, numerical-gradient,
-and quadrature checks. For diagonal species effects, each row receives only its
+and quadrature checks. A site random intercept in the zero component requires
+numerical integration of its logistic-normal probability. We assume the zero
+and positive-component random effects are independent, as specified by these
+models, and include zero-process variance uncertainty in the full gradient.
+For diagonal species effects, each row receives only its
 species' site and macro-plot variances. These establish implementation agreement,
 not scientific adequacy or interval coverage.
 
@@ -279,7 +291,7 @@ integrated_means <- function(m, id, species = NULL) {
   vc <- VarCorr(m)$cond
   structure <- m$modelInfo$reStruc$condReStruc
   stopifnot(all(rowSums(A > 0) == 4L), family(m)$link == "log",
-            length(VarCorr(m)$zi) == 0L, length(vc) == length(structure))
+            length(vc) == length(structure))
   stopifnot(family(m)$family == "Gamma", is.null(model.offset(frame)),
             length(VarCorr(m)$disp) == 0L)
   # Support the task's independent intercepts and diagonal species indicators.
@@ -298,12 +310,17 @@ integrated_means <- function(m, id, species = NULL) {
   W <- do.call(cbind, lapply(random_design, function(z) z^2))
   X <- model.matrix(delete.response(terms(formula(m, fixed.only = TRUE))), grid)
   Z <- model.matrix(formula(m, component = "zi", fixed.only = TRUE), grid)
-  # Use the full nonrandom parameter vector: theta is log(SD), not variance.
+  # Use the full nonrandom parameter vector: theta/thetazi are log(SD).
   # Gamma dispersion has zero derivative for this mean, but stays in V.
   b <- m$fit$par
   ib <- which(names(b) == "beta")
   iz <- which(names(b) == "betazi")
   it <- which(names(b) == "theta")
+  itz <- which(names(b) == "thetazi")
+  zi_vc <- VarCorr(m)$zi
+  stopifnot(length(itz) <= 1L, length(zi_vc) == length(itz))
+  if (length(itz)) stopifnot(identical(names(zi_vc), "site"),
+                            identical(colnames(zi_vc[[1]]), "(Intercept)"))
   stopifnot(identical(colnames(X), names(fixef(m)$cond)),
             identical(colnames(Z), names(fixef(m)$zi)),
             length(it) == ncol(W),
@@ -311,28 +328,51 @@ integrated_means <- function(m, id, species = NULL) {
   # Independent variances add for each observation's random-effect design.
   # There is no additional lognormal residual correction for Gamma responses.
   variance <- drop(W %*% exp(2 * b[it]))
-  pzero <- plogis(drop(Z %*% b[iz]))
+  # The logistic-normal expectation has no lognormal correction. Integrate
+  # over a standard normal and differentiate the same probability functional.
+  zero_moments <- function(eta, log_sd = numeric()) {
+    if (!length(log_sd)) {
+      p <- plogis(eta)
+      return(cbind(p = p, d_eta = p * (1 - p), d_logsd = 0))
+    }
+    s <- exp(log_sd)
+    t(vapply(eta, function(a) c(
+      p = integrate(function(z) plogis(a + s*z) * dnorm(z), -Inf, Inf,
+                    rel.tol = 1e-10)$value,
+      d_eta = integrate(function(z) { p <- plogis(a + s*z); p*(1-p)*dnorm(z) },
+                        -Inf, Inf, rel.tol = 1e-10)$value,
+      d_logsd = integrate(function(z) { p <- plogis(a + s*z); p*(1-p)*s*z*dnorm(z) },
+                          -Inf, Inf, rel.tol = 1e-10)$value), numeric(3)))
+  }
+  zm <- zero_moments(drop(Z %*% b[iz]), b[itz])
+  pzero <- zm[, "p"]
   mu <- exp(drop(X %*% b[ib]) + variance / 2) * (1 - pzero)
-  # Derivatives include zero coefficients and every log(SD). The full
+  # Derivatives include zero coefficients and every conditional/zero log(SD). The full
   # covariance retains their cross-covariances with conditional coefficients.
   D <- matrix(0, nrow(grid), length(b))
   D[, ib] <- mu * X
-  D[, iz] <- -mu * pzero * Z
+  D[, iz] <- -mu * zm[, "d_eta"] / (1 - pzero) * Z
   D[, it] <- mu * sweep(W, 2L, exp(2 * b[it]), "*")
+  if (length(itz)) D[, itz] <- -mu * zm[, "d_logsd"] / (1 - pzero)
   G <- A %*% D
   estimate <- drop(A %*% mu)
   se <- sqrt(diag(G %*% m$sdr$cov.fixed %*% t(G)))
   functional <- function(b) drop(A %*% (
     exp(drop(X %*% b[ib]) + drop(W %*% exp(2 * b[it])) / 2) *
-      (1 - plogis(drop(Z %*% b[iz])))))
+      (1 - zero_moments(drop(Z %*% b[iz]), b[itz])[, "p"])))
   numeric_G <- numDeriv::jacobian(functional, unname(b))
   variance_values <- unique(variance)
   quadrature <- vapply(variance_values, function(v)
     integrate(function(z) exp(sqrt(v) * z) * dnorm(z), -12, 12)$value, numeric(1))
   vc_variance <- Reduce(`+`, purrr::map2(random_design, vc,
     function(z, v) rowSums((z %*% v) * z)))
+  # In the locked glmmTMB version re.form=NA zeros conditional effects but
+  # retains fitted zero-process effects. NA site levels zero both components.
+  zero_effect_grid <- grid
+  if (length(itz)) zero_effect_grid$site <- NA
   stopifnot(max(abs(G - numeric_G) / pmax(1, abs(G))) < 1e-5,
-            max(abs(mu / exp(variance / 2) - predict(m, grid, type = "response", re.form = NA))) < 1e-7,
+            max(abs((1 - plogis(drop(Z %*% b[iz]))) * exp(drop(X %*% b[ib])) -
+                      predict(m, zero_effect_grid, type = "response", re.form = NA))) < 1e-7,
             max(abs(quadrature - exp(variance_values / 2))) < 1e-8,
             all(is.finite(se)), all(se > 0),
             max(abs(vc_variance - variance)) < 1e-9,
@@ -343,6 +383,7 @@ integrated_means <- function(m, id, species = NULL) {
   mutate(labels, model_id = id, estimate = estimate, se = se,
     lcl = estimate * exp(-qnorm(.975) * se / estimate),
     ucl = estimate * exp(qnorm(.975) * se / estimate),
+    marginal_zero_probability = drop(A %*% pzero),
     total_random_variance = drop(A %*% variance),
     integration_multiplier = drop(A %*% exp(variance / 2)))
 }
@@ -1562,7 +1603,7 @@ provenance <- list(
     diagnostics = "1000 unconditional DHARMa simulations per category; seed 20261030; residual plots by treatment",
     artifacts = "RW/TO figure in Results; four-category estimate table in supplement",
     figure_layout = "two species panels with different vertical scales to retain interval legibility",
-    status = "RD02 complete; four separate species models, RW/TO Results figure, and four-category supplement table accepted for publication drafting"
+    status = "Accepted baseline: four separate species models and publication displays; zero-process sensitivity reopened for review"
   )
 yaml::write_yaml(provenance, file.path(out, "manifests/rd02-selected-species-provenance.yml"))
 
@@ -1573,6 +1614,338 @@ The RW/TO figure appears in the [Results](draft-results.qmd#rd02-regeneration-di
 all categories appear in the [supplement](draft-supplement.qmd#tbl-rd02-selected-species-estimates).
 [Full-precision estimates](repo-files/publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv)
 remain the numerical source for subsequent claims.
+
+## Zero-process sensitivity {#rd02-zero-sensitivity}
+
+Do sites differ in the probability that a vegetation plot has no regeneration
+basal area, and does allowing that variation change our treatment comparisons?
+The accepted hurdle-Gamma models use one zero probability per species. We'll
+compare that baseline with a site random intercept in the zero component for
+all four categories, keeping the positive-Gamma model and dispersion unchanged.
+For redwood, we'll also examine treatment and treatment-plus-site zero models:
+its observed treatment zero counts suggest that occurrence could contribute to
+the treatment response. These candidates are exploratory, not replacements for
+the accepted publication models. We do not add interactions or correlated
+effects between the zero and positive processes.
+
+We'll first locate the observed zeros by site and treatment. Each site contains
+16 vegetation plots per category; each site-treatment macro plot contains four.
+These counts describe the sample and do not themselves test site differences.
+
+```{r}
+#| label: rd02-zero-observed
+
+if (zero_recompute) {
+  zero_data <- as.data.frame(readRDS(file.path(paths_common$input, "regeneration-measurements.rds")))
+  zero_data$site <- factor(zero_data$site)
+  for (directory in c("models", "tables", "figures", "manifests"))
+    dir.create(file.path(zero_root, directory), recursive = TRUE, showWarnings = FALSE)
+  zero_observed <- bind_rows(lapply(c("site", "treat"), function(group) {
+    zero_data |> group_by(spp, across(all_of(group))) |>
+      summarise(n = n(), n_zero = sum(ba_ha == 0), .groups = "drop") |>
+      rename(level = all_of(group)) |> mutate(group = group)
+  })) |> mutate(proportion_zero = n_zero/n)
+  write.csv(zero_observed, file.path(zero_root, "tables/rd02-zero-observed.csv"), row.names = FALSE)
+}
+rd02_review_table(read.csv(file.path(zero_root, "tables/rd02-zero-observed.csv")))
+```
+
+We'll fit six alternatives and read the four accepted models as their
+baselines. Site variation adds one zero-process SD; redwood treatment adds
+three coefficients. We retain the existing optimizer controls, seed, and
+10^-4^ objective-agreement tolerance. Boundary and optimizer warnings stay in
+the record. AIC comparisons are within each species' same 64 observations;
+they do not supply a calibrated boundary-variance significance test. With only
+four sites and two tanoak zeros, weak identification is a substantive limitation.
+
+```{r}
+#| label: rd02-zero-fit
+
+if (zero_recompute) {
+  zero_models <- list()
+  zero_fit_rows <- list()
+  fit_zero <- isTRUE(params$refit) || isTRUE(params$refit_zero)
+  for (sp in species_order) {
+    data_sp <- droplevels(subset(zero_data, spp == sp))
+    base <- read_saved_model(file.path(selected_root, "models", paste0(sp, "_site_macro.rds")), "RD02")
+    specifications <- list(constant = ~1, site = ~1 + (1 | site))
+    if (sp == "rw") specifications <- c(specifications,
+      list(treatment = ~treat, treatment_site = ~treat + (1 | site)))
+    for (structure in names(specifications)) {
+      id <- if (structure == "constant") paste0(sp, "_site_macro") else paste0(sp, "_zi_", structure)
+      warnings <- check_warnings <- character()
+      model_path <- file.path(zero_root, "models", paste0(id, ".rds"))
+      check_path <- file.path(zero_root, "models", paste0(id, "-bfgs.rds"))
+      capture_warning <- function(w) {
+        warnings <<- c(warnings, conditionMessage(w)); invokeRestart("muffleWarning")
+      }
+      if (structure == "constant") {
+        m <- base
+        check <- read_saved_model(file.path(selected_root, "models", paste0(sp, "_site_macro-bfgs.rds")), "RD02")
+      } else if (fit_zero) {
+        message("Fitting zero-process alternative: ", id)
+        m <- withCallingHandlers(update(base, data = data_sp,
+          ziformula = specifications[[structure]],
+          control = glmmTMBControl(optCtrl = list(iter.max = 10000, eval.max = 10000))),
+          warning = capture_warning)
+        check <- withCallingHandlers(update(m,
+          control = glmmTMBControl(optimizer = optim, optArgs = list(method = "BFGS"),
+            optCtrl = list(maxit = 10000, reltol = 1e-10))),
+          warning = function(w) { check_warnings <<- c(check_warnings, conditionMessage(w)); invokeRestart("muffleWarning") })
+        saveRDS(m, model_path)
+        saveRDS(check, check_path)
+      } else {
+        m <- read_saved_model(model_path, "RD02")
+        check <- read_saved_model(check_path, "RD02")
+        previous <- read.csv(file.path(zero_root, "tables/rd02-zero-model-comparison.csv"))
+        warnings <- na.omit(previous$warnings[previous$model_id == id])
+        check_warnings <- na.omit(previous$bfgs_warnings[previous$model_id == id])
+      }
+      difference <- check$fit$objective - m$fit$objective
+      stopifnot(nobs(m) == 64L, m$fit$convergence == 0, m$sdr$pdHess,
+                check$fit$convergence == 0, abs(difference) < 1e-4,
+                max(abs(fixef(m)$cond - fixef(base)$cond)) < 1e-3,
+                max(abs(fixef(m)$disp - fixef(base)$disp)) < 1e-3)
+      ll <- logLik(m)
+      zero_models[[id]] <- m
+      zi_vc <- VarCorr(m)$zi
+      zero_fit_rows[[id]] <- data.frame(model_id = id, spp = sp, zero_structure = structure,
+        zero_formula = paste(deparse(specifications[[structure]]), collapse = " "),
+        n = nobs(m), n_zero = sum(data_sp$ba_ha == 0), k = attr(ll, "df"),
+        log_likelihood = as.numeric(ll), AIC = AIC(m), convergence = m$fit$convergence,
+        pd_hessian = m$sdr$pdHess, max_abs_gradient = max(abs(m$sdr$gradient.fixed)),
+        zero_site_sd = if (length(zi_vc)) sqrt(zi_vc$site[1,1]) else 0,
+        conditional_site_sd = sqrt(VarCorr(m)$cond$site[1,1]),
+        conditional_macro_sd = sqrt(VarCorr(m)$cond[["treat:site"]][1,1]),
+        bfgs_pd_hessian = check$sdr$pdHess, objective_difference = difference,
+        warnings = paste(unique(warnings), collapse = " | "),
+        bfgs_warnings = paste(unique(check_warnings), collapse = " | "))
+    }
+  }
+  zero_fit <- bind_rows(zero_fit_rows) |> group_by(spp) |>
+    mutate(delta_AIC = AIC - min(AIC), AIC_change_from_baseline = AIC - AIC[zero_structure == "constant"]) |>
+    ungroup()
+  stopifnot(nrow(zero_fit) == 10L,
+            max(abs(zero_fit$AIC - (-2*zero_fit$log_likelihood + 2*zero_fit$k))) < 1e-8)
+  write.csv(zero_fit, file.path(zero_root, "tables/rd02-zero-model-comparison.csv"), row.names = FALSE)
+}
+zero_fit <- read.csv(file.path(zero_root, "tables/rd02-zero-model-comparison.csv"))
+rd02_review_table(zero_fit)
+```
+
+The site-only zero model increases AIC by approximately 2 for redwood and
+tanoak, whose estimated zero-site SDs are below 0.001. Douglas-fir has zero-site
+SD `r sprintf("%.2f", zero_fit$zero_site_sd[zero_fit$model_id == "df_zi_site"])`
+and improves AIC by
+`r sprintf("%.2f", -zero_fit$AIC_change_from_baseline[zero_fit$model_id == "df_zi_site"])`;
+other species has zero-site SD
+`r sprintf("%.2f", zero_fit$zero_site_sd[zero_fit$model_id == "other_zi_site"])`
+but its extra parameter increases AIC by
+`r sprintf("%.2f", zero_fit$AIC_change_from_baseline[zero_fit$model_id == "other_zi_site"])`.
+These are modest fit differences, not decisive evidence for selecting different
+structures. All ten primary and alternate-optimizer fits have positive-definite
+Hessians and satisfy the existing objective-agreement tolerance.
+
+For redwood, treatment-dependent zeros improve AIC by
+`r sprintf("%.2f", -zero_fit$AIC_change_from_baseline[zero_fit$model_id == "rw_zi_treatment"])`
+relative to the accepted baseline. Adding site variation to that treatment
+model changes the log likelihood very little and costs approximately two AIC
+units. The exploratory AIC leader is therefore the treatment-zero candidate,
+but its advantage over the accepted model is less than one unit.
+
+We'll check zeros at the site and treatment scales, where a global zero-count
+test can miss structure. The existing unconditional DHARMa simulation draws new
+random effects; its count envelopes describe exchangeable groups rather than
+predictions conditioned on a particular fitted site. We also report fitted
+site-treatment zero probabilities and approximate intervals conditional on the
+estimated site effects. Those intervals are distinct from population-average
+uncertainty and can be unreliable near a variance boundary.
+
+```{r}
+#| label: rd02-zero-diagnostics
+
+if (zero_recompute) {
+  diagnostic_rows <- count_rows <- probability_rows <- list()
+  for (id in names(zero_models)) {
+    m <- zero_models[[id]]
+    frame <- model.frame(m)
+    sp <- zero_fit$spp[match(id, zero_fit$model_id)]
+    sim <- publication_simulate_residuals(m, n = simulations, seed = seed, refit = FALSE, plot = FALSE)
+    diagnostic_rows[[id]] <- rd02_tests(sim, id, "species_plot_rows")
+    count_rows[[id]] <- bind_rows(lapply(c("site", "treat"), function(group) {
+      bind_rows(lapply(levels(factor(frame[[group]])), function(level) {
+        keep <- frame[[group]] == level
+        simulated_counts <- colSums(sim$simulatedResponse[keep, , drop = FALSE] == 0)
+        data.frame(model_id = id, spp = sp, group = group, level = level,
+          n = sum(keep), observed_zeros = sum(frame$ba_ha[keep] == 0),
+          simulated_mean = mean(simulated_counts),
+          simulated_lower = unname(quantile(simulated_counts, .025)),
+          simulated_upper = unname(quantile(simulated_counts, .975)))
+      }))
+    }))
+    grid <- distinct(frame, site, treat, .keep_all = TRUE)
+    prediction <- predict(m, newdata = grid, type = "zlink", re.form = NULL, se.fit = TRUE)
+    probability_rows[[id]] <- data.frame(model_id = id, spp = sp,
+      site = grid$site, treat = grid$treat,
+      probability_zero = plogis(prediction$fit),
+      lower_probability = plogis(prediction$fit - qnorm(.975)*prediction$se.fit),
+      upper_probability = plogis(prediction$fit + qnorm(.975)*prediction$se.fit))
+  }
+  write.csv(bind_rows(diagnostic_rows), file.path(zero_root, "tables/rd02-zero-diagnostics.csv"), row.names = FALSE)
+  write.csv(bind_rows(count_rows), file.path(zero_root, "tables/rd02-zero-count-checks.csv"), row.names = FALSE)
+  write.csv(bind_rows(probability_rows), file.path(zero_root, "tables/rd02-zero-site-probabilities.csv"), row.names = FALSE)
+}
+rd02_review_table(read.csv(file.path(zero_root, "tables/rd02-zero-count-checks.csv")))
+rd02_review_table(read.csv(file.path(zero_root, "tables/rd02-zero-diagnostics.csv")))
+```
+
+None of the four existing row-level diagnostic tests flags a candidate at the
+0.05 reference. The grouped counts reveal a limitation hidden by those global
+checks: Camp 6 has one Douglas-fir zero, below the baseline's pointwise 95%
+simulation range of 3–10, and five other-species zeros, below its range of 6–13.
+Both counts fall inside the corresponding site-varying model envelopes. These
+are exploratory, unadjusted pointwise checks, not formal site-effect tests.
+Their width and the four-site sample limit their ability to discriminate models;
+they do not establish that site- or treatment-independent occurrence is adequate.
+
+The site-only alternative makes the fitted occurrence differences visible
+without adding treatment effects. Points and ranges below are fitted zero
+probabilities with approximate 95% intervals; crosses are observed proportions.
+
+```{r}
+#| label: fig-rd02-zero-sites
+#| fig-cap: "Observed zero proportions (crosses) and fitted probabilities with approximate 95% intervals for constant and site-varying zero submodels. Site-model predictions condition on fitted zero-process site effects. Each site has 16 vegetation plots per species category. These are exploratory fits; four sites provide limited information about their variance."
+
+if (zero_recompute) {
+  probabilities <- read.csv(file.path(zero_root, "tables/rd02-zero-site-probabilities.csv")) |>
+    left_join(select(zero_fit, model_id, zero_structure), by = "model_id") |>
+    filter(zero_structure %in% c("constant", "site")) |> distinct(spp, site, zero_structure, .keep_all = TRUE)
+  observations <- filter(zero_observed, group == "site") |>
+    mutate(site = level, species = factor(unname(species_labels[as.character(spp)]),
+      levels = unname(species_labels)))
+  probabilities$species <- factor(unname(species_labels[as.character(probabilities$spp)]),
+                                  levels = unname(species_labels))
+  figure <- ggplot(probabilities, aes(site, probability_zero, color = zero_structure)) +
+    geom_pointrange(aes(ymin = lower_probability, ymax = upper_probability),
+      position = position_dodge(width = .45)) +
+    geom_point(data = observations, aes(site, proportion_zero), inherit.aes = FALSE, shape = 4, size = 2.5) +
+    facet_wrap(~species, ncol = 2) + coord_cartesian(ylim = c(0, 1)) +
+    labs(x = NULL, y = "Probability of zero basal area", color = "Zero submodel") +
+    theme_bw() + theme(axis.text.x = element_text(angle = 25, hjust = 1), legend.position = "bottom")
+  ggsave(file.path(zero_root, "figures/rd02-zero-site-probabilities.png"), figure, width = 9, height = 6, dpi = 320)
+  ggsave(file.path(zero_root, "figures/rd02-zero-site-probabilities.pdf"), figure, width = 9, height = 6)
+}
+knitr::include_graphics(file.path(zero_root, "figures/rd02-zero-site-probabilities.png"))
+```
+
+The site-varying fits shrink the observed differences toward a common
+probability. Redwood and tanoak shrink almost completely; Douglas-fir retains
+the clearest fitted site gradient. Other-species occurrence differs between
+Camp 6 and the remaining sites, but the fit gain does not offset the AIC penalty.
+
+We'll now propagate the zero-model changes into the publication estimand:
+expected basal area including zeros, integrated over independent site and
+macro-plot effects. The logistic-normal expectation and its derivatives enter
+the full covariance calculation above. The zero and positive processes are
+independent in these specifications; a site-only occurrence multiplier is
+constant across treatments, so it preserves their mean ratios. Treatment zero
+effects can change those ratios. We check the baseline against its accepted
+means and SEs and check alternative ratios against the separate positive-Gamma
+and occurrence contributions. Intervals remain asymptotic; refitted bootstrap
+coverage and formal boundary-variance tests are not assessed here.
+
+```{r}
+#| label: rd02-zero-estimates
+
+if (zero_recompute) {
+  zero_estimates <- bind_rows(lapply(names(zero_models), function(id) {
+    sp <- zero_fit$spp[match(id, zero_fit$model_id)]
+    integrated_means(zero_models[[id]], id, species = sp)
+  })) |> left_join(select(zero_fit, model_id, zero_structure), by = "model_id")
+  accepted <- read.csv(file.path(selected_root, "tables/rd02-selected-species-estimates.csv"))
+  baseline <- filter(zero_estimates, zero_structure == "constant")
+  index <- match(paste(baseline$spp, baseline$treat), paste(accepted$spp, accepted$treat))
+  stopifnot(!anyNA(index), max(abs(baseline$estimate/accepted$estimate[index] - 1)) < 1e-7,
+            max(abs(baseline$se/accepted$se[index] - 1)) < 1e-7)
+  zero_estimates <- zero_estimates |>
+    left_join(transmute(baseline, spp, treat, baseline_mean = estimate, baseline_width = ucl-lcl),
+              by = c("spp", "treat")) |>
+    mutate(mean_change_percent = 100*(estimate/baseline_mean - 1),
+           interval_width_change_percent = 100*((ucl-lcl)/baseline_width - 1)) |>
+    group_by(model_id) |> mutate(ratio_to_GS = estimate/estimate[treat == "gs"]) |> ungroup()
+  ratio_check <- zero_estimates |> group_by(spp, treat) |>
+    summarise(spread = diff(range(ratio_to_GS[zero_structure %in% c("constant", "site")])), .groups = "drop")
+  stopifnot(nrow(zero_estimates) == 40L, max(abs(ratio_check$spread)) < 1e-3)
+  write.csv(zero_estimates, file.path(zero_root, "tables/rd02-zero-integrated-estimates.csv"), row.names = FALSE)
+  yaml::write_yaml(list(task = "RD02 exploratory zero-process sensitivity",
+    data = "64 vegetation plots per species category; 4 sites and 16 macro plots",
+    conditional_formula = "ba_ha ~ treat + (1 | site/treat)", family = "ziGamma(log); dispersion ~1",
+    zero_candidates = c("~1 baseline", "~1 + (1 | site) all four categories",
+                        "~treat and ~treat + (1 | site) redwood only"),
+    target = "expected basal area including zeros, integrated over independent conditional and zero random effects",
+    integration = "analytic conditional lognormal expectation; adaptive logistic-normal integration, relative tolerance 1e-10",
+    uncertainty = "full-covariance log-scale delta intervals; includes zero-site log-SD; no model-selection uncertainty",
+    limitations = "4 sites; sparse tanoak zeros; independent component random effects; no bootstrap coverage or formal variance test",
+    diagnostics = "1000 unconditional DHARMa simulations, seed 20261030; site and treatment zero-count envelopes",
+    status = "Exploratory alternatives; accepted publication estimates unchanged"),
+    file.path(zero_root, "manifests/rd02-zero-provenance.yml"))
+  writeLines(capture.output(sessionInfo()), file.path(zero_root, "manifests/rd02-zero-session-info.txt"))
+}
+zero_estimates <- read.csv(file.path(zero_root, "tables/rd02-zero-integrated-estimates.csv"))
+rd02_review_table(zero_estimates)
+```
+
+We'll compare all four species on their own vertical scales, retaining the
+accepted constant-zero models alongside the alternatives. Differences in mean
+levels, interval widths, and treatment ratios answer separate parts of the
+sensitivity question; interval overlap does not constitute a treatment test.
+
+```{r}
+#| label: fig-rd02-zero-means
+#| fig-cap: "Expected regeneration basal area including modeled zeros under alternative zero submodels. All candidates retain the accepted positive-Gamma specification. Points integrate independent conditional and zero-process random effects; ranges are full-covariance log-scale delta-method 95% intervals for means. Treatment zero effects are explored for redwood only. Species panels use different vertical scales."
+
+if (zero_recompute) {
+  figure_data <- zero_estimates |>
+    mutate(species = factor(unname(species_labels[as.character(spp)]), levels = unname(species_labels)),
+      treat = factor(treat, levels = c("gs", "ld", "ha", "hd"), labels = c("GS", "LD", "HA", "HD")),
+      zero_structure = factor(zero_structure, levels = c("constant", "site", "treatment", "treatment_site"),
+        labels = c("Constant (accepted)", "Site", "Treatment", "Treatment + site")))
+  figure <- ggplot(figure_data, aes(treat, estimate, color = zero_structure, shape = zero_structure)) +
+    geom_pointrange(aes(ymin = lcl, ymax = ucl), position = position_dodge(width = .6)) +
+    facet_wrap(~species, scales = "free_y", ncol = 2) +
+    labs(x = "Retained-overstory treatment", y = expression("Expected basal area ("*m^2*" ha"^-1*")"),
+         color = "Zero submodel", shape = "Zero submodel") +
+    theme_bw() + theme(legend.position = "bottom")
+  ggsave(file.path(zero_root, "figures/rd02-zero-integrated-means.png"), figure, width = 9, height = 7, dpi = 320)
+  ggsave(file.path(zero_root, "figures/rd02-zero-integrated-means.pdf"), figure, width = 9, height = 7)
+}
+knitr::include_graphics(file.path(zero_root, "figures/rd02-zero-integrated-means.png"))
+```
+
+Allowing site variation alone leaves redwood and tanoak estimates essentially
+unchanged. Douglas-fir means increase by about 0.64%, with interval widths about
+8–10% larger; other-species means increase by about 0.09%, with widths about
+2% larger. Site-only occurrence variation therefore has little effect on the
+current population-average basal-area conclusions, despite visible fitted
+site differences for Douglas-fir.
+
+Redwood treatment-dependent occurrence has a larger practical effect: expected
+GS basal area rises from
+`r sprintf("%.2f", zero_estimates$estimate[zero_estimates$model_id == "rw_site_macro" & zero_estimates$treat == "gs"])`
+to `r sprintf("%.2f", zero_estimates$estimate[zero_estimates$model_id == "rw_zi_treatment" & zero_estimates$treat == "gs"])`
+m² ha⁻¹, while HD falls from
+`r sprintf("%.2f", zero_estimates$estimate[zero_estimates$model_id == "rw_site_macro" & zero_estimates$treat == "hd"])`
+to `r sprintf("%.2f", zero_estimates$estimate[zero_estimates$model_id == "rw_zi_treatment" & zero_estimates$treat == "hd"])`.
+The estimated GS-to-HD ratio increases from about 13.6 to 22.7, while the
+GS > LD > HA > HD ordering remains. Treatment-plus-site estimates are almost
+identical. These changes reflect occurrence, not a changed positive-Gamma
+response, and their weak AIC advantage leaves the model choice unresolved.
+
+This sensitivity separates site and treatment variation in occurrence and shows
+where the accepted constant-zero assumption matters for interpretation. The
+accepted publication displays remain the baseline pending review. Four sites,
+sparse tanoak zeros, independent component random effects, boundary variances,
+and unassessed bootstrap interval behavior limit inference.
 
 ## Summary and model decision {#rd02-review-recommendation}
 
@@ -1586,8 +1959,10 @@ and some cross-species ordering depend on model structure. The historical figure
 now represents the actual thesis target; the publication figure represents
 integrated expected basal area including zeros.
 
-RD02 is complete: the four separate models and their Results figure and
-supplementary estimates table are accepted for downstream publication drafting.
+The four separate models and their Results figure and supplementary estimates
+table remain the accepted baseline. RD02 is reopened for review of the
+[zero-process sensitivity](#rd02-zero-sensitivity); exploratory alternatives
+have not been accepted for downstream publication drafting.
 Boundary variances, four-site estimation,
 treatment-invariant zero probabilities, and unassessed bootstrap interval behavior
 remain material limitations, as does the four-category diagonal fit's BFGS

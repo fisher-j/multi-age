@@ -131,14 +131,14 @@
   {
     "id": "RD02",
     "title": "regeneration basal area display",
-    "status": "Completed - four separate species models and displays accepted",
+    "status": "Reopened - zero-process sensitivity for review; accepted baseline retained",
     "target": "RW/TO Results figure and all-species supplement table",
     "files": [
       "publication/task-rd02.qmd",
       "publication/sections/rd02-regeneration-display.qmd",
       "publication/sections/rd02-species-estimates-table.qmd"
     ],
-    "summary": "RD02 is complete. The [final model decision](task-rd02.qmd#rd02-review-recommendation) retains four separate species-category hurdle-Gamma models with site and macro-plot intercepts. The RW/TO Results figure and four-category supplement table are accepted for downstream publication drafting. The [consolidated sensitivity review](task-rd02.qmd#rd02-04) compares ten configurations across two data scopes; joint diagonal models reproduce the separate fits, while common-variance site-by-species alternatives retain stronger AIC support. The [scientific rationale](task-rd02.qmd#rd02-diagonal-rationale), four-site uncertainty, boundary variances, zero-process assumptions, historical tail flag, and four-category diagonal BFGS Hessian warning remain documented. RT01 owns the next regeneration Results draft.",
+    "summary": "The four separate species-category hurdle-Gamma models and publication displays remain the [accepted baseline](task-rd02.qmd#rd02-review-recommendation). RD02 is reopened for [zero-process sensitivity](task-rd02.qmd#rd02-zero-sensitivity): constant versus site-varying zero probabilities for all four categories, plus treatment and treatment-plus-site alternatives for redwood. Integrated means include zero-process site variation and its uncertainty. Alternatives are exploratory pending review; downstream drafts retain the accepted estimates. The earlier [covariance sensitivity review](task-rd02.qmd#rd02-04), four-site uncertainty, and boundary warnings remain relevant.",
     "inputs": [
       "publication/inputs/thesis/README.md",
       "publication/inputs/thesis/manifest.json",
@@ -198,6 +198,14 @@
       "publication/outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png",
       "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml",
       "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-session-info.txt",
+      "publication/outputs/regeneration/selected-species-models/models/rw_site_macro.rds",
+      "publication/outputs/regeneration/selected-species-models/models/to_site_macro.rds",
+      "publication/outputs/regeneration/selected-species-models/models/df_site_macro.rds",
+      "publication/outputs/regeneration/selected-species-models/models/other_site_macro.rds",
+      "publication/outputs/regeneration/selected-species-models/models/rw_site_macro-bfgs.rds",
+      "publication/outputs/regeneration/selected-species-models/models/to_site_macro-bfgs.rds",
+      "publication/outputs/regeneration/selected-species-models/models/df_site_macro-bfgs.rds",
+      "publication/outputs/regeneration/selected-species-models/models/other_site_macro-bfgs.rds",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-diagnostics.csv",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-display.csv",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
@@ -232,7 +240,31 @@
       "publication/outputs/regeneration/separate-species-comparison/tables/rd02-species-variance-components.csv",
       "publication/outputs/regeneration/tables/rd02-basal-area-model-estimates.csv",
       "publication/outputs/regeneration/tables/rd02-observed-basal-area-summary.csv",
-      "publication/outputs/regeneration/tables/rd02-thesis-results.csv"
+      "publication/outputs/regeneration/tables/rd02-thesis-results.csv",
+      "publication/outputs/regeneration/zero-process-sensitivity/tables/rd02-zero-observed.csv",
+      "publication/outputs/regeneration/zero-process-sensitivity/tables/rd02-zero-model-comparison.csv",
+      "publication/outputs/regeneration/zero-process-sensitivity/tables/rd02-zero-diagnostics.csv",
+      "publication/outputs/regeneration/zero-process-sensitivity/tables/rd02-zero-count-checks.csv",
+      "publication/outputs/regeneration/zero-process-sensitivity/tables/rd02-zero-site-probabilities.csv",
+      "publication/outputs/regeneration/zero-process-sensitivity/tables/rd02-zero-integrated-estimates.csv",
+      "publication/outputs/regeneration/zero-process-sensitivity/figures/rd02-zero-site-probabilities.png",
+      "publication/outputs/regeneration/zero-process-sensitivity/figures/rd02-zero-site-probabilities.pdf",
+      "publication/outputs/regeneration/zero-process-sensitivity/figures/rd02-zero-integrated-means.png",
+      "publication/outputs/regeneration/zero-process-sensitivity/figures/rd02-zero-integrated-means.pdf",
+      "publication/outputs/regeneration/zero-process-sensitivity/manifests/rd02-zero-provenance.yml",
+      "publication/outputs/regeneration/zero-process-sensitivity/manifests/rd02-zero-session-info.txt",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_site.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_treatment.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_treatment_site.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/to_zi_site.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/df_zi_site.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/other_zi_site.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_site-bfgs.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_treatment-bfgs.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/rw_zi_treatment_site-bfgs.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/to_zi_site-bfgs.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/df_zi_site-bfgs.rds",
+      "publication/outputs/regeneration/zero-process-sensitivity/models/other_zi_site-bfgs.rds"
     ],
     "depends_on": [
       "F01"
@@ -253,14 +285,14 @@
   {
     "id": "RT01",
     "title": "regeneration Results narrative",
-    "status": "Queued - ready after completed RD02",
+    "status": "Queued - accepted baseline available; zero-process sensitivity under review",
     "target": "1–2 manuscript pages",
     "files": [
       "publication/task-rt01.qmd",
       "publication/sections/results.qmd",
       "publication/draft-results.qmd"
     ],
-    "summary": "RD02 is complete and its separate-species models and displays are accepted. The next step is to draft a 1–2-page regeneration Results subsection around that display, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Every quantitative claim must be traceable to an accepted display or linked table.",
+    "summary": "The accepted RD02 separate-species estimates remain the baseline while its zero-process sensitivity is reviewed. Draft a 1–2-page regeneration Results subsection around the accepted display, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Do not substitute exploratory alternatives without a model decision. Every quantitative claim must be traceable to an accepted display or linked table.",
     "inputs": [
       "publication/task-rd02.qmd",
       "publication/sections/rd02-regeneration-display.qmd",
