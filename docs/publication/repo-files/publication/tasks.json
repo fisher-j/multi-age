@@ -278,13 +278,22 @@
   {
     "id": "RD03",
     "title": "sprout-height display",
-    "status": "In progress - thesis review and analysis proposal",
+    "status": "In progress - Phase One audit complete; human review pending",
     "target": "One size/time figure; optional interval-rate companion",
     "files": [
-      "publication/task-rd03.qmd"
+      "publication/task-rd03.qmd",
+      "analysis/scripts/export-publication-inputs.R",
+      "analysis/scripts/publication-export/rd03-inputs.R"
     ],
-    "summary": "The [thesis review](task-rd03.qmd#rd03-review) verifies saved model specifications and historical means, identifies model/prose mismatches, and qualifies tallest-clump sampling and four-site precision. The [analysis proposal](task-rd03.qmd#rd03-model-plan) makes changes in site blocking, species covariance, temporal structure, response family, dispersion, and prediction targets explicit, drawing on RD02. The [display proposals](task-rd03.qmd#rd03-display-proposals) pair year-10 size with interval change, with an optional interval-rate companion. No publication fits, final model selection, or displays are accepted; sprout input export and field-cohort reconciliation remain prerequisites.",
-    "outputs": [],
+    "summary": "The [Phase One audit](task-rd03.qmd#rd03-phase-one) reconciles all 692 workbook clumps with the saved analysis, verifies the interval definitions, and exports typed measurements and historical references. It recovers redwood residual-tree codes (197 code 0, 137 code 1), identifies the separate tallest-ten subset, and reports equal-site descriptive means. Original enrollment, mortality, leader identity, sampling probabilities, and residual-code timing remain unresolved. The [human review and Phase Two handoff](task-rd03.qmd#rd03-handoff) preserves the selected recorded-cohort target and directs reference/design/covariance fitting after review; no publication model or display is accepted.",
+    "outputs": [
+      "publication/outputs/sprouts/phase-one/identity-checks.csv",
+      "publication/outputs/sprouts/phase-one/cohort-counts.csv",
+      "publication/outputs/sprouts/phase-one/response-support.csv",
+      "publication/outputs/sprouts/phase-one/sampling-composition.csv",
+      "publication/outputs/sprouts/phase-one/observed-site-means.csv",
+      "publication/outputs/sprouts/phase-one/observed-treatment-means.csv"
+    ],
     "inputs": [
       "analysis/thesis/methods.qmd",
       "analysis/thesis/results.qmd",
@@ -296,7 +305,18 @@
       "publication/task-rd02.qmd",
       "publication/inputs/thesis/manifest.json",
       "analysis/sprout_modeling.rda",
-      "analysis/wrangled_sprouts.rda"
+      "analysis/wrangled_sprouts.rda",
+      "data/Sprouts10yr.xlsx",
+      "analysis/work_log.qmd",
+      "analysis/_notes/thesis_notes.md",
+      "publication/inputs/thesis/data-dictionary.csv",
+      "publication/inputs/thesis/README.md",
+      "publication/inputs/thesis/sprouts/measurements.rds",
+      "publication/inputs/thesis/sprouts/workbook-all.rds",
+      "publication/inputs/thesis/sprouts/workbook-tallest.rds",
+      "publication/inputs/thesis/sprouts/historical-frames.rds",
+      "publication/inputs/thesis/sprouts/historical-predictions.csv",
+      "publication/inputs/thesis/sprouts/historical-model-record.csv"
     ],
     "depends_on": [
       "RD02"
@@ -334,7 +354,7 @@
       "publication/task-rt02.qmd",
       "publication/sections/results.qmd"
     ],
-    "summary": "After RD03 acceptance, the proposal is to report redwood and tanoak height/time findings in a distinct 1–1.5-page Results subsection. Combining it with RT01 remains conditional on one shared display and a clearer common message; the narrative must add sprout-development evidence without restating basal-area/density findings. The initial RD03 review is available, but model selection and display acceptance remain pending; later drafting must use the selected tallest-clump estimand and verified contrasts rather than inherited thesis significance language.",
+    "summary": "After RD03 acceptance, the proposal is to report redwood and tanoak height/time findings in a distinct 1–1.5-page Results subsection. Combining it with RT01 remains conditional on one shared display and a clearer common message; the narrative must add sprout-development evidence without restating basal-area/density findings. The initial RD03 review is available, but model selection and display acceptance remain pending; later drafting must use the selected tallest-clump estimand and verified contrasts rather than inherited thesis significance language. RD03 Phase One now supplies an audited selected-clump cohort and recovered residual-tree indicator; human review of field-history limits and Phase Two fitting remain pending.",
     "inputs": [
       "publication/task-rd03.qmd",
       "analysis/thesis/results.qmd",
@@ -406,7 +426,7 @@
       "publication/sections/supplement.qmd",
       "publication/draft-methods.qmd"
     ],
-    "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02. RD03 now records the thesis-model audit and proposed sensitivities; its sampling target, four-site hierarchy, period definitions, and final prediction target must be resolved before sprout Methods are finalized.",
+    "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02. RD03 now records the thesis-model audit and proposed sensitivities; its sampling target, four-site hierarchy, period definitions, and final prediction target must be resolved before sprout Methods are finalized. RD03 Phase One now supplies an audited selected-clump cohort and recovered residual-tree indicator; human review of field-history limits and Phase Two fitting remain pending.",
     "inputs": [
       "publication/task-rd02.qmd",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
@@ -465,7 +485,7 @@
       "publication/task-d02.qmd",
       "publication/sections/discussion.qmd"
     ],
-    "summary": "The proposed sprout discussion connects accepted height patterns to light, retention, and cohort development. Its 1–1.5 pages must explain what the height evidence adds beyond basal area; combining it with D01 depends on whether the reviewed results support one inseparable management message. The initial RD03 review qualifies leader replacement, selected-clump sampling, shade-tolerance interpretation, and the proposed long-term retention threshold; these are limits for later discussion, not accepted new results.",
+    "summary": "The proposed sprout discussion connects accepted height patterns to light, retention, and cohort development. Its 1–1.5 pages must explain what the height evidence adds beyond basal area; combining it with D01 depends on whether the reviewed results support one inseparable management message. The initial RD03 review qualifies leader replacement, selected-clump sampling, shade-tolerance interpretation, and the proposed long-term retention threshold; these are limits for later discussion, not accepted new results. RD03 Phase One now supplies an audited selected-clump cohort and recovered residual-tree indicator; human review of field-history limits and Phase Two fitting remain pending.",
     "inputs": [
       "publication/task-rd03.qmd",
       "analysis/thesis/discussion.qmd",

@@ -2,7 +2,7 @@
 # From analysis/: Rscript scripts/export-publication-inputs.R
 stopifnot(getRversion() == "4.3.2")
 suppressPackageStartupMessages({
-  library(dplyr); library(tidyr); library(readr); library(glmmTMB); library(marginaleffects)
+  library(dplyr); library(tidyr); library(readr); library(readxl); library(glmmTMB); library(marginaleffects)
 })
 stopifnot(requireNamespace("digest", quietly = TRUE), requireNamespace("jsonlite", quietly = TRUE))
 analysis_root <- normalizePath(".")
@@ -11,7 +11,9 @@ output <- normalizePath("../publication", mustWork = TRUE)
 output <- file.path(output, "inputs", "thesis")
 dir.create(output, recursive = TRUE, showWarnings = FALSE)
 inputs <- c("summarize_collected_data.rda", "calculate_fuel_load.rda",
-            "fuel_modeling_round_3.rda", "regen_visualize.rda", "results_appendix_deps.rda", "renv.lock", ".Rprofile")
+            "fuel_modeling_round_3.rda", "regen_visualize.rda", "results_appendix_deps.rda", "renv.lock", ".Rprofile",
+            "wrangled_sprouts.rda", "sprout_modeling.rda", "../data/Sprouts10yr.xlsx",
+            "analysis/sprouts_import_data.qmd", "analysis/sprout_modeling.qmd", "thesis/methods.qmd")
 sha <- function(path) digest::digest(readBin(path, "raw", n = file.info(path)$size),
                                     serialize = FALSE, algo = "sha256")
 protected <- vapply(inputs, sha, character(1))
@@ -33,8 +35,12 @@ source("scripts/publication-export/fuel-historical-reference.R")
 source("scripts/publication-export/rd02-historical-reference.R")
 export_fuel_reference(analysis_root, output)
 export_rd02_reference(e, output)
+source("scripts/publication-export/rd03-inputs.R")
+sprout_datasets <- export_rd03_inputs(output)
+
 datasets <- list(fuel_measurements = measurements, fuel_deadwood_loads = loads,
                  regeneration_measurements = regen)
+datasets <- c(datasets, sprout_datasets)
 dictionary <- bind_rows(lapply(names(datasets), function(name) {
   x <- datasets[[name]]
   data.frame(dataset = name, column = names(x),
@@ -52,7 +58,8 @@ manifest <- list(schema_version = 1L, r = R.version.string,
   exports = setNames(as.list(vapply(files, sha, character(1))),
                      substring(files, nchar(output) + 2L)),
   units = list(depth = "cm", vegetation_height = "m", cover = "percent",
-               fuel_load = "Mg ha-1", basal_area = "m2 ha-1"),
+               fuel_load = "Mg ha-1", basal_area = "m2 ha-1",
+               sprout_height = "m", sprout_increment = "m yr-1"),
   contract = "Preserve order, identifiers, values, missingness, types, factors and contrasts; no thesis model objects exported")
 jsonlite::write_json(manifest, file.path(output, "manifest.json"), pretty = TRUE, auto_unbox = TRUE)
 stopifnot(identical(protected, vapply(inputs, sha, character(1))))

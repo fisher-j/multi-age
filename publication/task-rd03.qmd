@@ -1,5 +1,8 @@
 ---
 title: "RD03 - sprout-height display"
+params:
+  recompute: false
+  refit: false
 sidebar: workflow
 ---
 
@@ -18,10 +21,10 @@ and the smallest useful set of displays. The publication's regeneration-first
 direction makes redwood development the main question, with tanoak providing
 ecological context; this task does not repeat RD02's basal-area result.
 
-**This is an initial review and proposed analysis plan, not a model selection.**
-No models have been refitted, no analytical outputs overwritten, and no new
-publication estimates or significance claims accepted. The expectation that
-the broad thesis patterns will persist guides the display proposals only.
+**Phase One is complete for the available records; field-history questions remain
+for human review.** The [input audit and handoff](#rd03-phase-one) extend the
+initial thesis review below. No publication models have been fitted and no new
+model estimates, significance claims, or displays are accepted.
 
 ### Evidence reviewed and numerical limits
 
@@ -45,14 +48,15 @@ The imported increments exactly equal $(H_5-H_1)/4$ and $(H_{10}-H_5)/5$.
 Those checks establish the content of the saved analysis, not the completeness
 of the original field cohort or the reason clump counts differ.
 
-Current committed publication exports cover fuels and regeneration basal area,
-not sprout heights. An intentional sprout export in the thesis environment,
+At the initial review, committed publication exports covered fuels and
+regeneration basal area, not sprout heights. An intentional sprout export in the thesis environment,
 with identifiers, factor levels, missingness, selection information where
 available, and historical prediction references, is a prerequisite for publication
 fitting. We must also reconcile those exports with the original workbook and
 field history before assuming that the complete saved frames imply no attrition.
 The existing exporter and manifest should be extended when we implement the
-analysis; this review does not silently make legacy objects publication inputs.
+analysis. Phase One below implements that boundary and documents what field
+history remains unavailable.
 
 ## What the thesis models actually assume {#rd03-thesis-models}
 
@@ -383,7 +387,7 @@ revised analysis to reveal treatment dependence. Keep full estimates, interval
 definitions, planned contrasts, and sensitivity evidence in a companion table.
 No invented confidence limits or schematic results are needed at this stage.
 
-## Where this leaves RD03
+## Initial review conclusion
 
 The thesis provides credible preliminary evidence that selected leading redwood
 sprouts attained greater height under lighter retention and continued developing
@@ -395,5 +399,289 @@ changes to covariance and prediction targets. A compact size-plus-time display
 can then complement RD02 without implying that tall sprouts alone establish
 successful cohort recruitment or a long-term retention threshold. Model choice,
 interval calibration, and final captions remain open until these tests are run.
+
+## Phase One: audited inputs and human review {#rd03-phase-one}
+
+Can we trace every modeled clump to the workbook, and what population can those
+records describe? This first phase implements the audit and export prerequisites
+in the selection sequence. Phase Two will fit the reference and limited
+design/covariance candidates; later selection, bootstrap uncertainty, and display
+acceptance follow that comparison. The phases make the existing sequence
+explicit without accepting any candidate model in advance.
+
+We exported both workbook sheets, the saved wide measurements with original and
+renumbered identifiers, the historical response frames, and plain prediction
+references in thesis R 4.3.2. The exporter checks every imported column against
+the workbook and reproduces the saved long frames. It preserves the historical
+factor levels (LIDE, SESE; GS, LD, HA, HD), row order, and missing values. No fitted
+model crosses the publication boundary. The manifest protects the workbook,
+saved objects, import/model sources, Methods, and existing thesis environment.
+The thesis startup still reports its existing synchronization, locale, and
+package-build warnings; no packages or lockfiles were changed. Replaying the
+shared exporter also rewrote the existing fuel/regeneration RDS files with a
+UTF-8 serialization header. Read-back comparisons with the committed baseline
+confirmed identical R objects, and the historical CSV checksums are unchanged;
+those analyses therefore require no numerical refresh.
+
+The following audit runs in publication R 4.6.2 using only exported measurements.
+An ordinary render reads saved audit tables; `-P recompute:true` refreshes these
+deterministic calculations. Phase One has no fitting branch, so `refit:true` is
+rejected to prevent it being mistaken for a completed model analysis.
+
+```{r}
+#| label: rd03-audit-setup
+#| include: false
+suppressPackageStartupMessages({ library(dplyr); library(tidyr) })
+if (isTRUE(params$refit)) stop("Phase One audits inputs only; no publication fitting is implemented yet.")
+recompute <- isTRUE(params$recompute)
+input <- "inputs/thesis/sprouts"
+out <- "outputs/sprouts/phase-one"
+read_audit <- function(name) read.csv(file.path(out, paste0(name, ".csv")), check.names = FALSE)
+write_audit <- function(x, name) write.csv(x, file.path(out, paste0(name, ".csv")), row.names = FALSE)
+if (recompute) {
+  dir.create(out, recursive = TRUE, showWarnings = FALSE)
+  d <- readRDS(file.path(input, "measurements.rds"))
+  raw <- readRDS(file.path(input, "workbook-all.rds"))
+  tallest <- readRDS(file.path(input, "workbook-tallest.rds"))
+  frames <- readRDS(file.path(input, "historical-frames.rds"))
+}
+```
+
+### Identity, repeated measurements, and interval definitions
+
+We require unique original clump keys and a one-to-one map to the saved clump
+IDs. Each macro plot must belong to one site and treatment, each site must have
+all four treatments, and every clump must have three heights and two increments.
+The numerical checks below use a tolerance of 10^-12^ m yr^-1^ for spreadsheet
+roundoff; no height or increment is replaced or rounded in the input.
+
+```{r}
+#| label: rd03-identity-checks
+if (recompute) {
+  keys <- raw[c("Site", "Plot", "Species", "Tree")]
+  macros <- distinct(d, plot, site, treat, original_plot)
+  err5 <- max(abs(d$ht_inc5 - (d$ht5 - d$ht1) / 4))
+  err10 <- max(abs(d$ht_inc10 - (d$ht10 - d$ht5) / 5))
+  height_index <- match(paste(frames$dht$tree, frames$dht$year),
+    paste(rep(d$tree, each = 3), rep(c(1, 5, 10), nrow(d))))
+  inc_index <- match(paste(frames$dinc$tree, frames$dinc$year),
+    paste(rep(d$tree, each = 2), rep(c(5, 10), nrow(d))))
+  checks <- data.frame(check = c("Unique original site/plot/species/clump keys",
+    "Unique saved clump IDs and source rows", "16 macros, one treatment per site",
+    "Three historical heights per clump", "Two historical increments per clump",
+    "Year-10 frame matches wide heights", "Years 1-5 increment = (H5-H1)/4",
+    "Years 5-10 increment = (H10-H5)/5"),
+    passed = c(!anyDuplicated(keys), !anyDuplicated(d$tree) && !anyDuplicated(d$source_row),
+      nrow(macros) == 16L && !anyDuplicated(macros$plot) &&
+        all(table(macros$site, macros$treat) == 1),
+      nrow(frames$dht) == 3L * nrow(d) && !anyNA(height_index) &&
+        !anyDuplicated(frames$dht[c("tree", "year")]) &&
+        all(frames$dht$ht == c(t(as.matrix(d[c("ht1", "ht5", "ht10")])))[height_index]),
+      nrow(frames$dinc) == 2L * nrow(d) && !anyNA(inc_index) &&
+        !anyDuplicated(frames$dinc[c("tree", "year")]) &&
+        all(frames$dinc$ht_inc == c(t(as.matrix(d[c("ht_inc5", "ht_inc10")])))[inc_index]),
+      nrow(frames$dht10) == nrow(d) && !anyDuplicated(frames$dht10$tree) &&
+        all(frames$dht10$ht == d$ht10[match(frames$dht10$tree, d$tree)]),
+      err5 < 1e-12, err10 < 1e-12))
+  stopifnot(all(checks$passed))
+  write_audit(checks, "identity-checks")
+}
+knitr::kable(read_audit("identity-checks"))
+```
+
+All available workbook rows are accounted for in the saved analysis. The
+`Age10all` sheet supplies 692 clumps, while `Age10tallest50tpha` contains a
+320-row subset with the same original keys and heights. The latter has ten
+clumps per site/treatment/species cell and ranks 1–10; it is an outcome-selected
+subset, not additional replication or an attrition record. We retain the full
+692-row cohort for the planned comparison and do not apply the workbook's
+saved display filter. The original plot numbers and clump labels remain
+available alongside the saved globally unique `plot` and `tree` factors.
+
+We count clumps within the actual treatment units because these counts reveal
+sampling composition without treating clumps as independent treatment replicates.
+The selected-height subset is counted separately to expose the selection.
+
+```{r}
+#| label: rd03-cohort-counts
+if (recompute) {
+  counts <- d |> group_by(site, treat, spp) |>
+    summarise(n_clumps = n(), n_missing_height = sum(is.na(ht1) | is.na(ht5) | is.na(ht10)),
+      n_tallest_subset = sum(in_tallest_sheet), .groups = "drop")
+  stopifnot(nrow(counts) == 32L, sum(counts$n_clumps) == 692L,
+    all(counts$n_tallest_subset == 10L), sum(d$in_tallest_sheet) == nrow(tallest),
+    all(tallest$HT10rank <= 10), all(d$in_tallest_sheet == (d$ht_rnk10 <= 10)))
+  write_audit(counts, "cohort-counts")
+}
+knitr::kable(read_audit("cohort-counts"))
+```
+
+There are 334 redwood and 358 tanoak clumps, 2,076 height observations, and
+1,384 increments across four sites and 16 macro plots. Redwood treatment totals
+range from 72 to 91, and tanoak totals from 78 to 95. The Methods describes
+approximately 25 clumps per species per macro plot, rather than an exact initial
+roster. The available files cannot explain differences from that approximate
+target. Complete rows do not establish complete follow-up of the original cohort.
+
+### Response support and recoverable sampling information
+
+We check missingness and support before considering response families. This also
+makes the distinction between recorded interval change and growth of one
+continuously tracked leader explicit: the measurements follow the tallest sprout
+in each clump at each visit.
+
+```{r}
+#| label: rd03-response-support
+if (recompute) {
+  support <- bind_rows(lapply(c("ht1", "ht5", "ht10", "ht_inc5", "ht_inc10"), function(v) {
+    x <- d[[v]]
+    data.frame(variable = v, n = length(x), missing = sum(is.na(x)),
+      zero = sum(x == 0, na.rm = TRUE), negative = sum(x < 0, na.rm = TRUE),
+      minimum = min(x, na.rm = TRUE), maximum = max(x, na.rm = TRUE),
+      unit = if (startsWith(v, "ht_inc")) "m yr-1" else "m")
+  }))
+  stopifnot(all(support$missing == 0), all(is.finite(support$minimum)),
+    all(support$minimum > 0))
+  write_audit(support, "response-support")
+}
+knitr::kable(read_audit("response-support"), digits = 4)
+```
+
+All recorded heights and increments are positive. This removes a support-based
+objection to a positive increment family on these rows, but does not establish
+that Gamma is appropriate. The planned Gaussian increment reference remains
+unchanged. Neither valid negative increments in a future corrected input nor
+missing/dead clumps should be silently removed or recoded to fit a family.
+
+The workbook's `ResidRWonClumpYN` was omitted from the thesis import. We recover
+its numeric codes as `residual_rw`, retaining NA for tanoak. A code of 1 denotes
+residual redwood on the clump according to the column label; its timing and field
+protocol still need confirmation. We tabulate both codes and missing values
+before proposing any adjustment.
+
+```{r}
+#| label: rd03-sampling-composition
+if (recompute) {
+  composition <- d |> group_by(spp, treat) |>
+    summarise(n_clumps = n(), code_0 = sum(residual_rw == 0, na.rm = TRUE),
+      code_1 = sum(residual_rw == 1, na.rm = TRUE), missing = sum(is.na(residual_rw)),
+      .groups = "drop")
+  stopifnot(all(is.na(d$residual_rw[d$spp == "LIDE"])),
+    all(d$residual_rw[d$spp == "SESE"] %in% c(0, 1)))
+  write_audit(composition, "sampling-composition")
+}
+knitr::kable(read_audit("sampling-composition"))
+```
+
+Redwood has 197 code-0 and 137 code-1 clumps; tanoak has 358 missing indicators,
+so its missing values must not be treated as code 0. All 91 GS redwood clumps
+have code 0. LD has 41/31, HA 35/52, and HD 30/54 code-0/code-1 clumps. Thus the
+redwood indicator is treatment-associated and lacks overlap in GS. Adjusting for
+it would change the treatment question and cannot identify every
+within-stratum treatment comparison. We have no area-wide stratum frequencies
+or inclusion probabilities from which to calculate sampling weights.
+
+### Descriptive context and historical reference
+
+We summarize each species within each macro plot first, then weight the four
+sites equally for a descriptive treatment summary. These are observed sample
+means, not fitted estimates or confidence intervals. Duration weighting uses
+four and five years, so the years 1–10 annual rate equals `(H10-H1)/9`.
+
+```{r}
+#| label: rd03-observed-context
+if (recompute) {
+  observed <- d |> group_by(site, plot, treat, spp) |>
+    summarise(n_clumps = n(), height1 = mean(ht1), height5 = mean(ht5), height10 = mean(ht10),
+      increment_1_5 = mean(ht_inc5), increment_5_10 = mean(ht_inc10),
+      period_change = mean(ht_inc10 - ht_inc5),
+      annual_rate_1_10 = mean((4 * ht_inc5 + 5 * ht_inc10) / 9), .groups = "drop")
+  stopifnot(nrow(observed) == 32L,
+    max(abs(observed$annual_rate_1_10 - (observed$height10 - observed$height1) / 9)) < 1e-12)
+  write_audit(observed, "observed-site-means")
+}
+knitr::kable(read_audit("observed-site-means"), digits = 3)
+```
+
+The equal-site summary helps assess the direction of change without allowing
+larger sampled cohorts to dominate a treatment. The four site means in the
+preceding table retain the variation behind each treatment summary.
+
+```{r}
+#| label: rd03-observed-treatment-context
+if (recompute) {
+  treatment <- observed |> group_by(spp, treat) |>
+    summarise(n_sites = n(), across(c(height10, increment_1_5, increment_5_10,
+      period_change, annual_rate_1_10), mean), .groups = "drop")
+  stopifnot(all(treatment$n_sites == 4L))
+  write_audit(treatment, "observed-treatment-means")
+}
+knitr::kable(read_audit("observed-treatment-means"), digits = 3)
+```
+
+The observed year-10 means decrease from GS through LD and HA to HD in both
+species: redwood spans 10.480 to 5.929 m, and tanoak 5.213 to 3.142 m. The later
+interval has a lower observed annual increment in all eight cells. Redwood
+changes range from -0.159 to -0.066 m yr^-1^, compared with -0.048 to -0.037 for
+tanoak. These summaries motivate testing treatment-specific temporal means;
+they do not establish significant contrasts or validate a particular covariance
+structure.
+
+For traceability, the historical table below contains direct saved-model
+predictions checked against the fixed-effect design matrix in thesis R. Its SEs
+are historical model-based mean SEs; they do not validate four-site coverage or
+establish any new contrast. Period codes 5 and 10 mean years 1–5 and 5–10.
+
+```{r}
+#| label: rd03-historical-reference
+knitr::kable(read.csv(file.path(input, "historical-predictions.csv")) |>
+  select(model_id, treat, spp, period, estimate, se, unit), digits = 4)
+```
+
+### Human review and Phase Two handoff {#rd03-handoff}
+
+The available records now support a reproducible analysis of the **selected,
+recorded clump cohort**, retaining all 692 rows. They do not resolve whether the
+workbook was assembled only from surviving or otherwise eligible clumps. We
+found no original enrollment roster, mortality/absence ledger, per-visit leader
+IDs, or inclusion probabilities in the workbook, import/model sources, Methods,
+work log, or relevant repository notes; the workbook has no cell comments or
+additional sheets documenting those events. The tally of roughly 25 clumps per
+species per macro plot is insufficient to reconstruct an attrition denominator.
+These are missing field-history evidence, not failed numerical checks.
+
+Human review should confirm the residual-tree code definition and timing, explain
+unequal clump counts if original records exist, and decide whether the recorded
+cohort is the intended target for exploratory fitting. No sampling weights,
+zero-height replacements, survival claims, or unobserved leader histories have
+been inferred. If new field information changes inclusion or measurements,
+refresh the export and this audit before fitting.
+
+The next agent should read this section and the [candidate plan](#rd03-model-plan),
+verify export integrity with
+`python publication/scripts/check-analysis.py --inputs-only --protected`, and use
+`inputs/thesis/sprouts/measurements.rds` in the publication environment. Preserve
+the exported factor coding and original ID crosswalk; use all rows, not the
+tallest-ten subset. The historical frames and 24 prediction cells provide
+reproduction references, not publication estimates. Start Phase Two with the
+thesis reference fits and the limited site-blocking, species-macro covariance,
+and increment temporal-mean alternatives on identical rows. Use ML for
+fixed-effect comparisons, retain design clustering, and record convergence,
+Hessian, variance boundaries, second-optimizer agreement, and leave-one-site-out
+sensitivity. Do not add an unidentified full two-period covariance on top of
+unrestricted residual variances and a clump intercept.
+
+Before reporting publication means, resolve observed-site versus exchangeable-site
+standardization and predeclare contrast families and multiplicity handling.
+Keep residual-tree adjustment as an explicitly conditional sensitivity, subject
+to code validation and the GS overlap limitation. Bootstrap calibration and
+final displays follow model review; RT02, M02, and D02 remain queued. Human
+review should precede the next phase.
+
+Phase One establishes traceable inputs and exposes a consequential selection
+limitation that complete analytical frames alone concealed. It also recovers a
+sampling indicator that can inform a carefully bounded sensitivity. The main
+scientific limitation remains generalization beyond the selected recorded clumps;
+model fitting cannot recover the missing field history or establish survival.
 
 {{< include /_task-metadata/rd03-files.qmd >}}

@@ -12,6 +12,10 @@ without opening thesis model objects or activating thesis renv.
 | `fuel/thesis-reference-reproduction.csv` | `fuel_modeling_round_3.rda`, `fuel_tmb` | Historical Results grid, zero-random-effect means/SEs, and model formulas |
 | `regeneration/tables/`, `regeneration/inference-audit/` | `regen_visualize.rda`, `mba` | Historical joint-model integrated means/SEs/intervals, observed summaries, prediction grids, and independent inference checks |
 | `regeneration/tables/rd02-thesis-results.csv` | `results_appendix_deps.rda`, `regen_all` emmeans objects | Original 16 thesis zero-effect means, SEs, and response-scale asymptotic 95% intervals, including negative lower limits; checked against the saved `mba` predictions |
+| `sprouts/measurements.rds` | `wrangled_sprouts.rda`, `sprouts`, reconciled with `Sprouts10yr.xlsx` | All 692 recorded clumps, unchanged saved factors/values/order, plus original plot/clump IDs, worksheet row, residual-redwood codes, and selected-sheet membership |
+| `sprouts/workbook-all.rds`, `sprouts/workbook-tallest.rds` | Workbook sheets `Age10all`, `Age10tallest50tpha` | All columns and rows from both sheets, including missing values; the 320-row tallest-ten subset is separate from the analysis cohort |
+| `sprouts/historical-frames.rds` | `sprout_modeling.rda`, `dht`, `dinc`, `dht10` | Plain measurement frames reproducing the saved long data exactly; no fitted models |
+| `sprouts/historical-predictions.csv`, `sprouts/historical-model-record.csv` | Saved `minc_sel`, `ht10_sel` | 24 zero-random-effect prediction cells with historical SEs, formulas, likelihoods and convergence records; not new publication results |
 | `regeneration/saved-model-reference.rds` | Same saved `mba` | Plain numeric response ordering, saved log likelihood, and formula strings; contains no fitted model |
 
 The typed RDS datasets preserve row order, values, missingness, classes, factor
@@ -37,4 +41,10 @@ isolated environments, replays the historical fuel predictions and RD02
 inference checks, and verifies that protected thesis files have not changed.
 It does not execute thesis notebooks, refit historical models, or update thesis
 packages. Review and version the changed exports before publication execution.
+Sprout heights are metres and increments are metres per year over four- and five-year intervals.
+The residual-redwood indicator retains numeric 0/1 codes and tanoak NA values; its
+field definition and timing remain for review. Complete recorded rows do not
+establish absence of attrition before workbook assembly. The tallest-ten sheet
+is an outcome-selected subset and must not replace the 692-row analysis cohort.
+
 Scientific changes to exports or historical references require separate review.

@@ -94,15 +94,16 @@ def main():
     parser.add_argument("--inputs-only", action="store_true")
     parser.add_argument("--protected", action="store_true")
     parser.add_argument("--require-models", action="store_true")
-    parser.add_argument("--task", choices=("F01", "RD04", "RD02"), help="Check only this task's current outputs")
+    parser.add_argument("--task", choices=("F01", "RD04", "RD02", "RD03"), help="Check only this task's current outputs")
     parser.add_argument("--outputs", type=Path, default=PROJECT / "outputs")
-    parser.add_argument("--domains", default="fuel,regeneration")
+    parser.add_argument("--domains", default="fuel,regeneration,sprouts")
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()
     domains = args.domains.split(",")
-    if not domains or any(domain not in ("fuel", "regeneration") for domain in domains):
-        parser.error("--domains must contain fuel and/or regeneration")
-    if args.task and domains != (["regeneration"] if args.task == "RD02" else ["fuel"]):
+    if not domains or any(domain not in ("fuel", "regeneration", "sprouts") for domain in domains):
+        parser.error("--domains must contain fuel, regeneration, and/or sprouts")
+    task_domain = {"F01": "fuel", "RD04": "fuel", "RD02": "regeneration", "RD03": "sprouts"}
+    if args.task and domains != [task_domain[args.task]]:
         parser.error("--task must match --domains")
     errors = validate_exports(PROJECT, args.protected) if args.inputs_only or args.protected else []
     if not args.inputs_only:
