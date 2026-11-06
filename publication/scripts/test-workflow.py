@@ -47,6 +47,24 @@ class WorkflowTests(unittest.TestCase):
                                     formula + '</td></tr></table></details>', encoding="utf-8")
                     self.assertEqual(bool(website.Document(page).formula_errors), broken)
 
+    def test_rd02_fit_table_checks_current_candidate_count(self):
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "task.html"
+            markup = ('<img src="outputs/rd02-regeneration-basal-area.png">'
+                      '<details id="rd02-historical-details"><summary>History</summary></details>'
+                      '<img src="outputs/rd02-overall-sensitivity.png">'
+                      '<details id="rd02-comparison-details"><summary>Fits</summary></details>')
+            for candidates in (8, 10):
+                with self.subTest(candidates=candidates):
+                    rows = [["Model"]] + [[str(i)] for i in range(candidates)]
+                    table = '<div id="tbl-rd02-random-effects-fit"><table>' + ''.join(
+                        '<tr><td>' + row[0] + '</td></tr>' for row in rows) + '</table></div>'
+                    page.write_text(markup + table, encoding="utf-8")
+                    doc = website.Document(page)
+                    self.assertEqual(website.rd02_review_errors(doc, rows), [])
+                    self.assertTrue(website.rd02_review_errors(doc, rows[:-1]))
+                    self.assertTrue(website.rd02_review_errors(doc, rows + [["missing model"]]))
+
     def test_source_documents_are_listed_without_downloads_and_old_copies_are_pruned(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

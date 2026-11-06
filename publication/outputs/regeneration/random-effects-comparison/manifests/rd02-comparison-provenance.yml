@@ -6,6 +6,8 @@ candidate_formulas:
   thesis_site_species: ba_ha ~ treat * spp + (1 | site:spp)
   full_nested: ba_ha ~ treat * spp + (1 | site/treat/plot)
   nested_plus_site_species: ba_ha ~ treat * spp + (1 | site/treat/plot) + (1 | site:spp)
+  diagonal_site_macro: ba_ha ~ treat * spp + diag(0 + spp | site) + diag(0 + spp |
+    site:treat)
 fixed_components: ziGamma(log); conditional treat*spp; zero ~spp; dispersion ~spp
 fit: maximum likelihood; nlminb; iter.max=eval.max=10000
 diagnostics:

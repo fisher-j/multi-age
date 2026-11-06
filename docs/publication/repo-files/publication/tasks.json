@@ -131,14 +131,14 @@
   {
     "id": "RD02",
     "title": "regeneration basal area display",
-    "status": "Separate models selected; displays pending review",
+    "status": "Completed - four separate species models and displays accepted",
     "target": "RW/TO Results figure and all-species supplement table",
     "files": [
       "publication/task-rd02.qmd",
       "publication/sections/rd02-regeneration-display.qmd",
       "publication/sections/rd02-species-estimates-table.qmd"
     ],
-    "summary": "The [thesis-results figure](task-rd02.qmd#rd02-01) reproduces original zero-effect means and intervals; the [statistical framework](task-rd02.qmd#rd02-inference-review) distinguishes the current integrated target. One [consolidated sensitivity figure](task-rd02.qmd#rd02-04) compares joint and separate configurations, with supporting tables folded. The [model decision](task-rd02.qmd#rd02-review-recommendation) retains separate species models for biological interpretation despite stronger joint-model AIC support. Boundary variances, four-site uncertainty, zero-process assumptions, and the historical tail flag remain explicit limitations. RW/TO fits are reused from the authoritative four-category collection. Displays remain under review.",
+    "summary": "RD02 is complete. The [final model decision](task-rd02.qmd#rd02-review-recommendation) retains four separate species-category hurdle-Gamma models with site and macro-plot intercepts. The RW/TO Results figure and four-category supplement table are accepted for downstream publication drafting. The [consolidated sensitivity review](task-rd02.qmd#rd02-04) compares ten configurations across two data scopes; joint diagonal models reproduce the separate fits, while common-variance site-by-species alternatives retain stronger AIC support. The [scientific rationale](task-rd02.qmd#rd02-diagonal-rationale), four-site uncertainty, boundary variances, zero-process assumptions, historical tail flag, and four-category diagonal BFGS Hessian warning remain documented. RT01 owns the next regeneration Results draft.",
     "inputs": [
       "publication/inputs/thesis/README.md",
       "publication/inputs/thesis/manifest.json",
@@ -169,6 +169,10 @@
       "publication/outputs/regeneration/overall-sensitivity/tables/rd02-overall-variance-components.csv",
       "publication/outputs/regeneration/random-effects-comparison/diagnostics/full_nested-by-species-treatment.png",
       "publication/outputs/regeneration/random-effects-comparison/diagnostics/full_nested-dharma.png",
+      "publication/outputs/regeneration/random-effects-comparison/diagnostics/diagonal_site_macro-by-species-treatment.png",
+      "publication/outputs/regeneration/random-effects-comparison/diagnostics/diagonal_site_macro-dharma.png",
+      "publication/outputs/regeneration/random-effects-comparison/models/diagonal_site_macro.rds",
+      "publication/outputs/regeneration/random-effects-comparison/models/diagonal_site_macro-bfgs.rds",
       "publication/outputs/regeneration/random-effects-comparison/diagnostics/nested_plus_site_species-by-species-treatment.png",
       "publication/outputs/regeneration/random-effects-comparison/diagnostics/nested_plus_site_species-dharma.png",
       "publication/outputs/regeneration/random-effects-comparison/diagnostics/thesis_site_species-by-species-treatment.png",
@@ -202,6 +206,10 @@
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-variances.csv",
       "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_combined_rwto-by-treatment.png",
       "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_combined_rwto-dharma.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_diagonal_site_macro_rwto-by-treatment.png",
+      "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_diagonal_site_macro_rwto-dharma.png",
+      "publication/outputs/regeneration/separate-species-comparison/models/joint_diagonal_site_macro_rwto.rds",
+      "publication/outputs/regeneration/separate-species-comparison/models/joint_diagonal_site_macro_rwto-bfgs.rds",
       "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_full_nested_rwto-by-treatment.png",
       "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_full_nested_rwto-dharma.png",
       "publication/outputs/regeneration/separate-species-comparison/diagnostics/joint_site_species_rwto-by-treatment.png",
@@ -245,13 +253,14 @@
   {
     "id": "RT01",
     "title": "regeneration Results narrative",
-    "status": "Queued - after RD02",
+    "status": "Queued - ready after completed RD02",
     "target": "1–2 manuscript pages",
     "files": [
       "publication/task-rt01.qmd",
-      "publication/sections/results.qmd"
+      "publication/sections/results.qmd",
+      "publication/draft-results.qmd"
     ],
-    "summary": "After RD02 acceptance, the proposal is to draft a 1–2-page regeneration Results subsection around the accepted display, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Every quantitative claim must be traceable to an accepted display or linked table.",
+    "summary": "RD02 is complete and its separate-species models and displays are accepted. The next step is to draft a 1–2-page regeneration Results subsection around that display, emphasizing redwood with concise tanoak context and supplemental treatment of other species. Every quantitative claim must be traceable to an accepted display or linked table.",
     "inputs": [
       "publication/task-rd02.qmd",
       "publication/sections/rd02-regeneration-display.qmd",
@@ -332,8 +341,10 @@
     "status": "Queued - after RT01/RT02",
     "target": "1–1.5 manuscript pages",
     "files": [
+      "publication/task-m02.qmd",
       "publication/sections/methods.qmd",
       "publication/sections/supplement.qmd",
+      "publication/draft-methods.qmd",
       "analysis/analysis/sprout_modeling.qmd"
     ],
     "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02.",
@@ -481,6 +492,7 @@
       "F01",
       "RD02",
       "RD04",
+      "M02",
       "RT03"
     ]
   },

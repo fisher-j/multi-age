@@ -3,6 +3,7 @@ title: "RD02 - regeneration basal area display"
 params:
   recompute: false
   refit: false
+  refit_diagonal: false
 sidebar: workflow
 ---
 
@@ -20,17 +21,20 @@ presenting the publication estimates.
 
 The products are a redwood/tanoak (RW/TO) Results figure and a four-category
 supplement table, including Douglas-fir and other species. Basal area is measured
-in m² ha⁻¹; this task does not analyze stem counts. Four separate species models
-are already selected on biological grounds. Their selection, numerical checks,
-scientific limitations, and pending display review are different parts of the
-record, rather than one blanket acceptance.
+in m² ha⁻¹; this task does not analyze stem counts. Following the model comparison,
+we retain the four separate species models as the final selection. The RW/TO
+Results figure and four-category supplement table are accepted for downstream
+publication drafting, and RD02 is complete. The scientific limitations documented
+below remain part of that decision.
 
 ## Setup and execution
 
 The F01 bundle supplies shared readers and display functions; RD02-specific
 analysis stays here. An ordinary render reviews saved evidence.
 `-P recompute:true` refreshes calculations from saved models; `-P refit:true`
-also refits them. Missing models are prerequisites, not permission to refit.
+also refits them. `-P refit_diagonal:true` fits only the two diagonal candidates
+and recomputes the comparisons from the other saved fits. Missing models are
+prerequisites, not permission to refit.
 
 ```{r}
 #| label: rd02-setup
@@ -56,7 +60,7 @@ completing the affected sequence before treating its outputs as current.
 #| message: false
 #| warning: false
 
-recompute <- isTRUE(params$recompute) || isTRUE(params$refit)
+recompute <- isTRUE(params$recompute) || isTRUE(params$refit) || isTRUE(params$refit_diagonal)
 publication_root <- normalizePath(getwd(), winslash = "/")
 paths_common <- publication_paths(publication_root)
 regeneration_root <- file.path(paths_common$output, "regeneration")
@@ -74,6 +78,7 @@ if (recompute) {
   saved_reference <- readRDS(file.path(paths_common$input, "regeneration/saved-model-reference.rds"))
 }
 data.frame(Mode = if (isTRUE(params$refit)) "Refit and recompute" else
+  if (isTRUE(params$refit_diagonal)) "Fit diagonal candidates and recompute" else
   if (recompute) "Recompute from saved models" else "Review saved results")
 ```
 
@@ -249,8 +254,9 @@ Boundary variances and four-site estimation limit the asymptotic approximation;
 refitted bootstrap assessment has not been done.
 
 We'll define the integrated calculation with its prediction, numerical-gradient,
-and quadrature checks. These establish implementation agreement, not scientific
-adequacy or interval coverage.
+and quadrature checks. For diagonal species effects, each row receives only its
+species' site and macro-plot variances. These establish implementation agreement,
+not scientific adequacy or interval coverage.
 
 ```{r}
 #| label: rd02-integrated-means
@@ -270,13 +276,26 @@ integrated_means <- function(m, id, species = NULL) {
     keep <- grid$treat == labels$treat[i] & grid$spp == labels$spp[i]
     as.numeric(keep) / sum(keep)
   }))
+  vc <- VarCorr(m)$cond
+  structure <- m$modelInfo$reStruc$condReStruc
   stopifnot(all(rowSums(A > 0) == 4L), family(m)$link == "log",
-            length(VarCorr(m)$zi) == 0L,
-            all(purrr::map_lgl(VarCorr(m)$cond, function(v) identical(dim(v), c(1L, 1L)))))
+            length(VarCorr(m)$zi) == 0L, length(vc) == length(structure))
   stopifnot(family(m)$family == "Gamma", is.null(model.offset(frame)),
-            length(VarCorr(m)$disp) == 0L,
-            all(purrr::map_lgl(VarCorr(m)$cond,
-                function(v) identical(colnames(v), "(Intercept)"))))
+            length(VarCorr(m)$disp) == 0L)
+  # Support the task's independent intercepts and diagonal species indicators.
+  # Do not silently treat an unstructured covariance as independent variances.
+  random_design <- purrr::map2(vc, structure, function(v, block) {
+    if (identical(colnames(v), "(Intercept)")) {
+      stopifnot(identical(dim(v), c(1L, 1L)), block$blockNumTheta == 1L)
+      return(matrix(1, nrow(grid), 1L))
+    }
+    species_design <- model.matrix(~0 + spp, grid)
+    stopifnot(block$blockName == "diag", block$blockNumTheta == ncol(v),
+              identical(colnames(v), colnames(species_design)),
+              all(v[row(v) != col(v)] == 0))
+    species_design
+  })
+  W <- do.call(cbind, lapply(random_design, function(z) z^2))
   X <- model.matrix(delete.response(terms(formula(m, fixed.only = TRUE))), grid)
   Z <- model.matrix(formula(m, component = "zi", fixed.only = TRUE), grid)
   # Use the full nonrandom parameter vector: theta is log(SD), not variance.
@@ -287,11 +306,11 @@ integrated_means <- function(m, id, species = NULL) {
   it <- which(names(b) == "theta")
   stopifnot(identical(colnames(X), names(fixef(m)$cond)),
             identical(colnames(Z), names(fixef(m)$zi)),
-            length(it) == length(VarCorr(m)$cond),
+            length(it) == ncol(W),
             isTRUE(all.equal(unname(b), unname(m$sdr$par.fixed))))
-  # Independent intercept variances add; integration is exp(sum(sigma^2)/2).
+  # Independent variances add for each observation's random-effect design.
   # There is no additional lognormal residual correction for Gamma responses.
-  variance <- sum(exp(2 * b[it]))
+  variance <- drop(W %*% exp(2 * b[it]))
   pzero <- plogis(drop(Z %*% b[iz]))
   mu <- exp(drop(X %*% b[ib]) + variance / 2) * (1 - pzero)
   # Derivatives include zero coefficients and every log(SD). The full
@@ -299,26 +318,33 @@ integrated_means <- function(m, id, species = NULL) {
   D <- matrix(0, nrow(grid), length(b))
   D[, ib] <- mu * X
   D[, iz] <- -mu * pzero * Z
-  D[, it] <- outer(mu, exp(2 * b[it]))
+  D[, it] <- mu * sweep(W, 2L, exp(2 * b[it]), "*")
   G <- A %*% D
   estimate <- drop(A %*% mu)
   se <- sqrt(diag(G %*% m$sdr$cov.fixed %*% t(G)))
   functional <- function(b) drop(A %*% (
-    exp(drop(X %*% b[ib]) + sum(exp(2 * b[it])) / 2) *
+    exp(drop(X %*% b[ib]) + drop(W %*% exp(2 * b[it])) / 2) *
       (1 - plogis(drop(Z %*% b[iz])))))
   numeric_G <- numDeriv::jacobian(functional, unname(b))
-  quadrature <- integrate(function(z) exp(sqrt(variance) * z) * dnorm(z), -12, 12)$value
+  variance_values <- unique(variance)
+  quadrature <- vapply(variance_values, function(v)
+    integrate(function(z) exp(sqrt(v) * z) * dnorm(z), -12, 12)$value, numeric(1))
+  vc_variance <- Reduce(`+`, purrr::map2(random_design, vc,
+    function(z, v) rowSums((z %*% v) * z)))
   stopifnot(max(abs(G - numeric_G) / pmax(1, abs(G))) < 1e-5,
             max(abs(mu / exp(variance / 2) - predict(m, grid, type = "response", re.form = NA))) < 1e-7,
-            abs(quadrature - exp(variance / 2)) < 1e-8,
+            max(abs(quadrature - exp(variance_values / 2))) < 1e-8,
             all(is.finite(se)), all(se > 0),
-            abs(sum(purrr::map_dbl(VarCorr(m)$cond, function(v) v[1, 1])) - variance) < 1e-9)
+            max(abs(vc_variance - variance)) < 1e-9,
+            all(vapply(seq_len(nrow(labels)), function(i)
+              length(unique(variance[A[i, ] > 0])) == 1L, logical(1))))
   # se is on the response scale; se/estimate is its log-scale delta SE.
   # Exponentiation produces positive intervals for the mean, not new plots.
   mutate(labels, model_id = id, estimate = estimate, se = se,
     lcl = estimate * exp(-qnorm(.975) * se / estimate),
     ucl = estimate * exp(qnorm(.975) * se / estimate),
-    total_random_variance = variance, integration_multiplier = exp(variance / 2))
+    total_random_variance = drop(A %*% variance),
+    integration_multiplier = drop(A %*% exp(variance / 2)))
 }
 ```
 
@@ -347,13 +373,15 @@ rd02_variances <- function(m, id) {
     variables <- strsplit(group, ":", fixed = TRUE)[[1]]
     data.frame(model_id = id, group = group,
                n_groups = nrow(unique(model.frame(m)[variables])),
-               variance = v[1, 1], sd = sqrt(v[1, 1]))
+               coefficient = colnames(v), variance = diag(v), sd = sqrt(diag(v)))
   }) |> purrr::list_rbind()
 }
 rd02_review_table <- function(x) {
   for (name in names(x)) {
     if (!is.numeric(x[[name]]) || is.integer(x[[name]])) next
-    if (grepl("AIC|log_likelihood", name, ignore.case = TRUE)) {
+    if (grepl("difference", name)) {
+      x[[name]] <- formatC(x[[name]], format = "g", digits = 4)
+    } else if (grepl("AIC|log_likelihood", name, ignore.case = TRUE)) {
       x[[name]] <- sprintf("%.2f", x[[name]])
     } else if (name == "p_value") {
       x[[name]] <- format.pval(x[[name]], digits = 5, eps = 1e-5)
@@ -371,17 +399,55 @@ rd02_review_table <- function(x) {
 
 We compare the thesis site-by-species structure, full site/macro/vegetation
 nesting, nesting plus site-by-species variation, and separate species models
-with site and macro-plot intercepts. Joint models share random-effect variances;
-separate models estimate them for each species. Joint conditional effects remain
-`treat*spp`, with species-specific zero and dispersion intercepts.
+with site and macro-plot intercepts. The original joint models share random-effect
+variances; the added diagonal models estimate site and macro-plot variances for
+each species. Joint conditional effects remain `treat*spp`, with species-specific
+zero and dispersion intercepts.
 
-The three joint structures are fitted both to all four categories (256 rows)
+The four joint structures are fitted both to all four categories (256 rows)
 and to RW/TO only (128 rows). The separate configuration uses the product of
 species likelihoods on the corresponding dataset. Summing log likelihoods and
 parameter counts assumes species independence; it provides a candidate
 likelihood, not evidence of independence. Individual 64-row AICs and AICs from
 different scopes must not be ranked together. The primary covariance structures
 are not nested, so we do not report an ordinary likelihood-ratio test.
+
+### Why add species-specific diagonal variances? {#rd02-diagonal-rationale}
+
+Does a common site variance hide biologically relevant differences in how species
+respond to the study's contrasting sites? We expect both redwood and tanoak to
+benefit from light, with a stronger regeneration growth response in redwood.
+North- and south-facing slopes provide a reason to consider different magnitudes
+of among-site variation. This is a scientific motivation for the candidate, not
+evidence that aspect or light caused the fitted differences: neither enters this
+model as a measured predictor.
+
+The term `(1 | site:spp)` gives each site-species combination its own deviation,
+but draws all deviations from one common-variance distribution. In contrast,
+`diag(0 + spp | site)` estimates one variance for each species and fixes their
+cross-species correlations to zero. We use the no-intercept species indicators;
+`diag(spp | site)` instead constrains independent intercept and contrast
+coefficients, which imposes reference-dependent species variances and covariance.
+See the [glmmTMB covariance documentation](https://glmmtmb.github.io/glmmTMB/articles/covstruct.html).
+
+We pair the species-specific site effects with
+`diag(0 + spp | site:treat)`. Macro plots received the treatments, and their four
+vegetation plots are subsamples. Retaining these terms preserves that clustering
+level even when its estimated variance approaches zero; it does not guarantee
+well-calibrated uncertainty. We omit a vegetation-plot term: each species has one
+observation per vegetation plot, and the existing joint plot-intercept estimates
+are near zero. A shared plot intercept could represent cross-species dependence,
+but would impose a common proportional plot effect that this candidate does not
+attempt to estimate.
+
+The resulting diagonal model has the same species-specific mean, zero,
+dispersion, and site/macro variance parameters as the separate fits. Its likelihood
+factorizes by species, so agreement with their summed likelihood is expected;
+joint fitting does not add replication or test biological independence. Four sites
+still weakly inform each site variance. The expectation of positive responses in
+both species could also imply positive cross-species site covariance, which this
+diagonal structure does not estimate. This comparison examines unequal variance
+without claiming to identify that covariance or the light-response mechanism.
 
 ### Authoritative species models {#rd02-05}
 
@@ -519,7 +585,8 @@ We'll keep the same 256 rows in each joint comparison and verify the thesis
 structure's likelihood against its saved reference. Unconditional DHARMa
 simulations assess the fitted hierarchy; grouped residuals inspect site,
 macro-plot, and vegetation-plot patterns. Their evidence is collected for the
-consolidated review rather than repeated in separate figures.
+consolidated review rather than repeated in separate figures. We show the new
+diagonal fit's numerical record here before comparing its scientific implications.
 
 ```{r}
 #| label: rd02-02
@@ -540,7 +607,8 @@ if (recompute) {
   formulas <- list(
     thesis_site_species = ba_ha ~ treat * spp + (1 | site:spp),
     full_nested = ba_ha ~ treat * spp + (1 | site/treat/plot),
-    nested_plus_site_species = ba_ha ~ treat * spp + (1 | site/treat/plot) + (1 | site:spp)
+    nested_plus_site_species = ba_ha ~ treat * spp + (1 | site/treat/plot) + (1 | site:spp),
+    diagonal_site_macro = ba_ha ~ treat * spp + diag(0 + spp | site) + diag(0 + spp | site:treat)
   )
   models <- list()
   records <- list()
@@ -548,9 +616,11 @@ if (recompute) {
   diagnostic_records <- list()
 
   for (id in names(formulas)) {
-    message(if (isTRUE(params$refit)) "Fitting " else "Reading saved fit ", id)
+    fit_requested <- isTRUE(params$refit) ||
+      (isTRUE(params$refit_diagonal) && id == "diagonal_site_macro")
+    message(if (fit_requested) "Fitting " else "Reading saved fit ", id)
     fit_warnings <- character()
-    fit <- if (isTRUE(params$refit)) {
+    fit <- if (fit_requested) {
   withCallingHandlers(
       glmmTMB(formulas[[id]], data = d, family = ziGamma(link = "log"),
               ziformula = ~spp, dispformula = ~spp,
@@ -563,12 +633,12 @@ if (recompute) {
     } else {
       read_saved_model(file.path(out, "models", paste0(id, ".rds")), "RD02")
     }
-    if (!isTRUE(params$refit)) {
+    if (!fit_requested) {
       saved_register <- read.csv(file.path(out, "tables/rd02-model-comparison.csv"))
       fit_warnings <- stats::na.omit(saved_register$warnings[saved_register$model_id == id])
     }
     models[[id]] <- fit
-    if (isTRUE(params$refit)) saveRDS(fit, file.path(out, "models", paste0(id, ".rds")))
+    if (fit_requested) saveRDS(fit, file.path(out, "models", paste0(id, ".rds")))
     vc <- VarCorr(fit)$cond
     variance_records[[id]] <- rd02_variances(fit, id)
     ll <- logLik(fit)
@@ -615,6 +685,8 @@ if (recompute) {
   write.csv(variance_table, file.path(out, "tables/rd02-random-effect-variances.csv"), row.names = FALSE)
   write.csv(diagnostics, file.path(out, "tables/rd02-dharma-tests.csv"), row.names = FALSE)
 }
+rd02_review_table(read.csv(file.path(joint_root, "tables/rd02-model-comparison.csv")) |>
+  filter(model_id == "diagonal_site_macro"))
 ```
 
 Near-zero variances warrant checking the fitting route. We'll read the saved
@@ -630,10 +702,12 @@ objective-agreement tolerance.
 if (recompute) {
   # Boundary components warrant an optimizer/start sensitivity check. Start each
   # random SD at 0.3 rather than inheriting the near-zero nlminb estimates.
-  optimizer_checks <- purrr::map(c("full_nested", "nested_plus_site_species"), function(id) {
+  optimizer_checks <- purrr::map(c("full_nested", "nested_plus_site_species", "diagonal_site_macro"), function(id) {
     message("Checking BFGS optimizer/start sensitivity: ", id)
+    fit_requested <- isTRUE(params$refit) ||
+      (isTRUE(params$refit_diagonal) && id == "diagonal_site_macro")
     warnings <- character()
-    check <- if (isTRUE(params$refit)) {
+    check <- if (fit_requested) {
   withCallingHandlers(update(models[[id]],
       start = list(theta = rep(log(.3), sum(names(models[[id]]$fit$par) == "theta"))),
       control = glmmTMBControl(optimizer = optim, optArgs = list(method = "BFGS"),
@@ -645,7 +719,11 @@ if (recompute) {
     } else {
       read_saved_model(file.path(out, "models", paste0(id, "-bfgs.rds")), "RD02")
     }
-    if (isTRUE(params$refit)) saveRDS(check, file.path(out, "models", paste0(id, "-bfgs.rds")))
+    if (!fit_requested) {
+      saved_checks <- read.csv(file.path(out, "tables/rd02-optimizer-sensitivity.csv"))
+      warnings <- stats::na.omit(saved_checks$warnings[saved_checks$model_id == id])
+    }
+    if (fit_requested) saveRDS(check, file.path(out, "models", paste0(id, "-bfgs.rds")))
     difference <- check$fit$objective - models[[id]]$fit$objective
     stopifnot(check$fit$convergence == 0, abs(difference) < 1e-4)
     data.frame(model_id = id, optimizer = "BFGS; initial random SDs 0.3",
@@ -728,10 +806,11 @@ if (recompute) {
 
 ### Joint RW/TO alternatives {#rd02-03}
 
-We'll fit or read the three joint structures on the same 128 RW/TO rows.
+We'll fit or read the four joint structures on the same 128 RW/TO rows.
 Separate-species evidence comes directly from the authoritative selected fits,
 including diagnostics and optimizer records. This retains the focused same-data
-comparison while removing duplicate separate-model computation.
+comparison while removing duplicate separate-model computation. The new diagonal
+fit's numerical record is displayed immediately below.
 
 ```{r}
 #| label: rd02-03
@@ -751,16 +830,20 @@ if (recompute) {
   spec <- list(
     joint_site_species_rwto = list(formula = ba_ha ~ treat*spp + (1 | site:spp)),
     joint_full_nested_rwto = list(formula = ba_ha ~ treat*spp + (1 | site/treat/plot)),
-    joint_combined_rwto = list(formula = ba_ha ~ treat*spp + (1 | site/treat/plot) + (1 | site:spp))
+    joint_combined_rwto = list(formula = ba_ha ~ treat*spp + (1 | site/treat/plot) + (1 | site:spp)),
+    joint_diagonal_site_macro_rwto = list(formula = ba_ha ~ treat*spp +
+      diag(0 + spp | site) + diag(0 + spp | site:treat))
   )
   models <- list()
-  fit_records <- variance_records <- diagnostic_records <- list()
+  fit_records <- variance_records <- diagnostic_records <- optimizer_records <- list()
   for (id in names(spec)) {
     item <- spec[[id]]
     model_data <- d
-    message(if (isTRUE(params$refit)) "Fitting " else "Reading saved fit ", id)
+    fit_requested <- isTRUE(params$refit) ||
+      (isTRUE(params$refit_diagonal) && id == "joint_diagonal_site_macro_rwto")
+    message(if (fit_requested) "Fitting " else "Reading saved fit ", id)
     warnings <- character()
-    m <- if (isTRUE(params$refit)) {
+    m <- if (fit_requested) {
   withCallingHandlers(
       glmmTMB(item$formula, data = model_data, family = ziGamma(link = "log"),
               ziformula = ~spp, dispformula = ~spp,
@@ -772,12 +855,12 @@ if (recompute) {
     } else {
       read_saved_model(file.path(out, "models", paste0(id, ".rds")), "RD02")
     }
-    if (!isTRUE(params$refit)) {
+    if (!fit_requested) {
       saved_register <- read.csv(file.path(out, "tables/rd02-species-fit-register.csv"))
       warnings <- stats::na.omit(saved_register$warnings[saved_register$model_id == id])
     }
     models[[id]] <- m
-    if (isTRUE(params$refit)) saveRDS(m, file.path(out, "models", paste0(id, ".rds")))
+    if (fit_requested) saveRDS(m, file.path(out, "models", paste0(id, ".rds")))
     vc <- VarCorr(m)$cond
     variance_records[[id]] <- rd02_variances(m, id)
     ll <- logLik(m)
@@ -797,6 +880,29 @@ if (recompute) {
         width = 1200, height = 1000, res = 160)
     plotResiduals(sim, form = model_data$treat)
     dev.off()
+    if (id == "joint_diagonal_site_macro_rwto") {
+      check_warnings <- character()
+      check <- if (fit_requested) {
+        withCallingHandlers(update(m,
+          start = list(theta = rep(log(.3), sum(names(m$fit$par) == "theta"))),
+          control = glmmTMBControl(optimizer = optim, optArgs = list(method = "BFGS"),
+            optCtrl = list(maxit = 10000, reltol = 1e-10))),
+          warning = function(w) {
+            check_warnings <<- c(check_warnings, conditionMessage(w))
+            invokeRestart("muffleWarning")
+          })
+      } else read_saved_model(file.path(out, "models", paste0(id, "-bfgs.rds")), "RD02")
+      if (!fit_requested) {
+        saved_checks <- read.csv(file.path(out, "tables/rd02-species-optimizer-checks.csv"))
+        check_warnings <- stats::na.omit(saved_checks$warnings[saved_checks$model_id == id])
+      }
+      if (fit_requested) saveRDS(check, file.path(out, "models", paste0(id, "-bfgs.rds")))
+      difference <- check$fit$objective - m$fit$objective
+      stopifnot(check$fit$convergence == 0, abs(difference) < 1e-4)
+      optimizer_records[[id]] <- data.frame(model_id = id, convergence = check$fit$convergence,
+        pd_hessian = check$sdr$pdHess, objective_difference_from_nlminb = difference,
+        warnings = paste(unique(check_warnings), collapse = " | "))
+    }
   }
   # Reuse authoritative RW/TO fit, variance, diagnostic, and optimizer records.
   primary_var <- read.csv(file.path(selected_root, "tables/rd02-selected-species-variances.csv"))
@@ -814,12 +920,15 @@ if (recompute) {
   write.csv(diagnostics, file.path(out, "tables/rd02-species-dharma-tests.csv"), row.names = FALSE)
   primary_opt <- read.csv(file.path(selected_root, "tables/rd02-selected-species-optimizer-checks.csv")) |>
     filter(spp %in% c("rw", "to")) |> mutate(model_id = paste0(spp, "_site_macro")) |> select(-spp)
-  write.csv(primary_opt, file.path(out, "tables/rd02-species-optimizer-checks.csv"), row.names = FALSE)
+  write.csv(bind_rows(primary_opt, bind_rows(optimizer_records)),
+    file.path(out, "tables/rd02-species-optimizer-checks.csv"), row.names = FALSE)
 }
+rd02_review_table(read.csv(file.path(species_root, "tables/rd02-species-fit-register.csv")) |>
+  filter(model_id == "joint_diagonal_site_macro_rwto"))
 ```
 
 We'll sum the selected RW/TO log likelihoods and parameter counts. The identity
-$AIC=-2\ell+2k$ is checked on all four 128-row alternatives.
+$AIC=-2\ell+2k$ is checked on all five 128-row alternatives.
 
 ```{r}
 #| label: rd02-03-paired-aic
@@ -848,7 +957,7 @@ if (recompute) {
 ```
 
 We'll calculate joint RW/TO integrated means and reuse the eight selected
-RW/TO estimates exactly. The collection retains 32 comparison cells; reuse is
+RW/TO estimates exactly. The collection retains 40 comparison cells; reuse is
 not described as independent numerical validation.
 
 ```{r}
@@ -865,7 +974,7 @@ if (recompute) {
     filter(spp %in% c("rw", "to")) |>
     select(treat, spp, model_id, estimate, se, lcl, ucl, total_random_variance, integration_multiplier)
   estimates <- bind_rows(primary_means, estimates)
-  stopifnot(nrow(estimates) == 32L)
+  stopifnot(nrow(estimates) == 40L)
   write.csv(estimates, file.path(out, "tables/rd02-species-integrated-estimates.csv"), row.names = FALSE)
   provenance <- list(
     task = "RD02 separate species with site and macro-plot random effects",
@@ -876,7 +985,7 @@ if (recompute) {
     paired_likelihood = "sum species log likelihoods and parameter counts; assumes independence between species",
     diagnostics = "1000 unconditional DHARMa simulations, seed 20261030, plus treatment plots",
     optimizer_sensitivity = "BFGS from all random SDs 0.3; objective agreement checked within 1e-4",
-    prediction_checks = "24 joint means checked here; 8 RW/TO means reused from the 16 checked selected means",
+    prediction_checks = "32 joint means checked here; 8 RW/TO means reused from the 16 checked selected means",
     intervals = "95% log-scale delta method including all conditional random SD uncertainty; approximate near boundary",
     review = "plot-level RE omitted as requested; 4 site and 16 nested macro-plot groups per species",
     selection = "joint sensitivity fits plus authoritative selected RW/TO fits; no duplicate separate fitting"
@@ -888,7 +997,7 @@ if (recompute) {
 
 ## Consolidated sensitivity review {#rd02-04}
 
-We'll assemble the eight-configuration fit record with separate AIC scopes.
+We'll assemble the ten-configuration fit record with separate AIC scopes.
 BIC remains downloadable; the review focuses on log likelihood, parameter count,
 AIC, and within-scope differences. Supporting tables are folded beneath the
 figure so the treatment patterns remain easy to inspect.
@@ -925,12 +1034,12 @@ if (recompute) {
   fit2 <- read_input("fit2")
   selected_components <- read_input("selected_fit")
   meta <- data.frame(
-    model_id = c("thesis_site_species", "full_nested", "nested_plus_site_species",
-                 "joint_site_species_rwto", "joint_full_nested_rwto", "joint_combined_rwto",
+    model_id = c("thesis_site_species", "full_nested", "nested_plus_site_species", "diagonal_site_macro",
+                 "joint_site_species_rwto", "joint_full_nested_rwto", "joint_combined_rwto", "joint_diagonal_site_macro_rwto",
                  "separate_site_macro_pair", "selected_separate_four_species"),
-    fit_scope = c(rep("Four-species fits", 3), rep("RW/TO fits", 4), "Four-species fits"),
-    model_label = c("Site x species", "Full nesting", "Nested + site x species",
-                    "Site x species", "Full nesting", "Nested + site x species", "Separate: site + macro plot",
+    fit_scope = c(rep("Four-species fits", 4), rep("RW/TO fits", 5), "Four-species fits"),
+    model_label = c("Site x species", "Full nesting", "Nested + site x species", "Diagonal: site + macro plot",
+                    "Site x species", "Full nesting", "Nested + site x species", "Diagonal: site + macro plot", "Separate: site + macro plot",
                     "Separate: site + macro plot")
   )
   annotate <- function(x) {
@@ -967,9 +1076,9 @@ if (recompute) {
     group_by(fit_scope) |>
     mutate(delta_AIC_within_scope = AIC - min(AIC)) |>
     ungroup() |>
-    arrange(match(model_id, c("thesis_site_species", "full_nested", "nested_plus_site_species",
+    arrange(match(model_id, c("thesis_site_species", "full_nested", "nested_plus_site_species", "diagonal_site_macro",
                              "selected_separate_four_species", "joint_site_species_rwto",
-                             "joint_full_nested_rwto", "joint_combined_rwto", "separate_site_macro_pair")))
+                             "joint_full_nested_rwto", "joint_combined_rwto", "joint_diagonal_site_macro_rwto", "separate_site_macro_pair")))
   out <- file.path(regeneration_root, "overall-sensitivity")
   for (directory in c("tables", "figures", "manifests")) {
     dir.create(file.path(out, directory), recursive = TRUE, showWarnings = FALSE)
@@ -980,7 +1089,7 @@ if (recompute) {
 
 We'll assemble means, variances, and row-level diagnostics, retaining component
 model identities. Existing completeness and exact source-to-assembly checks
-protect all 96 mean/interval cells. Grouped residual checks remain in their
+protect all 120 mean/interval cells. Grouped residual checks remain in their
 joint source rather than being mislabeled as row tests.
 
 ```{r}
@@ -996,6 +1105,8 @@ if (recompute) {
                                        component_model_id == "to_site_macro" ~ "Tanoak",
                                        component_model_id == "df_site_macro" ~ "Douglas-fir",
                                        component_model_id == "other_site_macro" ~ "Other species",
+                                       !is.na(coefficient) & startsWith(coefficient, "spp") ~
+                                         unname(species_labels[sub("^spp", "", coefficient)]),
                                        TRUE ~ "Shared variance"))
   diagnostics <- bind_rows(
     annotate(filter(read_input("diag4"), scope == "species_plot_rows")),
@@ -1014,12 +1125,12 @@ if (recompute) {
                      annotate(select(read_input("mean2"), all_of(mean_columns))),
                      annotate_selected(select(read_input("selected_mean"), all_of(mean_columns))))
   stopifnot(
-    nrow(fit) == 8L, all(fit$convergence == 0), all(fit$pd_hessian),
+    nrow(fit) == 10L, all(fit$convergence == 0), all(fit$pd_hessian),
     all(fit$n[fit$fit_scope == "Four-species fits"] == 256L),
     all(fit$n[fit$fit_scope == "RW/TO fits"] == 128L),
     max(abs(fit$AIC - (-2 * fit$log_likelihood + 2 * fit$k))) < 1e-8,
     max(abs(fit$BIC[match(fit4$model_id, fit$model_id)] - fit4$BIC)) < 1e-8,
-    nrow(variances) == 28L, nrow(diagnostics) == 48L, nrow(means) == 96L,
+    nrow(variances) == 40L, nrow(diagnostics) == 56L, nrow(means) == 120L,
     !anyDuplicated(means[, c("model_id", "spp", "treat")]),
     all(is.finite(means$estimate)), all(is.finite(means$se)),
     all(means$lcl <= means$estimate), all(means$ucl >= means$estimate)
@@ -1053,7 +1164,7 @@ fit evidence below addresses relative model support.
 #| echo: true
 #| message: false
 #| warning: false
-#| fig-cap: "Basal-area sensitivity under four covariance/species configurations. Top panels use 256 four-category rows; bottom panels use 128 RW/TO rows. Points integrate all fitted random intercepts and include zeros; ranges are full-covariance log-scale delta-method 95% intervals for means. Panel-specific vertical scales are used."
+#| fig-cap: "Basal-area sensitivity under five covariance/species configurations. Top panels use 256 four-category rows; bottom panels use 128 RW/TO rows. Diagonal models allow species-specific site and macro-plot variances and fix cross-species correlations to zero. Points integrate all fitted random effects and include zeros; ranges are full-covariance log-scale delta-method 95% intervals for means. Panel-specific vertical scales are used. Diagonal and separate estimates nearly coincide; their horizontal positions are offset for visibility."
 #| out-width: "100%"
 
 if (recompute) {
@@ -1062,7 +1173,7 @@ if (recompute) {
            model_label = factor(model_label, levels = unique(meta$model_label)),
            spp = factor(spp, levels = c("rw", "to")),
            treat = factor(treat, levels = c("gs", "ld", "ha", "hd")))
-  stopifnot(nrow(display) == 64L,
+  stopifnot(nrow(display) == 80L,
             all(count(display, fit_scope, model_label, spp)$n == 4L))
   position <- position_dodge(width = .66)
   figure <- ggplot(display, aes(treat, estimate, ymin = lcl, ymax = ucl,
@@ -1071,8 +1182,8 @@ if (recompute) {
     geom_point(size = 2.3, position = position) +
     facet_wrap(vars(fit_scope, spp), ncol = 2, scales = "free_y",
                labeller = labeller(spp = c(rw = "Redwood", to = "Tanoak"))) +
-    scale_color_manual(values = c("#3F51B5", "#C96F38", "#237A57", "#8B4678")) +
-    scale_shape_manual(values = c(16, 17, 15, 18)) +
+    scale_color_manual(values = c("#3F51B5", "#C96F38", "#237A57", "#007C91", "#8B4678")) +
+    scale_shape_manual(values = c(16, 17, 15, 1, 18)) +
     scale_x_discrete(labels = toupper) +
     scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, .06))) +
     labs(x = "Retention treatment", y = expression(Basal~area~(m^2 %.% ha^-1)), color = NULL, shape = NULL) +
@@ -1087,7 +1198,7 @@ if (recompute) {
   yaml::write_yaml(list(
     task = "RD02 overall sensitivity displays and tables", models_refitted = FALSE,
     inputs = "Current comparison and selected-model tables from this task",
-    configurations = 8L, estimate_rows = 96L, focal_figure_points = 64L,
+    configurations = 10L, estimate_rows = 120L, focal_figure_points = 80L,
     selected_primary = "selected_separate_four_species: user-selected species-specific site/macro-plot models",
     AIC = "Delta AIC calculated separately within the 256-row and 128-row data scopes",
     BIC = "-2 log likelihood + log(n) times parameter count; n=128 for the combined separate pair",
@@ -1095,7 +1206,7 @@ if (recompute) {
     estimates = "Original estimates and interval limits copied exactly; no inference recalculated",
     figure = "Two species columns; fitting-data scopes in rows; panel-specific vertical scales"
   ), file.path(out, "manifests/rd02-overall-provenance.yml"))
-  message("Assembled eight configurations, 96 unchanged mean/interval cells, and 64 focal figure points.")
+  message("Assembled ten configurations, 120 unchanged mean/interval cells, and 80 focal figure points.")
 }
 
 knitr::include_graphics("outputs/regeneration/overall-sensitivity/figures/rd02-overall-sensitivity.png")
@@ -1105,7 +1216,8 @@ knitr::include_graphics("outputs/regeneration/overall-sensitivity/figures/rd02-o
 <summary>Candidate specifications, fit statistics, and complete comparison estimates</summary>
 
 We'll pair each configuration with its data scope and species assumptions.
-Separate likelihoods assume independence; joint fits share variance parameters.
+Separate likelihoods assume independence; the original joint fits share variance
+parameters, while the diagonal joint fits allow species-specific variances.
 
 ```{r}
 #| label: rd02-candidate-specifications
@@ -1117,6 +1229,7 @@ specifications <- read.csv("outputs/regeneration/overall-sensitivity/tables/rd02
   select(model_id, fit_scope, model_label, selected_primary) |>
   mutate(random_structure = case_when(
     grepl("separate", model_id) ~ "Separate species: (1 | site/treat)",
+    grepl("diagonal", model_id) ~ "diag(0 + spp | site) + diag(0 + spp | site:treat)",
     grepl("combined|nested_plus", model_id) ~ "(1 | site/treat/plot) + (1 | site:spp)",
     grepl("full_nested", model_id) ~ "(1 | site/treat/plot)",
     TRUE ~ "(1 | site:spp)"),
@@ -1133,7 +1246,7 @@ not a second independent selection.
 #| echo: true
 #| message: false
 #| warning: false
-#| tbl-cap: "Same-data sensitivity-model fit. Delta AIC is within each dataset. Separate configurations sum component likelihoods and parameter counts, assuming independence. All fits converge with positive-definite Hessians."
+#| tbl-cap: "Same-data sensitivity-model fit. Delta AIC is within each dataset. Separate configurations sum component likelihoods and parameter counts, assuming independence. All primary fits converge with positive-definite Hessians; optimizer sensitivity is reviewed separately."
 
 rd02_cmp_fit <- read.csv("outputs/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv")
 rd02_fit_table <- rd02_cmp_fit |>
@@ -1175,6 +1288,60 @@ Redwood means follow GS > LD > HA > HD; tanoak follows GS > LD > HD > HA across
 the configurations. Absolute means and interval widths change, particularly for
 redwood GS. The RW/TO ordering within HD changes with shared full nesting.
 These are descriptive patterns in estimates, not treatment or species tests.
+
+### What did the diagonal fits add? {#rd02-diagonal-results}
+
+We'll compare each diagonal fit with the corresponding separate-species
+configuration on the same rows. Agreement is expected from their factorized
+likelihoods; it checks the implementation without providing independent evidence
+for species independence or model adequacy. Relative differences retain the
+small numerical discrepancies rather than rounding them to apparent identity.
+
+```{r}
+#| label: rd02-diagonal-agreement
+#| echo: true
+#| message: false
+#| warning: false
+
+rd02_cmp_means <- read.csv("outputs/regeneration/overall-sensitivity/tables/rd02-overall-integrated-estimates.csv")
+diagonal_agreement <- purrr::map2(
+  c("diagonal_site_macro", "joint_diagonal_site_macro_rwto"),
+  c("selected_separate_four_species", "separate_site_macro_pair"), function(joint_id, separate_id) {
+    joint <- filter(rd02_cmp_means, model_id == joint_id)
+    separate <- filter(rd02_cmp_means, model_id == separate_id)
+    index <- match(paste(joint$spp, joint$treat), paste(separate$spp, separate$treat))
+    stopifnot(!anyNA(index), nrow(joint) == nrow(separate))
+    separate <- separate[index, ]
+    fit_joint <- filter(rd02_cmp_fit, model_id == joint_id)
+    fit_separate <- filter(rd02_cmp_fit, model_id == separate_id)
+    data.frame(Data = fit_joint$fit_scope, Parameters = fit_joint$k,
+      AIC = fit_joint$AIC, delta_AIC = fit_joint$delta_AIC_within_scope,
+      log_likelihood_difference = fit_joint$log_likelihood - fit_separate$log_likelihood,
+      max_mean_difference_percent = 100 * max(abs(joint$estimate / separate$estimate - 1)),
+      max_SE_difference_percent = 100 * max(abs(joint$se / separate$se - 1)))
+  }) |> purrr::list_rbind()
+stopifnot(max(abs(diagonal_agreement$log_likelihood_difference)) < 1e-4)
+rd02_review_table(diagonal_agreement)
+```
+
+The diagonal fits have AIC 508.78 for RW/TO and 646.78 for all four categories,
+with within-scope differences of 3.64 and 3.92 from the site-by-species leaders.
+They reproduce the separate configurations' log likelihoods within 5 × 10⁻⁹;
+integrated means differ by less than 0.0002%, and SEs by less than 0.0006%.
+The joint parameterization therefore adds no material fit or explanatory power
+over separate fitting and leaves the selected publication estimates unchanged.
+It confirms that allowing unequal species variances is compatible with a joint
+model; joint versus separate syntax is not itself the scientific distinction.
+
+Both scopes recover site variances near 0.522 for redwood and 0.0242 for tanoak.
+The four-category fit additionally estimates approximately 1.087 for other species
+and effectively zero for Douglas-fir. All diagonal macro-plot SDs are below 0.001.
+The redwood/tanoak difference is consistent with the motivating hypothesis of
+unequal environmental sensitivity, but four sites cannot identify a light or
+aspect mechanism or establish a precise variance ratio. These candidates also
+retain treatment-invariant zero probabilities and zero cross-species covariance.
+The comparison with the AIC leader changes both variance flexibility and the
+presence of macro-plot terms; its AIC difference does not isolate either choice.
 
 ### Selected-model variance and numerical evidence {#rd02-separate-species-review}
 
@@ -1259,6 +1426,12 @@ establish adequacy of the treatment-invariant zero process. Unconditional and
 grouped checks also have limited power for remaining dependence. Treatment
 residual plots remain available with the saved model diagnostics.
 
+The two diagonal fits likewise have no row-level flags among these four tests;
+the four-category fit's grouped checks also have no flags at the 0.05 reference.
+Its saved residual-versus-prediction, species, and treatment plots, and the RW/TO
+residual and treatment plots, show no flagged pattern. These checks do not resolve
+the zero-process assumption, cross-species dependence, or four-site uncertainty.
+
 We'll show the larger historical-model tail check and its flagged observations
 together, retaining every observation in the analysis.
 
@@ -1290,7 +1463,17 @@ sufficiency of the covariance structure or interval coverage.
 #| warning: false
 
 rd02_review_table(read.csv(file.path(joint_root, "tables/rd02-optimizer-sensitivity.csv")))
+rd02_review_table(read.csv(file.path(species_root, "tables/rd02-species-optimizer-checks.csv")) |>
+  filter(model_id == "joint_diagonal_site_macro_rwto"))
 ```
+
+Both primary diagonal fits converge with positive-definite Hessians and maximum
+absolute gradients below 4 × 10⁻⁶. BFGS from random SDs of 0.3 reaches the same
+objective within 2 × 10⁻⁸ in both scopes, satisfying the existing 10⁻⁴ tolerance.
+The RW/TO BFGS Hessian is positive definite; the four-category BFGS fit reports a
+non-positive-definite Hessian at essentially the same objective. Agreement in
+objective values therefore does not establish stable curvature for the boundary
+components, and the four-category intervals retain that numerical qualification.
 
 ## Publication estimates and display
 
@@ -1342,8 +1525,8 @@ zero-effect target or a separately recomputed RW/TO pair.
 #| out-width: "100%"
 
 # fig-rd02-regeneration-basal-area
+out <- selected_root
 if (recompute) {
-  out <- selected_root
   estimates <- read.csv(file.path(out, "tables/rd02-selected-species-estimates.csv")) |>
     mutate(treat = factor(treat, levels = c("gs", "ld", "ha", "hd")))
   figure <- ggplot(filter(estimates, spp %in% c("rw", "to")),
@@ -1364,9 +1547,12 @@ if (recompute) {
   figure_name <- "rd02-selected-species-basal-area"
   ggsave(file.path(out, "figures", paste0(figure_name, ".png")), figure, width = 7, height = 4.4, dpi = 320, bg = "white")
   ggsave(file.path(out, "figures", paste0(figure_name, ".pdf")), figure, width = 7, height = 4.4)
-  provenance <- list(
+  writeLines(capture.output(sessionInfo()), file.path(out, "manifests/rd02-selected-species-session-info.txt"))
+}
+# Selection metadata follows the current decision on saved-result renders too.
+provenance <- list(
     task = "RD02 selected species-category models", selected_structure = "four independent species-category models",
-    selection_basis = "User selected biological interpretability and conventional species-specific analysis; not minimum AIC",
+    selection_basis = "User confirmed four separate species models after joint diagonal sensitivity review; species-specific biological interpretation and variances, not minimum AIC",
     categories = unname(species_labels), formula = "ba_ha ~ treat + (1 | site/treat)",
     family = "zero-inflated Gamma; conditional log link; zero ~1; dispersion ~1",
     design = "64 vegetation-plot observations per category; 4 site and 16 nested macro-plot intercept groups; no plot-level RE",
@@ -1376,11 +1562,9 @@ if (recompute) {
     diagnostics = "1000 unconditional DHARMa simulations per category; seed 20261030; residual plots by treatment",
     artifacts = "RW/TO figure in Results; four-category estimate table in supplement",
     figure_layout = "two species panels with different vertical scales to retain interval legibility",
-    status = "model structure selected; updated displays and diagnostics available for review"
+    status = "RD02 complete; four separate species models, RW/TO Results figure, and four-category supplement table accepted for publication drafting"
   )
-  yaml::write_yaml(provenance, file.path(out, "manifests/rd02-selected-species-provenance.yml"))
-  writeLines(capture.output(sessionInfo()), file.path(out, "manifests/rd02-selected-species-session-info.txt"))
-}
+yaml::write_yaml(provenance, file.path(out, "manifests/rd02-selected-species-provenance.yml"))
 
 knitr::include_graphics("outputs/regeneration/selected-species-models/figures/rd02-selected-species-basal-area.png")
 ```
@@ -1392,20 +1576,24 @@ remain the numerical source for subsequent claims.
 
 ## Summary and model decision {#rd02-review-recommendation}
 
-We retain four separate hurdle-Gamma models with treatment effects and site and
-nested macro-plot intercepts. They express species-specific biological responses
-and variation; joint alternatives document sensitivity and stronger AIC support.
+We confirm four separate hurdle-Gamma models as the final selection, with
+treatment effects and site and nested macro-plot intercepts. They express species-specific biological responses
+and variation. The new joint diagonal models reproduce their fit and estimates
+without improving explanatory power; the common-variance site-by-species
+alternatives retain stronger AIC support.
 Treatment ordering is stable within species, but absolute means, interval widths,
 and some cross-species ordering depend on model structure. The historical figure
 now represents the actual thesis target; the publication figure represents
 integrated expected basal area including zeros.
 
-Selected fits and numerical checks support a coherent implementation, not
-unqualified inferential acceptance. Boundary variances, four-site estimation,
+RD02 is complete: the four separate models and their Results figure and
+supplementary estimates table are accepted for downstream publication drafting.
+Boundary variances, four-site estimation,
 treatment-invariant zero probabilities, and unassessed bootstrap interval behavior
-remain material limitations. Cross-species covariance and model-selection
-uncertainty are not estimated. Display review remains open; no new pairwise
-significance claims follow from this revision.
+remain material limitations, as does the four-category diagonal fit's BFGS
+Hessian warning at the same objective. Cross-species covariance and model-selection
+uncertainty are not estimated. Completion does not add new pairwise significance
+claims.
 
 RT01 owns regeneration Results drafting; M02 will adapt this framework for
 Methods. Sprout-height analysis stays in RD03 and broader cohort interpretation

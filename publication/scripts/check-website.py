@@ -143,7 +143,7 @@ class Document(HTMLParser):
             self.result_tables[self.result_table][-1][-1] += data
 
 
-def rd02_review_errors(doc):
+def rd02_review_errors(doc, comparison_rows=None):
     errors = []
     for id in ("rd02-historical-details", "rd02-comparison-details"):
         if id not in doc.details_by_id or "open" in doc.details_by_id[id]:
@@ -154,6 +154,8 @@ def rd02_review_errors(doc):
             errors.append(f"{name} must be visible outside folded details")
     if doc.table_details.get("tbl-rd02-selected-species-estimates"):
         errors.append("Publication estimates table must remain unfolded")
+    if comparison_rows is not None and len(doc.result_tables.get("tbl-rd02-random-effects-fit", [])) != len(comparison_rows):
+        errors.append("Sensitivity table must render every saved model row")
     return errors
 
 
@@ -224,10 +226,11 @@ def check():
             if doc and doc.result_tables.get(label) != expected:
                 errors.append(f"{page}: rendered table cells differ from saved CSV: {label}")
     rd02 = documents.get(output / "task-rd02.html")
+    with (project / "outputs/regeneration/overall-sensitivity/tables/rd02-overall-model-comparison.csv").open(
+            encoding="utf-8", newline="") as stream:
+        comparison_rows = list(csv.reader(stream))
     if rd02:
-        errors.extend(f"task-rd02.html: {error}" for error in rd02_review_errors(rd02))
-    if rd02 and len(rd02.result_tables.get("tbl-rd02-random-effects-fit", [])) != 9:
-        errors.append("task-rd02.html: sensitivity table must render all eight model rows")
+        errors.extend(f"task-rd02.html: {error}" for error in rd02_review_errors(rd02, comparison_rows))
     import importlib.util
     spec = importlib.util.spec_from_file_location("workflow", project / "scripts/prepare-workflow.py")
     workflow = importlib.util.module_from_spec(spec)

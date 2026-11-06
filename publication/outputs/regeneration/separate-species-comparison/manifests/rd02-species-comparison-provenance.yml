@@ -7,6 +7,8 @@ candidate_formulas:
   joint_site_species_rwto: ba_ha ~ treat * spp + (1 | site:spp)
   joint_full_nested_rwto: ba_ha ~ treat * spp + (1 | site/treat/plot)
   joint_combined_rwto: ba_ha ~ treat * spp + (1 | site/treat/plot) + (1 | site:spp)
+  joint_diagonal_site_macro_rwto: ba_ha ~ treat * spp + diag(0 + spp | site) + diag(0
+    + spp | site:treat)
 joint_comparisons: all refitted on the SAME 128 RW/TO rows; no AIC comparison with
   earlier 256-row fits
 paired_likelihood: sum species log likelihoods and parameter counts; assumes independence
@@ -15,7 +17,7 @@ diagnostics: 1000 unconditional DHARMa simulations, seed 20261030, plus treatmen
   plots
 optimizer_sensitivity: BFGS from all random SDs 0.3; objective agreement checked within
   1e-4
-prediction_checks: 24 joint means checked here; 8 RW/TO means reused from the 16 checked
+prediction_checks: 32 joint means checked here; 8 RW/TO means reused from the 16 checked
   selected means
 intervals: 95% log-scale delta method including all conditional random SD uncertainty;
   approximate near boundary
