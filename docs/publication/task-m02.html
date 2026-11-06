@@ -281,7 +281,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#m02-files" id="toc-m02-files" class="nav-link active" data-scroll-target="#m02-files">Current repository files</a></li>
+  <li><a href="#m02-files" id="toc-m02-files" class="nav-link active" data-scroll-target="#m02-files">Current repository files</a>
+  <ul class="collapse">
+  <li><a href="#maintained-sources" id="toc-maintained-sources" class="nav-link" data-scroll-target="#maintained-sources">Maintained sources</a></li>
+  <li><a href="#consumed-inputs-and-references" id="toc-consumed-inputs-and-references" class="nav-link" data-scroll-target="#consumed-inputs-and-references">Consumed inputs and references</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -311,6 +315,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Status: Queued - after RT01/RT02.</strong> Working target: 1–1.5 manuscript pages.</p>
 <p><span id="m02-record"></span></p>
 <p>We’ll build the regeneration and sprout Methods around the measurements and models used in the accepted displays. The planned 1–1.5-page subsection should explain how the reported quantities are estimated, with expanded comparisons and secondary species detail linked in the supplement. That keeps the route from field observations to reported estimates easy to follow.</p>
+<p>For sprout heights, the <a href="./task-rd03.html#rd03-model-plan">RD03 review and proposal</a> now identify the selected-clump sampling target, four-site treatment replication, shared year-5 measurement in adjacent increments, and the distinction between zero-effect and integrated predictions. These choices remain under review; the final Methods must follow the selected model and prediction target.</p>
 <section id="m02-files" class="level2">
 <h2 class="anchored" data-anchor-id="m02-files">Current repository files</h2>
 <p>Paths below are relative to the repository root. Downloads are refreshed from the local checkout on every render.</p>
@@ -318,18 +323,31 @@ ul.task-list li input[type="checkbox"] {
 <summary>
 Browse current source files and outputs
 </summary>
+<p>Upstream analytical records: <a href="./task-rd02.html">RD02</a>, <a href="./task-rt01.html">RT01</a>, <a href="./task-rt02.html">RT02</a>, <a href="./task-rd03.html">RD03</a>.</p>
+<section id="maintained-sources" class="level3">
+<h3 class="anchored" data-anchor-id="maintained-sources">Maintained sources</h3>
 <ul>
 <li><code>publication/task-m02.qmd</code></li>
 <li><code>publication/sections/methods.qmd</code></li>
 <li><code>publication/sections/supplement.qmd</code></li>
 <li><code>publication/draft-methods.qmd</code></li>
+</ul>
+</section>
+<section id="consumed-inputs-and-references" class="level3">
+<h3 class="anchored" data-anchor-id="consumed-inputs-and-references">Consumed inputs and references</h3>
+<ul>
+<li><code>publication/task-rd02.qmd</code></li>
+<li><a href="repo-files/publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv">publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv</a></li>
+<li><a href="repo-files/publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml">publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml</a></li>
+<li><code>publication/task-rd03.qmd</code></li>
 <li><code>analysis/analysis/sprout_modeling.qmd</code></li>
 </ul>
-</details>
+</section></details>
 <p><a href="./task-list.html#m02">Back to this task in the task list</a>.</p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

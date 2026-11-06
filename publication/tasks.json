@@ -278,14 +278,29 @@
   {
     "id": "RD03",
     "title": "sprout-height display",
-    "status": "Queued",
-    "target": "1 figure, combined only if readable",
+    "status": "In progress - thesis review and analysis proposal",
+    "target": "One size/time figure; optional interval-rate companion",
     "files": [
-      "analysis/thesis/results.qmd",
-      "analysis/analysis/sprout_modeling.qmd",
-      "analysis/analysis/sprout_data_exploration.qmd"
+      "publication/task-rd03.qmd"
     ],
-    "summary": "The proposal reviews treatment, temporal, and 10-year redwood/tanoak sprout-height displays together, retaining the smallest set that preserves their distinct messages. The task page identifies the three thesis source figures and requires the chosen display to distinguish treatment from time without repeating the basal-area/density result."
+    "summary": "The [thesis review](task-rd03.qmd#rd03-review) verifies saved model specifications and historical means, identifies model/prose mismatches, and qualifies tallest-clump sampling and four-site precision. The [analysis proposal](task-rd03.qmd#rd03-model-plan) makes changes in site blocking, species covariance, temporal structure, response family, dispersion, and prediction targets explicit, drawing on RD02. The [display proposals](task-rd03.qmd#rd03-display-proposals) pair year-10 size with interval change, with an optional interval-rate companion. No publication fits, final model selection, or displays are accepted; sprout input export and field-cohort reconciliation remain prerequisites.",
+    "outputs": [],
+    "inputs": [
+      "analysis/thesis/methods.qmd",
+      "analysis/thesis/results.qmd",
+      "analysis/thesis/discussion.qmd",
+      "analysis/analysis/sprouts_import_data.qmd",
+      "analysis/analysis/sprout_modeling.qmd",
+      "analysis/analysis/sprout_data_exploration.qmd",
+      "analysis/analysis/fuel_modeling_round_3.qmd",
+      "publication/task-rd02.qmd",
+      "publication/inputs/thesis/manifest.json",
+      "analysis/sprout_modeling.rda",
+      "analysis/wrangled_sprouts.rda"
+    ],
+    "depends_on": [
+      "RD02"
+    ]
   },
   {
     "id": "RT01",
@@ -316,11 +331,19 @@
     "status": "Queued - after RD03",
     "target": "1–1.5 manuscript pages",
     "files": [
-      "publication/sections/results.qmd",
+      "publication/task-rt02.qmd",
+      "publication/sections/results.qmd"
+    ],
+    "summary": "After RD03 acceptance, the proposal is to report redwood and tanoak height/time findings in a distinct 1–1.5-page Results subsection. Combining it with RT01 remains conditional on one shared display and a clearer common message; the narrative must add sprout-development evidence without restating basal-area/density findings. The initial RD03 review is available, but model selection and display acceptance remain pending; later drafting must use the selected tallest-clump estimand and verified contrasts rather than inherited thesis significance language.",
+    "inputs": [
+      "publication/task-rd03.qmd",
       "analysis/thesis/results.qmd",
       "analysis/analysis/sprout_modeling.qmd"
     ],
-    "summary": "After RD03 acceptance, the proposal is to report redwood and tanoak height/time findings in a distinct 1–1.5-page Results subsection. Combining it with RT01 remains conditional on one shared display and a clearer common message; the narrative must add sprout-development evidence without restating basal-area/density findings."
+    "depends_on": [
+      "RD03"
+    ],
+    "outputs": []
   },
   {
     "id": "RT03",
@@ -381,20 +404,23 @@
       "publication/task-m02.qmd",
       "publication/sections/methods.qmd",
       "publication/sections/supplement.qmd",
-      "publication/draft-methods.qmd",
-      "analysis/analysis/sprout_modeling.qmd"
+      "publication/draft-methods.qmd"
     ],
-    "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02.",
+    "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02. RD03 now records the thesis-model audit and proposed sensitivities; its sampling target, four-site hierarchy, period definitions, and final prediction target must be resolved before sprout Methods are finalized.",
     "inputs": [
       "publication/task-rd02.qmd",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
-      "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml"
+      "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml",
+      "publication/task-rd03.qmd",
+      "analysis/analysis/sprout_modeling.qmd"
     ],
     "depends_on": [
       "RD02",
       "RT01",
-      "RT02"
-    ]
+      "RT02",
+      "RD03"
+    ],
+    "outputs": []
   },
   {
     "id": "M03",
@@ -436,11 +462,21 @@
     "status": "Queued - after sprout Results/Methods",
     "target": "1–1.5 manuscript pages",
     "files": [
-      "publication/sections/discussion.qmd",
+      "publication/task-d02.qmd",
+      "publication/sections/discussion.qmd"
+    ],
+    "summary": "The proposed sprout discussion connects accepted height patterns to light, retention, and cohort development. Its 1–1.5 pages must explain what the height evidence adds beyond basal area; combining it with D01 depends on whether the reviewed results support one inseparable management message. The initial RD03 review qualifies leader replacement, selected-clump sampling, shade-tolerance interpretation, and the proposed long-term retention threshold; these are limits for later discussion, not accepted new results.",
+    "inputs": [
+      "publication/task-rd03.qmd",
       "analysis/thesis/discussion.qmd",
       "analysis/analysis/sprout_modeling.qmd"
     ],
-    "summary": "The proposed sprout discussion connects accepted height patterns to light, retention, and cohort development. Its 1–1.5 pages must explain what the height evidence adds beyond basal area; combining it with D01 depends on whether the reviewed results support one inseparable management message."
+    "depends_on": [
+      "RD03",
+      "RT02",
+      "M02"
+    ],
+    "outputs": []
   },
   {
     "id": "D03",

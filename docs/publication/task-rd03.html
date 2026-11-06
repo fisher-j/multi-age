@@ -71,6 +71,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -281,7 +310,37 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#rd03-files" id="toc-rd03-files" class="nav-link active" data-scroll-target="#rd03-files">Current repository files</a></li>
+  <li><a href="#rd03-review" id="toc-rd03-review" class="nav-link active" data-scroll-target="#rd03-review">What height adds to the regeneration story</a>
+  <ul class="collapse">
+  <li><a href="#evidence-reviewed-and-numerical-limits" id="toc-evidence-reviewed-and-numerical-limits" class="nav-link" data-scroll-target="#evidence-reviewed-and-numerical-limits">Evidence reviewed and numerical limits</a></li>
+  </ul></li>
+  <li><a href="#rd03-thesis-models" id="toc-rd03-thesis-models" class="nav-link" data-scroll-target="#rd03-thesis-models">What the thesis models actually assume</a>
+  <ul class="collapse">
+  <li><a href="#interval-height-increment" id="toc-interval-height-increment" class="nav-link" data-scroll-target="#interval-height-increment">Interval height increment</a></li>
+  <li><a href="#height-at-year-10" id="toc-height-at-year-10" class="nav-link" data-scroll-target="#height-at-year-10">Height at year 10</a></li>
+  </ul></li>
+  <li><a href="#rd03-interpretation" id="toc-rd03-interpretation" class="nav-link" data-scroll-target="#rd03-interpretation">Validity and precision of the thesis interpretation</a>
+  <ul class="collapse">
+  <li><a href="#patterns-supported-by-the-saved-means" id="toc-patterns-supported-by-the-saved-means" class="nav-link" data-scroll-target="#patterns-supported-by-the-saved-means">Patterns supported by the saved means</a></li>
+  <li><a href="#corrections-needed-before-publication" id="toc-corrections-needed-before-publication" class="nav-link" data-scroll-target="#corrections-needed-before-publication">Corrections needed before publication</a></li>
+  <li><a href="#what-the-biological-interpretation-can-support" id="toc-what-the-biological-interpretation-can-support" class="nav-link" data-scroll-target="#what-the-biological-interpretation-can-support">What the biological interpretation can support</a></li>
+  </ul></li>
+  <li><a href="#rd03-model-plan" id="toc-rd03-model-plan" class="nav-link" data-scroll-target="#rd03-model-plan">Proposed revisions and sensitivity tests</a>
+  <ul class="collapse">
+  <li><a href="#why-the-shared-year-5-measurement-matters" id="toc-why-the-shared-year-5-measurement-matters" class="nav-link" data-scroll-target="#why-the-shared-year-5-measurement-matters">Why the shared year-5 measurement matters</a></li>
+  <li><a href="#selection-and-uncertainty-sequence" id="toc-selection-and-uncertainty-sequence" class="nav-link" data-scroll-target="#selection-and-uncertainty-sequence">Selection and uncertainty sequence</a></li>
+  </ul></li>
+  <li><a href="#rd03-display-proposals" id="toc-rd03-display-proposals" class="nav-link" data-scroll-target="#rd03-display-proposals">Proposed publication displays</a>
+  <ul class="collapse">
+  <li><a href="#main-figure-attained-height-and-temporal-change" id="toc-main-figure-attained-height-and-temporal-change" class="nav-link" data-scroll-target="#main-figure-attained-height-and-temporal-change">1. Main figure: attained height and temporal change</a></li>
+  <li><a href="#optional-companion-interval-rates-without-averaging-them-away" id="toc-optional-companion-interval-rates-without-averaging-them-away" class="nav-link" data-scroll-target="#optional-companion-interval-rates-without-averaging-them-away">2. Optional companion: interval rates without averaging them away</a></li>
+  </ul></li>
+  <li><a href="#where-this-leaves-rd03" id="toc-where-this-leaves-rd03" class="nav-link" data-scroll-target="#where-this-leaves-rd03">Where this leaves RD03</a></li>
+  <li><a href="#rd03-files" id="toc-rd03-files" class="nav-link" data-scroll-target="#rd03-files">Current repository files</a>
+  <ul class="collapse">
+  <li><a href="#maintained-sources" id="toc-maintained-sources" class="nav-link" data-scroll-target="#maintained-sources">Maintained sources</a></li>
+  <li><a href="#consumed-inputs-and-references" id="toc-consumed-inputs-and-references" class="nav-link" data-scroll-target="#consumed-inputs-and-references">Consumed inputs and references</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -308,9 +367,200 @@ ul.task-list li input[type="checkbox"] {
 
 
 <!-- Generated from tasks.json. -->
-<p><strong>Status: Queued.</strong> Working target: 1 figure, combined only if readable.</p>
+<p><strong>Status: In progress - thesis review and analysis proposal.</strong> Working target: One size/time figure; optional interval-rate companion.</p>
 <p><span id="rd03-record"></span></p>
-<p>Sprout height can show a different aspect of cohort development from basal area. We’ll review the treatment, annual-increment, and year-10 height displays together to find the smallest set that communicates that evidence for redwood and tanoak. The starting figures are <code>fig-sprout-ht-inc-treat</code>, <code>fig-sprout-ht-inc-year</code>, and <code>fig-sprout-ht-yr-10</code> in the thesis Results. The chosen figures and captions should distinguish treatment patterns from changes through time; remaining material can be considered for the supplement.</p>
+<section id="rd03-review" class="level2">
+<h2 class="anchored" data-anchor-id="rd03-review">What height adds to the regeneration story</h2>
+<p>Does retained overstory leave redwood with a developing cohort of tall sprouts, even where regeneration basal area is strongly reduced? Height helps distinguish the size attained by leading sprouts from the amount of regeneration occupying an area. We’ll review the thesis evidence before choosing a publication model and the smallest useful set of displays. The publication’s regeneration-first direction makes redwood development the main question, with tanoak providing ecological context; this task does not repeat RD02’s basal-area result.</p>
+<p><strong>This is an initial review and proposed analysis plan, not a model selection.</strong> No models have been refitted, no analytical outputs overwritten, and no new publication estimates or significance claims accepted. The expectation that the broad thesis patterns will persist guides the display proposals only.</p>
+<section id="evidence-reviewed-and-numerical-limits" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-reviewed-and-numerical-limits">Evidence reviewed and numerical limits</h3>
+<p>The review uses the thesis <a href="../thesis/methods.html#sprout-heights">Methods</a>, <a href="../thesis/results.html#sprout-heights">Results</a>, and <a href="../thesis/discussion.html#sprout-height">Discussion</a>, their QMD sources, <code>analysis/analysis/sprouts_import_data.qmd</code>, and <code>analysis/analysis/sprout_modeling.qmd</code>. On 6 November 2026 we also inspected <code>analysis/sprout_modeling.rda</code> and <code>analysis/wrangled_sprouts.rda</code> read-only in thesis R 4.3.2 with its existing library (glmmTMB 1.1.11). We checked saved calls, model frames, coefficients, variance components, convergence flags, and zero-random-effect predictions. Neither the thesis environment nor its saved objects was changed. Its startup reported an out-of-sync project, locale warnings, and a glmmTMB build under R 4.3.3; this inspection is not an environment validation.</p>
+<p>The saved analysis contains 692 clumps: 334 redwood and 358 tanoak, across four sites and 16 treatment-unit macro plots. There are 2,076 height observations and 1,384 increments, with no missing outcomes in these saved frames. Treatment cell sizes range from 72 to 91 clumps for redwood and 78 to 95 for tanoak. The imported increments exactly equal <span class="math inline">\((H_5-H_1)/4\)</span> and <span class="math inline">\((H_{10}-H_5)/5\)</span>. Those checks establish the content of the saved analysis, not the completeness of the original field cohort or the reason clump counts differ.</p>
+<p>Current committed publication exports cover fuels and regeneration basal area, not sprout heights. An intentional sprout export in the thesis environment, with identifiers, factor levels, missingness, selection information where available, and historical prediction references, is a prerequisite for publication fitting. We must also reconcile those exports with the original workbook and field history before assuming that the complete saved frames imply no attrition. The existing exporter and manifest should be extended when we implement the analysis; this review does not silently make legacy objects publication inputs.</p>
+</section>
+</section>
+<section id="rd03-thesis-models" class="level2">
+<h2 class="anchored" data-anchor-id="rd03-thesis-models">What the thesis models actually assume</h2>
+<p>The measured response is the <strong>height of the tallest sprout within a selected clump at each visit</strong>. The leading stem can change between visits. Consequently, the increment is change in clump maximum height, annualized over an interval, rather than necessarily the elongation of one continuously tracked stem. The saved variable named <code>tree</code> identifies the repeated clump record for this purpose. It is not evidence that the same individual sprout remained tallest.</p>
+<p>Clumps were selected to be well distributed within macro plots. Redwood sampling also balanced clumps with and without residual standing trees. That is not a documented equal-probability sample of all clumps or stems. An unweighted model describes this selected clump cohort; generalizing to an area-wide clump mean requires a defensible sampling assumption or known inclusion weights. It cannot be interpreted as mean height of all regeneration, mean height of retained PCT trees, survival, recruitment, or an area-based productivity measure.</p>
+<section id="interval-height-increment" class="level3">
+<h3 class="anchored" data-anchor-id="interval-height-increment">Interval height increment</h3>
+<p>The saved <code>minc_sel</code> is the source’s <code>minc15</code>, with Gaussian response and identity link. Writing <code>period</code> for the factor stored as <code>year</code> (5 = years 1–5; 10 = years 5–10), its conditional mean formula is:</p>
+<p><code>ht_inc ~ treat * spp + period * spp + (1 | clump) + (0 + spp | macro)</code>.</p>
+<p>The source uses globally unique <code>tree</code> and <code>plot</code> IDs for <code>clump</code> and <code>macro</code>. Residual dispersion is <code>~ spp * period * treat</code>, allowing 16 species–treatment– period residual scales. The macro effect is a two-species unstructured covariance matrix: separate species variances and one correlation, not a separate common macro intercept plus an additional species effect. The clump intercept variance is common to both species. There is no separate site term in this saved model. The <a href="https://glmmtmb.github.io/glmmTMB/articles/covstruct.html">glmmTMB covariance documentation</a> explains the distinction between unstructured and diagonal species effects.</p>
+<p>This specification allows species-specific treatment differences and species-specific changes between periods. It <strong>constrains the period change to be identical across all treatments within a species</strong>: neither treatment × period nor the three-way mean interaction is present. A lack of those terms does not establish equal temporal responses. Conditional residuals are independent after the clump and macro effects; the clump intercept induces nonnegative covariance between its two increments. Random effects are Gaussian, independent across grouping levels, and independent of predictors. Residual heterogeneity does not replace either clustering or a suitable within-clump covariance.</p>
+<p>The saved fit reports convergence code 0 and a positive-definite Hessian. Clump SD is 0.115 m yr<sup>-1</sup>; macro SDs are 0.141 for redwood and 0.059 for tanoak, with correlation 0.254. These estimates support inspecting unequal species variation, without establishing that this covariance structure is adequate or precisely estimated from 16 macro plots.</p>
+</section>
+<section id="height-at-year-10" class="level3">
+<h3 class="anchored" data-anchor-id="height-at-year-10">Height at year 10</h3>
+<p>The saved <code>ht10_sel</code> is <code>mht1011</code>, a Gaussian response with a log link:</p>
+<p><code>ht ~ treat * spp + (0 + spp | macro) + (1 | site)</code>; residual dispersion is <code>~ spp * treat</code> (eight residual scales).</p>
+<p>The response itself is not log-transformed. Residual variation is additive on the metre scale, while the conditional mean is positive and multiplicative in the predictors. A Gaussian distribution can still generate negative heights: a log link restricts its mean, not its support. The model assumes a shared site intercept on the log-mean scale and correlated species-specific macro intercepts. No clump intercept is needed for one response per clump.</p>
+<p>This fit also reports convergence code 0 and a positive-definite Hessian. Macro SDs on the log-mean scale are 0.195 for redwood and 0.159 for tanoak, with correlation 0.475. Site SD is approximately 0.000021, effectively at the boundary. This is weak information about a site variance, not proof that blocking is scientifically irrelevant. Four sites remain four treatment replicates per treatment; the hundreds of clumps are subsamples.</p>
+</section>
+</section>
+<section id="rd03-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="rd03-interpretation">Validity and precision of the thesis interpretation</h2>
+<section id="patterns-supported-by-the-saved-means" class="level3">
+<h3 class="anchored" data-anchor-id="patterns-supported-by-the-saved-means">Patterns supported by the saved means</h3>
+<p>The following historical values were reproduced from the saved coefficients and response predictions with random effects set to zero. They are not new publication estimates. Increment means give the two intervals equal weight.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Species</th>
+<th style="text-align: right;">Increment GS</th>
+<th style="text-align: right;">Increment LD</th>
+<th style="text-align: right;">Increment HA</th>
+<th style="text-align: right;">Increment HD</th>
+<th style="text-align: right;">Year-10 height GS</th>
+<th style="text-align: right;">Year-10 height HD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Redwood</td>
+<td style="text-align: right;">0.957</td>
+<td style="text-align: right;">0.800</td>
+<td style="text-align: right;">0.633</td>
+<td style="text-align: right;">0.556</td>
+<td style="text-align: right;">10.384</td>
+<td style="text-align: right;">5.810</td>
+</tr>
+<tr class="even">
+<td>Tanoak</td>
+<td style="text-align: right;">0.474</td>
+<td style="text-align: right;">0.379</td>
+<td style="text-align: right;">0.306</td>
+<td style="text-align: right;">0.299</td>
+<td style="text-align: right;">5.127</td>
+<td style="text-align: right;">3.117</td>
+</tr>
+</tbody>
+</table>
+<p>Increment units are m yr<sup>-1</sup>; height units are m. The extra digits make this audit identifiable, not biologically precise. The year-10 means match the rendered thesis’s 10.38–5.81 m and 5.13–3.12 m ranges, rather than the older 10.29–6.16 m and 5.12–3.04 m values left in the modeling notebook.</p>
+<p>The broad descriptive pattern is coherent: leading redwood sprouts were taller and had larger increments than tanoak; GS means were largest; HA and HD were lower, particularly for redwood. These observations add a size dimension to RD02’s area-based regeneration response. They do not establish every adjacent treatment difference or a continuous response to measured light.</p>
+</section>
+<section id="corrections-needed-before-publication" class="level3">
+<h3 class="anchored" data-anchor-id="corrections-needed-before-publication">Corrections needed before publication</h3>
+<ol type="1">
+<li><p><strong>The model and prose disagree about interactions.</strong> The thesis year-10 Results say the model lacks species × treatment and therefore gives parallel treatment comparisons. The saved fit contains that interaction, as do the Methods’ final specification. The increment notebook also says an interaction is absent after assigning a model that contains it. Distinguish an AIC-preferred reduced candidate from the retained research-question model. With a log link, omitting the interaction would impose common treatment <em>ratios</em>, not common metre differences. Nonsignificant interaction tests do not establish equivalence.</p></li>
+<li><p><strong>The species response claim needs its own contrast.</strong> In the retained increment model, treatment coefficients alone refer to the reference species, tanoak. Redwood treatment differences combine those coefficients with the interaction. A range of coefficient p values is not an omnibus treatment test. The saved redwood-versus-tanoak difference in the HD–GS increment response is about -0.227 m yr<sup>-1</sup>, with an individual asymptotic Wald p value of 0.029. This does not supply a multiplicity-adjusted family test, but it shows why the blanket statement that the interaction was nonsignificant is imprecise. Publication claims need explicitly defined contrasts and uncertainty.</p></li>
+<li><p><strong>Period means mix historical versions and weighting conventions.</strong> The text’s 0.80 to 0.67 m yr<sup>-1</sup> for redwood and 0.39 to 0.34 for tanoak agrees approximately with equally weighted treatment predictions (0.803 to 0.670; 0.385 to 0.344). The thesis temporal prediction call uses <code>newdata = NULL</code>, averaging observed rows; that gives 0.804 to 0.672 and 0.384 to 0.342 in the saved fit. We should use one declared weighting rule and regenerate prose from its results. The period decreases are 0.132 and 0.041 m yr<sup>-1</sup> in every treatment by model construction, not eight independently demonstrated changes.</p></li>
+<li><p><strong>Equal-period averaging is not the nine-year annual rate.</strong> The two intervals last four and five years. An equal-period mean is <span class="math inline">\((I_1+I_2)/2\)</span>; the annualized years 1–10 change is <span class="math inline">\((4I_1+5I_2)/9\)</span>. Neither includes years 0–1. Label these quantities explicitly; prefer separate intervals if temporal development is the scientific point.</p></li>
+<li><p><strong>Response-scale prediction is not random-effect integration.</strong> The thesis helper explicitly uses <code>re.form = NA</code>, setting random effects to zero, as described in the <a href="https://glmmtmb.github.io/glmmTMB/reference/predict.glmmTMB.html">prediction documentation</a>. For identity-link increments, zero-mean random-effect integration leaves the mean unchanged. For log-link year-10 height it gives <span class="math inline">\(M_{st}=\exp\{x_{st}^{\mathsf T}\beta+(\tau^2_{\mathrm{site}}+
+\tau^2_{\mathrm{macro},s})/2\}\)</span> under this model. This is integration over log-mean random effects; there is no lognormal <em>residual</em> correction for a Gaussian response with a log link. The current factors are about 1.019 for redwood and 1.013 for tanoak. The distinction is small here but must remain explicit, especially if we change the hierarchy or family. As in RD02, treatment-constant integration factors preserve within-species ratios.</p></li>
+<li><p><strong>Asymptotic intervals have limited replication behind them.</strong> The thesis prediction-to-emmeans helper uses <code>df = Inf</code> and reconstructs mean covariance from mean and pairwise-difference SEs. The resulting comparison arrows are not ordinary confidence bars or an independent validation of contrasts. Reproduce their covariance, contrast scale, and adjustment before retaining any historical pairwise claim. The printed <code>p = 0</code> is rounding, never an exact zero probability. New displays should show intervals for means and report selected contrasts separately. Model selection, sampling selection, measurement error, and covariance-structure uncertainty are not included in those Wald intervals. Convergence flags alone do not verify residual fit or interval coverage.</p></li>
+</ol>
+</section>
+<section id="what-the-biological-interpretation-can-support" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-biological-interpretation-can-support">What the biological interpretation can support</h3>
+<p>Tallest-clump height is relevant to the potential size of a future retained sprout. It does not identify the stems actually retained after PCT or demonstrate their subsequent performance. Height and basal area may respond differently because one describes selected clump maxima and the other integrates stem sizes and occurrence per area. That difference is informative rather than contradictory.</p>
+<p>Treatments combine overstory amount and spatial arrangement. HA versus HD is the direct arrangement comparison at similar target retention; a small, uncertain difference does not establish that aggregation has no effect. The treatment gradient is consistent with light limitation, but height models alone do not isolate light from other treatment-associated conditions or establish a species’ physiological shade tolerance. An SDI or light model would ask a different question.</p>
+<p>The thesis suggestion that roughly 32–38 m<sup>2</sup> ha<sup>-1</sup> is an upper retention bound for sustaining redwood growth beyond ten years exceeds what four categorical treatments and a ten-year record establish. We can say that leading redwood sprouts continued gaining height under the studied high-retention treatments, at lower estimated rates than GS. We cannot estimate a continuous threshold, long-term sustainability, stand yield, or an optimal cutting cycle from these fits.</p>
+</section>
+</section>
+<section id="rd03-model-plan" class="level2">
+<h2 class="anchored" data-anchor-id="rd03-model-plan">Proposed revisions and sensitivity tests</h2>
+<p>Our working target is <strong>arithmetic mean tallest-clump height, or its interval change, for the sampled clump cohort under each treatment</strong>. We should standardize comparisons across equally weighted treatments and sites and state whether means average the four observed sites or integrate an exchangeable site population. The latter matches RD02’s presentation, but adds a generalization assumption that four sites estimate poorly. Neither target automatically represents all clumps per hectare. If field information supports redwood sampling-stratum weights, report that explicitly rather than silently redefining the population.</p>
+<p>We’ll keep year-10 height as the primary size endpoint and interval increment as the complementary temporal endpoint. Start with the thesis response families as reference fits, retain species-specific treatment means, and test the following limited alternatives. These are proposed candidates, not an invitation to choose whichever produces the strongest treatment significance.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Proposed change or test</th>
+<th>Assumption retained, relaxed, or introduced</th>
+<th>Evidence needed for a decision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Represent site blocking in both endpoints; compare site fixed effects with site random intercepts, retaining macro clustering</td>
+<td>Replaces the increment model’s independence of different treatment units at the same site. Fixed sites condition inference on these four blocks; random sites assume exchangeability and a Gaussian site distribution.</td>
+<td>Treatment estimates and intervals under both specifications, variance boundaries, and four leave-one-site-out fits. Do not delete design clustering solely for AIC or a near-zero estimate.</td>
+</tr>
+<tr class="even">
+<td>Compare the joint unstructured species macro effects with diagonal effects and separate species fits, allowing species-specific clump variance for increments</td>
+<td>Diagonal effects remove cross-species macro covariance; separate fits also remove shared variance constraints. The thesis shares clump variance across species. Separate species-specific site variances relax the common site variance but are weakly identified from four sites.</td>
+<td>Same response rows and family for the covariance comparison; inspect variance estimates, correlations, optimizer agreement, and treatment uncertainty. Separate fits can describe species means but do not supply covariance for a species-difference test.</td>
+</tr>
+<tr class="odd">
+<td>Retain treatment × species; compare increment means with <code>treat * spp * period</code></td>
+<td>Relaxes the imposed common period change across treatments. The full mean model permits treatment-specific slowing or acceleration within each species.</td>
+<td>Period-change contrasts and their species/treatment differences, with intervals. Absence of a detected interaction is not temporal equivalence. A reduced model needs a scientific interpretation as well as fit support.</td>
+</tr>
+<tr class="even">
+<td>Compare saturated dispersion with <code>spp * period</code> and additive treatment dispersion for increments; <code>spp + treat</code> versus <code>spp * treat</code> for year 10</td>
+<td>Reduced dispersion pools residual scales across some cells. It does not pool treatment means or solve clustering. Separate-species fits permit their own residual scales.</td>
+<td>Residual spread and tails by species, treatment, period, and macro plot; fit stability and changes in interval widths. Retain supported heterogeneity rather than simplifying to improve significance.</td>
+</tr>
+<tr class="odd">
+<td>Test within-clump covariance of the two increments; compare the shared intercept with a directly estimated two-period covariance</td>
+<td>The thesis allows only nonnegative residual association through a common clump intercept. An unstructured two-period covariance permits either sign and different variances, but needs an identifiable parameterization.</td>
+<td>Estimate covariance after macro/site effects. Do not add a full two-period covariance on top of freely varying period residual variances and a clump intercept: these components cannot all be identified from two outcomes per clump.</td>
+</tr>
+<tr class="even">
+<td>Compare year-10 Gaussian identity/log links and positive Gamma(log); use a lognormal alternative only if residual evidence warrants it</td>
+<td>Identity link models additive metre effects; log links model proportional conditional effects. Gamma imposes positive support and variance proportional to squared mean within a dispersion group. Lognormal assumes Gaussian log-height residuals and needs residual as well as random-effect integration for arithmetic means.</td>
+<td>Observed/predicted distributions and lower-tail/negative-height simulation frequency, residual scale, convergence, and estimates on the same arithmetic-mean target. Do not use Gamma for increments if valid zero or negative increments exist in the audited input.</td>
+</tr>
+<tr class="odd">
+<td>Fit heights at years 1, 5, and 10 jointly as a targeted sensitivity, with categorical age and identifiable within-clump covariance</td>
+<td>Avoids treating two differences sharing year 5 as conditionally independent. Categorical age avoids assuming linear growth or extrapolating a curve from three visits. It introduces a model for the three-level covariance and all-age means.</td>
+<td>Derive <span class="math inline">\((M_5-M_1)/4\)</span>, <span class="math inline">\((M_{10}-M_5)/5\)</span>, and year-10 means from one fit, retaining covariance. Compare these estimands with the two-endpoint analysis; use the joint model as primary only if its assumptions and stability are preferable.</td>
+</tr>
+<tr class="even">
+<td>Compare zero-effect, integrated, and observed-site standardized predictions; equal-period and duration-weighted summaries</td>
+<td>Changes the prediction target or averaging weights, not necessarily the fitted model. Integration assumes the specified random-effect distribution represents the target population.</td>
+<td>Reconcile implementation by direct prediction, analytic integration where available, and numerical checks. Propagate variance-parameter uncertainty for integrated means. Never label a change of estimand as a biological change.</td>
+</tr>
+</tbody>
+</table>
+<section id="why-the-shared-year-5-measurement-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-the-shared-year-5-measurement-matters">Why the shared year-5 measurement matters</h3>
+<p>If measured heights have independent errors <span class="math inline">\(e_1,e_5,e_{10}\)</span>, then the two increment errors are <span class="math inline">\((e_5-e_1)/4\)</span> and <span class="math inline">\((e_{10}-e_5)/5\)</span>. Their covariance is <span class="math inline">\(-\operatorname{Var}(e_5)/20\)</span>. A persistent clump growth tendency can instead produce positive association. The thesis clump intercept represents the latter but cannot by itself represent the former. This derivation does not prove that the fitted covariance is wrong; it identifies a scientifically motivated sensitivity with a possible consequence for uncertainty in growth-rate change. With no replicate height measurements, measurement-error variance cannot be separately learned without additional assumptions or external precision data. Two intervals also cannot establish a general serial-correlation process.</p>
+</section>
+<section id="selection-and-uncertainty-sequence" class="level3">
+<h3 class="anchored" data-anchor-id="selection-and-uncertainty-sequence">Selection and uncertainty sequence</h3>
+<p>First audit identity, measurement definitions, interval lengths, original missing records, and any mortality or leader replacement notes. Resolve the redwood residual-tree sampling stratum: its indicator is described in the import source but omitted from the selected columns. If recoverable, use it for a targeted sampling/composition sensitivity, recognizing that residual-tree status is treatment-related and adjusting for it changes the question. Likewise, conditioning on year-1 height estimates later development at a common <em>post-treatment</em> size; it is not a correction for a pretreatment covariate and should not replace the unadjusted treatment comparison. Do not treat absent/dead clumps as zero heights without field justification, or invent missing-data weights from these complete saved frames.</p>
+<p>Next fit the reference and design/covariance alternatives on identical audited rows. Use maximum likelihood when comparing fixed-effect structures. Compare AIC within the same endpoint and likelihood basis; AIC across height and increment responses is meaningless. A model for log(height) needs the response-transformation Jacobian before comparing its likelihood with original-height models. Keep scientific mean terms needed for planned contrasts even when their individual coefficients are weak. Avoid stepwise selection over every interaction.</p>
+<p>Require numerical convergence, a usable Hessian, and agreement under a second optimizer for plausible finalists. Inspect boundary variances, residual and simulation diagnostics by species/treatment/period, within-clump association, macro-level residual patterns, and influential sites. Four leave-one-site-out analyses diagnose sensitivity; they do not turn three-site fits into precise estimates or justify dropping an inconvenient site. A small AIC difference or nonsignificant diagnostic is weak evidence, as RD02 demonstrated.</p>
+<p>Compare finalist mean estimates and intervals for GS versus HD (retention contrast), HA versus HD (arrangement contrast), and the second-minus-first interval change. Add species differences in those responses only with a joint covariance model or a paired resampling method that preserves sites, macro plots, and both species. Predeclare contrast families and a multiplicity approach (for example Holm adjustment for a small confirmatory family); keep other contrasts exploratory. GS–HD compares complete treatments, not an isolated continuous basal-area effect. Use metre differences for size and m yr<sup>-1</sup> differences for increment; report ratios as an additional interpretation only when useful. Avoid claiming equal responses without a biologically justified equivalence margin.</p>
+<p>For the preferred specification, assess the sensitivity of Wald uncertainty with a refitted parametric bootstrap that preserves the hierarchy, heterogeneity, and repeated measurements, including variance-parameter uncertainty in integrated means. Predeclare a seed and simulation count, report failed/boundary refits, and examine stability of interval endpoints. This assesses inference under the fitted model, not robustness to unmodeled sampling bias. Resampling just four sites nonparametrically is a weak sole basis for coverage. A within-site treatment randomization sensitivity is possible only after confirming the assignment scheme in the experimental record; it tests a different, design-based null. Intervals conditional on a selected model still omit model-selection uncertainty.</p>
+<p>RD02 motivates design-aware clustering, explicit estimands, species-specific variance checks, optimizer checks, and caution with four-site asymptotics. Its hurdle-Gamma occurrence process does <strong>not</strong> transfer automatically: these height records are selected clumps, not vegetation plots with recorded absence. We should select the simplest scientifically adequate height model and report material sensitivity, even if the treatment ordering remains unchanged.</p>
+</section>
+</section>
+<section id="rd03-display-proposals" class="level2">
+<h2 class="anchored" data-anchor-id="rd03-display-proposals">Proposed publication displays</h2>
+<section id="main-figure-attained-height-and-temporal-change" class="level3">
+<h3 class="anchored" data-anchor-id="main-figure-attained-height-and-temporal-change">1. Main figure: attained height and temporal change</h3>
+<p>Use one four-panel figure, with redwood and tanoak as columns. The top row shows year-10 mean tallest-clump height by treatment (GS, LD, HA, HD), in metres, with 95% intervals. The bottom row shows the estimated change in annualized increment, years 5–10 minus years 1–5, by treatment, with 95% intervals and a zero reference line. Use a common height scale across species for direct size comparison and a common increment-change scale across species in the bottom row. Keep the species colors/shapes used in RD02 and state that the sampling units differ.</p>
+<p>This joins attained size with the genuinely additional temporal question without repeating the treatment-averaged increment figure. It can show a continued redwood height advantage alongside slower later development. Do not imply treatment-specific temporal evidence if the selected mean model constrains all treatment changes to be equal: in that case collapse the bottom row to one species-wise change panel, labeled as averaged across treatments. If temporal evidence proves too fragile or secondary, retain the year-10 row as the main figure and move the temporal display to the supplement.</p>
+<p>Provisional caption structure: “Tallest-sprout development in sampled redwood and tanoak clumps under four retained-overstory treatments. Upper panels show modeled mean height at year 10; lower panels show later-minus-earlier annualized height change. Points and ranges denote arithmetic means or contrasts and their 95% confidence intervals [state site standardization/integration and uncertainty method after selection]. Heights follow the tallest stem in each clump at each visit, which need not be the same stem. Clumps are subsamples of 16 treatment units in four sites; intervals describe mean uncertainty.” Define treatment abbreviations in the final caption. Do not include significance arrows or infer pairwise differences from overlapping mean intervals.</p>
+</section>
+<section id="optional-companion-interval-rates-without-averaging-them-away" class="level3">
+<h3 class="anchored" data-anchor-id="optional-companion-interval-rates-without-averaging-them-away">2. Optional companion: interval rates without averaging them away</h3>
+<p>If absolute growth rates matter for the management interpretation, use two species panels with treatment on the x-axis and paired points for years 1–5 and 5–10, in m yr<sup>-1</sup>, with uncertainty. A light connector within each treatment can show the interval change; it is not a continuous annual growth trajectory. Use the same vertical scale for both species. Prefer equally weighted site summaries as subdued observed context, with four site symbols per treatment, over a dense cloud that makes hundreds of clumps look like treatment replicates. Label observed summaries separately from model estimates and omit them if they obscure the intervals.</p>
+<p>This is an alternative temporal view or a supplement, not a second mandatory main-text figure duplicating the lower row above. It preserves the thesis’s approximate 0.80-to-0.67 redwood and 0.39-to-0.34 tanoak story while allowing the revised analysis to reveal treatment dependence. Keep full estimates, interval definitions, planned contrasts, and sensitivity evidence in a companion table. No invented confidence limits or schematic results are needed at this stage.</p>
+</section>
+</section>
+<section id="where-this-leaves-rd03" class="level2">
+<h2 class="anchored" data-anchor-id="where-this-leaves-rd03">Where this leaves RD03</h2>
+<p>The thesis provides credible preliminary evidence that selected leading redwood sprouts attained greater height under lighter retention and continued developing under the higher-retention treatments. Its model/prose mismatch, selected-clump sampling target, imposed temporal structure, and limited treatment replication prevent us from carrying its precision and significance language forward unchanged. The proposed tests separate changes to biological response assumptions from changes to covariance and prediction targets. A compact size-plus-time display can then complement RD02 without implying that tall sprouts alone establish successful cohort recruitment or a long-term retention threshold. Model choice, interval calibration, and final captions remain open until these tests are run.</p>
+</section>
 <section id="rd03-files" class="level2">
 <h2 class="anchored" data-anchor-id="rd03-files">Current repository files</h2>
 <p>Paths below are relative to the repository root. Downloads are refreshed from the local checkout on every render.</p>
@@ -318,16 +568,34 @@ ul.task-list li input[type="checkbox"] {
 <summary>
 Browse current source files and outputs
 </summary>
+<p>Upstream analytical records: <a href="./task-rd02.html">RD02</a>.</p>
+<section id="maintained-sources" class="level3">
+<h3 class="anchored" data-anchor-id="maintained-sources">Maintained sources</h3>
 <ul>
+<li><code>publication/task-rd03.qmd</code></li>
+</ul>
+</section>
+<section id="consumed-inputs-and-references" class="level3">
+<h3 class="anchored" data-anchor-id="consumed-inputs-and-references">Consumed inputs and references</h3>
+<ul>
+<li><code>analysis/thesis/methods.qmd</code></li>
 <li><code>analysis/thesis/results.qmd</code></li>
+<li><code>analysis/thesis/discussion.qmd</code></li>
+<li><code>analysis/analysis/sprouts_import_data.qmd</code></li>
 <li><code>analysis/analysis/sprout_modeling.qmd</code></li>
 <li><code>analysis/analysis/sprout_data_exploration.qmd</code></li>
+<li><code>analysis/analysis/fuel_modeling_round_3.qmd</code></li>
+<li><code>publication/task-rd02.qmd</code></li>
+<li><a href="repo-files/publication/inputs/thesis/manifest.json">publication/inputs/thesis/manifest.json</a></li>
+<li><code>analysis/sprout_modeling.rda</code></li>
+<li><code>analysis/wrangled_sprouts.rda</code></li>
 </ul>
-</details>
+</section></details>
 <p><a href="./task-list.html#rd03">Back to this task in the task list</a>.</p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
