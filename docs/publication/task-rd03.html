@@ -389,6 +389,13 @@ window.Quarto = {
   <li><a href="#residual-behavior-and-simulation-support" id="toc-residual-behavior-and-simulation-support" class="nav-link" data-scroll-target="#residual-behavior-and-simulation-support">Residual behavior and simulation support</a></li>
   <li><a href="#rd03-phase-three" id="toc-rd03-phase-three" class="nav-link" data-scroll-target="#rd03-phase-three">Human review summary and Phase Three handoff</a></li>
   </ul></li>
+  <li><a href="#rd03-phase-three-analysis" id="toc-rd03-phase-three-analysis" class="nav-link" data-scroll-target="#rd03-phase-three-analysis">Phase Three: model adequacy and refitted uncertainty</a>
+  <ul class="collapse">
+  <li><a href="#numerical-investigation-and-a-joint-model-of-measured-heights" id="toc-numerical-investigation-and-a-joint-model-of-measured-heights" class="nav-link" data-scroll-target="#numerical-investigation-and-a-joint-model-of-measured-heights">Numerical investigation and a joint model of measured heights</a></li>
+  <li><a href="#simulated-support-and-refitted-bootstrap" id="toc-simulated-support-and-refitted-bootstrap" class="nav-link" data-scroll-target="#simulated-support-and-refitted-bootstrap">Simulated support and refitted bootstrap</a></li>
+  <li><a href="#proposed-size-display-and-supplementary-temporal-detail" id="toc-proposed-size-display-and-supplementary-temporal-detail" class="nav-link" data-scroll-target="#proposed-size-display-and-supplementary-temporal-detail">Proposed size display and supplementary temporal detail</a></li>
+  <li><a href="#phase-three-conclusion-and-acceptance-handoff" id="toc-phase-three-conclusion-and-acceptance-handoff" class="nav-link" data-scroll-target="#phase-three-conclusion-and-acceptance-handoff">Phase Three conclusion and acceptance handoff</a></li>
+  </ul></li>
   <li><a href="#rd03-files" id="toc-rd03-files" class="nav-link" data-scroll-target="#rd03-files">Current repository files</a>
   <ul class="collapse">
   <li><a href="#maintained-sources" id="toc-maintained-sources" class="nav-link" data-scroll-target="#maintained-sources">Maintained sources</a></li>
@@ -421,12 +428,12 @@ window.Quarto = {
 
 
 <!-- Generated from tasks.json. -->
-<p><strong>Status: In progress - Phase Two complete; Phase Three review pending.</strong> Working target: One size/time figure; optional interval-rate companion.</p>
+<p><strong>Status: Phase Three complete - display acceptance pending.</strong> Working target: One size/time figure; optional interval-rate companion.</p>
 <p><span id="rd03-record"></span></p>
 <section id="rd03-review" class="level2">
 <h2 class="anchored" data-anchor-id="rd03-review">What height adds to the regeneration story</h2>
 <p>Does retained overstory leave redwood with a developing cohort of tall sprouts, even where regeneration basal area is strongly reduced? Height helps distinguish the size attained by leading sprouts from the amount of regeneration occupying an area. We’ll review the thesis evidence before choosing a publication model and the smallest useful set of displays. The publication’s regeneration-first direction makes redwood development the main question, with tanoak providing ecological context; this task does not repeat RD02’s basal-area result.</p>
-<p><strong>Phase Two implements the reference and design/covariance comparison.</strong> The <a href="#rd03-phase-three">human review and Phase Three handoff</a> distinguishes exploratory fits from accepted publication results. All 692 recorded clumps are the intended cohort, as confirmed in human review on 6 November 2026. Final model selection, calibrated uncertainty, and publication displays remain pending.</p>
+<p><strong>Phase Three assesses the recommended models and their uncertainty.</strong> The <a href="#rd03-phase-three-analysis">Phase Three analysis</a> adds the joint-height sensitivity, numerical investigation, and refitted bootstrap. All 692 recorded clumps are the intended cohort, as confirmed in human review on 6 November 2026. The resulting display is a proposal for acceptance; manuscript acceptance remains pending.</p>
 <section id="evidence-reviewed-and-numerical-limits" class="level3">
 <h3 class="anchored" data-anchor-id="evidence-reviewed-and-numerical-limits">Evidence reviewed and numerical limits</h3>
 <p>The review uses the thesis <a href="../thesis/methods.html#sprout-heights">Methods</a>, <a href="../thesis/results.html#sprout-heights">Results</a>, and <a href="../thesis/discussion.html#sprout-height">Discussion</a>, their QMD sources, <code>analysis/analysis/sprouts_import_data.qmd</code>, and <code>analysis/analysis/sprout_modeling.qmd</code>. On 6 November 2026 we also inspected <code>analysis/sprout_modeling.rda</code> and <code>analysis/wrangled_sprouts.rda</code> read-only in thesis R 4.3.2 with its existing library (glmmTMB 1.1.11). We checked saved calls, model frames, coefficients, variance components, convergence flags, and zero-random-effect predictions. Neither the thesis environment nor its saved objects was changed. Its startup reported an out-of-sync project, locale warnings, and a glmmTMB build under R 4.3.3; this inspection is not an environment validation.</p>
@@ -8260,8 +8267,2037 @@ window.Quarto = {
 <li>Assess uncertainty by simulating new datasets from each chosen model and refitting it <strong>2,000 times</strong>, using seed <strong>20261116</strong>. This is the planned parametric bootstrap; it has <strong>not</strong> been run. Preserve the 16 macros, species, repeated clumps, observed site blocks, and fitted heterogeneity. Integrate log-link macro effects within every refit so that their variance uncertainty enters arithmetic means. Report failures, boundaries, Monte Carlo endpoint stability, and intervals’ dependence on model assumptions. Use the four predeclared redwood contrasts with Holm adjustment if confirmatory testing is retained; other comparisons stay exploratory. This checks uncertainty under the chosen model’s assumptions; it does not account for uncertainty about which model to choose or bias from how clumps were sampled.</li>
 <li>Only after reviewing model adequacy and calibrated contrasts, prepare the proposed size/time figure and caption for acceptance. If treatment-specific temporal evidence remains weak, use an appropriately labeled pooled change or place temporal detail in the supplement. Refresh RD03, then its RT02, M02, and D02 review records from the registry. Those tasks remain queued; no manuscript claim or publication figure is accepted by this phase.</li>
 </ol>
-<p>An ordinary render reads the saved tables. <code>-P recompute:true</code> rebuilds the audit, model summaries, predictions, diagnostics, and influence records from saved fits; <code>-P refit:true</code> refits this complete Phase Two sequence. Neither mode executes the unimplemented Phase Three bootstrap or joint-height sensitivity. No thesis environment, input export, package dependency, or RD02 result changed.</p>
-<p>Phase Two gives us named models to take forward and a clearer distinction between the results they support. The year-10 GS–HD redwood height difference is consistent across the tested models. HA–HD height differences and differences among treatments in how much growth slowed need more cautious interpretation. Phase Three should now review the recommended models, assess their uncertainty, and prepare a display for acceptance while keeping the conclusions about this recorded clump cohort.</p>
+<p>At the Phase Two handoff, an ordinary render read saved tables, <code>-P recompute:true</code> rebuilt Phase Two summaries, and <code>-P refit:true</code> refitted the Phase Two sequence. The Phase Three implementation below adds explicit <code>-P refit_phase_three:true</code> for its new fits and <code>-P bootstrap:true</code> for its 2,000-dataset simulations. Recomputation otherwise requires their saved models and bootstrap draws. No thesis environment, input export, package dependency, or RD02 result changed.</p>
+<p>Phase Two gives us named models to take forward and a clearer distinction between the results they support. The year-10 GS–HD redwood height difference is consistent across the tested models. HA–HD height differences and differences among treatments in how much growth slowed need more cautious interpretation. That handoff motivates the Phase Three analysis below, which assesses uncertainty and prepares a display proposal for this recorded clump cohort.</p>
+</section>
+</section>
+<section id="rd03-phase-three-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="rd03-phase-three-analysis">Phase Three: model adequacy and refitted uncertainty</h2>
+<p>Do the recommended models give a dependable account of attained height and changes in growth rate, despite only four treatment replicates? We carry forward the separate Gaussian(log) year-10 models and the separate Gaussian increment models with two correlated macro-period effects. Site predictions receive equal weight. These models describe the recorded clumps, integrating macro effects without extrapolating to an exchangeable population of sites. Residual-tree associations remain the secondary Phase Two checks.</p>
+<section id="numerical-investigation-and-a-joint-model-of-measured-heights" class="level3">
+<h3 class="anchored" data-anchor-id="numerical-investigation-and-a-joint-model-of-measured-heights">Numerical investigation and a joint model of measured heights</h3>
+<p>We first check both year-10 models with BFGS and revisit all eight temporal site omissions with that optimizer. A diagonal macro-period covariance is a targeted sensitivity: it retains treatment-unit variation in period change but sets the two macro effects’ covariance to zero. It is not selected merely to obtain convergence. Each saved fit records convergence, Hessian, gradients, warnings, and covariance boundaries; failed fits supply no usable intervals.</p>
+<p>The joint-height sensitivity uses categorical ages 1, 5, and 10, treatment by age means, and site by age blocking. For each species, separate unstructured three-age covariance matrices initially represent macros and clumps. If the macro covariance is singular, a rank-two macro covariance provides the targeted simplification, retaining age-specific loadings and macro variation in derived increment changes. We retain the failed unrestricted fits in the register. We set residual dispersion to glmmTMB’s near-zero value, so the clump matrix represents the entire within-clump covariance; adding free residual scales would be unidentifiable. This model handles the shared year-5 measurement without assuming a growth curve or decomposing measurement error from clump variation. It uses Gaussian identity errors as a sensitivity, not as a positive-support model of all possible heights. Its likelihood is not compared with either single-endpoint likelihood.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show Phase Three fitting and estimand helpers</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="st">"outputs/sprouts/phase-three"</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>p3_compute <span class="ot">&lt;-</span> recompute <span class="sc">||</span> <span class="fu">isTRUE</span>(params<span class="sc">$</span>refit_phase_three) <span class="sc">||</span> <span class="fu">isTRUE</span>(params<span class="sc">$</span>bootstrap)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>p3_read <span class="ot">&lt;-</span> <span class="cf">function</span>(name) <span class="fu">read.csv</span>(<span class="fu">file.path</span>(p3, <span class="st">"tables"</span>, <span class="fu">paste0</span>(name, <span class="st">".csv"</span>)), <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>p3_write <span class="ot">&lt;-</span> <span class="cf">function</span>(x, name) <span class="fu">write.csv</span>(x, <span class="fu">file.path</span>(p3, <span class="st">"tables"</span>, <span class="fu">paste0</span>(name, <span class="st">".csv"</span>)), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>p3_control <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">bfgs =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (bfgs) <span class="fu">glmmTMBControl</span>(<span class="at">optimizer =</span> optim, <span class="at">optArgs =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"BFGS"</span>),</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">optCtrl =</span> <span class="fu">list</span>(<span class="at">maxit =</span> <span class="dv">10000</span>, <span class="at">reltol =</span> <span class="fl">1e-10</span>), <span class="at">rank_check =</span> <span class="st">"stop"</span>) <span class="cf">else</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">glmmTMBControl</span>(<span class="at">optCtrl =</span> <span class="fu">list</span>(<span class="at">iter.max =</span> <span class="dv">3000</span>, <span class="at">eval.max =</span> <span class="dv">5000</span>), <span class="at">rank_check =</span> <span class="st">"stop"</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>p3_start <span class="ot">&lt;-</span> <span class="cf">function</span>(m) <span class="fu">list</span>(<span class="at">beta =</span> <span class="fu">unname</span>(<span class="fu">fixef</span>(m)<span class="sc">$</span>cond),</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">betadisp =</span> <span class="fu">unname</span>(<span class="fu">fixef</span>(m)<span class="sc">$</span>disp), <span class="at">theta =</span> <span class="fu">unname</span>(glmmTMB<span class="sc">::</span><span class="fu">getME</span>(m, <span class="st">"theta"</span>)))</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>p3_fit <span class="ot">&lt;-</span> <span class="cf">function</span>(id, mean, dispersion, dat, fam, <span class="at">bfgs =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(p3, <span class="st">"models"</span>, <span class="fu">paste0</span>(id, <span class="st">".rds"</span>))</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">isTRUE</span>(params<span class="sc">$</span>refit_phase_three)) {</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"RD03 Phase Three fitting "</span>, id)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    warnings <span class="ot">&lt;-</span> <span class="fu">character</span>()</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">withCallingHandlers</span>(<span class="fu">glmmTMB</span>(mean, <span class="at">dispformula =</span> dispersion, <span class="at">data =</span> dat,</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> fam, <span class="at">REML =</span> <span class="cn">FALSE</span>, <span class="at">na.action =</span> na.fail, <span class="at">control =</span> <span class="fu">p3_control</span>(bfgs)),</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">warning =</span> <span class="cf">function</span>(w) { warnings <span class="ot">&lt;&lt;-</span> <span class="fu">c</span>(warnings, <span class="fu">conditionMessage</span>(w)); <span class="fu">invokeRestart</span>(<span class="st">"muffleWarning"</span>) })</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">attr</span>(m, <span class="st">"rd03_warnings"</span>) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">unique</span>(warnings), <span class="at">collapse =</span> <span class="st">"; "</span>)</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">saveRDS</span>(m, path)</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(path)) <span class="fu">stop</span>(<span class="st">"Missing Phase Three fit: "</span>, id, <span class="st">"; use explicit refit_phase_three:true."</span>)</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(path)</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">nobs</span>(m) <span class="sc">==</span> <span class="fu">nrow</span>(dat))</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>  m</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>p3_record <span class="ot">&lt;-</span> <span class="cf">function</span>(m, id) {</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">VarCorr</span>(m)<span class="sc">$</span>cond</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>  correlations <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(v, <span class="cf">function</span>(z) <span class="fu">attr</span>(z, <span class="st">"correlation"</span>)[<span class="fu">lower.tri</span>(z)]))</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">model_id =</span> id, <span class="at">fit_status =</span> <span class="st">"fit"</span>, <span class="at">n =</span> <span class="fu">nobs</span>(m),</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">paste</span>(<span class="fu">deparse</span>(<span class="fu">formula</span>(m)), <span class="at">collapse =</span> <span class="st">" "</span>),</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">dispersion =</span> <span class="fu">paste</span>(<span class="fu">deparse</span>(<span class="fu">formula</span>(m, <span class="at">component =</span> <span class="st">"disp"</span>)), <span class="at">collapse =</span> <span class="st">" "</span>),</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">family</span>(m)<span class="sc">$</span>family, <span class="at">link =</span> <span class="fu">family</span>(m)<span class="sc">$</span>link,</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">convergence =</span> m<span class="sc">$</span>fit<span class="sc">$</span>convergence, <span class="at">pd_hessian =</span> <span class="fu">isTRUE</span>(m<span class="sc">$</span>sdr<span class="sc">$</span>pdHess),</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_gradient =</span> <span class="fu">max</span>(<span class="fu">abs</span>(m<span class="sc">$</span>sdr<span class="sc">$</span>gradient.fixed)), <span class="at">AIC =</span> <span class="fu">AIC</span>(m),</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_random_sd =</span> <span class="fu">min</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(v, <span class="cf">function</span>(z) <span class="fu">attr</span>(z, <span class="st">"stddev"</span>)))),</span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_absolute_correlation =</span> <span class="cf">if</span> (<span class="fu">length</span>(correlations)) <span class="fu">max</span>(<span class="fu">abs</span>(correlations)) <span class="cf">else</span> <span class="dv">0</span>,</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">warnings =</span> <span class="cf">if</span> (<span class="fu">is.null</span>(<span class="fu">attr</span>(m, <span class="st">"rd03_warnings"</span>))) <span class="st">""</span> <span class="cf">else</span> <span class="fu">attr</span>(m, <span class="st">"rd03_warnings"</span>))</span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a><span class="co"># This compact predictor is also used inside each bootstrap refit. Every</span></span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a><span class="co"># log-link prediction integrates the refitted macro variance, not its original value.</span></span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>p3_values <span class="ot">&lt;-</span> <span class="cf">function</span>(m, dat, endpoint, <span class="at">coefficients =</span> <span class="fu">fixef</span>(m)<span class="sc">$</span>cond) {</span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>  sp <span class="ot">&lt;-</span> <span class="fu">as.character</span>(dat<span class="sc">$</span>spp[<span class="dv">1</span>])</span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>  visit <span class="ot">&lt;-</span> <span class="cf">if</span> (endpoint <span class="sc">==</span> <span class="st">"increment"</span>) <span class="fu">c</span>(<span class="st">"5"</span>, <span class="st">"10"</span>) <span class="cf">else</span> <span class="cf">if</span> (endpoint <span class="sc">==</span> <span class="st">"joint"</span>) <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"5"</span>, <span class="st">"10"</span>) <span class="cf">else</span> <span class="st">"10"</span></span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>  grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">site =</span> <span class="fu">levels</span>(dat<span class="sc">$</span>site), <span class="at">treat =</span> <span class="fu">levels</span>(dat<span class="sc">$</span>treat), <span class="at">visit =</span> visit,</span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">KEEP.OUT.ATTRS =</span> <span class="cn">FALSE</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (v <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"treat"</span>)) grid[[v]] <span class="ot">&lt;-</span> <span class="fu">factor</span>(grid[[v]], <span class="at">levels =</span> <span class="fu">levels</span>(dat[[v]]))</span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (endpoint <span class="sc">==</span> <span class="st">"increment"</span>) grid<span class="sc">$</span>period <span class="ot">&lt;-</span> <span class="fu">factor</span>(grid<span class="sc">$</span>visit, <span class="at">levels =</span> <span class="fu">levels</span>(dat<span class="sc">$</span>period))</span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (endpoint <span class="sc">==</span> <span class="st">"joint"</span>) grid<span class="sc">$</span>age <span class="ot">&lt;-</span> <span class="fu">factor</span>(grid<span class="sc">$</span>visit, <span class="at">levels =</span> <span class="fu">levels</span>(dat<span class="sc">$</span>age))</span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="fu">delete.response</span>(<span class="fu">terms</span>(lme4<span class="sc">::</span><span class="fu">nobars</span>(<span class="fu">formula</span>(m)))), grid)</span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">identical</span>(<span class="fu">colnames</span>(X), <span class="fu">names</span>(<span class="fu">fixef</span>(m)<span class="sc">$</span>cond)))</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>  eta <span class="ot">&lt;-</span> <span class="fu">drop</span>(X <span class="sc">%*%</span> coefficients)</span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a>  macro_variance <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">family</span>(m)<span class="sc">$</span>link <span class="sc">==</span> <span class="st">"log"</span>) <span class="fu">VarCorr</span>(m)<span class="sc">$</span>cond<span class="sc">$</span>plot[<span class="dv">1</span>, <span class="dv">1</span>] <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a>  grid<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">family</span>(m)<span class="sc">$</span><span class="fu">linkinv</span>(eta) <span class="sc">*</span> <span class="fu">exp</span>(macro_variance <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a>  cells <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(value <span class="sc">~</span> treat <span class="sc">+</span> visit, grid, mean)</span>
+<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a>  get <span class="ot">&lt;-</span> <span class="cf">function</span>(tr, age) cells<span class="sc">$</span>value[cells<span class="sc">$</span>treat <span class="sc">==</span> tr <span class="sc">&amp;</span> cells<span class="sc">$</span>visit <span class="sc">==</span> age]</span>
+<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (tr <span class="cf">in</span> <span class="fu">levels</span>(dat<span class="sc">$</span>treat)) {</span>
+<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (endpoint <span class="sc">!=</span> <span class="st">"increment"</span>) out[<span class="fu">paste0</span>(<span class="st">"height:"</span>, tr)] <span class="ot">&lt;-</span> <span class="fu">get</span>(tr, <span class="st">"10"</span>)</span>
+<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (endpoint <span class="sc">!=</span> <span class="st">"height"</span>) {</span>
+<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a>      early <span class="ot">&lt;-</span> <span class="cf">if</span> (endpoint <span class="sc">==</span> <span class="st">"joint"</span>) (<span class="fu">get</span>(tr, <span class="st">"5"</span>) <span class="sc">-</span> <span class="fu">get</span>(tr, <span class="st">"1"</span>)) <span class="sc">/</span> <span class="dv">4</span> <span class="cf">else</span> <span class="fu">get</span>(tr, <span class="st">"5"</span>)</span>
+<span id="cb27-64"><a href="#cb27-64" aria-hidden="true" tabindex="-1"></a>      late <span class="ot">&lt;-</span> <span class="cf">if</span> (endpoint <span class="sc">==</span> <span class="st">"joint"</span>) (<span class="fu">get</span>(tr, <span class="st">"10"</span>) <span class="sc">-</span> <span class="fu">get</span>(tr, <span class="st">"5"</span>)) <span class="sc">/</span> <span class="dv">5</span> <span class="cf">else</span> <span class="fu">get</span>(tr, <span class="st">"10"</span>)</span>
+<span id="cb27-65"><a href="#cb27-65" aria-hidden="true" tabindex="-1"></a>      out[<span class="fu">paste0</span>(<span class="st">"early:"</span>, tr)] <span class="ot">&lt;-</span> early</span>
+<span id="cb27-66"><a href="#cb27-66" aria-hidden="true" tabindex="-1"></a>      out[<span class="fu">paste0</span>(<span class="st">"late:"</span>, tr)] <span class="ot">&lt;-</span> late</span>
+<span id="cb27-67"><a href="#cb27-67" aria-hidden="true" tabindex="-1"></a>      out[<span class="fu">paste0</span>(<span class="st">"change:"</span>, tr)] <span class="ot">&lt;-</span> late <span class="sc">-</span> early</span>
+<span id="cb27-68"><a href="#cb27-68" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb27-69"><a href="#cb27-69" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-70"><a href="#cb27-70" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (tr <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"GS"</span>, <span class="st">"HA"</span>)) {</span>
+<span id="cb27-71"><a href="#cb27-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (endpoint <span class="sc">!=</span> <span class="st">"increment"</span>) out[<span class="fu">paste0</span>(<span class="st">"height_contrast:"</span>, tr, <span class="st">"-HD"</span>)] <span class="ot">&lt;-</span></span>
+<span id="cb27-72"><a href="#cb27-72" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unname</span>(out[<span class="fu">paste0</span>(<span class="st">"height:"</span>, tr)] <span class="sc">-</span> out[<span class="st">"height:HD"</span>])</span>
+<span id="cb27-73"><a href="#cb27-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (endpoint <span class="sc">!=</span> <span class="st">"height"</span>) out[<span class="fu">paste0</span>(<span class="st">"change_contrast:"</span>, tr, <span class="st">"-HD"</span>)] <span class="ot">&lt;-</span></span>
+<span id="cb27-74"><a href="#cb27-74" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unname</span>(out[<span class="fu">paste0</span>(<span class="st">"change:"</span>, tr)] <span class="sc">-</span> out[<span class="st">"change:HD"</span>])</span>
+<span id="cb27-75"><a href="#cb27-75" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-76"><a href="#cb27-76" aria-hidden="true" tabindex="-1"></a>  out</span>
+<span id="cb27-77"><a href="#cb27-77" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>We fit the planned numerical and covariance sensitivities on identical species rows. The compact predictor must reproduce Phase Two’s independently checked arithmetic predictions before it is used for simulation. For the joint-height model, linear contrasts retain the covariance of all three visits when deriving both interval rates and their difference.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (p3_compute) {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (folder <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"models"</span>, <span class="st">"tables"</span>, <span class="st">"figures"</span>, <span class="st">"simulations"</span>))</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dir.create</span>(<span class="fu">file.path</span>(p3, folder), <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  p3_wide <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(input, <span class="st">"measurements.rds"</span>))</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  p3_inc <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">mutate</span>(p3_wide, <span class="at">period =</span> <span class="st">"5"</span>, <span class="at">ht_inc =</span> ht_inc5),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(p3_wide, <span class="at">period =</span> <span class="st">"10"</span>, <span class="at">ht_inc =</span> ht_inc10)) <span class="sc">|&gt;</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">period =</span> <span class="fu">factor</span>(period, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"5"</span>, <span class="st">"10"</span>)))</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  p3_models <span class="ot">&lt;-</span> <span class="fu">list</span>(); p3_data <span class="ot">&lt;-</span> <span class="fu">list</span>(); p3_records <span class="ot">&lt;-</span> <span class="fu">list</span>(); sensitivity <span class="ot">&lt;-</span> <span class="fu">list</span>(); omits <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  joint_results <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (sp <span class="cf">in</span> <span class="fu">levels</span>(p3_wide<span class="sc">$</span>spp)) {</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    h <span class="ot">&lt;-</span> <span class="fu">droplevels</span>(<span class="fu">filter</span>(p3_wide, spp <span class="sc">==</span> sp))</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    ii <span class="ot">&lt;-</span> <span class="fu">droplevels</span>(<span class="fu">filter</span>(p3_inc, spp <span class="sc">==</span> sp))</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (endpoint <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"height"</span>, <span class="st">"increment"</span>)) {</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>      id <span class="ot">&lt;-</span> <span class="cf">if</span> (endpoint <span class="sc">==</span> <span class="st">"height"</span>) <span class="fu">paste0</span>(<span class="st">"h_"</span>, sp) <span class="cf">else</span> <span class="fu">paste0</span>(<span class="st">"i_"</span>, sp, <span class="st">"_macro"</span>)</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>      path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(p2, <span class="st">"models"</span>, <span class="fu">paste0</span>(id, <span class="st">".rds"</span>))</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(path)) <span class="fu">stop</span>(<span class="st">"Missing prerequisite: "</span>, path)</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>      m <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(path)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stopifnot</span>(<span class="fu">rd_usable</span>(m))</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>      dat <span class="ot">&lt;-</span> <span class="cf">if</span> (endpoint <span class="sc">==</span> <span class="st">"height"</span>) h <span class="cf">else</span> ii</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>      p3_models[[id]] <span class="ot">&lt;-</span> m; p3_data[[id]] <span class="ot">&lt;-</span> dat</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Reconcile the bootstrap predictor with Phase Two's independently</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>      <span class="co"># checked fixed-effect design and analytic macro integration.</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>      reference <span class="ot">&lt;-</span> <span class="fu">rd_means</span>(m, dat, endpoint, id)<span class="sc">$</span>table</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>      compact <span class="ot">&lt;-</span> <span class="fu">p3_values</span>(m, dat, endpoint)</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>      keys <span class="ot">&lt;-</span> <span class="cf">if</span> (endpoint <span class="sc">==</span> <span class="st">"height"</span>) <span class="fu">paste0</span>(<span class="st">"height:"</span>, reference<span class="sc">$</span>treat) <span class="cf">else</span></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">paste0</span>(<span class="fu">ifelse</span>(reference<span class="sc">$</span>period <span class="sc">==</span> <span class="st">"5"</span>, <span class="st">"early:"</span>, <span class="st">"late:"</span>), reference<span class="sc">$</span>treat)</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stopifnot</span>(<span class="fu">max</span>(<span class="fu">abs</span>(reference<span class="sc">$</span>estimate <span class="sc">-</span> compact[keys])) <span class="sc">&lt;</span> <span class="fl">1e-8</span>)</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>      alt_id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(id, <span class="st">"_bfgs"</span>)</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>      alt <span class="ot">&lt;-</span> <span class="fu">p3_fit</span>(alt_id, <span class="fu">formula</span>(m), <span class="fu">formula</span>(m, <span class="at">component =</span> <span class="st">"disp"</span>), dat, <span class="fu">family</span>(m), <span class="cn">TRUE</span>)</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>      p3_records[[alt_id]] <span class="ot">&lt;-</span> <span class="fu">p3_record</span>(alt, alt_id)</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>      sensitivity[[alt_id]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model_id =</span> id, <span class="at">comparison =</span> alt_id,</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">usable =</span> <span class="fu">rd_usable</span>(alt), <span class="at">objective_difference =</span> <span class="fu">abs</span>(m<span class="sc">$</span>fit<span class="sc">$</span>objective <span class="sc">-</span> alt<span class="sc">$</span>fit<span class="sc">$</span>objective),</span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">max_estimand_difference =</span> <span class="cf">if</span> (<span class="fu">rd_usable</span>(alt)) <span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">p3_values</span>(m, dat, endpoint) <span class="sc">-</span> <span class="fu">p3_values</span>(alt, dat, endpoint))) <span class="cf">else</span> <span class="cn">NA_real_</span>)</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>    diag_id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"i_"</span>, sp, <span class="st">"_macro_diagonal"</span>)</span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>    md <span class="ot">&lt;-</span> <span class="fu">p3_fit</span>(diag_id, ht_inc <span class="sc">~</span> treat <span class="sc">*</span> period <span class="sc">+</span> site <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">0</span> <span class="sc">+</span> period <span class="sc">|</span> plot) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> tree),</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span>treat <span class="sc">*</span> period, ii, <span class="fu">gaussian</span>())</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>    p3_records[[diag_id]] <span class="ot">&lt;-</span> <span class="fu">p3_record</span>(md, diag_id)</span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (site <span class="cf">in</span> <span class="fu">levels</span>(ii<span class="sc">$</span>site)) {</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>      dd <span class="ot">&lt;-</span> <span class="fu">droplevels</span>(<span class="fu">filter</span>(ii, .data<span class="sc">$</span>site <span class="sc">!=</span> .env<span class="sc">$</span>site))</span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (shape <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"correlated"</span>, <span class="st">"diagonal"</span>)) {</span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>        id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"i_"</span>, sp, <span class="st">"_"</span>, shape, <span class="st">"_omit_"</span>, <span class="fu">match</span>(site, <span class="fu">levels</span>(ii<span class="sc">$</span>site)))</span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>        base <span class="ot">&lt;-</span> <span class="cf">if</span> (shape <span class="sc">==</span> <span class="st">"correlated"</span>) p3_models[[<span class="fu">paste0</span>(<span class="st">"i_"</span>, sp, <span class="st">"_macro"</span>)]] <span class="cf">else</span> md</span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>        mm <span class="ot">&lt;-</span> <span class="fu">p3_fit</span>(id, <span class="fu">formula</span>(base), <span class="fu">formula</span>(base, <span class="at">component =</span> <span class="st">"disp"</span>), dd, <span class="fu">family</span>(base), <span class="cn">TRUE</span>)</span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>        p3_records[[id]] <span class="ot">&lt;-</span> <span class="fu">p3_record</span>(mm, id)</span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="fu">rd_usable</span>(mm)) omits[[id]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model_id =</span> id, <span class="at">spp =</span> sp,</span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>          <span class="at">omitted_site =</span> site, <span class="at">estimand =</span> <span class="fu">names</span>(<span class="fu">p3_values</span>(mm, dd, <span class="st">"increment"</span>)),</span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>          <span class="at">value =</span> <span class="fu">unname</span>(<span class="fu">p3_values</span>(mm, dd, <span class="st">"increment"</span>)))</span>
+<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>    hh <span class="ot">&lt;-</span> h <span class="sc">|&gt;</span> <span class="fu">pivot_longer</span>(<span class="fu">c</span>(ht1, ht5, ht10), <span class="at">names_to =</span> <span class="st">"age"</span>, <span class="at">values_to =</span> <span class="st">"height"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">factor</span>(<span class="fu">sub</span>(<span class="st">"ht"</span>, <span class="st">""</span>, age), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"5"</span>, <span class="st">"10"</span>)))</span>
+<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a>    jid <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"joint_"</span>, sp)</span>
+<span id="cb28-54"><a href="#cb28-54" aria-hidden="true" tabindex="-1"></a>    ju <span class="ot">&lt;-</span> <span class="fu">p3_fit</span>(<span class="fu">paste0</span>(jid, <span class="st">"_unstructured"</span>), height <span class="sc">~</span> treat <span class="sc">*</span> age <span class="sc">+</span> site <span class="sc">*</span> age <span class="sc">+</span> <span class="fu">us</span>(<span class="dv">0</span> <span class="sc">+</span> age <span class="sc">|</span> plot) <span class="sc">+</span> <span class="fu">us</span>(<span class="dv">0</span> <span class="sc">+</span> age <span class="sc">|</span> tree),</span>
+<span id="cb28-55"><a href="#cb28-55" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span><span class="dv">0</span>, hh, <span class="fu">gaussian</span>())</span>
+<span id="cb28-56"><a href="#cb28-56" aria-hidden="true" tabindex="-1"></a>    jua <span class="ot">&lt;-</span> <span class="fu">p3_fit</span>(<span class="fu">paste0</span>(jid, <span class="st">"_unstructured_bfgs"</span>), <span class="fu">formula</span>(ju), <span class="sc">~</span><span class="dv">0</span>, hh, <span class="fu">gaussian</span>(), <span class="cn">TRUE</span>)</span>
+<span id="cb28-57"><a href="#cb28-57" aria-hidden="true" tabindex="-1"></a>    p3_records[[<span class="fu">paste0</span>(jid, <span class="st">"_unstructured"</span>)]] <span class="ot">&lt;-</span> <span class="fu">p3_record</span>(ju, <span class="fu">paste0</span>(jid, <span class="st">"_unstructured"</span>))</span>
+<span id="cb28-58"><a href="#cb28-58" aria-hidden="true" tabindex="-1"></a>    p3_records[[<span class="fu">paste0</span>(jid, <span class="st">"_unstructured_bfgs"</span>)]] <span class="ot">&lt;-</span> <span class="fu">p3_record</span>(jua, <span class="fu">paste0</span>(jid, <span class="st">"_unstructured_bfgs"</span>))</span>
+<span id="cb28-59"><a href="#cb28-59" aria-hidden="true" tabindex="-1"></a>    jm <span class="ot">&lt;-</span> <span class="fu">p3_fit</span>(jid, height <span class="sc">~</span> treat <span class="sc">*</span> age <span class="sc">+</span> site <span class="sc">*</span> age <span class="sc">+</span> <span class="fu">rr</span>(<span class="dv">0</span> <span class="sc">+</span> age <span class="sc">|</span> plot, <span class="at">d =</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">us</span>(<span class="dv">0</span> <span class="sc">+</span> age <span class="sc">|</span> tree),</span>
+<span id="cb28-60"><a href="#cb28-60" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span><span class="dv">0</span>, hh, <span class="fu">gaussian</span>())</span>
+<span id="cb28-61"><a href="#cb28-61" aria-hidden="true" tabindex="-1"></a>    ja <span class="ot">&lt;-</span> <span class="fu">p3_fit</span>(<span class="fu">paste0</span>(jid, <span class="st">"_bfgs"</span>), <span class="fu">formula</span>(jm), <span class="sc">~</span><span class="dv">0</span>, hh, <span class="fu">gaussian</span>(), <span class="cn">TRUE</span>)</span>
+<span id="cb28-62"><a href="#cb28-62" aria-hidden="true" tabindex="-1"></a>    p3_records[[jid]] <span class="ot">&lt;-</span> <span class="fu">p3_record</span>(jm, jid)</span>
+<span id="cb28-63"><a href="#cb28-63" aria-hidden="true" tabindex="-1"></a>    p3_records[[<span class="fu">paste0</span>(jid, <span class="st">"_bfgs"</span>)]] <span class="ot">&lt;-</span> <span class="fu">p3_record</span>(ja, <span class="fu">paste0</span>(jid, <span class="st">"_bfgs"</span>))</span>
+<span id="cb28-64"><a href="#cb28-64" aria-hidden="true" tabindex="-1"></a>    <span class="co"># BFGS must pass the same convergence/Hessian check as every other fit.</span></span>
+<span id="cb28-65"><a href="#cb28-65" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Objective agreement does not erase a failed nlminb convergence flag.</span></span>
+<span id="cb28-66"><a href="#cb28-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stopifnot</span>(<span class="fu">rd_usable</span>(ja), <span class="fu">abs</span>(jm<span class="sc">$</span>fit<span class="sc">$</span>objective <span class="sc">-</span> ja<span class="sc">$</span>fit<span class="sc">$</span>objective) <span class="sc">&lt;</span> <span class="fl">1e-4</span>)</span>
+<span id="cb28-67"><a href="#cb28-67" aria-hidden="true" tabindex="-1"></a>    jv <span class="ot">&lt;-</span> <span class="fu">p3_values</span>(ja, hh, <span class="st">"joint"</span>)</span>
+<span id="cb28-68"><a href="#cb28-68" aria-hidden="true" tabindex="-1"></a>    direct <span class="ot">&lt;-</span> <span class="fu">predict</span>(ja, <span class="at">newdata =</span> hh, <span class="at">re.form =</span> <span class="cn">NA</span>)</span>
+<span id="cb28-69"><a href="#cb28-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">is.finite</span>(direct)))</span>
+<span id="cb28-70"><a href="#cb28-70" aria-hidden="true" tabindex="-1"></a>    direct_cells <span class="ot">&lt;-</span> <span class="fu">mutate</span>(hh, <span class="at">fitted_height =</span> <span class="fu">as.numeric</span>(direct)) <span class="sc">|&gt;</span></span>
+<span id="cb28-71"><a href="#cb28-71" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(site, treat, age) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">value =</span> <span class="fu">mean</span>(fitted_height), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-72"><a href="#cb28-72" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(treat, age) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">value =</span> <span class="fu">mean</span>(value), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb28-73"><a href="#cb28-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (tr <span class="cf">in</span> <span class="fu">levels</span>(hh<span class="sc">$</span>treat)) {</span>
+<span id="cb28-74"><a href="#cb28-74" aria-hidden="true" tabindex="-1"></a>      get_height <span class="ot">&lt;-</span> <span class="cf">function</span>(a) direct_cells<span class="sc">$</span>value[direct_cells<span class="sc">$</span>treat <span class="sc">==</span> tr <span class="sc">&amp;</span> direct_cells<span class="sc">$</span>age <span class="sc">==</span> a]</span>
+<span id="cb28-75"><a href="#cb28-75" aria-hidden="true" tabindex="-1"></a>      early <span class="ot">&lt;-</span> (<span class="fu">get_height</span>(<span class="st">"5"</span>) <span class="sc">-</span> <span class="fu">get_height</span>(<span class="st">"1"</span>)) <span class="sc">/</span> <span class="dv">4</span></span>
+<span id="cb28-76"><a href="#cb28-76" aria-hidden="true" tabindex="-1"></a>      late <span class="ot">&lt;-</span> (<span class="fu">get_height</span>(<span class="st">"10"</span>) <span class="sc">-</span> <span class="fu">get_height</span>(<span class="st">"5"</span>)) <span class="sc">/</span> <span class="dv">5</span></span>
+<span id="cb28-77"><a href="#cb28-77" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stopifnot</span>(<span class="fu">abs</span>(jv[<span class="fu">paste0</span>(<span class="st">"height:"</span>, tr)] <span class="sc">-</span> <span class="fu">get_height</span>(<span class="st">"10"</span>)) <span class="sc">&lt;</span> <span class="fl">1e-8</span>,</span>
+<span id="cb28-78"><a href="#cb28-78" aria-hidden="true" tabindex="-1"></a>        <span class="fu">abs</span>(jv[<span class="fu">paste0</span>(<span class="st">"early:"</span>, tr)] <span class="sc">-</span> early) <span class="sc">&lt;</span> <span class="fl">1e-8</span>,</span>
+<span id="cb28-79"><a href="#cb28-79" aria-hidden="true" tabindex="-1"></a>        <span class="fu">abs</span>(jv[<span class="fu">paste0</span>(<span class="st">"late:"</span>, tr)] <span class="sc">-</span> late) <span class="sc">&lt;</span> <span class="fl">1e-8</span>,</span>
+<span id="cb28-80"><a href="#cb28-80" aria-hidden="true" tabindex="-1"></a>        <span class="fu">abs</span>(jv[<span class="fu">paste0</span>(<span class="st">"change:"</span>, tr)] <span class="sc">-</span> (late <span class="sc">-</span> early)) <span class="sc">&lt;</span> <span class="fl">1e-8</span>)</span>
+<span id="cb28-81"><a href="#cb28-81" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb28-82"><a href="#cb28-82" aria-hidden="true" tabindex="-1"></a>    sensitivity[[jid]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model_id =</span> jid, <span class="at">comparison =</span> <span class="fu">paste0</span>(jid, <span class="st">"_bfgs"</span>),</span>
+<span id="cb28-83"><a href="#cb28-83" aria-hidden="true" tabindex="-1"></a>      <span class="at">usable =</span> <span class="fu">rd_usable</span>(ja), <span class="at">objective_difference =</span> <span class="fu">abs</span>(jm<span class="sc">$</span>fit<span class="sc">$</span>objective <span class="sc">-</span> ja<span class="sc">$</span>fit<span class="sc">$</span>objective),</span>
+<span id="cb28-84"><a href="#cb28-84" aria-hidden="true" tabindex="-1"></a>      <span class="at">max_estimand_difference =</span> <span class="fu">max</span>(<span class="fu">abs</span>(jv <span class="sc">-</span> <span class="fu">p3_values</span>(jm, hh, <span class="st">"joint"</span>))))</span>
+<span id="cb28-85"><a href="#cb28-85" aria-hidden="true" tabindex="-1"></a>    hv <span class="ot">&lt;-</span> <span class="fu">p3_values</span>(p3_models[[<span class="fu">paste0</span>(<span class="st">"h_"</span>, sp)]], h, <span class="st">"height"</span>)</span>
+<span id="cb28-86"><a href="#cb28-86" aria-hidden="true" tabindex="-1"></a>    iv <span class="ot">&lt;-</span> <span class="fu">p3_values</span>(p3_models[[<span class="fu">paste0</span>(<span class="st">"i_"</span>, sp, <span class="st">"_macro"</span>)]], ii, <span class="st">"increment"</span>)</span>
+<span id="cb28-87"><a href="#cb28-87" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Identity-link estimands are linear in the mean coefficients. Applying</span></span>
+<span id="cb28-88"><a href="#cb28-88" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the same derivation to each basis vector retains covariance of shared H5.</span></span>
+<span id="cb28-89"><a href="#cb28-89" aria-hidden="true" tabindex="-1"></a>    basis <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">length</span>(<span class="fu">fixef</span>(ja)<span class="sc">$</span>cond))</span>
+<span id="cb28-90"><a href="#cb28-90" aria-hidden="true" tabindex="-1"></a>    J <span class="ot">&lt;-</span> <span class="fu">vapply</span>(<span class="fu">seq_len</span>(<span class="fu">ncol</span>(basis)), <span class="cf">function</span>(k)</span>
+<span id="cb28-91"><a href="#cb28-91" aria-hidden="true" tabindex="-1"></a>      <span class="fu">p3_values</span>(ja, hh, <span class="st">"joint"</span>, <span class="at">coefficients =</span> basis[, k]), <span class="fu">numeric</span>(<span class="fu">length</span>(jv)))</span>
+<span id="cb28-92"><a href="#cb28-92" aria-hidden="true" tabindex="-1"></a>    joint_se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(J <span class="sc">%*%</span> <span class="fu">as.matrix</span>(<span class="fu">vcov</span>(ja)<span class="sc">$</span>cond) <span class="sc">%*%</span> <span class="fu">t</span>(J)))</span>
+<span id="cb28-93"><a href="#cb28-93" aria-hidden="true" tabindex="-1"></a>    joint_results[[sp]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">spp =</span> sp, <span class="at">estimand =</span> <span class="fu">names</span>(jv), <span class="at">joint_value =</span> <span class="fu">unname</span>(jv),</span>
+<span id="cb28-94"><a href="#cb28-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">joint_se =</span> joint_se, <span class="at">joint_lcl =</span> jv <span class="sc">-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> joint_se,</span>
+<span id="cb28-95"><a href="#cb28-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">joint_ucl =</span> jv <span class="sc">+</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> joint_se,</span>
+<span id="cb28-96"><a href="#cb28-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">endpoint_value =</span> <span class="fu">unname</span>(<span class="fu">c</span>(hv, iv)[<span class="fu">names</span>(jv)]),</span>
+<span id="cb28-97"><a href="#cb28-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">uncertainty =</span> <span class="st">"provisional joint-height Wald; covariance model conditional"</span>)</span>
+<span id="cb28-98"><a href="#cb28-98" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb28-99"><a href="#cb28-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(<span class="fu">bind_rows</span>(p3_records), <span class="st">"rd03-fit-register"</span>)</span>
+<span id="cb28-100"><a href="#cb28-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(<span class="fu">bind_rows</span>(sensitivity), <span class="st">"optimizer-checks"</span>)</span>
+<span id="cb28-101"><a href="#cb28-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(<span class="fu">bind_rows</span>(omits), <span class="st">"site-omission-estimands"</span>)</span>
+<span id="cb28-102"><a href="#cb28-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(<span class="fu">bind_rows</span>(joint_results), <span class="st">"joint-height-sensitivity"</span>)</span>
+<span id="cb28-103"><a href="#cb28-103" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-104"><a href="#cb28-104" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"rd03-fit-register"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-105"><a href="#cb28-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model_id, convergence, pd_hessian, max_gradient, min_random_sd, max_absolute_correlation), <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model_id</th>
+<th style="text-align: right;">convergence</th>
+<th style="text-align: left;">pd_hessian</th>
+<th style="text-align: right;">max_gradient</th>
+<th style="text-align: right;">min_random_sd</th>
+<th style="text-align: right;">max_absolute_correlation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">h_LIDE_bfgs</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00019</td>
+<td style="text-align: right;">0.14650</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_macro_bfgs</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00017</td>
+<td style="text-align: right;">0.04461</td>
+<td style="text-align: right;">0.87641</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_macro_diagonal</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00172</td>
+<td style="text-align: right;">0.03772</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_correlated_omit_1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.05386</td>
+<td style="text-align: right;">0.01234</td>
+<td style="text-align: right;">0.99973</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_diagonal_omit_1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00005</td>
+<td style="text-align: right;">0.00001</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_correlated_omit_2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0.02144</td>
+<td style="text-align: right;">0.03767</td>
+<td style="text-align: right;">1.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_diagonal_omit_2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0.02072</td>
+<td style="text-align: right;">0.00000</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_correlated_omit_3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00121</td>
+<td style="text-align: right;">0.04360</td>
+<td style="text-align: right;">0.84911</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_diagonal_omit_3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00001</td>
+<td style="text-align: right;">0.03950</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_correlated_omit_4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0.00290</td>
+<td style="text-align: right;">0.04639</td>
+<td style="text-align: right;">0.99991</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_diagonal_omit_4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">11.31597</td>
+<td style="text-align: right;">0.03899</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">joint_LIDE_unstructured</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0.00282</td>
+<td style="text-align: right;">0.17452</td>
+<td style="text-align: right;">0.99786</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">joint_LIDE_unstructured_bfgs</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0.00889</td>
+<td style="text-align: right;">0.17299</td>
+<td style="text-align: right;">0.99767</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">joint_LIDE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00723</td>
+<td style="text-align: right;">0.17423</td>
+<td style="text-align: right;">0.99783</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">joint_LIDE_bfgs</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00011</td>
+<td style="text-align: right;">0.17423</td>
+<td style="text-align: right;">0.99783</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">h_SESE_bfgs</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00003</td>
+<td style="text-align: right;">0.15170</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_macro_bfgs</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00007</td>
+<td style="text-align: right;">0.07252</td>
+<td style="text-align: right;">0.91955</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_macro_diagonal</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00011</td>
+<td style="text-align: right;">0.04380</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_correlated_omit_1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00042</td>
+<td style="text-align: right;">0.06527</td>
+<td style="text-align: right;">1.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_diagonal_omit_1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00006</td>
+<td style="text-align: right;">0.01772</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_correlated_omit_2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00003</td>
+<td style="text-align: right;">0.03546</td>
+<td style="text-align: right;">0.44558</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_diagonal_omit_2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00002</td>
+<td style="text-align: right;">0.02455</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_correlated_omit_3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00011</td>
+<td style="text-align: right;">0.07884</td>
+<td style="text-align: right;">1.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_diagonal_omit_3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00001</td>
+<td style="text-align: right;">0.04812</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_correlated_omit_4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00000</td>
+<td style="text-align: right;">0.07935</td>
+<td style="text-align: right;">0.97162</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_diagonal_omit_4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00006</td>
+<td style="text-align: right;">0.05017</td>
+<td style="text-align: right;">0.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">joint_SESE_unstructured</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00150</td>
+<td style="text-align: right;">0.32429</td>
+<td style="text-align: right;">0.99913</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">joint_SESE_unstructured_bfgs</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0.00886</td>
+<td style="text-align: right;">0.32419</td>
+<td style="text-align: right;">0.99904</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">joint_SESE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.01354</td>
+<td style="text-align: right;">0.32430</td>
+<td style="text-align: right;">0.99900</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">joint_SESE_bfgs</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0.00789</td>
+<td style="text-align: right;">0.32431</td>
+<td style="text-align: right;">0.99900</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The optimizer comparison separates agreement on the complete cohort from instability after reducing the experiment to three sites. The joint-height table compares the same arithmetic estimands; differences reflect its distinct mean and covariance assumptions, including age-specific site effects.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"optimizer-checks"</span>), <span class="at">digits =</span> <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 21%">
+<col style="width: 8%">
+<col style="width: 25%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model_id</th>
+<th style="text-align: left;">comparison</th>
+<th style="text-align: left;">usable</th>
+<th style="text-align: right;">objective_difference</th>
+<th style="text-align: right;">max_estimand_difference</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">h_LIDE</td>
+<td style="text-align: left;">h_LIDE_bfgs</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0e+00</td>
+<td style="text-align: right;">1.0e-05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_macro</td>
+<td style="text-align: left;">i_LIDE_macro_bfgs</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0e+00</td>
+<td style="text-align: right;">3.0e-06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">joint_LIDE</td>
+<td style="text-align: left;">joint_LIDE_bfgs</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0e+00</td>
+<td style="text-align: right;">8.8e-05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">h_SESE</td>
+<td style="text-align: left;">h_SESE_bfgs</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0e+00</td>
+<td style="text-align: right;">6.2e-05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">i_SESE_macro_bfgs</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">0e+00</td>
+<td style="text-align: right;">0.0e+00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">joint_SESE</td>
+<td style="text-align: left;">joint_SESE_bfgs</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">2e-06</td>
+<td style="text-align: right;">6.2e-04</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"joint-height-sensitivity"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(spp, estimand, joint_value, joint_lcl, joint_ucl, endpoint_value), <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 29%">
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">spp</th>
+<th style="text-align: left;">estimand</th>
+<th style="text-align: right;">joint_value</th>
+<th style="text-align: right;">joint_lcl</th>
+<th style="text-align: right;">joint_ucl</th>
+<th style="text-align: right;">endpoint_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">height:GS</td>
+<td style="text-align: right;">5.2205</td>
+<td style="text-align: right;">4.5476</td>
+<td style="text-align: right;">5.8934</td>
+<td style="text-align: right;">5.1919</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">early:GS</td>
+<td style="text-align: right;">0.4971</td>
+<td style="text-align: right;">0.4438</td>
+<td style="text-align: right;">0.5504</td>
+<td style="text-align: right;">0.4968</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">late:GS</td>
+<td style="text-align: right;">0.4484</td>
+<td style="text-align: right;">0.3784</td>
+<td style="text-align: right;">0.5184</td>
+<td style="text-align: right;">0.4481</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">change:GS</td>
+<td style="text-align: right;">-0.0487</td>
+<td style="text-align: right;">-0.0883</td>
+<td style="text-align: right;">-0.0091</td>
+<td style="text-align: right;">-0.0487</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">height:LD</td>
+<td style="text-align: right;">3.8835</td>
+<td style="text-align: right;">3.2018</td>
+<td style="text-align: right;">4.5652</td>
+<td style="text-align: right;">3.8598</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">early:LD</td>
+<td style="text-align: right;">0.3989</td>
+<td style="text-align: right;">0.3439</td>
+<td style="text-align: right;">0.4538</td>
+<td style="text-align: right;">0.3992</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">late:LD</td>
+<td style="text-align: right;">0.3556</td>
+<td style="text-align: right;">0.2844</td>
+<td style="text-align: right;">0.4269</td>
+<td style="text-align: right;">0.3557</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">change:LD</td>
+<td style="text-align: right;">-0.0433</td>
+<td style="text-align: right;">-0.0851</td>
+<td style="text-align: right;">-0.0015</td>
+<td style="text-align: right;">-0.0435</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">height:HA</td>
+<td style="text-align: right;">3.1795</td>
+<td style="text-align: right;">2.5078</td>
+<td style="text-align: right;">3.8512</td>
+<td style="text-align: right;">3.2017</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">early:HA</td>
+<td style="text-align: right;">0.3281</td>
+<td style="text-align: right;">0.2751</td>
+<td style="text-align: right;">0.3811</td>
+<td style="text-align: right;">0.3282</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">late:HA</td>
+<td style="text-align: right;">0.2844</td>
+<td style="text-align: right;">0.2146</td>
+<td style="text-align: right;">0.3543</td>
+<td style="text-align: right;">0.2841</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">change:HA</td>
+<td style="text-align: right;">-0.0437</td>
+<td style="text-align: right;">-0.0829</td>
+<td style="text-align: right;">-0.0045</td>
+<td style="text-align: right;">-0.0441</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">height:HD</td>
+<td style="text-align: right;">3.1410</td>
+<td style="text-align: right;">2.4686</td>
+<td style="text-align: right;">3.8135</td>
+<td style="text-align: right;">3.1536</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">early:HD</td>
+<td style="text-align: right;">0.3169</td>
+<td style="text-align: right;">0.2637</td>
+<td style="text-align: right;">0.3701</td>
+<td style="text-align: right;">0.3170</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">late:HD</td>
+<td style="text-align: right;">0.2807</td>
+<td style="text-align: right;">0.2107</td>
+<td style="text-align: right;">0.3506</td>
+<td style="text-align: right;">0.2805</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">change:HD</td>
+<td style="text-align: right;">-0.0362</td>
+<td style="text-align: right;">-0.0756</td>
+<td style="text-align: right;">0.0032</td>
+<td style="text-align: right;">-0.0365</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">height_contrast:GS-HD</td>
+<td style="text-align: right;">2.0795</td>
+<td style="text-align: right;">1.1281</td>
+<td style="text-align: right;">3.0308</td>
+<td style="text-align: right;">2.0383</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0125</td>
+<td style="text-align: right;">-0.0683</td>
+<td style="text-align: right;">0.0434</td>
+<td style="text-align: right;">-0.0122</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">height_contrast:HA-HD</td>
+<td style="text-align: right;">0.0385</td>
+<td style="text-align: right;">-0.9120</td>
+<td style="text-align: right;">0.9890</td>
+<td style="text-align: right;">0.0480</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">-0.0075</td>
+<td style="text-align: right;">-0.0631</td>
+<td style="text-align: right;">0.0481</td>
+<td style="text-align: right;">-0.0076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">height:GS</td>
+<td style="text-align: right;">10.4820</td>
+<td style="text-align: right;">9.1986</td>
+<td style="text-align: right;">11.7653</td>
+<td style="text-align: right;">10.6020</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">early:GS</td>
+<td style="text-align: right;">1.0387</td>
+<td style="text-align: right;">0.9442</td>
+<td style="text-align: right;">1.1331</td>
+<td style="text-align: right;">1.0406</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">late:GS</td>
+<td style="text-align: right;">0.8805</td>
+<td style="text-align: right;">0.7517</td>
+<td style="text-align: right;">1.0093</td>
+<td style="text-align: right;">0.8814</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">change:GS</td>
+<td style="text-align: right;">-0.1581</td>
+<td style="text-align: right;">-0.2317</td>
+<td style="text-align: right;">-0.0846</td>
+<td style="text-align: right;">-0.1591</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">height:LD</td>
+<td style="text-align: right;">8.1019</td>
+<td style="text-align: right;">6.7877</td>
+<td style="text-align: right;">9.4160</td>
+<td style="text-align: right;">8.0528</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">early:LD</td>
+<td style="text-align: right;">0.8726</td>
+<td style="text-align: right;">0.7734</td>
+<td style="text-align: right;">0.9718</td>
+<td style="text-align: right;">0.8799</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">late:LD</td>
+<td style="text-align: right;">0.7057</td>
+<td style="text-align: right;">0.5729</td>
+<td style="text-align: right;">0.8384</td>
+<td style="text-align: right;">0.7170</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">change:LD</td>
+<td style="text-align: right;">-0.1669</td>
+<td style="text-align: right;">-0.2454</td>
+<td style="text-align: right;">-0.0884</td>
+<td style="text-align: right;">-0.1629</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">height:HA</td>
+<td style="text-align: right;">6.8917</td>
+<td style="text-align: right;">5.6039</td>
+<td style="text-align: right;">8.1795</td>
+<td style="text-align: right;">6.9108</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">early:HA</td>
+<td style="text-align: right;">0.6647</td>
+<td style="text-align: right;">0.5695</td>
+<td style="text-align: right;">0.7599</td>
+<td style="text-align: right;">0.6657</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">late:HA</td>
+<td style="text-align: right;">0.6006</td>
+<td style="text-align: right;">0.4713</td>
+<td style="text-align: right;">0.7300</td>
+<td style="text-align: right;">0.6015</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">change:HA</td>
+<td style="text-align: right;">-0.0641</td>
+<td style="text-align: right;">-0.1383</td>
+<td style="text-align: right;">0.0102</td>
+<td style="text-align: right;">-0.0641</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">height:HD</td>
+<td style="text-align: right;">5.9258</td>
+<td style="text-align: right;">4.6336</td>
+<td style="text-align: right;">7.2180</td>
+<td style="text-align: right;">5.9496</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">early:HD</td>
+<td style="text-align: right;">0.6164</td>
+<td style="text-align: right;">0.5206</td>
+<td style="text-align: right;">0.7123</td>
+<td style="text-align: right;">0.6153</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">late:HD</td>
+<td style="text-align: right;">0.4957</td>
+<td style="text-align: right;">0.3657</td>
+<td style="text-align: right;">0.6256</td>
+<td style="text-align: right;">0.4950</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">change:HD</td>
+<td style="text-align: right;">-0.1208</td>
+<td style="text-align: right;">-0.1957</td>
+<td style="text-align: right;">-0.0459</td>
+<td style="text-align: right;">-0.1203</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">height_contrast:GS-HD</td>
+<td style="text-align: right;">4.5562</td>
+<td style="text-align: right;">2.7350</td>
+<td style="text-align: right;">6.3774</td>
+<td style="text-align: right;">4.6524</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0374</td>
+<td style="text-align: right;">-0.1423</td>
+<td style="text-align: right;">0.0676</td>
+<td style="text-align: right;">-0.0389</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">height_contrast:HA-HD</td>
+<td style="text-align: right;">0.9659</td>
+<td style="text-align: right;">-0.8585</td>
+<td style="text-align: right;">2.7903</td>
+<td style="text-align: right;">0.9612</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0567</td>
+<td style="text-align: right;">-0.0488</td>
+<td style="text-align: right;">0.1622</td>
+<td style="text-align: right;">0.0562</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We retain the successfully fitted site-omission treatment contrasts below; their point estimates diagnose influence, while the fit register identifies omissions that supply no usable estimates. These are comparisons among the remaining three observed sites, not additional independent experiments.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"site-omission-estimands"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"_contrast:"</span>, estimand)), <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 6%">
+<col style="width: 21%">
+<col style="width: 28%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model_id</th>
+<th style="text-align: left;">spp</th>
+<th style="text-align: left;">omitted_site</th>
+<th style="text-align: left;">estimand</th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_correlated_omit_1</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">Camp Six</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0156</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_correlated_omit_1</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">Camp Six</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">-0.0004</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_diagonal_omit_1</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">Camp Six</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0152</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_diagonal_omit_1</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">Camp Six</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">-0.0004</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_correlated_omit_3</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">Waldo South</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0290</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_correlated_omit_3</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">Waldo South</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">-0.0025</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_diagonal_omit_3</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">Waldo South</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0279</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_diagonal_omit_3</td>
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">Waldo South</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">-0.0023</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_correlated_omit_1</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Camp Six</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0790</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_correlated_omit_1</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Camp Six</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0682</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_diagonal_omit_1</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Camp Six</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0769</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_diagonal_omit_1</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Camp Six</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0682</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_correlated_omit_2</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Waldo North</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0892</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_correlated_omit_2</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Waldo North</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0329</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_diagonal_omit_2</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Waldo North</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0893</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_diagonal_omit_2</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Waldo North</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0330</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_correlated_omit_3</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Waldo South</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">0.0154</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_correlated_omit_3</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Waldo South</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0244</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_diagonal_omit_3</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Waldo South</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">0.0189</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_diagonal_omit_3</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Waldo South</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0282</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_correlated_omit_4</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Whiskey Springs</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0025</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_correlated_omit_4</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Whiskey Springs</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0990</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_diagonal_omit_4</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Whiskey Springs</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0045</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_diagonal_omit_4</td>
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">Whiskey Springs</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0957</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The complete-cohort endpoint models agree under both optimizers. Setting macro period covariance to zero raises AIC by 8.40 for tanoak and 8.28 for redwood on the same rows, with little change in point estimates and wider provisional change intervals. We therefore retain the correlated macro-period models and keep the diagonal specification as a sensitivity. Both retain variation among macros in growth-rate change; neither deletes the experimental clustering.</p>
+<p>BFGS recovers the three Phase Two failed omissions, but redwood’s Camp Six and Waldo South omissions lie at almost perfect macro-period correlation. Tanoak’s Camp Six omission has correlation 0.9997 and a relatively large gradient; two other tanoak BFGS omissions have nonpositive Hessians even though their Phase Two nlminb fits were usable. Diagonal omissions also encounter zero variances and failed Hessians. This is weakly estimated covariance in small subsets, not a reason to discard sites or claim that one simpler covariance solves inference. Across the four usable correlated redwood omissions, the GS–HD difference in slowing ranges from -0.089 to +0.015 m/year. The HA–HD difference ranges from +0.024 to +0.099 m/year, without establishing precision for that comparison. Thus even the sign of the GS–HD temporal comparison depends on which sites remain, whereas the Phase Two height comparison retained a positive GS–HD sign.</p>
+<p>The unrestricted joint-height macro covariance is numerically singular for both species. Rank-two macro fits have usable BFGS Hessians and agree closely in objective with nlminb, whose false-convergence flags remain recorded. We use the BFGS fits only as sensitivities. Their redwood GS–HD year-10 contrast is 4.56 m, versus 4.65 m from the endpoint model; the HA–HD contrast is 0.97 versus 0.96 m. Redwood change estimates differ by at most 0.004 m/year, and tanoak change estimates by less than 0.001 m/year. Their uncertainty is less stable: the joint model’s provisional tanoak change intervals exclude zero in GS, LD, and HA, unlike the endpoint model’s Phase Two intervals. The joint clump covariance pools across treatments and site blocking is age-specific, so this is a different set of covariance assumptions, not independent confirmation of slowing. Differential-change intervals still span zero for both species.</p>
+</section>
+<section id="simulated-support-and-refitted-bootstrap" class="level3">
+<h3 class="anchored" data-anchor-id="simulated-support-and-refitted-bootstrap">Simulated support and refitted bootstrap</h3>
+<p>We inspect 500 simulated datasets from each separate year-10 model, keeping Gaussian draws below zero in the diagnostic count. A log link guarantees a positive mean, not positive observations. We retain these models provisionally because the Phase Two Gamma alternative had poorer fit and detectable residual misfit; this is a consequential approximation, not evidence that negative heights are biologically possible. A lognormal model would be an additional distributional change and is not needed solely to erase a small simulation tail.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (p3_compute) {</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  diagnostics <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(p3_models)) {</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    id <span class="ot">&lt;-</span> <span class="fu">names</span>(p3_models)[j]; m <span class="ot">&lt;-</span> p3_models[[j]]</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set.seed</span>(<span class="dv">20261115</span> <span class="sc">+</span> j)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    sim <span class="ot">&lt;-</span> <span class="fu">simulate</span>(m, <span class="at">nsim =</span> <span class="dv">500</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    dh <span class="ot">&lt;-</span> DHARMa<span class="sc">::</span><span class="fu">createDHARMa</span>(<span class="at">simulatedResponse =</span> <span class="fu">as.matrix</span>(sim),</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">observedResponse =</span> <span class="fu">model.response</span>(<span class="fu">model.frame</span>(m)), <span class="at">fittedPredictedResponse =</span> <span class="fu">rowMeans</span>(<span class="fu">as.matrix</span>(sim)),</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">integerResponse =</span> <span class="cn">FALSE</span>, <span class="at">seed =</span> <span class="dv">20261115</span> <span class="sc">+</span> j)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    diagnostics[[id]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model_id =</span> id, <span class="at">simulations =</span> <span class="dv">500</span>, <span class="at">seed =</span> <span class="dv">20261115</span> <span class="sc">+</span> j,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">simulated_nonpositive_fraction =</span> <span class="fu">mean</span>(<span class="fu">as.matrix</span>(sim) <span class="sc">&lt;=</span> <span class="dv">0</span>),</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">uniformity_p =</span> DHARMa<span class="sc">::</span><span class="fu">testUniformity</span>(dh, <span class="at">plot =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">dispersion_p =</span> DHARMa<span class="sc">::</span><span class="fu">testDispersion</span>(dh, <span class="at">plot =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(<span class="fu">bind_rows</span>(diagnostics), <span class="st">"simulation-diagnostics"</span>)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>  joint_support <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(<span class="fu">levels</span>(p3_wide<span class="sc">$</span>spp))) {</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>    sp <span class="ot">&lt;-</span> <span class="fu">levels</span>(p3_wide<span class="sc">$</span>spp)[j]</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>    jm <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(p3, <span class="st">"models"</span>, <span class="fu">paste0</span>(<span class="st">"joint_"</span>, sp, <span class="st">"_bfgs.rds"</span>)))</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set.seed</span>(<span class="dv">20261120</span> <span class="sc">+</span> j)</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>    js <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">simulate</span>(jm, <span class="at">nsim =</span> <span class="dv">500</span>))</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>    age <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(jm)<span class="sc">$</span>age</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>    joint_support[[sp]] <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">lapply</span>(<span class="fu">levels</span>(age), <span class="cf">function</span>(a)</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.frame</span>(<span class="at">spp =</span> sp, <span class="at">age =</span> a, <span class="at">simulations =</span> <span class="dv">500</span>, <span class="at">seed =</span> <span class="dv">20261120</span> <span class="sc">+</span> j,</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">simulated_nonpositive_fraction =</span> <span class="fu">mean</span>(js[age <span class="sc">==</span> a, , <span class="at">drop =</span> <span class="cn">FALSE</span>] <span class="sc">&lt;=</span> <span class="dv">0</span>))))</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(<span class="fu">bind_rows</span>(joint_support), <span class="st">"joint-simulation-support"</span>)</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"simulation-diagnostics"</span>), <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 34%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model_id</th>
+<th style="text-align: right;">simulations</th>
+<th style="text-align: right;">seed</th>
+<th style="text-align: right;">simulated_nonpositive_fraction</th>
+<th style="text-align: right;">uniformity_p</th>
+<th style="text-align: right;">dispersion_p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">h_LIDE</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261116</td>
+<td style="text-align: right;">0.00139</td>
+<td style="text-align: right;">0.33107</td>
+<td style="text-align: right;">0.484</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_macro</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261117</td>
+<td style="text-align: right;">0.01221</td>
+<td style="text-align: right;">0.83407</td>
+<td style="text-align: right;">0.908</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">h_SESE</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261118</td>
+<td style="text-align: right;">0.00782</td>
+<td style="text-align: right;">0.42082</td>
+<td style="text-align: right;">0.772</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261119</td>
+<td style="text-align: right;">0.01722</td>
+<td style="text-align: right;">0.86691</td>
+<td style="text-align: right;">0.848</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"joint-simulation-support"</span>), <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">spp</th>
+<th style="text-align: right;">age</th>
+<th style="text-align: right;">simulations</th>
+<th style="text-align: right;">seed</th>
+<th style="text-align: right;">simulated_nonpositive_fraction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261121</td>
+<td style="text-align: right;">0.04994</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261121</td>
+<td style="text-align: right;">0.00426</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261121</td>
+<td style="text-align: right;">0.00454</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261122</td>
+<td style="text-align: right;">0.03753</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261122</td>
+<td style="text-align: right;">0.00589</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">20261122</td>
+<td style="text-align: right;">0.00823</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The separate year-10 models generate about 1.4 nonpositive tanoak heights and 7.8 nonpositive redwood heights per 1,000 simulated observations. Their simulation uniformity and dispersion checks give no strong evidence of misfit, although that does not validate the Gaussian lower tail. The joint Gaussian identity sensitivity is less suitable as a full height distribution: about 5.0% of simulated year-1 tanoak heights and 3.8% of redwood heights are nonpositive. Together with its covariance boundaries and pooled clump covariance, that supports retaining it as a sensitivity rather than replacing the endpoint models or using its narrower tanoak intervals as accepted evidence.</p>
+<p>We predeclare <strong>2,000 simulated datasets per selected model</strong> and seed <strong>20261116</strong>. Simulation preserves the original rows, four observed site blocks, 16 macros, repeated clumps, and fitted dispersion. Separate species simulations support within-species comparisons only. Every refit integrates its own macro variance for log-link arithmetic means. Original fitted coefficients supply starting values, allowing valid Gaussian simulations containing negative observations to be fitted with the log mean link. We try nlminb first and BFGS after any error, nonzero convergence code, or nonpositive Hessian. Both attempts and their warnings remain recorded. We do not replace failed datasets or silently treat their estimates as usable.</p>
+<p>The bootstrap uses basic pointwise 95% intervals, reflecting the distribution of refitted estimate minus original estimate. These intervals propagate variance estimation under the selected model, but are conditional on the model and on successful refits. We show the approximate centered-bootstrap two-sided tail probabilities for the four reserved redwood contrasts and their Holm adjustment. These are model-based sensitivity tests, not randomization tests or a demonstration of nominal coverage with four sites. Other comparisons remain exploratory. The Monte Carlo table reports binomial order-statistic uncertainty in each interval endpoint and the intervals from the first and second 1,000 simulations; it assesses simulation precision, not robustness to model misspecification.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show 2,000-refit bootstrap and interval calculations</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>p3_boot_one <span class="ot">&lt;-</span> <span class="cf">function</span>(job, models, datasets, values_fun, start_fun, control_fun) {</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(glmmTMB))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  id <span class="ot">&lt;-</span> job<span class="sc">$</span>id; m <span class="ot">&lt;-</span> models[[id]]; dat <span class="ot">&lt;-</span> datasets[[id]]</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  endpoint <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">startsWith</span>(id, <span class="st">"h_"</span>)) <span class="st">"height"</span> <span class="cf">else</span> <span class="st">"increment"</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(job<span class="sc">$</span>seed)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  dat[[<span class="fu">all.vars</span>(<span class="fu">formula</span>(m))[<span class="dv">1</span>]]] <span class="ot">&lt;-</span> <span class="fu">simulate</span>(m, <span class="at">nsim =</span> <span class="dv">1</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  warning_text <span class="ot">&lt;-</span> <span class="fu">character</span>(); error_text <span class="ot">&lt;-</span> <span class="st">""</span>; attempts <span class="ot">&lt;-</span> <span class="fu">list</span>(); chosen <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (attempt <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) {</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    warning_text <span class="ot">&lt;-</span> <span class="fu">character</span>(); error_text <span class="ot">&lt;-</span> <span class="st">""</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    mm <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(<span class="fu">withCallingHandlers</span>(<span class="fu">glmmTMB</span>(<span class="fu">formula</span>(m),</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">dispformula =</span> <span class="fu">formula</span>(m, <span class="at">component =</span> <span class="st">"disp"</span>), <span class="at">family =</span> <span class="fu">family</span>(m), <span class="at">data =</span> dat,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">REML =</span> <span class="cn">FALSE</span>, <span class="at">na.action =</span> na.fail, <span class="at">start =</span> <span class="fu">start_fun</span>(m), <span class="at">control =</span> <span class="fu">control_fun</span>(attempt <span class="sc">==</span> <span class="dv">2</span>)),</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">warning =</span> <span class="cf">function</span>(w) { warning_text <span class="ot">&lt;&lt;-</span> <span class="fu">c</span>(warning_text, <span class="fu">conditionMessage</span>(w)); <span class="fu">invokeRestart</span>(<span class="st">"muffleWarning"</span>) }),</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) { error_text <span class="ot">&lt;&lt;-</span> <span class="fu">conditionMessage</span>(e); <span class="cn">NULL</span> })</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    usable <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">is.null</span>(mm) <span class="sc">&amp;&amp;</span> mm<span class="sc">$</span>fit<span class="sc">$</span>convergence <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;&amp;</span> <span class="fu">isTRUE</span>(mm<span class="sc">$</span>sdr<span class="sc">$</span>pdHess)</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    v <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(mm)) <span class="fu">VarCorr</span>(mm)<span class="sc">$</span>cond <span class="cf">else</span> <span class="fu">list</span>()</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    sd <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(v, <span class="cf">function</span>(z) <span class="fu">attr</span>(z, <span class="st">"stddev"</span>)))</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>    cor <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(v, <span class="cf">function</span>(z) <span class="fu">attr</span>(z, <span class="st">"correlation"</span>)[<span class="fu">lower.tri</span>(z)]))</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>    attempts[[attempt]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model_id =</span> id, <span class="at">replicate =</span> job<span class="sc">$</span>b, <span class="at">seed =</span> job<span class="sc">$</span>seed,</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">attempt =</span> attempt, <span class="at">usable =</span> usable,</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">convergence =</span> <span class="cf">if</span> (<span class="fu">is.null</span>(mm)) <span class="cn">NA_integer_</span> <span class="cf">else</span> mm<span class="sc">$</span>fit<span class="sc">$</span>convergence,</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">pd_hessian =</span> <span class="sc">!</span><span class="fu">is.null</span>(mm) <span class="sc">&amp;&amp;</span> <span class="fu">isTRUE</span>(mm<span class="sc">$</span>sdr<span class="sc">$</span>pdHess),</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">max_gradient =</span> <span class="cf">if</span> (<span class="fu">is.null</span>(mm)) <span class="cn">NA_real_</span> <span class="cf">else</span> <span class="fu">max</span>(<span class="fu">abs</span>(mm<span class="sc">$</span>sdr<span class="sc">$</span>gradient.fixed)),</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">min_random_sd =</span> <span class="cf">if</span> (<span class="fu">length</span>(sd)) <span class="fu">min</span>(sd) <span class="cf">else</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">max_absolute_correlation =</span> <span class="cf">if</span> (<span class="fu">length</span>(cor)) <span class="fu">max</span>(<span class="fu">abs</span>(cor)) <span class="cf">else</span> <span class="dv">0</span>,</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">boundary =</span> <span class="fu">any</span>(sd <span class="sc">&lt;</span> <span class="fl">1e-4</span>) <span class="sc">||</span> <span class="fu">any</span>(<span class="fu">abs</span>(cor) <span class="sc">&gt;</span> .<span class="dv">999</span>),</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">warnings =</span> <span class="fu">paste</span>(<span class="fu">unique</span>(warning_text), <span class="at">collapse =</span> <span class="st">"; "</span>), <span class="at">error =</span> error_text)</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (usable) { chosen <span class="ot">&lt;-</span> mm; <span class="cf">break</span> }</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">attempts =</span> <span class="fu">do.call</span>(rbind, attempts),</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="cf">if</span> (<span class="fu">is.null</span>(chosen)) <span class="cn">NULL</span> <span class="cf">else</span> <span class="fu">values_fun</span>(chosen, dat, endpoint))</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>We distribute independent simulations across local R workers, using seeds generated before scheduling so worker count cannot change a dataset. Failed connections stop startup; the completed bootstrap is saved as an ignored computational object for later summary regeneration.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (p3_compute) {</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  bootstrap_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(p3, <span class="st">"simulations"</span>, <span class="st">"bootstrap.rds"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">isTRUE</span>(params<span class="sc">$</span>bootstrap)) {</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Master-generated seeds make results independent of worker count and scheduling.</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set.seed</span>(<span class="dv">20261116</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    jobs <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(<span class="fu">names</span>(p3_models), <span class="cf">function</span>(id) <span class="fu">lapply</span>(<span class="fu">seq_len</span>(<span class="dv">2000</span>),</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>      <span class="cf">function</span>(b) <span class="fu">list</span>(<span class="at">id =</span> id, <span class="at">b =</span> b, <span class="at">seed =</span> <span class="fu">sample.int</span>(.Machine<span class="sc">$</span>integer.max, <span class="dv">1</span>)))), <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    workers <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">8</span>L, <span class="fu">max</span>(<span class="dv">1</span>L, parallel<span class="sc">::</span><span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">2</span>L))</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    cl <span class="ot">&lt;-</span> parallel<span class="sc">::</span><span class="fu">makePSOCKcluster</span>(workers, <span class="at">setup_timeout =</span> <span class="dv">30</span>)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    boot <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>      parallel<span class="sc">::</span><span class="fu">clusterEvalQ</span>(cl, { <span class="fu">source</span>(<span class="st">".Rprofile"</span>); <span class="fu">library</span>(glmmTMB); <span class="cn">NULL</span> })</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Batches retain progress without retaining comparison snapshots.</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>      ans <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, <span class="fu">length</span>(jobs))</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (first <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>L, <span class="fu">length</span>(jobs), <span class="at">by =</span> <span class="dv">200</span>L)) {</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>        ix <span class="ot">&lt;-</span> first<span class="sc">:</span><span class="fu">min</span>(first <span class="sc">+</span> <span class="dv">199</span>L, <span class="fu">length</span>(jobs))</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>        ans[ix] <span class="ot">&lt;-</span> parallel<span class="sc">::</span><span class="fu">parLapplyLB</span>(cl, jobs[ix], p3_boot_one,</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>          <span class="at">models =</span> p3_models, <span class="at">datasets =</span> p3_data, <span class="at">values_fun =</span> p3_values,</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>          <span class="at">start_fun =</span> p3_start, <span class="at">control_fun =</span> p3_control)</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">message</span>(<span class="st">"RD03 bootstrap: "</span>, <span class="fu">max</span>(ix), <span class="st">" / "</span>, <span class="fu">length</span>(jobs), <span class="st">" datasets"</span>)</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>      ans</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">finally =</span> parallel<span class="sc">::</span><span class="fu">stopCluster</span>(cl))</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">saveRDS</span>(boot, bootstrap_path)</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(bootstrap_path)) <span class="fu">stop</span>(<span class="st">"Missing Phase Three bootstrap; explicit bootstrap:true is required."</span>)</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>    boot <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(bootstrap_path)</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>We summarize every attempted dataset and use only refits meeting the unchanged convergence and Hessian criteria for intervals. Comparing refitted standard errors with the earlier Wald errors shows the effect of propagating fitted variance uncertainty under these models; Monte Carlo endpoint bands show how precisely 2,000 simulations locate the reported limits.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (p3_compute) {</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  attempts <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">lapply</span>(boot, <span class="st">`</span><span class="at">[[</span><span class="st">`</span>, <span class="st">"attempts"</span>))</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(attempts, <span class="st">"bootstrap-refits"</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  summary_rows <span class="ot">&lt;-</span> <span class="fu">list</span>(); intervals <span class="ot">&lt;-</span> <span class="fu">list</span>(); stability <span class="ot">&lt;-</span> <span class="fu">list</span>(); gradient_sensitivity <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (id <span class="cf">in</span> <span class="fu">names</span>(p3_models)) {</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    subset <span class="ot">&lt;-</span> boot[<span class="fu">vapply</span>(boot, <span class="cf">function</span>(z) z<span class="sc">$</span>attempts<span class="sc">$</span>model_id[<span class="dv">1</span>] <span class="sc">==</span> id, <span class="fu">logical</span>(<span class="dv">1</span>))]</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stopifnot</span>(<span class="fu">length</span>(subset) <span class="sc">==</span> <span class="dv">2000</span>L)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    ok <span class="ot">&lt;-</span> <span class="fu">vapply</span>(subset, <span class="cf">function</span>(z) <span class="sc">!</span><span class="fu">is.null</span>(z<span class="sc">$</span>values), <span class="fu">logical</span>(<span class="dv">1</span>))</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    last <span class="ot">&lt;-</span> attempts <span class="sc">|&gt;</span> <span class="fu">filter</span>(model_id <span class="sc">==</span> id) <span class="sc">|&gt;</span> <span class="fu">group_by</span>(replicate) <span class="sc">|&gt;</span> <span class="fu">slice_tail</span>(<span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">ungroup</span>()</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    summary_rows[[id]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model_id =</span> id, <span class="at">seed =</span> <span class="dv">20261116</span>, <span class="at">requested =</span> <span class="dv">2000</span>,</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">successful =</span> <span class="fu">sum</span>(ok), <span class="at">failed =</span> <span class="fu">sum</span>(<span class="sc">!</span>ok), <span class="at">retried =</span> <span class="fu">sum</span>(last<span class="sc">$</span>attempt <span class="sc">==</span> <span class="dv">2</span>),</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">successful_boundary =</span> <span class="fu">sum</span>(last<span class="sc">$</span>usable <span class="sc">&amp;</span> last<span class="sc">$</span>boundary),</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">successful_gradient_above_0_01 =</span> <span class="fu">sum</span>(last<span class="sc">$</span>usable <span class="sc">&amp;</span> last<span class="sc">$</span>max_gradient <span class="sc">&gt;</span> .<span class="dv">01</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">max_successful_gradient =</span> <span class="fu">max</span>(last<span class="sc">$</span>max_gradient[last<span class="sc">$</span>usable]),</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">first_half_successful =</span> <span class="fu">sum</span>(ok[<span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>]), <span class="at">second_half_successful =</span> <span class="fu">sum</span>(ok[<span class="dv">1001</span><span class="sc">:</span><span class="dv">2000</span>]))</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> p3_models[[id]]; dat <span class="ot">&lt;-</span> p3_data[[id]]</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    point <span class="ot">&lt;-</span> <span class="fu">p3_values</span>(m, dat, <span class="cf">if</span> (<span class="fu">startsWith</span>(id, <span class="st">"h_"</span>)) <span class="st">"height"</span> <span class="cf">else</span> <span class="st">"increment"</span>)</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>    draws <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(subset[ok], <span class="st">`</span><span class="at">[[</span><span class="st">`</span>, <span class="st">"values"</span>))</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stopifnot</span>(<span class="fu">nrow</span>(draws) <span class="sc">&gt;</span> <span class="dv">1000</span>L, <span class="fu">identical</span>(<span class="fu">colnames</span>(draws), <span class="fu">names</span>(point)), <span class="fu">all</span>(<span class="fu">is.finite</span>(draws)))</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A scale-dependent gradient screen is a numerical sensitivity, not a</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># replacement for convergence/Hessian criteria or a coverage guarantee.</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>    gradient <span class="ot">&lt;-</span> last<span class="sc">$</span>max_gradient[<span class="fu">match</span>(<span class="fu">which</span>(ok), last<span class="sc">$</span>replicate)]</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>    strict <span class="ot">&lt;-</span> <span class="fu">is.finite</span>(gradient) <span class="sc">&amp;</span> gradient <span class="sc">&lt;=</span> .<span class="dv">01</span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stopifnot</span>(<span class="fu">sum</span>(strict) <span class="sc">&gt;</span> <span class="dv">1000</span>L)</span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(point)) {</span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>      x <span class="ot">&lt;-</span> draws[, j]; n <span class="ot">&lt;-</span> <span class="fu">length</span>(x); q <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>), <span class="at">names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>      intervals[[<span class="fu">paste</span>(id, j)]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model_id =</span> id, <span class="at">spp =</span> <span class="fu">as.character</span>(dat<span class="sc">$</span>spp[<span class="dv">1</span>]),</span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">estimand =</span> <span class="fu">names</span>(point)[j], <span class="at">estimate =</span> <span class="fu">unname</span>(point[j]), <span class="at">se =</span> <span class="fu">sd</span>(x),</span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">lcl =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">unname</span>(point[j]) <span class="sc">-</span> q[<span class="dv">2</span>], <span class="at">ucl =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">unname</span>(point[j]) <span class="sc">-</span> q[<span class="dv">1</span>],</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">bootstrap_bias =</span> <span class="fu">mean</span>(x) <span class="sc">-</span> <span class="fu">unname</span>(point[j]), <span class="at">successful =</span> n,</span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">p_centered =</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">sum</span>(<span class="fu">abs</span>(x <span class="sc">-</span> point[j]) <span class="sc">&gt;=</span> <span class="fu">abs</span>(point[j]))) <span class="sc">/</span> (n <span class="sc">+</span> <span class="dv">1</span>),</span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">uncertainty =</span> <span class="st">"basic 95% parametric bootstrap; successful refits; model conditional"</span>)</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>      sq <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x[strict], <span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>), <span class="at">names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>      gradient_sensitivity[[<span class="fu">paste</span>(id, j)]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model_id =</span> id, <span class="at">spp =</span> <span class="fu">as.character</span>(dat<span class="sc">$</span>spp[<span class="dv">1</span>]),</span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">estimand =</span> <span class="fu">names</span>(point)[j], <span class="at">estimate =</span> <span class="fu">unname</span>(point[j]), <span class="at">gradient_cutoff =</span> .<span class="dv">01</span>,</span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">retained =</span> <span class="fu">sum</span>(strict), <span class="at">excluded_successful =</span> <span class="fu">sum</span>(<span class="sc">!</span>strict),</span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">lcl =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">unname</span>(point[j]) <span class="sc">-</span> sq[<span class="dv">2</span>], <span class="at">ucl =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">unname</span>(point[j]) <span class="sc">-</span> sq[<span class="dv">1</span>],</span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">uncertainty =</span> <span class="st">"basic 95% bootstrap; convergence/Hessian pass and max gradient &lt;= 0.01; numerical sensitivity"</span>)</span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (prob <span class="cf">in</span> <span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>)) {</span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a>        ranks <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">1</span>L, <span class="fu">pmin</span>(n, <span class="fu">qbinom</span>(<span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>), n, prob) <span class="sc">+</span> <span class="dv">1</span>L))</span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a>        sx <span class="ot">&lt;-</span> <span class="fu">sort</span>(x)</span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>        half_q <span class="ot">&lt;-</span> <span class="fu">vapply</span>(<span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>, <span class="dv">1001</span><span class="sc">:</span><span class="dv">2000</span>), <span class="cf">function</span>(ix) {</span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>          vals <span class="ot">&lt;-</span> <span class="fu">vapply</span>(subset[ix][ok[ix]], <span class="cf">function</span>(z) z<span class="sc">$</span>values[j], <span class="fu">numeric</span>(<span class="dv">1</span>))</span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a>          <span class="dv">2</span> <span class="sc">*</span> point[j] <span class="sc">-</span> <span class="fu">quantile</span>(vals, prob, <span class="at">names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a>        }, <span class="fu">numeric</span>(<span class="dv">1</span>))</span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a>        stability[[<span class="fu">paste</span>(id, j, prob)]] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model_id =</span> id, <span class="at">estimand =</span> <span class="fu">names</span>(point)[j],</span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a>          <span class="at">endpoint =</span> <span class="cf">if</span> (prob <span class="sc">==</span> .<span class="dv">975</span>) <span class="st">"lower"</span> <span class="cf">else</span> <span class="st">"upper"</span>,</span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a>          <span class="at">endpoint_value =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">unname</span>(point[j]) <span class="sc">-</span> <span class="fu">quantile</span>(x, prob, <span class="at">names =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a>          <span class="at">mc_low =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">unname</span>(point[j]) <span class="sc">-</span> sx[ranks[<span class="dv">2</span>]], <span class="at">mc_high =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">unname</span>(point[j]) <span class="sc">-</span> sx[ranks[<span class="dv">1</span>]],</span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a>          <span class="at">first_1000 =</span> half_q[<span class="dv">1</span>], <span class="at">second_1000 =</span> half_q[<span class="dv">2</span>])</span>
+<span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb36-54"><a href="#cb36-54" aria-hidden="true" tabindex="-1"></a>  estimates <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(intervals)</span>
+<span id="cb36-55"><a href="#cb36-55" aria-hidden="true" tabindex="-1"></a>  wald_means <span class="ot">&lt;-</span> <span class="fu">p2_read</span>(<span class="st">"candidate-means"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-56"><a href="#cb36-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">estimand =</span> <span class="fu">paste0</span>(<span class="fu">ifelse</span>(period <span class="sc">==</span> <span class="st">"year10"</span>, <span class="st">"height"</span>, <span class="fu">ifelse</span>(period <span class="sc">==</span> <span class="st">"5"</span>, <span class="st">"early"</span>, <span class="st">"late"</span>)), <span class="st">":"</span>, treat))</span>
+<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a>  wald_contrasts <span class="ot">&lt;-</span> <span class="fu">p2_read</span>(<span class="st">"candidate-contrasts"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">estimand =</span> <span class="fu">case_when</span>(</span>
+<span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">" height$"</span>, contrast) <span class="sc">~</span> <span class="fu">paste0</span>(<span class="st">"height_contrast:"</span>, <span class="fu">sub</span>(<span class="st">" minus HD height"</span>, <span class="st">"-HD"</span>, contrast)),</span>
+<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">" period change$"</span>, contrast) <span class="sc">~</span> <span class="fu">paste0</span>(<span class="st">"change_contrast:"</span>, <span class="fu">sub</span>(<span class="st">" minus HD period change"</span>, <span class="st">"-HD"</span>, contrast)),</span>
+<span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">paste0</span>(<span class="st">"change:"</span>, <span class="fu">sub</span>(<span class="st">" later minus earlier"</span>, <span class="st">""</span>, contrast))))</span>
+<span id="cb36-62"><a href="#cb36-62" aria-hidden="true" tabindex="-1"></a>  wald <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(wald_means, wald_contrasts) <span class="sc">|&gt;</span></span>
+<span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(model_id, spp, estimand, <span class="at">wald_estimate =</span> estimate, <span class="at">wald_se =</span> se, <span class="at">wald_lcl =</span> lcl, <span class="at">wald_ucl =</span> ucl)</span>
+<span id="cb36-64"><a href="#cb36-64" aria-hidden="true" tabindex="-1"></a>  estimates <span class="ot">&lt;-</span> <span class="fu">left_join</span>(estimates, wald, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"model_id"</span>, <span class="st">"spp"</span>, <span class="st">"estimand"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-65"><a href="#cb36-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">bootstrap_to_wald_se =</span> se <span class="sc">/</span> wald_se)</span>
+<span id="cb36-66"><a href="#cb36-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="sc">!</span><span class="fu">anyNA</span>(estimates<span class="sc">$</span>wald_se), <span class="fu">max</span>(<span class="fu">abs</span>(estimates<span class="sc">$</span>estimate <span class="sc">-</span> estimates<span class="sc">$</span>wald_estimate)) <span class="sc">&lt;</span> <span class="fl">1e-8</span>)</span>
+<span id="cb36-67"><a href="#cb36-67" aria-hidden="true" tabindex="-1"></a>  confirmatory <span class="ot">&lt;-</span> estimates <span class="sc">|&gt;</span> <span class="fu">filter</span>(spp <span class="sc">==</span> <span class="st">"SESE"</span>, <span class="fu">grepl</span>(<span class="st">"_contrast:"</span>, estimand)) <span class="sc">|&gt;</span></span>
+<span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">p_holm =</span> <span class="fu">p.adjust</span>(p_centered, <span class="at">method =</span> <span class="st">"holm"</span>),</span>
+<span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">interpretation =</span> <span class="st">"approximate model-based sensitivity; four-contrast family"</span>)</span>
+<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">nrow</span>(confirmatory) <span class="sc">==</span> <span class="dv">4</span>L)</span>
+<span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(<span class="fu">bind_rows</span>(summary_rows), <span class="st">"bootstrap-summary"</span>)</span>
+<span id="cb36-72"><a href="#cb36-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(estimates, <span class="st">"bootstrap-estimates"</span>)</span>
+<span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(confirmatory, <span class="st">"redwood-planned-contrasts"</span>)</span>
+<span id="cb36-74"><a href="#cb36-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(<span class="fu">bind_rows</span>(stability), <span class="st">"monte-carlo-stability"</span>)</span>
+<span id="cb36-75"><a href="#cb36-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(<span class="fu">bind_rows</span>(gradient_sensitivity), <span class="st">"gradient-sensitivity"</span>)</span>
+<span id="cb36-76"><a href="#cb36-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">writeLines</span>(<span class="fu">capture.output</span>(<span class="fu">sessionInfo</span>()), <span class="fu">file.path</span>(p3, <span class="st">"tables"</span>, <span class="st">"session-info.txt"</span>))</span>
+<span id="cb36-77"><a href="#cb36-77" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-78"><a href="#cb36-78" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"bootstrap-summary"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-79"><a href="#cb36-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model_id, requested, successful, failed, retried,</span>
+<span id="cb36-80"><a href="#cb36-80" aria-hidden="true" tabindex="-1"></a>    successful_boundary, successful_gradient_above_0_01),</span>
+<span id="cb36-81"><a href="#cb36-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Model"</span>, <span class="st">"Requested"</span>, <span class="st">"Successful"</span>, <span class="st">"Failed"</span>, <span class="st">"Retried"</span>, <span class="st">"Boundary"</span>, <span class="st">"Gradient &gt;0.01"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 12%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">Requested</th>
+<th style="text-align: right;">Successful</th>
+<th style="text-align: right;">Failed</th>
+<th style="text-align: right;">Retried</th>
+<th style="text-align: right;">Boundary</th>
+<th style="text-align: right;">Gradient &gt;0.01</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">h_LIDE</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_macro</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">1992</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">1304</td>
+<td style="text-align: right;">1223</td>
+<td style="text-align: right;">519</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">h_SESE</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">183</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">1895</td>
+<td style="text-align: right;">105</td>
+<td style="text-align: right;">1580</td>
+<td style="text-align: right;">1434</td>
+<td style="text-align: right;">17</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Both height models yielded 2,000 usable refits. Tanoak increments yielded 1,992 and redwood increments 1,895, leaving 8 (0.4%) and 105 (5.25%) failed datasets, respectively. The second optimizer was needed for 1,304 tanoak and 1,580 redwood datasets. Among successful increment refits, 1,223 tanoak and 1,434 redwood fits met the declared boundary flag (random SD below 0.0001 or absolute correlation above 0.999). Height-model boundary counts were 41 for tanoak and 183 for redwood. These are properties of the simulated fits, not evidence of additional independent replication. In particular, frequent temporal boundaries and conditioning on successful refits limit any claim of calibrated coverage.</p>
+<p>Large gradients can remain after a convergence code of zero and a positive Hessian. The additional numerical sensitivity below restricts successful draws to maximum absolute gradient at most 0.01. This cutoff depends on parameter scales; it diagnoses sensitivity rather than certifying accuracy. We retain the original intervals and all attempt records, and do not reclassify discarded draws as additional successful simulations.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"gradient-sensitivity"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^(change:|.*_contrast:)"</span>, estimand)) <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model_id, estimand, retained, excluded_successful, estimate, lcl, ucl), <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 24%">
+<col style="width: 10%">
+<col style="width: 22%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model_id</th>
+<th style="text-align: left;">estimand</th>
+<th style="text-align: right;">retained</th>
+<th style="text-align: right;">excluded_successful</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">lcl</th>
+<th style="text-align: right;">ucl</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">h_LIDE</td>
+<td style="text-align: left;">height_contrast:GS-HD</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2.0383</td>
+<td style="text-align: right;">1.0824</td>
+<td style="text-align: right;">2.9775</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">h_LIDE</td>
+<td style="text-align: left;">height_contrast:HA-HD</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0480</td>
+<td style="text-align: right;">-0.6881</td>
+<td style="text-align: right;">0.7765</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_macro</td>
+<td style="text-align: left;">change:GS</td>
+<td style="text-align: right;">1473</td>
+<td style="text-align: right;">519</td>
+<td style="text-align: right;">-0.0487</td>
+<td style="text-align: right;">-0.1013</td>
+<td style="text-align: right;">0.0011</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_macro</td>
+<td style="text-align: left;">change:LD</td>
+<td style="text-align: right;">1473</td>
+<td style="text-align: right;">519</td>
+<td style="text-align: right;">-0.0435</td>
+<td style="text-align: right;">-0.1045</td>
+<td style="text-align: right;">0.0093</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_macro</td>
+<td style="text-align: left;">change:HA</td>
+<td style="text-align: right;">1473</td>
+<td style="text-align: right;">519</td>
+<td style="text-align: right;">-0.0441</td>
+<td style="text-align: right;">-0.0930</td>
+<td style="text-align: right;">0.0055</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_macro</td>
+<td style="text-align: left;">change:HD</td>
+<td style="text-align: right;">1473</td>
+<td style="text-align: right;">519</td>
+<td style="text-align: right;">-0.0365</td>
+<td style="text-align: right;">-0.0842</td>
+<td style="text-align: right;">0.0121</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_LIDE_macro</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">1473</td>
+<td style="text-align: right;">519</td>
+<td style="text-align: right;">-0.0122</td>
+<td style="text-align: right;">-0.0844</td>
+<td style="text-align: right;">0.0573</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_LIDE_macro</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">1473</td>
+<td style="text-align: right;">519</td>
+<td style="text-align: right;">-0.0076</td>
+<td style="text-align: right;">-0.0728</td>
+<td style="text-align: right;">0.0640</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">h_SESE</td>
+<td style="text-align: left;">height_contrast:GS-HD</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4.6524</td>
+<td style="text-align: right;">2.5841</td>
+<td style="text-align: right;">6.5446</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">h_SESE</td>
+<td style="text-align: left;">height_contrast:HA-HD</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.9612</td>
+<td style="text-align: right;">-0.7008</td>
+<td style="text-align: right;">2.5085</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change:GS</td>
+<td style="text-align: right;">1878</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">-0.1591</td>
+<td style="text-align: right;">-0.2381</td>
+<td style="text-align: right;">-0.0855</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change:LD</td>
+<td style="text-align: right;">1878</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">-0.1629</td>
+<td style="text-align: right;">-0.2503</td>
+<td style="text-align: right;">-0.0802</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change:HA</td>
+<td style="text-align: right;">1878</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">-0.0641</td>
+<td style="text-align: right;">-0.1545</td>
+<td style="text-align: right;">0.0150</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change:HD</td>
+<td style="text-align: right;">1878</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">-0.1203</td>
+<td style="text-align: right;">-0.1981</td>
+<td style="text-align: right;">-0.0433</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">1878</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">-0.0389</td>
+<td style="text-align: right;">-0.1427</td>
+<td style="text-align: right;">0.0711</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">1878</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">0.0562</td>
+<td style="text-align: right;">-0.0569</td>
+<td style="text-align: right;">0.1721</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The gradient screen retains all height refits, 1,473 tanoak increment refits, and 1,878 redwood increment refits. Its interval endpoints differ from the original increment intervals by at most 0.0036 and 0.0014 m/year, respectively, without changing which change intervals span zero. This is reassuring about these numerical endpoints, but does not resolve covariance misspecification or the instability of estimating variance components from four blocks.</p>
+<p>These treatment contrasts use the same four-site arithmetic target as the point estimates. Holm adjustment applies to the two height and two differential change contrasts together; a cell-wise change interval is not a test that slowing differs between treatments.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"redwood-planned-contrasts"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(estimand, estimate, lcl, ucl, p_centered, p_holm), <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">estimand</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">lcl</th>
+<th style="text-align: right;">ucl</th>
+<th style="text-align: right;">p_centered</th>
+<th style="text-align: right;">p_holm</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">height_contrast:GS-HD</td>
+<td style="text-align: right;">4.6524</td>
+<td style="text-align: right;">2.5841</td>
+<td style="text-align: right;">6.5446</td>
+<td style="text-align: right;">0.0005</td>
+<td style="text-align: right;">0.0020</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">height_contrast:HA-HD</td>
+<td style="text-align: right;">0.9612</td>
+<td style="text-align: right;">-0.7008</td>
+<td style="text-align: right;">2.5085</td>
+<td style="text-align: right;">0.2399</td>
+<td style="text-align: right;">0.7196</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: right;">-0.0389</td>
+<td style="text-align: right;">-0.1427</td>
+<td style="text-align: right;">0.0710</td>
+<td style="text-align: right;">0.4736</td>
+<td style="text-align: right;">0.7196</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: right;">0.0562</td>
+<td style="text-align: right;">-0.0570</td>
+<td style="text-align: right;">0.1726</td>
+<td style="text-align: right;">0.3186</td>
+<td style="text-align: right;">0.7196</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>For redwood, GS–HD year-10 height is 4.65 m (basic 95% interval 2.58–6.54 m), with approximate centered-bootstrap probability 0.00050 and Holm-adjusted probability 0.0020. HA–HD height is 0.96 m (-0.70–2.51 m). Differences in later-minus-earlier rates are -0.039 m/year for GS–HD (-0.143–0.071) and +0.056 m/year for HA–HD (-0.057–0.173); the latter three adjusted probabilities are all about 0.72. These model-based calculations support the stronger attained-height contrast without establishing an arrangement advantage, treatment-specific slowing, or temporal equivalence.</p>
+<p>For the reserved redwood contrasts, the next table compares the first and second halves of the simulation and gives order-statistic uncertainty in each full-sample interval endpoint. The complete machine-readable table includes every treatment mean and temporal estimand.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"monte-carlo-stability"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"SESE"</span>, model_id), <span class="fu">grepl</span>(<span class="st">"_contrast:"</span>, estimand)), <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 22%">
+<col style="width: 9%">
+<col style="width: 15%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model_id</th>
+<th style="text-align: left;">estimand</th>
+<th style="text-align: left;">endpoint</th>
+<th style="text-align: right;">endpoint_value</th>
+<th style="text-align: right;">mc_low</th>
+<th style="text-align: right;">mc_high</th>
+<th style="text-align: right;">first_1000</th>
+<th style="text-align: right;">second_1000</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">h_SESE</td>
+<td style="text-align: left;">height_contrast:GS-HD</td>
+<td style="text-align: left;">upper</td>
+<td style="text-align: right;">6.5446</td>
+<td style="text-align: right;">6.4717</td>
+<td style="text-align: right;">6.6524</td>
+<td style="text-align: right;">6.5598</td>
+<td style="text-align: right;">6.5126</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">h_SESE</td>
+<td style="text-align: left;">height_contrast:GS-HD</td>
+<td style="text-align: left;">lower</td>
+<td style="text-align: right;">2.5841</td>
+<td style="text-align: right;">2.4257</td>
+<td style="text-align: right;">2.6467</td>
+<td style="text-align: right;">2.5106</td>
+<td style="text-align: right;">2.5979</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">h_SESE</td>
+<td style="text-align: left;">height_contrast:HA-HD</td>
+<td style="text-align: left;">upper</td>
+<td style="text-align: right;">2.5085</td>
+<td style="text-align: right;">2.4438</td>
+<td style="text-align: right;">2.5953</td>
+<td style="text-align: right;">2.5748</td>
+<td style="text-align: right;">2.4442</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">h_SESE</td>
+<td style="text-align: left;">height_contrast:HA-HD</td>
+<td style="text-align: left;">lower</td>
+<td style="text-align: right;">-0.7008</td>
+<td style="text-align: right;">-0.8096</td>
+<td style="text-align: right;">-0.6344</td>
+<td style="text-align: right;">-0.7648</td>
+<td style="text-align: right;">-0.6636</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: left;">upper</td>
+<td style="text-align: right;">0.0710</td>
+<td style="text-align: right;">0.0639</td>
+<td style="text-align: right;">0.0804</td>
+<td style="text-align: right;">0.0738</td>
+<td style="text-align: right;">0.0680</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change_contrast:GS-HD</td>
+<td style="text-align: left;">lower</td>
+<td style="text-align: right;">-0.1427</td>
+<td style="text-align: right;">-0.1495</td>
+<td style="text-align: right;">-0.1387</td>
+<td style="text-align: right;">-0.1403</td>
+<td style="text-align: right;">-0.1444</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: left;">upper</td>
+<td style="text-align: right;">0.1726</td>
+<td style="text-align: right;">0.1661</td>
+<td style="text-align: right;">0.1769</td>
+<td style="text-align: right;">0.1760</td>
+<td style="text-align: right;">0.1682</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">i_SESE_macro</td>
+<td style="text-align: left;">change_contrast:HA-HD</td>
+<td style="text-align: left;">lower</td>
+<td style="text-align: right;">-0.0570</td>
+<td style="text-align: right;">-0.0663</td>
+<td style="text-align: right;">-0.0530</td>
+<td style="text-align: right;">-0.0573</td>
+<td style="text-align: right;">-0.0532</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>For the four reserved redwood contrasts, first-half versus second-half interval endpoints differ by at most 0.131 m for height and 0.0079 m/year for temporal change. The GS–HD height lower endpoint is 2.58 m, with an order-statistic Monte Carlo band of 2.43–2.65 m. The temporal contrast endpoints have Monte Carlo bands about 0.011–0.017 m/year wide. Simulation precision does not change the qualitative contrast interpretation, but the extra decimals in the saved tables should not be read as biological precision. Bootstrap standard errors are close to the provisional Wald errors under the chosen models; that agreement does not establish finite-sample coverage.</p>
+<p>The interval-specific rates remain available without averaging away their different durations. The ratio of bootstrap to provisional Wald standard error shows how refitting changes the earlier uncertainty calculation under the chosen model; it does not establish that either interval has exact coverage.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">p3_read</span>(<span class="st">"bootstrap-estimates"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^(early|late):"</span>, estimand)) <span class="sc">|&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(spp, estimand, estimate, lcl, ucl, bootstrap_to_wald_se), <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">spp</th>
+<th style="text-align: left;">estimand</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">lcl</th>
+<th style="text-align: right;">ucl</th>
+<th style="text-align: right;">bootstrap_to_wald_se</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">early:GS</td>
+<td style="text-align: right;">0.4968</td>
+<td style="text-align: right;">0.4425</td>
+<td style="text-align: right;">0.5466</td>
+<td style="text-align: right;">0.9977</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">late:GS</td>
+<td style="text-align: right;">0.4481</td>
+<td style="text-align: right;">0.3630</td>
+<td style="text-align: right;">0.5241</td>
+<td style="text-align: right;">0.9747</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">early:LD</td>
+<td style="text-align: right;">0.3992</td>
+<td style="text-align: right;">0.3414</td>
+<td style="text-align: right;">0.4512</td>
+<td style="text-align: right;">0.9981</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">late:LD</td>
+<td style="text-align: right;">0.3557</td>
+<td style="text-align: right;">0.2714</td>
+<td style="text-align: right;">0.4292</td>
+<td style="text-align: right;">0.9821</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">early:HA</td>
+<td style="text-align: right;">0.3282</td>
+<td style="text-align: right;">0.2755</td>
+<td style="text-align: right;">0.3798</td>
+<td style="text-align: right;">0.9864</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">late:HA</td>
+<td style="text-align: right;">0.2841</td>
+<td style="text-align: right;">0.2056</td>
+<td style="text-align: right;">0.3608</td>
+<td style="text-align: right;">0.9906</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">early:HD</td>
+<td style="text-align: right;">0.3170</td>
+<td style="text-align: right;">0.2643</td>
+<td style="text-align: right;">0.3687</td>
+<td style="text-align: right;">1.0145</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIDE</td>
+<td style="text-align: left;">late:HD</td>
+<td style="text-align: right;">0.2805</td>
+<td style="text-align: right;">0.2010</td>
+<td style="text-align: right;">0.3585</td>
+<td style="text-align: right;">1.0156</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">early:GS</td>
+<td style="text-align: right;">1.0406</td>
+<td style="text-align: right;">0.9472</td>
+<td style="text-align: right;">1.1300</td>
+<td style="text-align: right;">0.9851</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">late:GS</td>
+<td style="text-align: right;">0.8814</td>
+<td style="text-align: right;">0.7447</td>
+<td style="text-align: right;">1.0074</td>
+<td style="text-align: right;">0.9771</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">early:LD</td>
+<td style="text-align: right;">0.8799</td>
+<td style="text-align: right;">0.7903</td>
+<td style="text-align: right;">0.9680</td>
+<td style="text-align: right;">0.9753</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">late:LD</td>
+<td style="text-align: right;">0.7170</td>
+<td style="text-align: right;">0.5797</td>
+<td style="text-align: right;">0.8498</td>
+<td style="text-align: right;">0.9943</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">early:HA</td>
+<td style="text-align: right;">0.6657</td>
+<td style="text-align: right;">0.5748</td>
+<td style="text-align: right;">0.7614</td>
+<td style="text-align: right;">1.0345</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">late:HA</td>
+<td style="text-align: right;">0.6015</td>
+<td style="text-align: right;">0.4581</td>
+<td style="text-align: right;">0.7369</td>
+<td style="text-align: right;">1.0202</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">early:HD</td>
+<td style="text-align: right;">0.6153</td>
+<td style="text-align: right;">0.5235</td>
+<td style="text-align: right;">0.7103</td>
+<td style="text-align: right;">1.0453</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SESE</td>
+<td style="text-align: left;">late:HD</td>
+<td style="text-align: right;">0.4950</td>
+<td style="text-align: right;">0.3533</td>
+<td style="text-align: right;">0.6317</td>
+<td style="text-align: right;">1.0284</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="proposed-size-display-and-supplementary-temporal-detail" class="level3">
+<h3 class="anchored" data-anchor-id="proposed-size-display-and-supplementary-temporal-detail">Proposed size display and supplementary temporal detail</h3>
+<p>We show year-10 height as the main display proposal and retain treatment-wise changes in growth rate as supplementary detail. A temporal panel in the main figure would invite a strong treatment-specific interpretation that needs support from the differential-change contrasts. Points and intervals use the refitted bootstrap, with redwood first and tanoak providing context.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (p3_compute) {</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  display <span class="ot">&lt;-</span> <span class="fu">p3_read</span>(<span class="st">"bootstrap-estimates"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^(height|change):"</span>, estimand)) <span class="sc">|&gt;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">treat =</span> <span class="fu">factor</span>(<span class="fu">sub</span>(<span class="st">".*:"</span>, <span class="st">""</span>, estimand), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"GS"</span>, <span class="st">"LD"</span>, <span class="st">"HA"</span>, <span class="st">"HD"</span>)),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">species =</span> <span class="fu">factor</span>(spp, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"SESE"</span>, <span class="st">"LIDE"</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Redwood"</span>, <span class="st">"Tanoak"</span>)))</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">p3_write</span>(display, <span class="st">"proposed-display"</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (kind <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"height"</span>, <span class="st">"change"</span>)) {</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    z <span class="ot">&lt;-</span> <span class="fu">filter</span>(display, <span class="fu">grepl</span>(<span class="fu">paste0</span>(<span class="st">"^"</span>, kind, <span class="st">":"</span>), estimand))</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(treat, estimate)) <span class="sc">+</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">"grey80"</span>, <span class="at">linewidth =</span> .<span class="dv">35</span>) <span class="sc">+</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lcl, <span class="at">ymax =</span> ucl), <span class="at">width =</span> .<span class="dv">12</span>, <span class="at">linewidth =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.7</span>, <span class="at">colour =</span> <span class="st">"#22665D"</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>species) <span class="sc">+</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Overstory treatment"</span>, <span class="at">y =</span> <span class="cf">if</span> (kind <span class="sc">==</span> <span class="st">"height"</span>) <span class="st">"Year-10 tallest-clump height (m)"</span> <span class="cf">else</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Later minus earlier annual height change (m/year)"</span>) <span class="sc">+</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggsave</span>(<span class="fu">file.path</span>(p3, <span class="st">"figures"</span>, <span class="fu">paste0</span>(<span class="st">"proposed-"</span>, kind, <span class="st">".png"</span>)), g, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="fl">4.3</span>, <span class="at">dpi =</span> <span class="dv">180</span>)</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">file.path</span>(p3, <span class="st">"figures"</span>, <span class="st">"proposed-height.png"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="outputs/sprouts/phase-three/figures/proposed-height.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Proposed main caption.</strong> Arithmetic mean year-10 height of the tallest sprout on each recorded clump under GS, LD, HA, and HD, shown separately for redwood and tanoak. Predictions average the four observed sites equally and integrate the fitted Gaussian macro effect in separate Gaussian(log) models. Bars are basic pointwise 95% parametric-bootstrap intervals from successful refits among 2,000 simulated datasets per model. They are model conditional and exclude uncertainty about model selection and clump inclusion. The tallest stem can change between visits; these are selected-cohort height estimates, not stand-wide productivity or survival estimates. The display awaits acceptance.</p>
+<p>The supplemental temporal display keeps the two unequal intervals explicit: the plotted quantity is <span class="math inline">\((H_{10}-H_5)/5-(H_5-H_1)/4\)</span>. Negative values indicate a lower later rate of change in clump maximum height, without identifying the growth history of one stem.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">file.path</span>(p3, <span class="st">"figures"</span>, <span class="st">"proposed-change.png"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="outputs/sprouts/phase-three/figures/proposed-change.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Proposed supplementary caption.</strong> Change in annualized tallest-clump height increment from years 1–5 to years 5–10, standardized equally over the four observed sites. Separate Gaussian models retain correlated macro-period effects, a clump intercept, and treatment-by-period residual dispersion. Points are later minus earlier rates; bars are basic pointwise 95% parametric-bootstrap intervals conditional on successful refits and the chosen model. Individual treatment intervals do not test differences in slowing between treatments. Covariance boundaries and alternative joint-height assumptions limit inference.</p>
+</section>
+<section id="phase-three-conclusion-and-acceptance-handoff" class="level3">
+<h3 class="anchored" data-anchor-id="phase-three-conclusion-and-acceptance-handoff">Phase Three conclusion and acceptance handoff</h3>
+<p>For the display proposal, we select <code>h_SESE</code> and <code>h_LIDE</code> for attained year-10 height and retain <code>i_SESE_macro</code> and <code>i_LIDE_macro</code> for supplementary temporal detail. Redwood GS clumps are clearly taller than HD clumps under the fitted model, while HA–HD height and differences among treatments in slowing remain uncertain. Redwood slowing intervals exclude zero in GS, LD, and HD, but not HA; tanoak’s four intervals span zero. Those within-treatment results do not test differential slowing and remain conditional on the selected covariance.</p>
+<p>The joint-height sensitivity supports the point-estimate story while exposing uncertainty and support limitations. The refitted bootstrap propagates fitted variance uncertainty, records failed and boundary fits, and locates the reported endpoints sufficiently well for this display decision. It does not remove the limitations of four sites, selected clumps, Gaussian support, or model selection. The main height figure and supplementary temporal figure are ready for human acceptance; RT02, M02, and D02 remain queued until then. No manuscript model, claim, or publication display is accepted by this analysis.</p>
 </section>
 </section>
 <section id="rd03-files" class="level2">
@@ -8307,6 +10343,107 @@ Browse current source files and outputs
 <li><a href="repo-files/publication/outputs/sprouts/phase-two/tables/rd03-fit-register.csv">publication/outputs/sprouts/phase-two/tables/rd03-fit-register.csv</a></li>
 <li><a href="repo-files/publication/outputs/sprouts/phase-two/tables/session-info.txt">publication/outputs/sprouts/phase-two/tables/session-info.txt</a></li>
 <li><a href="repo-files/publication/outputs/sprouts/phase-two/figures/residual-review.png">publication/outputs/sprouts/phase-two/figures/residual-review.png</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/rd03-fit-register.csv">publication/outputs/sprouts/phase-three/tables/rd03-fit-register.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/optimizer-checks.csv">publication/outputs/sprouts/phase-three/tables/optimizer-checks.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/site-omission-estimands.csv">publication/outputs/sprouts/phase-three/tables/site-omission-estimands.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/joint-height-sensitivity.csv">publication/outputs/sprouts/phase-three/tables/joint-height-sensitivity.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/simulation-diagnostics.csv">publication/outputs/sprouts/phase-three/tables/simulation-diagnostics.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/bootstrap-refits.csv">publication/outputs/sprouts/phase-three/tables/bootstrap-refits.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/bootstrap-summary.csv">publication/outputs/sprouts/phase-three/tables/bootstrap-summary.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/bootstrap-estimates.csv">publication/outputs/sprouts/phase-three/tables/bootstrap-estimates.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/redwood-planned-contrasts.csv">publication/outputs/sprouts/phase-three/tables/redwood-planned-contrasts.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/monte-carlo-stability.csv">publication/outputs/sprouts/phase-three/tables/monte-carlo-stability.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/proposed-display.csv">publication/outputs/sprouts/phase-three/tables/proposed-display.csv</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/session-info.txt">publication/outputs/sprouts/phase-three/tables/session-info.txt</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/figures/proposed-height.png">publication/outputs/sprouts/phase-three/figures/proposed-height.png</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/figures/proposed-change.png">publication/outputs/sprouts/phase-three/figures/proposed-change.png</a></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/joint-simulation-support.csv">publication/outputs/sprouts/phase-three/tables/joint-simulation-support.csv</a></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_reference.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_fixed.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_diagonal.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_disp_add.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_identity.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_gamma.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_reference.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_random.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_fixed.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_diagonal.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_full.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_disp_period.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_disp_add.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_LIDE.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE_period.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE_us.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE_macro.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_SESE.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE_period.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE_us.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE_macro.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/rh_base.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/rh_residual.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/ri_base.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/ri_residual.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_diagonal_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_identity_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_gamma_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_full_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_disp_add_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE_us_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE_us_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE_macro_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE_macro_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/rh_residual_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/ri_residual_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_diagonal_omit_1.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_diagonal_omit_2.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_diagonal_omit_3.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/h_diagonal_omit_4.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_full_omit_1.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_full_omit_2.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_full_omit_3.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_full_omit_4.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE_macro_omit_1.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE_macro_omit_2.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE_macro_omit_3.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_LIDE_macro_omit_4.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE_macro_omit_1.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE_macro_omit_2.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE_macro_omit_3.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-two/models/i_SESE_macro_omit_4.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/h_LIDE_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_macro_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_macro_diagonal.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_correlated_omit_1.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_diagonal_omit_1.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_correlated_omit_2.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_diagonal_omit_2.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_correlated_omit_3.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_diagonal_omit_3.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_correlated_omit_4.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_LIDE_diagonal_omit_4.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/joint_LIDE_unstructured.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/joint_LIDE_unstructured_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/joint_LIDE.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/joint_LIDE_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/h_SESE_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_macro_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_macro_diagonal.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_correlated_omit_1.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_diagonal_omit_1.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_correlated_omit_2.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_diagonal_omit_2.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_correlated_omit_3.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_diagonal_omit_3.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_correlated_omit_4.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/i_SESE_diagonal_omit_4.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/joint_SESE_unstructured.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/joint_SESE_unstructured_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/joint_SESE.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/models/joint_SESE_bfgs.rds</code></li>
+<li><code>publication/outputs/sprouts/phase-three/simulations/bootstrap.rds</code></li>
+<li><a href="repo-files/publication/outputs/sprouts/phase-three/tables/gradient-sensitivity.csv">publication/outputs/sprouts/phase-three/tables/gradient-sensitivity.csv</a></li>
 </ul>
 </section>
 <section id="consumed-inputs-and-references" class="level3">
