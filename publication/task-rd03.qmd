@@ -3,6 +3,7 @@ title: "RD03 - sprout-height display"
 params:
   recompute: false
   refit: false
+  refit_temporal: false
 sidebar: workflow
 ---
 
@@ -21,10 +22,11 @@ and the smallest useful set of displays. The publication's regeneration-first
 direction makes redwood development the main question, with tanoak providing
 ecological context; this task does not repeat RD02's basal-area result.
 
-**Phase One is complete for the available records; field-history questions remain
-for human review.** The [input audit and handoff](#rd03-phase-one) extend the
-initial thesis review below. No publication models have been fitted and no new
-model estimates, significance claims, or displays are accepted.
+**Phase Two implements the reference and design/covariance comparison.** The
+[human review and Phase Three handoff](#rd03-phase-three) distinguishes exploratory
+fits from accepted publication results. All 692 recorded clumps are the intended
+cohort, as confirmed in human review on 6 November 2026. Final model selection,
+calibrated uncertainty, and publication displays remain pending.
 
 ### Evidence reviewed and numerical limits
 
@@ -425,15 +427,16 @@ those analyses therefore require no numerical refresh.
 
 The following audit runs in publication R 4.6.2 using only exported measurements.
 An ordinary render reads saved audit tables; `-P recompute:true` refreshes these
-deterministic calculations. Phase One has no fitting branch, so `refit:true` is
-rejected to prevent it being mistaken for a completed model analysis.
+deterministic calculations. `-P refit:true` also runs the Phase Two fits below;
+it does not refit any thesis analysis or RD02 model.
 
 ```{r}
 #| label: rd03-audit-setup
-#| include: false
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show audit setup and helpers"
 suppressPackageStartupMessages({ library(dplyr); library(tidyr) })
-if (isTRUE(params$refit)) stop("Phase One audits inputs only; no publication fitting is implemented yet.")
-recompute <- isTRUE(params$recompute)
+recompute <- isTRUE(params$recompute) || isTRUE(params$refit) || isTRUE(params$refit_temporal)
 input <- "inputs/thesis/sprouts"
 out <- "outputs/sprouts/phase-one"
 read_audit <- function(name) read.csv(file.path(out, paste0(name, ".csv")), check.names = FALSE)
@@ -520,8 +523,10 @@ There are 334 redwood and 358 tanoak clumps, 2,076 height observations, and
 1,384 increments across four sites and 16 macro plots. Redwood treatment totals
 range from 72 to 91, and tanoak totals from 78 to 95. The Methods describes
 approximately 25 clumps per species per macro plot, rather than an exact initial
-roster. The available files cannot explain differences from that approximate
-target. Complete rows do not establish complete follow-up of the original cohort.
+roster. Human review suggests that some blocks had too few clumps to reach that
+approximate target and confirms this recorded cohort as the analysis population.
+That explanation is plausible field context, not a recovered enrollment ledger.
+Complete rows do not establish complete follow-up of an original cohort.
 
 ### Response support and recoverable sampling information
 
@@ -554,10 +559,11 @@ unchanged. Neither valid negative increments in a future corrected input nor
 missing/dead clumps should be silently removed or recoded to fit a family.
 
 The workbook's `ResidRWonClumpYN` was omitted from the thesis import. We recover
-its numeric codes as `residual_rw`, retaining NA for tanoak. A code of 1 denotes
-residual redwood on the clump according to the column label; its timing and field
-protocol still need confirmation. We tabulate both codes and missing values
-before proposing any adjustment.
+its numeric codes as `residual_rw`, retaining NA for tanoak. Human review confirms
+that 1 means a residual redwood tree was left on that clump following harvest;
+GS has none because all trees were cut. Such a tree could augment or suppress
+basal-sprout development. We tabulate composition before exploring that
+association, without assuming its direction.
 
 ```{r}
 #| label: rd03-sampling-composition
@@ -650,9 +656,11 @@ additional sheets documenting those events. The tally of roughly 25 clumps per
 species per macro plot is insufficient to reconstruct an attrition denominator.
 These are missing field-history evidence, not failed numerical checks.
 
-Human review should confirm the residual-tree code definition and timing, explain
-unequal clump counts if original records exist, and decide whether the recorded
-cohort is the intended target for exploratory fitting. No sampling weights,
+Human review on 6 November 2026 confirmed the recorded cohort as the intended
+target and defined the indicator as a residual redwood tree left on the clump
+following harvest. GS has no such trees because all trees were cut. Unequal
+counts may reflect too few available clumps in some blocks; no original roster
+was supplied to verify that explanation. No sampling weights,
 zero-height replacements, survival claims, or unobserved leader histories have
 been inferred. If new field information changes inclusion or measurements,
 refresh the export and this audit before fitting.
@@ -674,7 +682,7 @@ unrestricted residual variances and a clump intercept.
 Before reporting publication means, resolve observed-site versus exchangeable-site
 standardization and predeclare contrast families and multiplicity handling.
 Keep residual-tree adjustment as an explicitly conditional sensitivity, subject
-to code validation and the GS overlap limitation. Bootstrap calibration and
+to the GS overlap limitation. Bootstrap calibration and
 final displays follow model review; RT02, M02, and D02 remain queued. Human
 review should precede the next phase.
 
@@ -683,5 +691,822 @@ limitation that complete analytical frames alone concealed. It also recovers a
 sampling indicator that can inform a carefully bounded sensitivity. The main
 scientific limitation remains generalization beyond the selected recorded clumps;
 model fitting cannot recover the missing field history or establish survival.
+
+## Phase Two: design, covariance, and explanatory candidates {#rd03-phase-two}
+
+How much of the apparent treatment and temporal pattern survives a model that
+respects the four-site experiment, and does a residual redwood on the same clump
+help explain sprout development? We retain every audited clump and compare a
+limited set of scientifically motivated alternatives. Fits here are exploratory
+publication candidates, not accepted Results. Human review has authorized this
+cohort and clarified residual-tree status; it has not supplied sampling weights
+or a survival history.
+
+Our working target is arithmetic mean tallest-clump height or interval change
+in this selected cohort, **standardized equally over the four observed sites**.
+For log-link models we integrate the Gaussian macro effect for point estimates;
+fixed sites avoid generalizing a site distribution from four blocks. Random-site
+candidates instead describe an exchangeable-site population and are explicitly
+labeled as a different target. The provisional intervals below propagate fixed
+mean-coefficient uncertainty only, holding random-effect variance estimates
+fixed. They are a comparison aid, not final coverage claims. Phase Three must
+include variance-parameter uncertainty and assess finite-replication calibration.
+
+Before fitting, we reserve four redwood contrasts for a possible confirmatory
+family: GS minus HD and HA minus HD in year-10 height, and the same two treatment
+differences in later-minus-earlier annual increment. Phase Three will apply Holm
+adjustment across those four tests if retained. Cell-wise temporal changes,
+tanoak context, covariance comparisons, and residual-tree associations remain
+exploratory. No significance-based model search or equivalence claim is intended.
+
+### Fitting and prediction helpers
+
+The helpers keep ML fitting, convergence evidence, and arithmetic-mean prediction
+consistent across candidates. A saved model is required for recomputation;
+only `refit:true` authorizes the complete fitting sequence. The focused
+`refit_temporal:true` mode fits the added species-specific temporal-macro
+candidates, their optimizer checks, and site omissions while reading every other
+saved fit. We retain warnings and unsuccessful numerical
+fits in the register rather than quietly discarding them. Model RDS files remain
+ignored; tables and diagnostic figures remain versioned.
+
+```{r}
+#| label: rd03-phase-two-setup
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show fitting and prediction helpers"
+suppressPackageStartupMessages({ library(glmmTMB); library(ggplot2); library(DHARMa) })
+p2 <- "outputs/sprouts/phase-two"
+p2_read <- function(name) read.csv(file.path(p2, "tables", paste0(name, ".csv")), check.names = FALSE)
+p2_write <- function(x, name) write.csv(x, file.path(p2, "tables", paste0(name, ".csv")), row.names = FALSE)
+if (recompute) {
+  for (folder in c("models", "tables", "figures"))
+    dir.create(file.path(p2, folder), recursive = TRUE, showWarnings = FALSE)
+  wide <- readRDS(file.path(input, "measurements.rds"))
+  inc <- bind_rows(mutate(wide, period = "5", ht_inc = ht_inc5),
+                   mutate(wide, period = "10", ht_inc = ht_inc10)) |>
+    mutate(period = factor(period, levels = c("5", "10")))
+  stopifnot(nrow(wide) == 692L, nrow(inc) == 1384L, !anyNA(wide$ht10), !anyNA(inc$ht_inc))
+  fits <- list(); fit_records <- list(); fit_data <- list()
+}
+rd_fit <- function(id, mean, dispersion, data, endpoint, stage = "candidate",
+                   family = gaussian(if (endpoint == "height") "log" else "identity"),
+                   second_optimizer = FALSE) {
+  path <- file.path(p2, "models", paste0(id, ".rds"))
+  if (isTRUE(params$refit) || (isTRUE(params$refit_temporal) && grepl("^i_(LIDE|SESE)_macro", id))) {
+    message("RD03 fitting ", id)
+    warnings <- character()
+    control <- if (second_optimizer)
+      glmmTMBControl(optimizer = optim, optArgs = list(method = "BFGS"),
+                     optCtrl = list(maxit = 10000, reltol = 1e-10), rank_check = "stop") else
+      glmmTMBControl(optCtrl = list(iter.max = 3000, eval.max = 5000), rank_check = "stop")
+    m <- withCallingHandlers(glmmTMB(mean, dispformula = dispersion, data = data,
+      family = family, REML = FALSE, na.action = na.fail, control = control),
+      warning = function(w) { warnings <<- c(warnings, conditionMessage(w)); invokeRestart("muffleWarning") })
+    attr(m, "rd03_warnings") <- paste(unique(warnings), collapse = "; ")
+    saveRDS(m, path)
+  } else {
+    if (!file.exists(path)) stop("Missing saved RD03 fit: ", id, ". Explicit refit:true is required.")
+    m <- readRDS(path)
+  }
+  stopifnot(nobs(m) == nrow(data), identical(rownames(model.frame(m)), rownames(data)))
+  if ("tree" %in% names(model.frame(m)))
+    stopifnot(identical(as.character(model.frame(m)$tree), as.character(data$tree)))
+  ll <- logLik(m)
+  fit_records[[id]] <<- data.frame(model_id = id, stage = stage, endpoint = endpoint,
+    fit_status = "fit", n = nobs(m), n_clumps = n_distinct(data$tree), n_sites = n_distinct(data$site),
+    mean = paste(deparse(formula(m)), collapse = " "),
+    dispersion = paste(deparse(formula(m, component = "disp")), collapse = " "),
+    family = family(m)$family, link = family(m)$link, parameters = attr(ll, "df"),
+    log_likelihood = as.numeric(ll), AIC = AIC(m), convergence = m$fit$convergence,
+    pd_hessian = isTRUE(m$sdr$pdHess), max_gradient = max(abs(m$sdr$gradient.fixed)),
+    warnings = attr(m, "rd03_warnings"))
+  fits[[id]] <<- m
+  fit_data[[id]] <<- data
+  m
+}
+rd_usable <- function(m) m$fit$convergence == 0 && isTRUE(m$sdr$pdHess)
+rd_variance <- function(m, id) {
+  bind_rows(lapply(names(VarCorr(m)$cond), function(group) {
+    v <- VarCorr(m)$cond[[group]]
+    ix <- which(lower.tri(v, diag = TRUE), arr.ind = TRUE)
+    data.frame(model_id = id, group = group, term1 = rownames(v)[ix[, 1]],
+      term2 = colnames(v)[ix[, 2]], covariance = v[ix],
+      correlation = attr(v, "correlation")[ix],
+      boundary_sd_below_1e_4 = sqrt(diag(v))[ix[, 1]] < 1e-4 | sqrt(diag(v))[ix[, 2]] < 1e-4)
+  }))
+}
+rd_means <- function(m, data, endpoint, id) {
+  stopifnot(rd_usable(m))
+  grid <- expand.grid(site = levels(droplevels(data$site)), treat = levels(droplevels(data$treat)),
+    spp = levels(droplevels(data$spp)),
+    period = if (endpoint == "increment") levels(data$period) else "year10",
+    KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+  for (v in c("site", "treat", "spp")) grid[[v]] <- factor(grid[[v]], levels = levels(data[[v]]))
+  if (endpoint == "increment") grid$period <- factor(grid$period, levels = levels(data$period))
+  grid$plot <- data$plot[1]; grid$tree <- data$tree[1]
+  ff <- delete.response(terms(lme4::nobars(formula(m))))
+  X <- model.matrix(ff, grid)
+  beta <- fixef(m)$cond
+  stopifnot(identical(colnames(X), names(beta)))
+  eta <- drop(X %*% beta)
+  stopifnot(max(abs(predict(m, newdata = grid, type = "link", re.form = NA) - eta)) < 1e-8)
+  multiplier <- rep(1, nrow(grid))
+  vc <- VarCorr(m)$cond
+  random_site <- "site" %in% names(vc)
+  if (family(m)$link == "log") {
+    for (i in seq_len(nrow(grid))) {
+      v <- sum(vapply(names(vc), function(group) {
+        z <- vc[[group]]
+        if (nrow(z) == 1L) z[1, 1] else z[paste0("spp", grid$spp[i]), paste0("spp", grid$spp[i])]
+      }, numeric(1)))
+      multiplier[i] <- exp(v / 2)
+    }
+  }
+  mu <- family(m)$linkinv(eta) * multiplier
+  J <- X * as.numeric(family(m)$mu.eta(eta) * multiplier)
+  cells <- unique(grid[c("spp", "treat", "period")])
+  W <- t(vapply(seq_len(nrow(cells)), function(j) {
+    z <- grid$spp == cells$spp[j] & grid$treat == cells$treat[j] & grid$period == cells$period[j]
+    as.numeric(z) / sum(z)
+  }, numeric(nrow(grid))))
+  G <- W %*% J
+  covariance <- G %*% as.matrix(vcov(m)$cond) %*% t(G)
+  ans <- data.frame(model_id = id, cells, estimate = drop(W %*% mu),
+    se = sqrt(diag(covariance)), target = if (random_site) "exchangeable sites; random effects integrated" else
+      "four observed sites equally weighted; macro effects integrated",
+    uncertainty = "provisional Wald; random variances held fixed")
+  ans$lcl <- ans$estimate - qnorm(.975) * ans$se
+  ans$ucl <- ans$estimate + qnorm(.975) * ans$se
+  list(table = ans, covariance = covariance, gradient = G,
+       coefficient_covariance = as.matrix(vcov(m)$cond))
+}
+rd_contrasts <- function(z, endpoint) {
+  a <- z$table; rows <- list()
+  add <- function(w, label, spp) {
+    est <- sum(w * a$estimate)
+    # Form the contrast gradient first: subtracting nearly equal cell
+    # covariances loses precision for changes constrained to be identical.
+    g <- drop(t(w) %*% z$gradient)
+    se <- sqrt(drop(t(g) %*% z$coefficient_covariance %*% g))
+    rows[[length(rows) + 1L]] <<- data.frame(model_id = a$model_id[1], spp = spp,
+      contrast = label, estimate = est, se = se, lcl = est - qnorm(.975) * se,
+      ucl = est + qnorm(.975) * se, uncertainty = a$uncertainty[1])
+  }
+  for (sp in unique(as.character(a$spp))) {
+    if (endpoint == "height") {
+      for (tr in c("GS", "HA")) add(as.numeric(a$spp == sp & a$treat == tr) -
+        as.numeric(a$spp == sp & a$treat == "HD"), paste0(tr, " minus HD height"), sp)
+    } else {
+      changes <- lapply(levels(wide$treat), function(tr)
+        as.numeric(a$spp == sp & a$treat == tr & a$period == "10") -
+        as.numeric(a$spp == sp & a$treat == tr & a$period == "5"))
+      names(changes) <- levels(wide$treat)
+      for (tr in names(changes)) add(changes[[tr]], paste0(tr, " later minus earlier"), sp)
+      for (tr in c("GS", "HA")) add(changes[[tr]] - changes$HD,
+        paste0(tr, " minus HD period change"), sp)
+    }
+  }
+  bind_rows(rows)
+}
+```
+
+### Reference and blocked joint models
+
+We first reproduce the two thesis specifications from the exported measurements.
+The increment reference omits site blocking and constrains temporal change within
+each species; the alternatives add site, diagonal species-macro effects, and then
+the full treatment × species × period mean. All joint candidates use the same
+rows within an endpoint and ML. The two height families and reduced dispersion
+candidates are bounded sensitivities, not a replacement for residual review.
+AIC comparisons are meaningful only within the same endpoint and response rows;
+fixed versus random sites also change the generalization assumption.
+
+Use the model-comparison table to see which changes improve fit without adding
+unnecessary parameters. Compare AIC only within height or within increment;
+check convergence and `pd_hessian` before interpreting a model's estimates.
+
+```{r}
+#| label: rd03-joint-candidates
+if (recompute) {
+  rd_fit("h_reference", ht10 ~ treat * spp + (0 + spp | plot) + (1 | site), ~spp * treat, wide, "height")
+  rd_fit("h_fixed", ht10 ~ treat * spp + site + (0 + spp | plot), ~spp * treat, wide, "height")
+  rd_fit("h_diagonal", ht10 ~ treat * spp + site + diag(0 + spp | plot), ~spp * treat, wide, "height")
+  rd_fit("h_disp_add", ht10 ~ treat * spp + site + diag(0 + spp | plot), ~spp + treat, wide, "height")
+  rd_fit("h_identity", ht10 ~ treat * spp + site + diag(0 + spp | plot), ~spp * treat, wide, "height", family = gaussian())
+  rd_fit("h_gamma", ht10 ~ treat * spp + site + diag(0 + spp | plot), ~spp * treat, wide, "height", family = Gamma(link = "log"))
+  rd_fit("i_reference", ht_inc ~ treat * spp + period * spp + (1 | tree) + (0 + spp | plot), ~spp * period * treat, inc, "increment")
+  rd_fit("i_random", ht_inc ~ treat * spp + period * spp + (1 | site) + (1 | tree) + (0 + spp | plot), ~spp * period * treat, inc, "increment")
+  rd_fit("i_fixed", ht_inc ~ treat * spp + period * spp + site + (1 | tree) + (0 + spp | plot), ~spp * period * treat, inc, "increment")
+  rd_fit("i_diagonal", ht_inc ~ treat * spp + period * spp + site + (1 | tree) + diag(0 + spp | plot), ~spp * period * treat, inc, "increment")
+  rd_fit("i_full", ht_inc ~ treat * spp * period + site + (1 | tree) + diag(0 + spp | plot), ~spp * period * treat, inc, "increment")
+  rd_fit("i_disp_period", ht_inc ~ treat * spp * period + site + (1 | tree) + diag(0 + spp | plot), ~spp * period, inc, "increment")
+  rd_fit("i_disp_add", ht_inc ~ treat * spp * period + site + (1 | tree) + diag(0 + spp | plot), ~spp * period + treat, inc, "increment")
+  joint_ids <- names(fits)
+  p2_write(bind_rows(fit_records), "joint-comparison")
+  reference_check <- bind_rows(lapply(c("h_reference", "i_reference"), function(id) {
+    endpoint <- if (startsWith(id, "h")) "height" else "increment"
+    nd <- if (endpoint == "height") wide else inc
+    historical <- read.csv(file.path(input, "historical-predictions.csv")) |>
+      filter(model_id == if (endpoint == "height") "ht10_sel" else "minc_sel")
+    grid <- nd[rep(1L, nrow(historical)), ]
+    grid$treat <- factor(historical$treat, levels = levels(nd$treat))
+    grid$spp <- factor(historical$spp, levels = levels(nd$spp))
+    if (endpoint == "increment") grid$period <- factor(historical$period, levels = levels(nd$period))
+    delta <- max(abs(predict(fits[[id]], grid, re.form = NA, type = "response") - historical$estimate))
+    # Cross-version numerical reproduction tolerance; no analytical inputs change.
+    stopifnot(delta < 1e-4)
+    data.frame(model_id = id, cells = nrow(historical), max_absolute_prediction_error = delta,
+      tolerance = 1e-4, passed = delta < 1e-4)
+  }))
+  p2_write(reference_check, "reference-reproduction")
+}
+knitr::kable(p2_read("joint-comparison") |>
+  select(model_id, endpoint, n, parameters, AIC, convergence, pd_hessian, max_gradient), digits = 4)
+```
+
+The reproduction table checks that `h_reference` and `i_reference` recover the
+historical predictions. This helps us distinguish a deliberate model change
+from a failure to reproduce the starting analysis.
+
+```{r}
+#| label: rd03-reference-reproduction-review
+knitr::kable(p2_read("reference-reproduction"), digits = 7)
+```
+
+The new reference fits reproduce all 24 historical prediction cells: the largest
+differences are 0.00000374 m for year-10 height and less than 0.000000002 m yr^-1^
+for increments. Adding fixed sites changes the height comparison little; allowing
+cross-species macro covariance improves AIC by only 0.47 relative to diagonal
+effects. Random-site variances approach zero in both endpoints, but that does
+not remove the experimental blocks from the design.
+
+Among the blocked diagonal height candidates, Gaussian(log) has the lowest AIC;
+identity and Gamma(log) are higher by 5.64 and 24.86. Pooling treatment dispersion
+raises AIC by 11.10. The full increment mean raises AIC by 6.42 relative to the
+otherwise matched reduced mean: treatment-specific temporal responses are not
+strongly supported by this likelihood comparison. We nevertheless retain the
+full mean as an exploratory sensitivity so that its uncertainty is visible;
+the reduced mean imposes parallel responses rather than demonstrating them.
+
+### Species-specific and two-period covariance sensitivities
+
+Separate species models relax the shared site and clump-variance assumptions.
+For increments, we compare the saturated treatment/period dispersion with a
+period-only version, then replace its clump intercept and residual variances
+with one unstructured two-period clump covariance. The latter includes no
+additional clump intercept or free residual variance. It can represent negative
+association but pools covariance across treatments within a species; thus it
+does not also reproduce treatment-specific dispersion. The period-only intercept
+fit makes that restriction visible rather than confounding both changes.
+This follows the identifiable formulation in the
+[glmmTMB covariance documentation](https://glmmtmb.github.io/glmmTMB/articles/covstruct.html).
+
+One more covariance question matters for temporal inference: a single macro
+intercept cancels from a within-clump period difference. We therefore also fit
+species-specific two-period macro effects, retaining the clump intercept and
+treatment/period dispersion. These allow treatment units to differ in their
+temporal responses. The temporal-macro fits keep the full mean structure and
+remain identifiable because each macro contains many repeated clumps.
+
+The next table compares these alternatives within each species. In particular,
+compare `i_SESE_macro` with `i_SESE`, and `i_LIDE_macro` with `i_LIDE`, to assess
+whether allowing macro plots to change between periods improves fit.
+
+```{r}
+#| label: rd03-species-covariance
+if (recompute) {
+  for (sp in levels(wide$spp)) {
+    h <- droplevels(filter(wide, spp == sp)); ii <- droplevels(filter(inc, spp == sp))
+    rd_fit(paste0("h_", sp), ht10 ~ treat + site + (1 | plot), ~treat, h, "height")
+    rd_fit(paste0("i_", sp), ht_inc ~ treat * period + site + (1 | plot) + (1 | tree), ~treat * period, ii, "increment")
+    rd_fit(paste0("i_", sp, "_period"), ht_inc ~ treat * period + site + (1 | plot) + (1 | tree), ~period, ii, "increment")
+    rd_fit(paste0("i_", sp, "_us"), ht_inc ~ treat * period + site + (1 | plot) + us(0 + period | tree), ~0, ii, "increment")
+    rd_fit(paste0("i_", sp, "_macro"), ht_inc ~ treat * period + site + (0 + period | plot) + (1 | tree), ~treat * period, ii, "increment")
+  }
+  p2_write(bind_rows(fit_records)[!names(fit_records) %in% joint_ids, ], "species-comparison")
+  p2_write(bind_rows(lapply(names(fits), function(id) rd_variance(fits[[id]], id))), "variance-components")
+}
+knitr::kable(p2_read("species-comparison") |>
+  select(model_id, endpoint, n, parameters, AIC, convergence, pd_hessian, max_gradient), digits = 4)
+```
+
+The variance table shows what each model estimates about differences among
+sites, macro plots, and clumps. It helps explain why uncertainty changes between
+models: look for unequal species variances, correlations between periods, and
+variance estimates flagged as close to zero.
+
+```{r}
+#| label: rd03-variance-components-review
+knitr::kable(p2_read("variance-components"), digits = 4)
+```
+
+The separate-species increment fits estimate clump variances of 0.0461 for
+redwood and 0.0080 for tanoak, indicating that a shared variance is a substantial
+restriction. The period-only clump covariances are positive (correlations 0.615
+and 0.405), and their unstructured fits have essentially the same likelihood as
+the corresponding intercept fits. Negative association is permitted but is not
+estimated here. This does not separately identify measurement-error variance.
+
+Allowing macro effects to differ by period lowers AIC by 11.72 for redwood and
+14.21 for tanoak relative to their separate-species saturated-dispersion intercept
+fits. Macro correlations are high (0.920 and 0.876), but unequal period variances
+leave nonzero treatment-unit variation in temporal change. This is a more
+consequential covariance improvement than permitting a negative clump covariance,
+and it should carry forward to Phase Three. All full-cohort candidates converge
+with positive-definite Hessians; stability under reduced site replication is a
+separate question below.
+
+### A residual tree on the clump
+
+We explore whether a retained redwood on a clump explains development **within
+LD, HA, and HD**, adjusting for treatment and observed site. GS is structurally
+code 0 and tanoak has no defined indicator; neither supplies a residual-tree
+comparison. The height candidate estimates one common log-mean association
+across the three treatments; the increment candidate allows that association
+to differ by period while retaining treatment-specific temporal means. Baseline
+and adjusted likelihoods use identical redwood rows. These are post-treatment
+associations that can reflect clump selection or local conditions, not causal
+direct/indirect effects of retaining a tree. We do not condition the primary
+treatment comparison on this indicator or invent area-wide stratum weights.
+
+The fit table asks whether adding residual-tree status explains enough variation
+to justify the extra model terms. Compare `rh_residual` with `rh_base`, and
+`ri_residual` with `ri_base`; each pair uses exactly the same clumps.
+
+```{r}
+#| label: rd03-residual-tree
+if (recompute) {
+  rh <- droplevels(filter(wide, spp == "SESE", treat != "GS"))
+  ri <- droplevels(filter(inc, spp == "SESE", treat != "GS"))
+  stopifnot(nrow(rh) == 243L, all(rh$residual_rw %in% c(0, 1)))
+  rd_fit("rh_base", ht10 ~ treat + site + (1 | plot), ~treat, rh, "height", stage = "residual_tree")
+  rd_fit("rh_residual", ht10 ~ treat + site + residual_rw + (1 | plot), ~treat, rh, "height", stage = "residual_tree")
+  rd_fit("ri_base", ht_inc ~ treat * period + site + (1 | plot) + (1 | tree), ~treat * period, ri, "increment", stage = "residual_tree")
+  rd_fit("ri_residual", ht_inc ~ treat * period + site + residual_rw * period + (1 | plot) + (1 | tree), ~treat * period, ri, "increment", stage = "residual_tree")
+  p2_write(rh |> group_by(site, treat, residual_rw) |>
+    summarise(n_clumps = n(), height10 = mean(ht10), increment_1_5 = mean(ht_inc5),
+      increment_5_10 = mean(ht_inc10), .groups = "drop"), "residual-tree-observed")
+  assoc <- list()
+  for (id in c("rh_residual", "ri_residual")) {
+    m <- fits[[id]]; beta <- fixef(m)$cond; V <- as.matrix(vcov(m)$cond)
+    for (period in if (id == "rh_residual") "year10" else c("5", "10")) {
+      w <- setNames(rep(0, length(beta)), names(beta)); w["residual_rw"] <- 1
+      if (period == "10") w[grep("residual_rw:period10|period10:residual_rw", names(beta))] <- 1
+      est <- sum(w * beta); se <- sqrt(drop(t(w) %*% V %*% w))
+      logged <- id == "rh_residual"
+      f <- if (logged) exp else identity
+      assoc[[length(assoc) + 1L]] <- data.frame(model_id = id, period = period,
+        effect = if (logged) "residual-present / absent height ratio" else "residual-present minus absent m yr-1",
+        estimate = f(est), lcl = f(est - qnorm(.975) * se), ucl = f(est + qnorm(.975) * se),
+        uncertainty = "exploratory Wald; selected retained-treatment clumps")
+    }
+  }
+  p2_write(bind_rows(assoc), "residual-tree-associations")
+  p2_write(bind_rows(fit_records)[vapply(fit_records, function(x) x$stage == "residual_tree", logical(1)), ], "residual-tree-comparison")
+}
+knitr::kable(p2_read("residual-tree-comparison") |>
+  select(model_id, n, parameters, AIC, convergence, pd_hessian), digits = 3)
+```
+
+The association table puts the residual-tree result in biological units. A
+height ratio of 1 means no estimated height difference; an increment difference
+of 0 means no estimated growth-rate difference. The intervals show whether both
+augmentation and suppression remain plausible.
+
+```{r}
+#| label: rd03-residual-tree-associations-review
+knitr::kable(p2_read("residual-tree-associations"), digits = 4)
+```
+
+The observed summaries show how many clumps support each comparison within a
+site and treatment. They help us spot uneven sampling or a result concentrated
+in one group; these raw means do not adjust for site or treatment differences.
+
+```{r}
+#| label: rd03-residual-tree-observed-review
+knitr::kable(p2_read("residual-tree-observed"), digits = 3)
+```
+
+The common residual-tree association adds little explanatory power in these
+243 retained-treatment redwood clumps. AIC increases by 1.10 for height and
+3.36 for increments. The height ratio is 1.050 (exploratory 95% Wald interval
+0.950–1.160); increment associations are +0.031 and +0.016 m yr^-1^, with intervals
+spanning both suppression and augmentation. We do not promote the indicator
+into the primary treatment model or search additional interactions on this
+evidence. Small effects, opposing treatment-specific associations, and selection
+effects remain possible; this is not evidence that residual trees have no effect.
+
+### Comparable means and planned contrasts
+
+The arithmetic predictions below expose sensitivity to mean and covariance
+assumptions. We average sites equally, integrate log-link random effects
+analytically, and check the fixed design against direct zero-effect prediction.
+Reference random-site models have a different population target, labeled in
+the saved table. Separate-species fits cannot provide cross-species contrasts.
+Intervals are unadjusted, provisional Wald summaries with variance components
+held fixed. AIC, interval overlap, or a small temporal coefficient alone does
+not establish an accepted model or equivalent temporal responses.
+
+The mean table gives the scale of the modeled responses under each treatment:
+height in metres for `h_diagonal`, and annual height change in m/year for
+`i_full`. It provides context for the direct comparisons that follow.
+
+```{r}
+#| label: rd03-candidate-estimates
+if (recompute) {
+  prediction_ids <- c(joint_ids, "h_LIDE", "h_SESE", "i_LIDE", "i_SESE",
+    "i_LIDE_period", "i_SESE_period", "i_LIDE_us", "i_SESE_us", "i_LIDE_macro", "i_SESE_macro")
+  means <- contrasts <- list()
+  for (id in prediction_ids) {
+    m <- fits[[id]]
+    if (!rd_usable(m)) next
+    endpoint <- if (startsWith(id, "h")) "height" else "increment"
+    dat <- if (endpoint == "height") wide else inc
+    sp <- sub("^[hi]_(LIDE|SESE).*", "\\1", id)
+    if (sp %in% levels(wide$spp)) dat <- droplevels(filter(dat, spp == sp))
+    z <- rd_means(m, dat, endpoint, id)
+    means[[id]] <- z$table; contrasts[[id]] <- rd_contrasts(z, endpoint)
+    stopifnot(all(is.finite(contrasts[[id]]$estimate)), all(is.finite(contrasts[[id]]$se)))
+    if (id %in% c("i_reference", "i_random", "i_fixed", "i_diagonal")) {
+      zero <- filter(contrasts[[id]], grepl("minus HD period change", contrast))
+      # These differences are analytically zero under the reduced mean;
+      # this also checks stable SE calculation after covariance cancellation.
+      stopifnot(all(abs(zero$estimate) < 1e-10), all(zero$se < 1e-8))
+    }
+  }
+  p2_write(bind_rows(means), "candidate-means")
+  p2_write(bind_rows(contrasts), "candidate-contrasts")
+}
+knitr::kable(p2_read("candidate-means") |> filter(model_id %in% c("h_diagonal", "i_full")) |>
+  select(model_id, spp, treat, period, estimate, se, lcl, ucl), digits = 3)
+```
+
+This contrast table directly compares treatments and periods in those joint
+models. It is more useful for assessing GS minus HD or HA minus HD than
+judging whether two treatment-mean intervals overlap. Negative
+later-minus-earlier values indicate slower annual height change in years 5–10.
+
+```{r}
+#| label: rd03-joint-contrasts-review
+knitr::kable(p2_read("candidate-contrasts") |> filter(model_id %in% c("h_diagonal", "i_full")) |>
+  select(model_id, spp, contrast, estimate, se, lcl, ucl), digits = 3)
+```
+
+The next table repeats the temporal comparisons using `i_SESE_macro` and
+`i_LIDE_macro`, our recommended growth-model starting points. Compare their
+intervals with `i_full` above to see the consequence of allowing species-specific
+clump variation and different macro-plot contributions in each period.
+
+```{r}
+#| label: rd03-temporal-macro-contrasts-review
+knitr::kable(p2_read("candidate-contrasts") |> filter(model_id %in% c("i_LIDE_macro", "i_SESE_macro")) |>
+  select(model_id, spp, contrast, estimate, se, lcl, ucl), digits = 3)
+```
+
+The blocked diagonal height candidate estimates redwood means of 10.57, 8.04,
+6.92, and 5.93 m for GS, LD, HA, and HD. The GS–HD difference is 4.64 m; the
+HA–HD difference is 0.99 m with substantially greater uncertainty relative to
+its size. The separate redwood height fit gives nearly identical differences
+(4.65 and 0.96 m). These are candidate estimates, not accepted publication claims.
+
+The redwood temporal-macro fit estimates later-minus-earlier changes of -0.159,
+-0.163, -0.064, and -0.120 m yr^-1^. Its GS–HD and HA–HD differences in change
+are -0.039 and +0.056 m yr^-1^; both provisional intervals span zero. In particular,
+tanoak's four temporal-change intervals all span zero once temporal macro
+variation is represented, despite all four point estimates being negative.
+Neither the thesis's parallel-response interpretation nor a claim of equal
+slowing across treatments follows from these results.
+
+### Numerical agreement and influential sites
+
+We check plausible blocked candidates and the residual-tree associations with
+BFGS started independently of the primary nlminb fit. We record likelihood and
+prediction differences without converting agreement into evidence of scientific
+adequacy. Four leave-one-site-out fits each of the blocked height, joint full
+increment, and two separate temporal-macro candidates retain treatment-unit
+clustering and average the remaining three sites equally. They diagnose
+sensitivity to particular blocks; they do
+not justify excluding a site or estimate model-selection uncertainty.
+
+The optimizer table checks whether two fitting algorithms reach essentially the
+same answer. Small objective and prediction differences support numerical
+reliability; they do not establish that the model describes the biology well.
+
+```{r}
+#| label: rd03-optimizer-influence
+if (recompute) {
+  optimizer_ids <- c("h_diagonal", "h_identity", "h_gamma", "i_full", "i_disp_add",
+    "i_LIDE_us", "i_SESE_us", "i_LIDE_macro", "i_SESE_macro", "rh_residual", "ri_residual")
+  opt <- list()
+  for (id in optimizer_ids) {
+    m <- fits[[id]]; dat <- fit_data[[id]]
+    alt <- rd_fit(paste0(id, "_bfgs"), formula(m), formula(m, component = "disp"), dat,
+      if (startsWith(id, "h") || startsWith(id, "rh")) "height" else "increment",
+      stage = "optimizer", family = family(m), second_optimizer = TRUE)
+    opt[[id]] <- data.frame(model_id = id, alternative_id = paste0(id, "_bfgs"),
+      primary_usable = rd_usable(m), alternative_usable = rd_usable(alt),
+      absolute_objective_difference = abs(m$fit$objective - alt$fit$objective),
+      max_conditional_prediction_difference = max(abs(predict(m, type = "response", re.form = NA) -
+        predict(alt, type = "response", re.form = NA))))
+  }
+  p2_write(bind_rows(opt), "optimizer-checks")
+  loo <- list()
+  for (base_id in c("h_diagonal", "i_full", "i_LIDE_macro", "i_SESE_macro")) {
+    endpoint <- if (startsWith(base_id, "h")) "height" else "increment"
+    m <- fits[[base_id]]; dat <- fit_data[[base_id]]
+    for (site in levels(wide$site)) {
+      dd <- droplevels(filter(dat, .data$site != .env$site))
+      id <- paste0(base_id, "_omit_", match(site, levels(wide$site)))
+      alt <- rd_fit(id, formula(m), formula(m, component = "disp"), dd, endpoint, stage = "leave_site_out", family = family(m))
+      if (rd_usable(alt)) {
+        z <- rd_means(alt, dd, endpoint, id)
+        loo[[id]] <- mutate(rd_contrasts(z, endpoint), omitted_site = site)
+      }
+    }
+  }
+  p2_write(bind_rows(loo), "leave-one-site-out-contrasts")
+}
+knitr::kable(p2_read("optimizer-checks"), digits = 6)
+```
+
+The site-omission table shows whether the redwood treatment comparisons depend
+strongly on one site. Look for changes in sign or large shifts in size. Only
+usable fits have intervals here; the failed fits are identified in the review
+below and retained in the full fit register.
+
+```{r}
+#| label: rd03-site-omission-review
+knitr::kable(p2_read("leave-one-site-out-contrasts") |>
+  filter(spp == "SESE", !grepl("later minus earlier", contrast)) |>
+  select(model_id, omitted_site, contrast, estimate, lcl, ucl), digits = 3)
+```
+
+All 11 full-cohort optimizer checks have usable Hessians and agree within
+0.00000002 in objective and 0.000075 in conditional response prediction. The
+four height omissions preserve a positive redwood GS–HD difference (3.76–5.59 m),
+while HA–HD ranges from 0.05 to 1.58 m. Joint-model temporal GS–HD contrasts
+change sign across omissions. Thus the broad size contrast is more stable than
+the arrangement or differential-slowing interpretation.
+
+Of 16 site-omission fits, 13 satisfy both convergence and Hessian criteria.
+The temporal-macro candidates encounter singular convergence when Camp Six is
+omitted for either species and when Waldo South is omitted for redwood;
+the redwood Camp Six omission also lacks a positive-definite Hessian. Those
+models remain in the fit register, but their intervals are excluded from the
+contrast table. We have not weakened convergence checks or dropped those sites.
+The complete four-site candidates are stable under BFGS, but this three-site
+instability limits confidence in an elaborate temporal covariance.
+
+### Residual behavior and simulation support
+
+We inspect residual location, spread, tails, paired increment association, and
+macro-level patterns, with 500 unconditional simulations per focal candidate
+using seed 20261106. These diagnostics include both the Gaussian and Gamma
+height candidates, the joint and separate temporal-macro increment candidates,
+and the two residual-tree fits.
+The simulation count is for diagnostics, not a refitted uncertainty bootstrap.
+Conditional paired residual correlations are affected by fitted clump effects
+and must not be read as estimates of the marginal two-period covariance.
+
+The simulation table checks whether data generated by each model resemble the
+observations. The nonpositive fraction is particularly useful for spotting
+impossible predicted heights; the diagnostic p-values help identify departures
+that merit inspection, rather than certify that a model is correct.
+
+```{r}
+#| label: rd03-diagnostics
+if (recompute) {
+  diagnostic_ids <- c("h_diagonal", "h_identity", "h_gamma", "i_full", "i_LIDE_macro", "i_SESE_macro", "rh_residual", "ri_residual")
+  diagnostic <- grouped <- macro <- paired <- plots <- list()
+  for (k in seq_along(diagnostic_ids)) {
+    id <- diagnostic_ids[k]; m <- fits[[id]]; mf <- model.frame(m)
+    stopifnot(rd_usable(m))
+    set.seed(20261106L + k - 1L)
+    sims <- simulate(m, nsim = 500L)
+    dh <- createDHARMa(simulatedResponse = as.matrix(sims), observedResponse = model.response(mf),
+      fittedPredictedResponse = rowMeans(as.matrix(sims)), integerResponse = FALSE, seed = 20261106L + k - 1L)
+    diagnostic[[id]] <- data.frame(model_id = id, simulations = 500L, seed = 20261106L + k - 1L,
+      uniformity_p = testUniformity(dh, plot = FALSE)$p.value,
+      dispersion_p = testDispersion(dh, plot = FALSE)$p.value,
+      outliers_p = testOutliers(dh, plot = FALSE, type = "bootstrap")$p.value,
+      simulated_nonpositive_fraction = mean(as.matrix(sims) <= 0),
+      observed_nonpositive_fraction = mean(model.response(mf) <= 0))
+    rr <- fit_data[[id]] |> mutate(model_id = id, fitted = as.numeric(predict(m, type = "response")),
+      residual = as.numeric(residuals(m, type = "pearson")), scaled_residual = dh$scaledResiduals)
+    if (!"spp" %in% names(rr)) rr$spp <- "SESE"
+    if (!"period" %in% names(rr)) rr$period <- "year10"
+    grouped[[id]] <- rr |> group_by(model_id, spp, treat, period) |>
+      summarise(n = n(), mean_residual = mean(residual), sd_residual = sd(residual),
+        q025 = quantile(residual, .025), q975 = quantile(residual, .975),
+        mean_scaled_residual = mean(scaled_residual), .groups = "drop")
+    macro[[id]] <- rr |> group_by(model_id, site, plot, spp, period) |>
+      summarise(n = n(), mean_residual = mean(residual), .groups = "drop")
+    if ("ht_inc" %in% names(rr)) {
+      pairs <- rr |> select(model_id, tree, spp, treat, period, residual) |>
+        pivot_wider(names_from = period, values_from = residual, names_prefix = "p")
+      paired[[id]] <- pairs |> group_by(model_id, spp, treat) |>
+        summarise(n_clumps = n(), conditional_residual_correlation = cor(p5, p10), .groups = "drop")
+    }
+    plots[[id]] <- rr |> select(model_id, fitted, residual, scaled_residual)
+  }
+  p2_write(bind_rows(diagnostic), "simulation-diagnostics")
+  p2_write(bind_rows(grouped), "grouped-residuals")
+  p2_write(bind_rows(macro), "macro-residuals")
+  p2_write(bind_rows(paired), "paired-residuals")
+  diag_plot <- ggplot(bind_rows(plots), aes(fitted, residual)) +
+    geom_hline(yintercept = 0, color = "grey55") + geom_point(alpha = .35, size = .7) +
+    facet_wrap(~model_id, scales = "free", ncol = 2) + theme_minimal(base_size = 11) +
+    labs(x = "Conditional fitted response (m or m/year)", y = "Conditional Pearson residual",
+      title = "RD03 exploratory model diagnostics")
+  ggsave(file.path(p2, "figures/residual-review.png"), diag_plot, width = 9, height = 9, dpi = 160, bg = "white")
+  p2_write(bind_rows(fit_records), "rd03-fit-register")
+  writeLines(capture.output(sessionInfo()), file.path(p2, "tables/session-info.txt"))
+}
+knitr::kable(p2_read("simulation-diagnostics"), digits = 5)
+```
+
+The grouped residual table checks for errors hidden by an overall diagnostic:
+a model might fit one species, treatment, or period less well than the others.
+Compare residual means, spread, and tails across those groups; simulation-scaled
+residual means are expected to be near 0.5 under a well-matched model.
+
+```{r}
+#| label: rd03-grouped-residuals-review
+knitr::kable(p2_read("grouped-residuals"), digits = 3)
+```
+
+The paired residual table checks whether the two increments from a clump still
+move together after accounting for its fitted effects. This can flag remaining
+dependence, but the fitted clump effects themselves influence these correlations;
+the table cannot establish the underlying covariance or measurement error.
+
+```{r}
+#| label: rd03-paired-residuals-review
+knitr::kable(p2_read("paired-residuals"), digits = 3)
+```
+
+The macro-plot residual table helps locate errors shared by many clumps in one
+treatment unit. Such a pattern matters because many clumps with similar errors
+are not independent evidence that a treatment response is estimated precisely.
+
+```{r}
+#| label: rd03-macro-residuals-review
+knitr::kable(p2_read("macro-residuals"), digits = 3)
+```
+
+The residual plot complements the tables by showing curves, changing spread, or
+extreme observations that averages can hide. We use it to decide which model
+assumptions need closer review before accepting a display.
+
+```{r}
+#| label: rd03-residual-figure-review
+knitr::include_graphics(file.path(p2, "figures/residual-review.png"))
+```
+
+Gaussian(log) year-10 simulations produce 0.47% nonpositive heights, versus
+0.66% for the identity link and none for Gamma. Gamma nevertheless has poorer
+AIC and a uniform-residual diagnostic p-value of 0.0015, so positive support
+alone does not make it preferable. The separate temporal-macro increment
+models generate roughly 1.25% nonpositive tanoak and 1.77% nonpositive redwood
+increments, compared with none observed. Gaussian increments permit negative
+changes in principle, but this lower-tail mismatch deserves targeted review.
+The simulation diagnostics do not otherwise flag strong overall dispersion
+or outlier departures; their nonsignificant p-values do not validate the models.
+The residual figure also retains the larger positive increment tail. We retain
+the family/support trade-off for Phase Three rather than claiming that any
+candidate passes all scientific checks.
+
+### Human review summary and Phase Three handoff {#rd03-phase-three}
+
+**Phase Two is complete. I recommend the models below as the starting point for
+Phase Three; none is yet accepted for the manuscript.** We used all 692 recorded
+clumps, as approved in human review. Each treatment was represented at four
+sites; the hundreds of clumps are subsamples within those treatment units.
+Some blocks may have had too few clumps to reach the sampling target, but we
+have no original roster to confirm that explanation. Our results describe this
+recorded cohort and cannot establish survival or recruitment across the stand.
+
+The model names identify the response and species: `h` means year-10 height,
+`i` means annualized height change, `SESE` is redwood, and `LIDE` is tanoak.
+Here, height always follows the tallest sprout on a clump at each visit; the
+tallest stem may change between visits.
+
+**Year-10 height:** the separate redwood model, `h_SESE`, estimates that GS clumps
+were 4.65 m taller than HD clumps on average. Its estimate for HA minus HD is
+only 0.96 m, with an approximate interval from -0.63 to +2.56 m. The joint model,
+`h_diagonal`, gives almost the same two differences: 4.64 and 0.99 m. When we
+refitted `h_diagonal` leaving out one site at a time, GS minus HD remained
+positive, whereas HA minus HD ranged from 0.05 to 1.58 m. Thus GS versus HD is
+the stronger result to carry forward. We should not yet claim a clear advantage
+of aggregated retention (HA) over dispersed retention (HD).
+
+**Change in growth rate:** `i_SESE_macro` models redwood separately and allows
+each macro plot to have a different growth rate in each measurement period.
+It estimates that annual height change was lower in years 5–10 than in years
+1–5 by about 0.16, 0.16, 0.06, and 0.12 m/year under GS, LD, HA, and HD,
+respectively. However, its intervals do not clearly distinguish how much slowing
+occurred under GS versus HD or HA versus HD. The corresponding tanoak model,
+`i_LIDE_macro`, also estimates slowing under every treatment, but each interval
+includes no change. These two models fit better than `i_SESE` and `i_LIDE`,
+which assume that a macro plot's contribution stays constant across periods.
+**I recommend carrying `i_SESE_macro` and `i_LIDE_macro` forward**, because that
+constant contribution would cancel when comparing periods and leave out
+variation among treatment units in how growth changed.
+
+There is an important limit to those growth models. Both fit successfully using
+all four sites and agree under two fitting algorithms. But three of their eight
+site-omission fits had convergence problems: both species when Camp Six was
+omitted, and redwood when Waldo South was omitted. Phase Three needs to examine
+that instability before accepting their uncertainty intervals. We should not
+remove those sites or treat the failed fits as reliable results.
+
+**Residual redwood trees:** `rh_residual` compares year-10 redwood height between
+clumps with and without a tree left after harvest, allowing for treatment and
+site. It estimates about 5% greater height with a residual tree, but the interval
+ranges from about 5% shorter to 16% taller. `ri_residual` makes the corresponding
+growth-rate comparison and also leaves both suppression and augmentation
+plausible. Neither model improves fit enough to justify adding the indicator
+to the main analysis. **I recommend keeping these as secondary exploratory
+results and leaving `residual_rw` out of the main treatment models.** This
+comparison uses LD, HA, and HD only: GS has no residual trees. It does not
+establish that retaining a tree causes either a benefit or a reduction in growth.
+
+Use the following table as the Phase Three decision list: it names the models
+we recommend carrying forward and the checks still needed before accepting
+each one. This makes the next analysis choices explicit without treating the
+current candidates as final selections.
+
+| Question | Recommended Phase Three starting models | What to check before acceptance |
+|---|---|---|
+| Year-10 height | Start with `h_SESE` and `h_LIDE`: separate Gaussian(log) models with treatment, site, and macro-plot effects. Keep `h_diagonal` and `h_fixed` as joint-species comparisons. | Check simulated heights and uncertainty for each separate model. The related `h_diagonal` model generates about five nonpositive heights per 1,000 simulated measurements. `h_gamma` avoids this but fits the observed data less well. |
+| Change in growth rate | Start with `i_SESE_macro` and `i_LIDE_macro`, which allow different amounts of slowing among treatments and macro plots. | Investigate the failed site-omission fits and calibrate uncertainty. Keep `i_full` as a comparison: it assumes one macro contribution across periods and shares clump variance across species. `i_diagonal` also forces equal slowing across treatments within a species. |
+| Residual trees | Keep `rh_residual` and `ri_residual` as secondary checks against their matching models without the indicator, `rh_base` and `ri_base`. | Report the LD/HA/HD comparison and its uncertainty. Do not add the indicator to the main treatment models or expand the interaction search on this evidence. |
+
+For all main comparisons, **I recommend averaging the four site predictions
+equally when reporting treatment means**, rather than weighting them by the
+number of clumps sampled. The current intervals are approximate; Phase Three
+still needs to assess their reliability with only four sites.
+
+The next analyst should proceed in this order:
+
+1. Read this summary, the [candidate plan](#rd03-model-plan), and the numerical
+   evidence above. Checkpoint the Phase Two sources and versioned outputs before
+   further analytical changes. Run
+   `python publication/scripts/check-analysis.py --inputs-only --protected` and
+   `python publication/scripts/check-analysis.py --task RD03 --domains sprouts --require-models`.
+   All 54 fits, including failed site omissions, have ignored RDS files under
+   `outputs/sprouts/phase-two/models/`; the fit register records their status.
+   Missing fits are prerequisites, not authority to silently refit.
+2. Review the recommended models in the table before making a final selection.
+   For `i_SESE_macro` and `i_LIDE_macro`, investigate why some three-site fits
+   fail and explain any simpler model used in response. Retain variation among
+   macro plots in the change between periods. Fit the planned joint-height
+   sensitivity: one model of heights at years 1, 5, and 10, treating the visits
+   as separate ages rather than assuming a straight growth line. Derive both
+   interval changes from that model, so the shared year-5 measurement is handled
+   within one analysis. It has **not** been fitted in Phase Two. A lognormal
+   height model is also untested; add it only if reviewing simulated low heights
+   and residuals gives a reason to do so. If added, include the likelihood
+   Jacobian for comparison and the correction needed to report arithmetic means.
+3. Review species/treatment/period and macro residual tables and the diagnostic
+   figure, including the negative simulation fractions. Keep the observed-site
+   arithmetic target consistent and do not compare AIC across endpoints or
+   across different row subsets. Cross-species formal contrasts require a joint
+   covariance model or paired hierarchical simulation; separate fits alone do
+   not supply them. Do not expand the residual-tree search merely to find a
+   favorable association.
+4. Assess uncertainty by simulating new datasets from each chosen model and
+   refitting it **2,000 times**, using seed **20261116**. This is the planned
+   parametric bootstrap; it has **not** been run. Preserve
+   the 16 macros, species, repeated clumps, observed site blocks, and fitted
+   heterogeneity. Integrate log-link macro effects within every refit so that
+   their variance uncertainty enters arithmetic means. Report failures,
+   boundaries, Monte Carlo endpoint stability, and intervals' dependence on
+   model assumptions. Use the four predeclared redwood contrasts with Holm
+   adjustment if confirmatory testing is retained; other comparisons stay
+   exploratory. This checks uncertainty under the chosen model's assumptions;
+   it does not account for uncertainty about which model to choose or bias from
+   how clumps were sampled.
+5. Only after reviewing model adequacy and calibrated contrasts, prepare the
+   proposed size/time figure and caption for acceptance. If treatment-specific
+   temporal evidence remains weak, use an appropriately labeled pooled change
+   or place temporal detail in the supplement. Refresh RD03, then its RT02,
+   M02, and D02 review records from the registry. Those tasks remain queued;
+   no manuscript claim or publication figure is accepted by this phase.
+
+An ordinary render reads the saved tables. `-P recompute:true` rebuilds the audit,
+model summaries, predictions, diagnostics, and influence records from saved
+fits; `-P refit:true` refits this complete Phase Two sequence. Neither mode
+executes the unimplemented Phase Three bootstrap or joint-height sensitivity.
+No thesis environment, input export, package dependency, or RD02 result changed.
+
+Phase Two gives us named models to take forward and a clearer distinction
+between the results they support. The year-10 GS–HD redwood height difference
+is consistent across the tested models. HA–HD height differences and differences
+among treatments in how much growth slowed need more cautious interpretation.
+Phase Three should now review the recommended models, assess their uncertainty,
+and prepare a display for acceptance while keeping the conclusions about this
+recorded clump cohort.
 
 {{< include /_task-metadata/rd03-files.qmd >}}

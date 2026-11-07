@@ -278,21 +278,39 @@
   {
     "id": "RD03",
     "title": "sprout-height display",
-    "status": "In progress - Phase One audit complete; human review pending",
+    "status": "In progress - Phase Two complete; Phase Three review pending",
     "target": "One size/time figure; optional interval-rate companion",
     "files": [
       "publication/task-rd03.qmd",
       "analysis/scripts/export-publication-inputs.R",
       "analysis/scripts/publication-export/rd03-inputs.R"
     ],
-    "summary": "The [Phase One audit](task-rd03.qmd#rd03-phase-one) reconciles all 692 workbook clumps with the saved analysis, verifies the interval definitions, and exports typed measurements and historical references. It recovers redwood residual-tree codes (197 code 0, 137 code 1), identifies the separate tallest-ten subset, and reports equal-site descriptive means. Original enrollment, mortality, leader identity, sampling probabilities, and residual-code timing remain unresolved. The [human review and Phase Two handoff](task-rd03.qmd#rd03-handoff) preserves the selected recorded-cohort target and directs reference/design/covariance fitting after review; no publication model or display is accepted.",
+    "summary": "The [Phase Two review](task-rd03.qmd#rd03-phase-three) recommends starting Phase Three with separate redwood and tanoak height models (h_SESE, h_LIDE) and growth-change models that allow macro plots to change between periods (i_SESE_macro, i_LIDE_macro). The models consistently estimate taller redwood sprouts under GS than HD; HA versus HD and treatment differences in slowing are less clear. Three site-omission growth fits failed, so their uncertainty needs further review. The residual-tree models add little explanatory power within LD/HA/HD; keep them as secondary checks. The handoff specifies the remaining model review, bootstrap, and display decisions; no publication model or display is accepted.",
     "outputs": [
       "publication/outputs/sprouts/phase-one/identity-checks.csv",
       "publication/outputs/sprouts/phase-one/cohort-counts.csv",
       "publication/outputs/sprouts/phase-one/response-support.csv",
       "publication/outputs/sprouts/phase-one/sampling-composition.csv",
       "publication/outputs/sprouts/phase-one/observed-site-means.csv",
-      "publication/outputs/sprouts/phase-one/observed-treatment-means.csv"
+      "publication/outputs/sprouts/phase-one/observed-treatment-means.csv",
+      "publication/outputs/sprouts/phase-two/tables/joint-comparison.csv",
+      "publication/outputs/sprouts/phase-two/tables/reference-reproduction.csv",
+      "publication/outputs/sprouts/phase-two/tables/species-comparison.csv",
+      "publication/outputs/sprouts/phase-two/tables/variance-components.csv",
+      "publication/outputs/sprouts/phase-two/tables/residual-tree-observed.csv",
+      "publication/outputs/sprouts/phase-two/tables/residual-tree-associations.csv",
+      "publication/outputs/sprouts/phase-two/tables/residual-tree-comparison.csv",
+      "publication/outputs/sprouts/phase-two/tables/candidate-means.csv",
+      "publication/outputs/sprouts/phase-two/tables/candidate-contrasts.csv",
+      "publication/outputs/sprouts/phase-two/tables/optimizer-checks.csv",
+      "publication/outputs/sprouts/phase-two/tables/leave-one-site-out-contrasts.csv",
+      "publication/outputs/sprouts/phase-two/tables/simulation-diagnostics.csv",
+      "publication/outputs/sprouts/phase-two/tables/grouped-residuals.csv",
+      "publication/outputs/sprouts/phase-two/tables/macro-residuals.csv",
+      "publication/outputs/sprouts/phase-two/tables/paired-residuals.csv",
+      "publication/outputs/sprouts/phase-two/tables/rd03-fit-register.csv",
+      "publication/outputs/sprouts/phase-two/tables/session-info.txt",
+      "publication/outputs/sprouts/phase-two/figures/residual-review.png"
     ],
     "inputs": [
       "analysis/thesis/methods.qmd",
@@ -354,11 +372,13 @@
       "publication/task-rt02.qmd",
       "publication/sections/results.qmd"
     ],
-    "summary": "After RD03 acceptance, the proposal is to report redwood and tanoak height/time findings in a distinct 1–1.5-page Results subsection. Combining it with RT01 remains conditional on one shared display and a clearer common message; the narrative must add sprout-development evidence without restating basal-area/density findings. The initial RD03 review is available, but model selection and display acceptance remain pending; later drafting must use the selected tallest-clump estimand and verified contrasts rather than inherited thesis significance language. RD03 Phase One now supplies an audited selected-clump cohort and recovered residual-tree indicator; human review of field-history limits and Phase Two fitting remain pending.",
+    "summary": "After RD03 acceptance, the proposal is to report redwood and tanoak height/time findings in a distinct 1–1.5-page Results subsection. Combining it with RT01 remains conditional on one shared display and a clearer common message; the narrative must add sprout-development evidence without restating basal-area/density findings. The initial RD03 review is available, but model selection and display acceptance remain pending; later drafting must use the selected tallest-clump estimand and verified contrasts rather than inherited thesis significance language. RD03 Phase Two now supplies exploratory fitted candidates for the approved recorded cohort, including retained-treatment residual-tree associations. Final model selection, calibrated uncertainty, and display acceptance remain pending Phase Three review.",
     "inputs": [
       "publication/task-rd03.qmd",
       "analysis/thesis/results.qmd",
-      "analysis/analysis/sprout_modeling.qmd"
+      "analysis/analysis/sprout_modeling.qmd",
+      "publication/outputs/sprouts/phase-two/tables/candidate-contrasts.csv",
+      "publication/outputs/sprouts/phase-two/tables/residual-tree-associations.csv"
     ],
     "depends_on": [
       "RD03"
@@ -426,13 +446,15 @@
       "publication/sections/supplement.qmd",
       "publication/draft-methods.qmd"
     ],
-    "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02. RD03 now records the thesis-model audit and proposed sensitivities; its sampling target, four-site hierarchy, period definitions, and final prediction target must be resolved before sprout Methods are finalized. RD03 Phase One now supplies an audited selected-clump cohort and recovered residual-tree indicator; human review of field-history limits and Phase Two fitting remain pending.",
+    "summary": "The proposal describes the regeneration and sprout measurements and analyses retained in accepted displays, moving expanded specifications, comparisons, and secondary-species detail to the supplement. The planned 1–1.5-page subsection must make the reported estimands reproducible; it follows RT01/RT02. RD03 now records the thesis-model audit and proposed sensitivities; its sampling target, four-site hierarchy, period definitions, and final prediction target must be resolved before sprout Methods are finalized. RD03 Phase Two now supplies exploratory fitted candidates for the approved recorded cohort, including retained-treatment residual-tree associations. Final model selection, calibrated uncertainty, and display acceptance remain pending Phase Three review.",
     "inputs": [
       "publication/task-rd02.qmd",
       "publication/outputs/regeneration/selected-species-models/tables/rd02-selected-species-estimates.csv",
       "publication/outputs/regeneration/selected-species-models/manifests/rd02-selected-species-provenance.yml",
       "publication/task-rd03.qmd",
-      "analysis/analysis/sprout_modeling.qmd"
+      "analysis/analysis/sprout_modeling.qmd",
+      "publication/outputs/sprouts/phase-two/tables/candidate-contrasts.csv",
+      "publication/outputs/sprouts/phase-two/tables/residual-tree-associations.csv"
     ],
     "depends_on": [
       "RD02",
@@ -485,11 +507,13 @@
       "publication/task-d02.qmd",
       "publication/sections/discussion.qmd"
     ],
-    "summary": "The proposed sprout discussion connects accepted height patterns to light, retention, and cohort development. Its 1–1.5 pages must explain what the height evidence adds beyond basal area; combining it with D01 depends on whether the reviewed results support one inseparable management message. The initial RD03 review qualifies leader replacement, selected-clump sampling, shade-tolerance interpretation, and the proposed long-term retention threshold; these are limits for later discussion, not accepted new results. RD03 Phase One now supplies an audited selected-clump cohort and recovered residual-tree indicator; human review of field-history limits and Phase Two fitting remain pending.",
+    "summary": "The proposed sprout discussion connects accepted height patterns to light, retention, and cohort development. Its 1–1.5 pages must explain what the height evidence adds beyond basal area; combining it with D01 depends on whether the reviewed results support one inseparable management message. The initial RD03 review qualifies leader replacement, selected-clump sampling, shade-tolerance interpretation, and the proposed long-term retention threshold; these are limits for later discussion, not accepted new results. RD03 Phase Two now supplies exploratory fitted candidates for the approved recorded cohort, including retained-treatment residual-tree associations. Final model selection, calibrated uncertainty, and display acceptance remain pending Phase Three review.",
     "inputs": [
       "publication/task-rd03.qmd",
       "analysis/thesis/discussion.qmd",
-      "analysis/analysis/sprout_modeling.qmd"
+      "analysis/analysis/sprout_modeling.qmd",
+      "publication/outputs/sprouts/phase-two/tables/candidate-contrasts.csv",
+      "publication/outputs/sprouts/phase-two/tables/residual-tree-associations.csv"
     ],
     "depends_on": [
       "RD03",

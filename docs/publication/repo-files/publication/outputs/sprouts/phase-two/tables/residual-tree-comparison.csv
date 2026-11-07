@@ -1,0 +1,5 @@
+"model_id","stage","endpoint","fit_status","n","n_clumps","n_sites","mean","dispersion","family","link","parameters","log_likelihood","AIC","convergence","pd_hessian","max_gradient","warnings"
+"rh_base","residual_tree","height","fit",243,243,4,"ht10 ~ treat + site + (1 | plot)","~treat","gaussian","log",10,-583.234005757702,1186.4680115154,0,TRUE,0.000175477117837275,""
+"rh_residual","residual_tree","height","fit",243,243,4,"ht10 ~ treat + site + residual_rw + (1 | plot)","~treat","gaussian","log",11,-582.78344106619,1187.56688213238,0,TRUE,0.00185861336743631,""
+"ri_base","residual_tree","increment","fit",486,243,4,"ht_inc ~ treat * period + site + (1 | plot) + (1 | tree)","~treat * period","gaussian","identity",17,-25.7355319495419,85.4710638990838,0,TRUE,0.00030784218336599,""
+"ri_residual","residual_tree","increment","fit",486,243,4,"ht_inc ~ treat * period + site + residual_rw * period + (1 |      plot) + (1 | tree)","~treat * period","gaussian","identity",19,-25.414251914005,88.8285038280099,0,TRUE,0.000464525323311745,""
